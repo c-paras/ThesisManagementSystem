@@ -2,8 +2,9 @@
 from flask import Flask, render_template,session, request, Response, url_for, redirect, g
 from flask_restful import Resource, Api, reqparse, fields, marshal
 import sqlite3
+import config
 
-DATABASE = '/db/thesisManage'
+
 
 app = Flask(__name__)
 
