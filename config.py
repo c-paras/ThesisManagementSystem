@@ -1,1 +1,1 @@
-DATABASE = '/db/thesisManage'
+DATABASE = '/db/thesis'
