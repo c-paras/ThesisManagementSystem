@@ -1,6 +1,7 @@
-  
-from flask import Flask, render_template, session, request, Response, url_for, redirect, g
+from flask import Flask, render_template, session, request
+from flask import Response, url_for, redirect, g
 from flask_restful import Resource, Api, reqparse, fields, marshal
+
 import sqlite3
 import config
 
@@ -23,9 +24,9 @@ def close_connection(exception):
 
 
 @app.route('/')
-def base():
-    return render_template('base.html')  # loads base for now to be changes
+def index():
+    return render_template('base.html')  # TODO
 
 
 if __name__ == '__main__':
-    app.run(use_reloader=False, debug=True)
+    app.run(use_reloader=True, debug=True)
