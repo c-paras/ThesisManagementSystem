@@ -1,7 +1,7 @@
 function submit_register() {
     const email = document.getElementById('email');
-    if(email.classList.contains('valid') === false) {
-        console.log('Invalid email');
+    if(email.value.indexOf('@') < 0) {
+        alert('Please enter valid email');
         return;
     }
     const pass = document.getElementById('password');
