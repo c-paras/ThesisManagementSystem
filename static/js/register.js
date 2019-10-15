@@ -18,6 +18,8 @@ function submit_register() {
                 const res = JSON.parse(this.responseText);
                 if(res.status === 'fail') {
                     alert('Error: ' + res.message);
+                } else {
+                    alert('Success');
                 }
             } else {
                 alert('Unexpected error occurred');
