@@ -1,41 +1,39 @@
 {% extends "base.html" %}
 
 {% block body_contents %}
-<div class="container">
-  <h1>Welcome to the register screen!</h1>
-  <div class="row">
-    <form class="col s12" id="registration_form">
-      <div class="row">
-        <div class="input-field col s12">
-          <input id="email" name="email" type="email" class="validate">
-          <label for="email">Email</label>
-          <span class="helper-text" data-error="Invalid email"></span>
+  <div class="container">
+    <h1>Welcome to the register screen!</h1>
+    <div class="row">
+      <form class="col s12" id="registration_form">
+        <div class="row">
+          <div class="input-field col s12">
+            <input id="email" name="email" type="email" class="validate">
+            <label for="email">Email</label>
+            <span class="helper-text" data-error="Invalid email"></span>
+          </div>
         </div>
-      </div>
-      <div class="row">
-        <div class="input-field col s12">
-          <input name="password" id="password" type="password" class="validate" oninput="check_password()">
-          <label for="password">Password</label>
+        <div class="row">
+          <div class="input-field col s12">
+            <input name="password" id="password" type="password" class="validate" oninput="check_password()">
+            <label for="password">Password</label>
+          </div>
         </div>
-      </div>
-      <div class="row">
-        <div class="input-field col s12">
-          <input id="confirm_password" type="password" oninput="check_password()">
-          <label for="password">Confirm Password</label>
-          <span class="helper-text" data-error="Passwords don't match"></span>
+        <div class="row">
+          <div class="input-field col s12">
+            <input id="confirm_password" type="password" oninput="check_password()">
+            <label for="password">Confirm Password</label>
+            <span class="helper-text" data-error="Passwords don't match"></span>
+          </div>
         </div>
-      </div>
-      <div class="row">
-        <div class="input-field col s12">
-          <input placeholder="Registraion Key" name="registration_key" type="text">
-          <label for="registraion_key">Registration Key</label>
+        <div class="row">
+          <div class="input-field col s12">
+            <input placeholder="Registraion Key" name="registration_key" type="text">
+            <label for="registraion_key">Registration Key</label>
+          </div>
         </div>
-      </div>
-      <a class="waves-effect waves-light btn" id="register_btn" onclick="submit_register()">button</a>
-    </form>
+        <a class="waves-effect waves-light btn" id="register_btn" onclick="submit_register()">button</a>
+      </form>
+    </div>
   </div>
-</div>
-
-<script src="{{ url_for('static', filename='js/register.js') }}"></script>
-
+  <script src="{{ url_for('static', filename='js/register.js') }}"></script>
 {% endblock %}
