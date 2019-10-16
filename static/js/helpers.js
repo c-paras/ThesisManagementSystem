@@ -52,3 +52,24 @@ function makeRequest(endpoint, form, callback) {
   .then(res => res.json())
   .then(callback);
 }
+
+/*
+ * Load toast message into localStorage for display on subsequent page load.
+ */
+function delayToast(msg, err) {
+  localStorage.setItem('msg', msg);
+  localStorage.setItem('error', err);
+}
+
+/*
+ * Show lingering "toast" message upon page reload.
+ */
+$(function () {
+  const msg = localStorage.getItem('msg', '');
+  const err = localStorage.getItem('error', '');
+  if (msg !== '' && err !== '') {
+    flash(msg, eval(err)); /* jshint ignore:line */
+  }
+  localStorage.removeItem('msg');
+  localStorage.removeItem('error');
+});

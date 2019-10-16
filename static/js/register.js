@@ -7,7 +7,8 @@ function submitRegister() {
     if (res.status === 'fail') {
       flash(res.message, error = true);
     } else {
-      flash('Account created!', error = false);
+      delayToast('Account created!', false);
+      window.location.href = '/login';
     }
   });
 }
