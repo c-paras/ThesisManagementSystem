@@ -4,3 +4,5 @@ Jinja2==2.10.1
 jinjalint==0.5
 pipreqs==0.4.9
 Werkzeug==0.14.1
+bcrypt==3.1.7
+pycodestyle==2.5.0
