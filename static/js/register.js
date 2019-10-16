@@ -1,44 +1,44 @@
 function submit_register() {
-    const email = document.getElementById('email');
-    if(email.value.indexOf('@') < 0) {
+    const email = $('#email');
+    if(email.val().indexOf('@') < 0) {
         alert('Please enter valid email');
         return;
     }
-    const pass = document.getElementById('password');
-    const conf_pass = document.getElementById('confirm_password');
-    if(pass.value !== conf_pass.value) {
+    const pass = $('#password');
+    const conf_pass = $('#confirm_password');
+    if(pass.val() !== conf_pass.val()) {
         alert('Passwords don\'t match');
         return;
     }
-    const request = new XMLHttpRequest();
-    request.open('POST', '/register');
-    request.onreadystatechange = function() {
-        if(this.readyState === 4) {
-            if(this.status === 200) {
-                const res = JSON.parse(this.responseText);
-                if(res.status === 'fail') {
-                    alert('Error: ' + res.message);
-                } else {
-                    alert('Success');
-                }
-            } else {
-                alert('Unexpected error occurred');
-            }
-        }
-    };
 
-    const form = document.getElementById('registration_form');
-    request.send(new FormData(form));
+    const form = $('#registration_form');
+
+    fetch('/register', {
+        headers: {
+            'Content-Type': 'application/x-www-form-urlencoded',
+            'Accept': 'application/json',
+        },
+        method: 'POST',
+        body: form.serialize()
+    })
+        .then(res => res.json())
+        .then(res => {
+            if(res.status === 'fail') {
+                alert('Error: ' + res.message);
+            } else {
+                alert('Success');
+            }
+        });
 }
 
 function check_password() {
-    const pass = document.getElementById('password');
-    const conf_pass = document.getElementById('confirm_password');
-    if(pass.value === conf_pass.value) {
-        conf_pass.classList.remove('invalid');
-        conf_pass.classList.add('valid');
+    const pass = $('#password');
+    const conf_pass = $('#confirm_password');
+    if(pass.val() === conf_pass.val()) {
+        conf_pass.removeClass('invalid');
+        conf_pass.addClass('valid');
     } else {
-        conf_pass.classList.remove('valid');
-        conf_pass.classList.add('invalid');
+        conf_pass.removeClass('valid');
+        conf_pass.addClass('invalid');
     }
 }
