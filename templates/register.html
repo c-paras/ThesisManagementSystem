@@ -6,28 +6,28 @@
     <form class="col s8 offset-m2" id="registration-form">
       <div class="row">
         <div class="input-field">
-          <input id="email" name="email" type="email" class="validate">
+          <input id="email" name="email" type="email" class="validate" required="" aria-required="true">
           <label for="email">Email</label>
           <span class="helper-text" data-error="Invalid email"></span>
         </div>
       </div>
       <div class="row">
         <div class="input-field">
-          <input name="password" id="password" type="password" class="validate" oninput="checkPassword()">
+          <input name="password" id="password" type="password" class="validate" oninput="checkPassword()" required=""  aria-required="true">
           <label for="password">Password</label>
           <span class="helper-text" data-error="Invalid password"></span>
         </div>
       </div>
       <div class="row">
         <div class="input-field">
-          <input id="confirm-password" type="password" oninput="checkPassword()">
+          <input name="confirm-password" id="confirm-password" type="password" oninput="checkPassword()" required="" aria-required="true">
           <label for="password">Confirm Password</label>
           <span class="helper-text" data-error="Passwords do not match"></span>
         </div>
       </div>
       <div class="row">
         <div class="input-field">
-          <input name="registration-key" type="text">
+          <input name="registration-key" id="registration-key" type="text" oninput="checkKey()" required="" aria-required="true">
           <label for="registration-key">Registration Key</label>
         </div>
       </div>
