@@ -54,8 +54,10 @@
       </nav>
     {% endif %}
 
-    {% block body %}
-    {% endblock %}
+    <div class="container">
+      {% block body %}
+      {% endblock %}
+    </div>
 
     <!-- JavaScript at end of body for optimized loading -->
     <script
@@ -76,7 +78,5 @@
       })
     </script>
 
-    <!-- TODO -->
-    <a href="{{ url_for('register') }}">Register Here!</a>
   </body>
 </html>
