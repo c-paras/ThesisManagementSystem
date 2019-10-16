@@ -1,17 +1,17 @@
-function submit_register() {
+function submitRegister() {
     const email = $('#email');
     if(email.val().indexOf('@') < 0) {
         alert('Please enter valid email');
         return;
     }
     const pass = $('#password');
-    const conf_pass = $('#confirm_password');
-    if(pass.val() !== conf_pass.val()) {
+    const confPass = $('#confirm-password');
+    if(pass.val() !== confPass.val()) {
         alert('Passwords don\'t match');
         return;
     }
 
-    const form = $('#registration_form');
+    const form = $('#registration-form');
 
     fetch('/register', {
         headers: {
@@ -31,14 +31,14 @@ function submit_register() {
         });
 }
 
-function check_password() {
+function checkPassword() {
     const pass = $('#password');
-    const conf_pass = $('#confirm_password');
-    if(pass.val() === conf_pass.val()) {
-        conf_pass.removeClass('invalid');
-        conf_pass.addClass('valid');
+    const confPass = $('#confirm-password');
+    if(pass.val() === confPass.val()) {
+        confPass.removeClass('invalid');
+        confPass.addClass('valid');
     } else {
-        conf_pass.removeClass('valid');
-        conf_pass.addClass('invalid');
+        confPass.removeClass('valid');
+        confPass.addClass('invalid');
     }
 }
