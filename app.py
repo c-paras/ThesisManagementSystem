@@ -51,7 +51,8 @@ def register():
                         'message': 'email has already been registered'})
     hashed_pass = bcrypt.hashpw(password.encode('utf-8'), bcrypt.gensalt())
     print(f'Registering user {email} with hashed password {hashed_pass}')
-    conn.execute('INSERT INTO users (email, password) VALUES (?, ?)', [email, hashed_pass])
+    conn.execute('INSERT INTO users (email, password) VALUES (?, ?)',
+                 [email, hashed_pass])
     conn.commit()
     conn.close()
     return jsonify({'status': 'ok'})
