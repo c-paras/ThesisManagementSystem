@@ -26,13 +26,14 @@ def close_connection(exception):
 
 @app.route('/')
 def index():
-    return render_template('login.html', hide_navbar=True)
+    return render_template('login.html', title='Login', hide_navbar=True)
 
 
 @app.route('/register', methods=['GET', 'POST'])
 def register():
     if request.method == 'GET':
-        return render_template('register.html', hide_navbar=True)
+        return render_template('register.html',
+                               title='Register', hide_navbar=True)
 
     email = request.form.get('email', None)
     password = request.form.get('password', None)
@@ -61,13 +62,14 @@ def register():
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     if request.method == 'GET':
-        return render_template('login.html', hide_navbar=True)
+        return render_template('login.html', title='Login', hide_navbar=True)
 
 
 @app.route('/home', methods=['GET', 'POST'])
 def home():
     if request.method == 'GET':
-        return render_template('home.html')
+        return render_template('home.html',
+                               heading='My Dashboard', title='My Dashboard')
 
 
 if __name__ == '__main__':

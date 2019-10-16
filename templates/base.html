@@ -2,8 +2,7 @@
   <head>
     <meta charset="utf-8">
     <title>
-      {% block title %}
-      {% endblock %}
+      TMS - {{ title }}
     </title>
 
     <!-- Import Google Icon Font -->
@@ -55,6 +54,13 @@
     {% endif %}
 
     <div class="container">
+      {% if not hide_navbar %}
+        {# There should be a heading on any page with a navbar #}
+        <h3>{{ heading }}</h3>
+        <hr>
+      {% endif %}
+
+      <!-- Page content -->
       {% block body %}
       {% endblock %}
     </div>
