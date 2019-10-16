@@ -8,16 +8,24 @@ This system is designed to offer a central platform for managing each step of th
 
 ### Prerequisites
 It is assumed that:
-* Python 3.6.8 or above is installed (<https://www.python.org/downloads/>)
+* [Python 3.6.8](https://www.python.org/downloads/) or above is installed
+* [SQLite 3.22.0](https://www.sqlite.org/download.html) or above is installed
+* [JSHint 2.10.2](https://jshint.com/install/) or above is installed
 
 ### Installation
 
 Run the following commands to initialize the project:
 
 ```sh
+# Install Python requirements
 pip3 install -r requirements.txt
+
+# Set up linters in a UNIX environment
 sh setup.sh
-````
+
+# Initialize an empty database
+sqlite3 db/thesis.db < db/schema.sql
+```
 
 ## Usage
 
@@ -26,6 +34,7 @@ Run the Python Flask server with the following command:
 python3 app.py
 ```
 Then navigate to <http://localhost:5000>.
+The server should restart automatically upon changing the project files.
 
 ## Project Structure
 * `static/` - CSS and JS files
@@ -47,4 +56,4 @@ This program is free software: you can redistribute it and/or modify it under th
 
 This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
 
-You should have received a copy of the GNU General Public License along with this program. If not, see http://www.gnu.org/licenses/.
+You should have received a copy of the GNU General Public License along with this program. If not, see <http://www.gnu.org/licenses/>.
