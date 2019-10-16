@@ -26,13 +26,13 @@ def close_connection(exception):
 
 @app.route('/')
 def index():
-    return render_template('base.html')  # TODO
+    return render_template('login.html', hide_navbar=True)
 
 
 @app.route('/register', methods=['GET', 'POST'])
 def register():
     if request.method == 'GET':
-        return render_template('register.html')
+        return render_template('register.html', hide_navbar=True)
 
     email = request.form.get('email', None)
     password = request.form.get('password', None)
@@ -56,6 +56,18 @@ def register():
     conn.commit()
     conn.close()
     return jsonify({'status': 'ok'})
+
+
+@app.route('/login', methods=['GET', 'POST'])
+def login():
+    if request.method == 'GET':
+        return render_template('login.html', hide_navbar=True)
+
+
+@app.route('/home', methods=['GET', 'POST'])
+def home():
+    if request.method == 'GET':
+        return render_template('home.html')
 
 
 if __name__ == '__main__':
