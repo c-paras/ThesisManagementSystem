@@ -1,8 +1,8 @@
+bcrypt==3.1.7
 Flask==0.10.1
 Flask_RESTful==0.3.2
 Jinja2==2.10.1
 jinjalint==0.5
 pipreqs==0.4.9
-Werkzeug==0.14.1
-bcrypt==3.1.7
 pycodestyle==2.5.0
+Werkzeug==0.14.1
