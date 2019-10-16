@@ -1,1 +1,1 @@
-DATABASE = '/db/thesis'
+DATABASE = './db/thesis.db'
