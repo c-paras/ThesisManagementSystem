@@ -31,3 +31,8 @@ def get_fields(form, fields):
             raise ValueError(err)
         data.append(value)
     return data
+
+
+def error(msg):
+    ''' Format error response with message. '''
+    return jsonify({'status': 'fail', 'message': msg})

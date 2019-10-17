@@ -6,6 +6,7 @@ from flask import session
 from flask import jsonify
 from functools import wraps
 
+from helpers import error
 from helpers import get_db
 from helpers import get_fields
 
@@ -41,23 +42,19 @@ def register():
         return e.args
 
     if not re.match(config.EMAIL_FORMAT, email):
-        return jsonify({'status': 'fail',
-                        'message': 'Invalid email format!'})
+        return error(f'Invalid email format!<br>{config.EMAIL_FORMAT_ERROR}')
 
     conn = get_db()
     res = conn.execute('SELECT email FROM users WHERE email = ?', [email])
     if res.fetchone():
         conn.close()
-        return jsonify({'status': 'fail',
-                        'message': 'Email has already been registered!'})
+        return error('Email has already been registered!')
 
     if password != confirm:
-        return jsonify({'status': 'fail',
-                        'message': 'Passwords do not match!'})
+        return error('Passwords do not match!')
 
     if key != config.REGISTRATION_KEY:
-        return jsonify({'status': 'fail',
-                        'message': 'Invalid registration key!'})
+        return error('Invalid registration key!')
 
     hashed_pass = bcrypt.hashpw(password.encode('utf-8'), bcrypt.gensalt())
     conn.execute('INSERT INTO users (email, password) VALUES (?, ?)',
@@ -82,11 +79,9 @@ def login():
     hashed_password = res.fetchone()
     if not hashed_password:
         conn.close()
-        return jsonify({'status': 'fail',
-                        'message': 'Unknown email!'})
+        return error('Unknown email!')
     if not bcrypt.checkpw(password.encode('utf-8'), hashed_password[0]):
-        return jsonify({'status': 'fail',
-                        'message': 'Wrong password!'})
+        return error('Wrong password!')
 
     session['user'] = email
     conn.close()
