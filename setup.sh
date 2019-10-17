@@ -24,7 +24,7 @@ done
 
 # run linters
 fail=1
-jinjalint -c .jinja-config templates/ || fail=0
+jinjalint -c .jinjarc templates/ || fail=0
 pycodestyle . || fail=0
 jshint static/js/ --exclude static/js/vendor || fail=0
 
