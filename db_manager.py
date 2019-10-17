@@ -27,7 +27,8 @@ class sqliteManager:
 
     # inserts 1 row in db
     # table = string, all others are lists
-    def insert_row(table, values, columns):
+
+    def insert_single(table, values, columns):
         columns = ','.join(columns)
         placeholder = ','.join('?' * len(values))
         if columns is None:
@@ -42,9 +43,30 @@ class sqliteManager:
             )
         sqliteManager.conn.commit()
 
+    # inserts all in list before commit
+    # each item in the list should follow
+    # same format as insert_single
+
+    def insert_multiple(inserts):
+        for table, values, columns in inserts:
+            columns = ','.join(columns)
+            placeholder = ','.join('?' * len(values))
+            if columns is None:
+                res = sqliteManager.conn.execute(
+                    f'INSERT INTO {table} VALUES ?',
+                    [values]
+                )
+            else:
+                res = sqliteManager.conn.execute(
+                    f'INSERT INTO {table} {columns} VALUES {placeholder}',
+                    values
+                )
+        sqliteManager.conn.commit()
+
     # updates all specified columns
     # where clause is only joined by AND
     # table = string, all others are lists
+
     def update_rows(table, values, columns, where_col, where_val):
         column_placeholder = ' = ? ,'.join(columns) + ' = ? '
         where_placeholder = ' = ? AND '.join(where_col) + ' = ?'
@@ -57,6 +79,7 @@ class sqliteManager:
     # deletes all specified columns
     # where clause is only joined by AND
     # table = string, all others are lists
+
     def delete_rows(table, where_col, where_val):
         placeholder = ' = ? AND '.join(where_col) + ' = ?'
         res = sqliteManager.conn.execute(
@@ -64,9 +87,22 @@ class sqliteManager:
         )
         sqliteManager.conn.commit()
 
+    # executes all deletes in list before commit
+    # format for each item in list is
+    # same as delete_rows
+
+    def delete_multiple(deletes):
+        for table, where_col, where_val in deletes:
+            placeholder = ' = ? AND '.join(where_col) + ' = ?'
+            res = sqliteManager.conn.execute(
+                f'DELETE FROM {table} WHERE ' + placeholder, where_val
+            )
+        sqliteManager.conn.commit()
+
     # returns all specified columns
     # where clause is only joined by AND
     # table = string, all others are lists
+
     def select_columns(table, columns, where_col, where_val):
         columns = ','.join(columns)
         if where is not None:
