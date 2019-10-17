@@ -1,6 +1,6 @@
 DROP TABLE IF EXISTS account_types;
 CREATE TABLE account_types(
-    id          INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT UNIQUE,
+    id          INTEGER NOT NULL PRIMARY KEY,
     name        TEXT NOT NULL,
     description TEXT
 );
@@ -8,16 +8,16 @@ CREATE TABLE account_types(
 
 DROP TABLE IF EXISTS allowed_files;
 CREATE TABLE allowed_files(
-    id        INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT UNIQUE,
+    id        INTEGER NOT NULL PRIMARY KEY,
     task      INTEGER NOT NULL,
-    extension TEXT NOT NULL,
+    extension TEXT NOT NULL, -- can change to mask --
     FOREIGN KEY(task) REFERENCES tasks(id)
 );
 
 
 DROP TABLE IF EXISTS announcements;
 CREATE TABLE announcements(
-    id     INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT UNIQUE,
+    id     INTEGER NOT NULL PRIMARY KEY,
     topic  INTEGER,
     course INTEGER,
     text   TEXT NOT NULL,
@@ -29,7 +29,7 @@ CREATE TABLE announcements(
 
 DROP TABLE IF EXISTS course_roles;
 CREATE TABLE course_roles(
-    id          INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT UNIQUE,
+    id          INTEGER NOT NULL PRIMARY KEY,
     name        TEXT NOT NULL,
     description TEXT
 );
@@ -37,17 +37,17 @@ CREATE TABLE course_roles(
 
 DROP TABLE IF EXISTS courses;
 CREATE TABLE courses(
-    id         INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT UNIQUE,
+    id         INTEGER NOT NULL PRIMARY KEY,
     code       TEXT NOT NULL,
     name       TEXT NOT NULL,
-    start_date date,
-    end_date   date
+    start_date INTEGER,
+    end_date   INTEGER
 );
 
 
 DROP TABLE IF EXISTS marking_methods;
 CREATE TABLE marking_methods(
-    id          INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT UNIQUE,
+    id          INTEGER NOT NULL PRIMARY KEY,
     name        TEXT NOT NULL,
     description TEXT
 );
@@ -68,7 +68,7 @@ CREATE TABLE marks(
 
 DROP TABLE IF EXISTS material_attachments;
 CREATE TABLE material_attachments(
-    id       INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT UNIQUE,
+    id       INTEGER NOT NULL PRIMARY KEY,
     material INTEGER NOT NULL,
     name     TEXT NOT NULL,
     path     TEXT NOT NULL,
@@ -78,10 +78,10 @@ CREATE TABLE material_attachments(
 
 DROP TABLE IF EXISTS materials;
 CREATE TABLE materials(
-    id          INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT UNIQUE,
+    id          INTEGER NOT NULL PRIMARY KEY,
     course      INTEGER NOT NULL,
     name        TEXT NOT NULL,
-    visible     INTEGER NOT NULL,
+    visible     INTEGER DEFAULT 1,
     description TEXT,
     FOREIGN KEY(course) REFERENCES courses(id)
 );
@@ -89,7 +89,7 @@ CREATE TABLE materials(
 
 DROP TABLE IF EXISTS prerequisites;
 CREATE TABLE prerequisites(
-    id     INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT UNIQUE,
+    id     INTEGER NOT NULL PRIMARY KEY,
     type   INTEGER NOT NULL,
     mark   integeR,
     topic  INTEGER NOT NULL,
@@ -113,12 +113,14 @@ CREATE TABLE student_topic(
 
 DROP TABLE IF EXISTS submission_types;
 CREATE TABLE submission_types(
-    id          INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT UNIQUE,
+    id          INTEGER NOT NULL PRIMARY KEY,
     name        TEXT NOT NULL,
     description TEXT
 );
 
 
+-- currently only allows for 1 submission file, can change later
+-- but seems fine for thesis assessments
 DROP TABLE IF EXISTS submissions;
 CREATE TABLE submissions(
     student INTEGER NOT NULL,
@@ -126,7 +128,7 @@ CREATE TABLE submissions(
     name    TEXT NOT NULL,
     path    TEXT,
     text    TEXT,
-    date    datetime NOT NULL,
+    date    INTEGER NOT NULL,
     PRIMARY KEY(student, task),
     FOREIGN KEY(student) REFERENCES user(id),
     FOREIGN KEY(task) REFERENCES tasks(id)
@@ -135,13 +137,13 @@ CREATE TABLE submissions(
 
 DROP TABLE IF EXISTS tasks;
 CREATE TABLE tasks(
-    id              INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT UNIQUE,
+    id              INTEGER NOT NULL PRIMARY KEY,
     name            TEXT NOT NULL,
     course          INTEGER NOT NULL,
-    deadline        date NOT NULL,
+    deadline        INTEGER NOT NULL,
     description     TEXT,
-    size_limit      INTEGER,
-    visible         INTEGER NOT NULL,
+    size_limit      INTEGER DEFAULT 5, -- in MB's --
+    visible         INTEGER DEFAULT 1,
     marking_method  INTEGER NOT NULL,
     submission_type INTEGER NOT NULL,
     FOREIGN KEY(marking_method) REFERENCES marking_methods(id),
@@ -152,7 +154,7 @@ CREATE TABLE tasks(
 
 DROP TABLE IF EXISTS task_attachments;
 CREATE TABLE task_attachments(
-    id   INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT UNIQUE,
+    id   INTEGER NOT NULL PRIMARY KEY,
     task INTEGER NOT NULL,
     name TEXT NOT NULL,
     path TEXT NOT NULL,
@@ -162,7 +164,7 @@ CREATE TABLE task_attachments(
 
 DROP TABLE IF EXISTS task_criteria;
 CREATE TABLE task_criteria(
-    id          INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT UNIQUE,
+    id          INTEGER NOT NULL PRIMARY KEY,
     task        INTEGER NOT NULL,
     name        TEXT NOT NULL,
     description TEXT,
@@ -173,17 +175,17 @@ CREATE TABLE task_criteria(
 
 DROP TABLE IF EXISTS topics;
 CREATE TABLE topics(
-    id         INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT UNIQUE,
+    id         INTEGER NOT NULL PRIMARY KEY,
     name       TEXT NOT NULL,
     supervisor INTEGER NOT NULL,
-    visible    INTEGER NOT NULL,
+    visible    INTEGER DEFAULT 1,
     FOREIGN KEY(supervisor) REFERENCES user(id)
 );
 
 
 DROP TABLE IF EXISTS topic_areas;
 CREATE TABLE topic_areas(
-    id    INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT UNIQUE,
+    id    INTEGER NOT NULL PRIMARY KEY,
     topic INTEGER NOT NULL,
     name  TEXT NOT NULL,
     FOREIGN KEY(topic) REFERENCES topics(id)
@@ -192,7 +194,7 @@ CREATE TABLE topic_areas(
 
 DROP TABLE IF EXISTS users;
 CREATE TABLE users(
-    id           INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT UNIQUE,
+    id           INTEGER NOT NULL PRIMARY KEY,
     email        TEXT NOT NULL,
     password     TEXT NOT NULL,
     account_type INTEGER NOT NULL,
