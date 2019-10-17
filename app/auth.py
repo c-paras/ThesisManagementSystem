@@ -81,7 +81,7 @@ def login():
         conn.close()
         return error('Unknown email!')
     if not bcrypt.checkpw(password.encode('utf-8'), hashed_password[0]):
-        return error('Wrong password!')
+        return error('Incorrect password!')
 
     session['user'] = email
     conn.close()
