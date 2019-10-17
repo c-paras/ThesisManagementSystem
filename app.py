@@ -49,7 +49,7 @@ def register():
     if res.fetchone():
         conn.close()
         return jsonify({'status': 'fail',
-                        'message': 'email has already been registered'})
+                        'message': 'Email has already been registered!'})
     hashed_pass = bcrypt.hashpw(password.encode('utf-8'), bcrypt.gensalt())
     print(f'Registering user {email} with hashed password {hashed_pass}')
     conn.execute('INSERT INTO users (email, password) VALUES (?, ?)',
@@ -65,7 +65,7 @@ def login():
         return render_template('login.html', title='Login', hide_navbar=True)
 
 
-@app.route('/home', methods=['GET', 'POST'])
+@app.route('/home', methods=['GET'])
 def home():
     if request.method == 'GET':
         return render_template('home.html',
@@ -73,4 +73,6 @@ def home():
 
 
 if __name__ == '__main__':
-    app.run(use_reloader=True, debug=True)
+    if config.DEBUG:
+        app.config['SEND_FILE_MAX_AGE_DEFAULT'] = 0
+    app.run(use_reloader=True, debug=config.DEBUG)
