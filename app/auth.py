@@ -7,6 +7,7 @@ from flask import jsonify
 from functools import wraps
 
 from helpers import get_db
+from helpers import get_fields
 
 import bcrypt
 
@@ -30,15 +31,12 @@ def register():
         return render_template('register.html',
                                title='Register', hide_navbar=True)
 
-    email = request.form.get('email', None)
-    password = request.form.get('password', None)
-    if email is None or len(email) is 0:
-        return jsonify({'status': 'fail',
-                        'message': 'email is blank'})
-    if password is None or len(password) is 0:
-        return jsonify({'status': 'fail',
-                        'message': 'password is blank'})
+    try:
+        email, password = get_fields(request.form, ['email', 'password'])
+    except Exception as e:
+        return e.args
 
+    # TODO: check confirm password, reg key
     conn = get_db()
     res = conn.execute('SELECT email FROM users WHERE email = ?', [email])
     if res.fetchone():
@@ -59,14 +57,10 @@ def login():
     if request.method == 'GET':
         return render_template('login.html', title='Login', hide_navbar=True)
 
-    email = request.form.get('email', None)
-    password = request.form.get('password', None)
-    if email is None or len(email) is 0:
-        return jsonify({'status': 'fail',
-                        'message': 'email is blank'})
-    if password is None or len(password) is 0:
-        return jsonify({'status': 'fail',
-                        'message': 'password is blank'})
+    try:
+        email, password = get_fields(request.form, ['email', 'password'])
+    except Exception as e:
+        return e.args
 
     conn = get_db()
     res = conn.execute('SELECT password FROM users WHERE email = ?', [email])
