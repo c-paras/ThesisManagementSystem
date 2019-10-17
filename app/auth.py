@@ -1,12 +1,11 @@
-from flask import Flask, render_template, session, request, Blueprint
-from flask import Response, url_for, redirect, g, jsonify
-from flask_restful import Resource, Api, reqparse, fields, marshal
+from flask import Blueprint
+from flask import render_template
+from flask import request
+from flask import jsonify
 
 from helpers import get_db
 
-import sqlite3
 import bcrypt
-import config
 
 
 auth = Blueprint('auth', __name__)
