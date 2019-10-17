@@ -1,4 +1,31 @@
 {% extends "base.html" %}
 
 {% block body %}
+  <h3 class="center teal-text">Login to TMS</h3>
+  <div class="row">
+    <form class="col s8 offset-m2" id="login-form">
+      <div class="row">
+        <div class="input-field">
+          <i class="material-icons prefix">account_circle</i>
+          <input id="email" name="email" type="email" class="validate" required="" aria-required="true">
+          <label for="email">Email</label>
+          <span class="helper-text" data-error="Invalid email"></span>
+        </div>
+      </div>
+      <div class="row">
+        <div class="input-field">
+          <i class="material-icons prefix">security</i>
+          <input name="password" id="password" type="password" class="validate" required="" aria-required="true">
+          <label for="password">Password</label>
+          <span class="helper-text" data-error="Invalid password"></span>
+        </div>
+      </div>
+      <div class="center">
+        <a class="waves-effect waves-light btn" id="login-btn" onclick="submitLogin()">Login
+          <i class="material-icons right">send</i>
+        </a>
+      </div>
+    </form>
+  </div>
+  <script src="{{ url_for('static', filename='js/login.js') }}"></script>
 {% endblock %}
