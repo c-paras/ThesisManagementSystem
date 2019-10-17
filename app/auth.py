@@ -50,6 +50,11 @@ def register():
         conn.close()
         return error('Email has already been registered!')
 
+    if len(password) < 8 or not any(str.isdigit(c) for c in password) \
+            or not any(str.isalpha(c) for c in password):
+        msg = 'Password must be at least 8 characters long<br>' + \
+              'and contain at least one digit and one letter!'
+        return error(msg)
     if password != confirm:
         return error('Passwords do not match!')
 
