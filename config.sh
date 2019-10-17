@@ -8,12 +8,13 @@ cat > .git/hooks/pre-commit <<'EOF' || exit 1
 #!/bin/sh
 
 export PATH="/bin:/usr/bin:/usr/local/bin:$PATH"
-unset CDPATH IFS
+unset CDPATH
+IFS=`printf "\n\b"`
 
 # abort if nothing to commit
-git status |
+git status 2>&1 |
 tail -1 |
-egrep -q 'nothing to commit|nothing added to commit' && exit 0
+egrep -q 'nothing (added )?to commit' && exit 0
 
 # check if linters exist
 for linter in jinjalint pycodestyle jshint
@@ -22,11 +23,24 @@ do
     { echo "Linter \`$linter' not found. Aborting commit."; exit 1; }
 done
 
-# run linters
 fail=1
-jinjalint -c .jinjarc templates/ || fail=0
-pycodestyle . || fail=0
-jshint static/js/ --exclude static/js/vendor || fail=0
+
+# run linters only on changed files
+for file in `git diff --name-only --cached`
+do
+    test -f "$file" || continue
+    ext=`echo "$file" | sed 's/.*\.//'`
+    if test "$ext" = 'py'
+    then
+        pycodestyle "$file" || fail=0
+    elif test "$ext" = 'html'
+    then
+        jinjalint -c .jinjarc "$file" || fail=0
+    elif test "$ext" = 'js'
+    then
+        jshint "$file" || fail=0
+    fi
+done
 
 test $fail -ne 0 && exit 0
 
