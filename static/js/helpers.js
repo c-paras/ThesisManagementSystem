@@ -29,7 +29,7 @@ function markFieldValid(field, valid) {
 function formValid(form) {
   let invalid = false;
   form.find('input').each(function () {
-    if ($(this).val() === '') {
+    if ($(this).val() === '' && $(this).attr('required')) {
       invalid = true;
     }
   });
