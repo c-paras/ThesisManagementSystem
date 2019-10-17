@@ -9,7 +9,10 @@ from functools import wraps
 from helpers import get_db
 from helpers import get_fields
 
+import re
 import bcrypt
+
+import config
 
 
 auth = Blueprint('auth', __name__)
@@ -37,6 +40,10 @@ def register():
     except Exception as e:
         return e.args
 
+    if not re.match(config.EMAIL_FORMAT, email):
+        return jsonify({'status': 'fail',
+                        'message': 'Invalid email format!'})
+
     conn = get_db()
     res = conn.execute('SELECT email FROM users WHERE email = ?', [email])
     if res.fetchone():
@@ -48,7 +55,9 @@ def register():
         return jsonify({'status': 'fail',
                         'message': 'Passwords do not match!'})
 
-    # TODO: check reg key
+    if key != config.REGISTRATION_KEY:
+        return jsonify({'status': 'fail',
+                        'message': 'Invalid registration key!'})
 
     hashed_pass = bcrypt.hashpw(password.encode('utf-8'), bcrypt.gensalt())
     conn.execute('INSERT INTO users (email, password) VALUES (?, ?)',
