@@ -51,6 +51,29 @@ def login():  # TODO
     if request.method == 'GET':
         return render_template('login.html', title='Login', hide_navbar=True)
 
+    email = request.form.get('email', None)
+    password = request.form.get('password', None)
+    if email is None or len(email) is 0:
+        return jsonify({'status': 'fail',
+                        'message': 'email is blank'})
+    if password is None or len(password) is 0:
+        return jsonify({'status': 'fail',
+                        'message': 'password is blank'})
+
+    conn = get_db()
+    res = conn.execute('SELECT password FROM users WHERE email = ?', [email])
+    hashed_password = res.fetchone()
+    if not hashed_password:
+        conn.close()
+        return jsonify({'status': 'fail',
+                        'message': 'Unknown email!'})
+    if not bcrypt.checkpw(password.encode('utf-8'), hashed_password[0]):
+        return jsonify({'status': 'fail',
+                        'message': 'Wrong password!'})
+    print('Loging in user')
+    conn.close()
+    return jsonify({'status': 'ok'})
+
 
 @auth.route('/home', methods=['GET'])
 def home():  # TODO
