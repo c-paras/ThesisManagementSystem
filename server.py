@@ -2,13 +2,16 @@ from flask import Flask
 from flask import g
 
 from app.auth import auth
+from app.home import home
 
 import config
 
 
 app = Flask(__name__)
 app.secret_key = config.SECRET_KEY
-app.register_blueprint(auth)
+
+for blueprint in [auth, home]:
+    app.register_blueprint(blueprint)
 
 
 @app.teardown_appcontext

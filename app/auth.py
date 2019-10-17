@@ -24,15 +24,6 @@ def loggedin(func):
     return wrapper
 
 
-@auth.route('/', methods=['GET'])
-def index():
-    if 'user' not in session:
-        return render_template('login.html', title='Login', hide_navbar=True)
-    else:
-        return render_template('home.html',
-                               heading='My Dashboard', title='My Dashboard')
-
-
 @auth.route('/register', methods=['GET', 'POST'])
 def register():
     if request.method == 'GET':
@@ -91,11 +82,3 @@ def login():
     session['user'] = email
     conn.close()
     return jsonify({'status': 'ok'})
-
-
-@auth.route('/home', methods=['GET'])
-@loggedin
-def home():
-    if request.method == 'GET':
-        return render_template('home.html',
-                               heading='My Dashboard', title='My Dashboard')
