@@ -32,19 +32,25 @@ def register():
                                title='Register', hide_navbar=True)
 
     try:
-        email, password = get_fields(request.form, ['email', 'password'])
+        fields = ['email', 'password', 'confirm-password', 'registration-key']
+        email, password, confirm, key = get_fields(request.form, fields)
     except Exception as e:
         return e.args
 
-    # TODO: check confirm password, reg key
     conn = get_db()
     res = conn.execute('SELECT email FROM users WHERE email = ?', [email])
     if res.fetchone():
         conn.close()
         return jsonify({'status': 'fail',
                         'message': 'Email has already been registered!'})
+
+    if password != confirm:
+        return jsonify({'status': 'fail',
+                        'message': 'Passwords do not match!'})
+
+    # TODO: check reg key
+
     hashed_pass = bcrypt.hashpw(password.encode('utf-8'), bcrypt.gensalt())
-    print(f'Registering user {email} with hashed password {hashed_pass}')
     conn.execute('INSERT INTO users (email, password) VALUES (?, ?)',
                  [email, hashed_pass])
     conn.commit()
@@ -72,7 +78,7 @@ def login():
     if not bcrypt.checkpw(password.encode('utf-8'), hashed_password[0]):
         return jsonify({'status': 'fail',
                         'message': 'Wrong password!'})
-    print('Loging in user')
+
     session['user'] = email
     conn.close()
     return jsonify({'status': 'ok'})

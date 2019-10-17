@@ -25,9 +25,9 @@ def get_fields(form, fields):
     for field in fields:
         value = form.get(field, None)
         if value is None or len(value) is 0:
-            field_name = field.capitalize()
+            field_name = field.capitalize().replace('-', ' ')
             err = jsonify({'status': 'fail',
-                           'message': f'{field_name} cannot be blank!'})
+                           'message': f'{field_name} is required!'})
             raise ValueError(err)
         data.append(value)
     return data
