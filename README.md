@@ -21,7 +21,7 @@ Run the following commands to initialize the project:
 pip3 install -r requirements.txt
 
 # Set up linters in a UNIX environment
-sh setup.sh
+sh config.sh
 
 # Initialize an empty database
 sqlite3 db/thesis.db < db/schema.sql
@@ -31,14 +31,15 @@ sqlite3 db/thesis.db < db/schema.sql
 
 Run the Python Flask server with the following command:
 ```sh
-python3 app.py
+python3 server.py
 ```
 Then navigate to <http://localhost:5000>.
 The server should restart automatically upon changing the project files.
 
 ## Project Structure
-* `static/` - CSS and JS files
+* `app/` - Python server blueprints
 * `db/` - database-related files
+* `static/` - CSS and JS files
 * `templates/` - Jinja2 HTML templates
 
 ## Contributing

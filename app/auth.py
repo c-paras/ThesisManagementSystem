@@ -1,35 +1,23 @@
-from flask import Flask, render_template, session, request
+from flask import Flask, render_template, session, request, Blueprint
 from flask import Response, url_for, redirect, g, jsonify
 from flask_restful import Resource, Api, reqparse, fields, marshal
+
+from helpers import get_db
 
 import sqlite3
 import bcrypt
 import config
 
 
-app = Flask(__name__)
+auth = Blueprint('auth', __name__)
 
 
-def get_db():
-    db = getattr(g, '_database', None)
-    if db is None:
-        db = g._database = sqlite3.connect(config.DATABASE)
-    return db
-
-
-@app.teardown_appcontext
-def close_connection(exception):
-    db = getattr(g, '_database', None)
-    if db is not None:
-        db.close()
-
-
-@app.route('/')
-def index():
+@auth.route('/', methods=['GET'])
+def index():  # TODO
     return render_template('login.html', title='Login', hide_navbar=True)
 
 
-@app.route('/register', methods=['GET', 'POST'])
+@auth.route('/register', methods=['GET', 'POST'])
 def register():
     if request.method == 'GET':
         return render_template('register.html',
@@ -59,20 +47,14 @@ def register():
     return jsonify({'status': 'ok'})
 
 
-@app.route('/login', methods=['GET', 'POST'])
-def login():
+@auth.route('/login', methods=['GET', 'POST'])
+def login():  # TODO
     if request.method == 'GET':
         return render_template('login.html', title='Login', hide_navbar=True)
 
 
-@app.route('/home', methods=['GET'])
-def home():
+@auth.route('/home', methods=['GET'])
+def home():  # TODO
     if request.method == 'GET':
         return render_template('home.html',
                                heading='My Dashboard', title='My Dashboard')
-
-
-if __name__ == '__main__':
-    if config.DEBUG:
-        app.config['SEND_FILE_MAX_AGE_DEFAULT'] = 0
-    app.run(use_reloader=True, debug=config.DEBUG)
