@@ -1,7 +1,10 @@
+from flask import abort
 from flask import Blueprint
 from flask import render_template
 from flask import request
+from flask import session
 from flask import jsonify
+from functools import wraps
 
 from helpers import get_db
 
@@ -11,9 +14,23 @@ import bcrypt
 auth = Blueprint('auth', __name__)
 
 
+def loggedin(func):
+    ''' Raise 403 error if user is not logged in '''
+    @wraps(func)
+    def wrapper(*args, **kwargs):
+        if 'user' not in session:
+            abort(403)
+        return func(*args, **kwargs)
+    return wrapper
+
+
 @auth.route('/', methods=['GET'])
-def index():  # TODO
-    return render_template('login.html', title='Login', hide_navbar=True)
+def index():
+    if 'user' not in session:
+        return render_template('login.html', title='Login', hide_navbar=True)
+    else:
+        return render_template('home.html',
+                               heading='My Dashboard', title='My Dashboard')
 
 
 @auth.route('/register', methods=['GET', 'POST'])
@@ -47,7 +64,7 @@ def register():
 
 
 @auth.route('/login', methods=['GET', 'POST'])
-def login():  # TODO
+def login():
     if request.method == 'GET':
         return render_template('login.html', title='Login', hide_navbar=True)
 
@@ -71,12 +88,14 @@ def login():  # TODO
         return jsonify({'status': 'fail',
                         'message': 'Wrong password!'})
     print('Loging in user')
+    session['user'] = email
     conn.close()
     return jsonify({'status': 'ok'})
 
 
 @auth.route('/home', methods=['GET'])
-def home():  # TODO
+@loggedin
+def home():
     if request.method == 'GET':
         return render_template('home.html',
                                heading='My Dashboard', title='My Dashboard')
