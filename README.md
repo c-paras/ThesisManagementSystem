@@ -47,7 +47,7 @@ The server should restart automatically upon changing the project files.
 2. Create a new feature branch (`git checkout -b foobar-feature`)
 3. Commit new changes (`git commit -a -m 'add foobar'`)
 4. Push to the branch (`git push origin foobar-feature`)
-5. Create a new [Pull Request](https://github.com/costaparas/ThesisManagementSystem/pulls>)
+5. Create a new [Pull Request](https://github.com/costaparas/ThesisManagementSystem/pulls)
 6. Merge the Pull Request once it is approved by at least one other contributor
 
 ## License
