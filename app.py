@@ -9,7 +9,6 @@ from db_manager import sqliteManager as db
 app = Flask(__name__)
 
 
-
 @app.teardown_appcontext
 def close_connection(exception):
     db.close(exception)
@@ -35,7 +34,7 @@ def register():
                         'message': 'password is blank'})
 
     db.connect()
-    res = db.select_columns('users',['email'],['email'],[email])
+    res = db.select_columns('users', ['email'], ['email'], [email])
 
     if res is not None:
         db.close()
