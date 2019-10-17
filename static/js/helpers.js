@@ -65,9 +65,9 @@ function delayToast(msg, err) {
  * Show lingering "toast" message upon page reload.
  */
 $(function () {
-  const msg = localStorage.getItem('msg', '');
-  const err = localStorage.getItem('error', '');
-  if (msg !== '' && err !== '') {
+  const msg = localStorage.getItem('msg');
+  const err = localStorage.getItem('error');
+  if (msg !== null && err !== null) {
     flash(msg, eval(err)); /* jshint ignore:line */
   }
   localStorage.removeItem('msg');
