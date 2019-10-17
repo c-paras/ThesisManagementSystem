@@ -73,3 +73,17 @@ $(function () {
   localStorage.removeItem('msg');
   localStorage.removeItem('error');
 });
+
+/*
+ * Enable forms on page to be submitted by pressing the enter/return key.
+ */
+$(function () {
+  $('form').each(function () {
+    $(this).keydown(function(event) {
+      if (event.keyCode === 13) {
+        $(this).find('a:last').click();
+        return false;
+      }
+    });
+  });
+});
