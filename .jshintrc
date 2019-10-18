@@ -1,0 +1,8 @@
+{
+  "indent": 2,
+  "maxerr": 10,
+  "eqeqeq": true,
+  "latedef": true,
+  "trailing": true,
+  "esversion": 6
+}

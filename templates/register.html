@@ -1,39 +1,46 @@
 {% extends "base.html" %}
 
 {% block body %}
-  <div class="container">
-    <h1>Welcome to the register screen!</h1>
-    <div class="row">
-      <form class="col s12" id="registration-form">
-        <div class="row">
-          <div class="input-field col s12">
-            <input id="email" name="email" type="email" class="validate">
-            <label for="email">Email</label>
-            <span class="helper-text" data-error="Invalid email"></span>
-          </div>
+  <h3 class="center teal-text">Register for TMS</h3>
+  <div class="row">
+    <form class="col s8 offset-m2" id="registration-form">
+      <div class="row">
+        <div class="input-field">
+          <i class="material-icons prefix">account_circle</i>
+          <input id="email" name="email" type="email" class="validate" required="" aria-required="true">
+          <label for="email">Email</label>
+          <span class="helper-text" data-error="Invalid email"></span>
         </div>
-        <div class="row">
-          <div class="input-field col s12">
-            <input name="password" id="password" type="password" class="validate" oninput="checkPassword()">
-            <label for="password">Password</label>
-          </div>
+      </div>
+      <div class="row">
+        <div class="input-field">
+          <i class="material-icons prefix">security</i>
+          <input name="password" id="password" type="password" class="validate" oninput="checkPassword()" required="" aria-required="true">
+          <label for="password">Password</label>
+          <span class="helper-text" data-error="Invalid password"></span>
         </div>
-        <div class="row">
-          <div class="input-field col s12">
-            <input id="confirm-password" type="password" oninput="checkPassword()">
-            <label for="password">Confirm Password</label>
-            <span class="helper-text" data-error="Passwords don't match"></span>
-          </div>
+      </div>
+      <div class="row">
+        <div class="input-field">
+          <i class="material-icons prefix">security</i>
+          <input name="confirm-password" id="confirm-password" type="password" oninput="checkPassword()" required="" aria-required="true">
+          <label for="password">Confirm Password</label>
+          <span class="helper-text" data-error="Passwords do not match"></span>
         </div>
-        <div class="row">
-          <div class="input-field col s12">
-            <input placeholder="Registraion Key" name="registration-key" type="text">
-            <label for="registration-key">Registration Key</label>
-          </div>
+      </div>
+      <div class="row">
+        <div class="input-field">
+          <i class="material-icons prefix">vpn_key</i>
+          <input name="registration-key" id="registration-key" type="text" oninput="checkKey()" required="" aria-required="true">
+          <label for="registration-key">Registration Key</label>
         </div>
-        <a class="waves-effect waves-light btn" id="register-btn" onclick="submitRegister()">button</a>
-      </form>
-    </div>
+      </div>
+      <div class="center">
+        <a class="waves-effect waves-light btn" id="register-btn" onclick="submitRegister()">Register
+          <i class="material-icons right">send</i>
+        </a>
+      </div>
+    </form>
   </div>
   <script src="{{ url_for('static', filename='js/register.js') }}"></script>
 {% endblock %}
