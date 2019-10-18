@@ -8,28 +8,38 @@ This system is designed to offer a central platform for managing each step of th
 
 ### Prerequisites
 It is assumed that:
-* Python 3.6.8 or above is installed (<https://www.python.org/downloads/>)
+* [Python 3.6.8](https://www.python.org/downloads/) or above is installed
+* [SQLite 3.22.0](https://www.sqlite.org/download.html) or above is installed
+* [JSHint 2.10.2](https://jshint.com/install/) or above is installed
 
 ### Installation
 
 Run the following commands to initialize the project:
 
 ```sh
+# Install Python requirements
 pip3 install -r requirements.txt
-sh setup.sh
-````
+
+# Set up linters in a UNIX environment
+sh config.sh
+
+# Initialize an empty database
+sqlite3 db/thesis.db < db/schema.sql
+```
 
 ## Usage
 
 Run the Python Flask server with the following command:
 ```sh
-python3 app.py
+python3 server.py
 ```
 Then navigate to <http://localhost:5000>.
+The server should restart automatically upon changing the project files.
 
 ## Project Structure
-* `static/` - CSS and JS files
+* `app/` - Python server blueprints and helpers
 * `db/` - database-related files
+* `static/` - CSS and JS files
 * `templates/` - Jinja2 HTML templates
 
 ## Contributing
@@ -37,7 +47,7 @@ Then navigate to <http://localhost:5000>.
 2. Create a new feature branch (`git checkout -b foobar-feature`)
 3. Commit new changes (`git commit -a -m 'add foobar'`)
 4. Push to the branch (`git push origin foobar-feature`)
-5. Create a new [Pull Request](https://github.com/costaparas/ThesisManagementSystem/pulls>)
+5. Create a new [Pull Request](https://github.com/costaparas/ThesisManagementSystem/pulls)
 6. Merge the Pull Request once it is approved by at least one other contributor
 
 ## License
@@ -47,4 +57,4 @@ This program is free software: you can redistribute it and/or modify it under th
 
 This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
 
-You should have received a copy of the GNU General Public License along with this program. If not, see http://www.gnu.org/licenses/.
+You should have received a copy of the GNU General Public License along with this program. If not, see <http://www.gnu.org/licenses/>.

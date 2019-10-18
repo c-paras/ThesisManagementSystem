@@ -1,44 +1,25 @@
 function submitRegister() {
-    const email = $('#email');
-    if(email.val().indexOf('@') < 0) {
-        alert('Please enter valid email');
-        return;
+  const form = $('#registration-form');
+  if (!formValid(form)) {
+    return;
+  }
+  makeRequest('/register', form, (res) => {
+    if (res.status === 'fail') {
+      flash(res.message, error = true);
+    } else {
+      delayToast('Account created!', false);
+      window.location.href = '/login';
     }
-    const pass = $('#password');
-    const confPass = $('#confirm-password');
-    if(pass.val() !== confPass.val()) {
-        alert('Passwords don\'t match');
-        return;
-    }
-
-    const form = $('#registration-form');
-
-    fetch('/register', {
-        headers: {
-            'Content-Type': 'application/x-www-form-urlencoded',
-            'Accept': 'application/json',
-        },
-        method: 'POST',
-        body: form.serialize()
-    })
-        .then(res => res.json())
-        .then(res => {
-            if(res.status === 'fail') {
-                alert('Error: ' + res.message);
-            } else {
-                alert('Success');
-            }
-        });
+  });
 }
 
 function checkPassword() {
-    const pass = $('#password');
-    const confPass = $('#confirm-password');
-    if(pass.val() === confPass.val()) {
-        confPass.removeClass('invalid');
-        confPass.addClass('valid');
-    } else {
-        confPass.removeClass('valid');
-        confPass.addClass('invalid');
-    }
+  const pass = $('#password');
+  const confPass = $('#confirm-password');
+  markFieldValid(confPass, pass.val() === confPass.val());
+}
+
+function checkKey() {
+  const key = $('#registration-key');
+  markFieldValid(key, key.val() !== '');
 }

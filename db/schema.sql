@@ -45,6 +45,14 @@ CREATE TABLE courses(
 );
 
 
+DROP TABLE IF EXISTS file_types;
+CREATE TABLE file_types(
+    id          INTEGER NOT NULL PRIMARY KEY,
+    name        TEXT NOT NULL,
+    description TEXT
+);
+
+
 DROP TABLE IF EXISTS marking_methods;
 CREATE TABLE marking_methods(
     id          INTEGER NOT NULL PRIMARY KEY,
@@ -113,9 +121,11 @@ CREATE TABLE student_topic(
 
 DROP TABLE IF EXISTS submission_types;
 CREATE TABLE submission_types(
-    id          INTEGER NOT NULL PRIMARY KEY,
-    name        TEXT NOT NULL,
-    description TEXT
+    file_type INTEGER NOT NULL,
+    task      INTEGER NOT NULL,
+    PRIMARY KEY(file_type, task),
+    FOREIGN KEY(file_type) REFERENCES file_types(id),
+    FOREIGN KEY(task) REFERENCES file_types(tasks)
 );
 
 
@@ -144,8 +154,8 @@ CREATE TABLE tasks(
     description     TEXT,
     size_limit      INTEGER DEFAULT 5, -- in MB's --
     visible         INTEGER DEFAULT 1,
-    marking_method  INTEGER NOT NULL,
-    submission_type INTEGER NOT NULL,
+    marking_method  INTEGER DEFAULT 0,
+    submission_type INTEGER DEFAULT 0,
     FOREIGN KEY(marking_method) REFERENCES marking_methods(id),
     FOREIGN KEY(submission_type) REFERENCES submission_types(id),
     FOREIGN KEY(course) REFERENCES courses(id)
@@ -195,19 +205,20 @@ CREATE TABLE topic_areas(
 DROP TABLE IF EXISTS users;
 CREATE TABLE users(
     id           INTEGER NOT NULL PRIMARY KEY,
+    name         TEXT NOT NULL,
     email        TEXT NOT NULL,
     password     TEXT NOT NULL,
-    account_type INTEGER NOT NULL,
+    account_type INTEGER,
     FOREIGN KEY(account_type) REFERENCES account_types(id)
 );
 
 
 DROP TABLE IF EXISTS user_course;
 CREATE TABLE user_course(
-    student INTEGER NOT NULL,
-    course  INTEGER NOT NULL,
-    role    INTEGER NOT NULL,
-    FOREIGN KEY(student) REFERENCES users(id),
+    user   INTEGER NOT NULL,
+    course INTEGER NOT NULL,
+    role   INTEGER,
+    FOREIGN KEY(user) REFERENCES users(id),
     FOREIGN KEY(course) REFERENCES courses(id),
     FOREIGN KEY(role) REFERENCES course_roles(id)
 );
