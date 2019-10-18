@@ -40,9 +40,10 @@ class sqliteManager:
 
         table = 'marking_methods'
         names = ['text submission', 'file submission']
-        sqliteManager.insert_multiple(queries)
         for name in names:
             queries.append((table, [name], ['name']))
+
+        sqliteManager.insert_multiple(queries)
 
     # inserts 1 row in db
     # table = string, all others are lists
