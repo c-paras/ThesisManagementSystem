@@ -37,7 +37,7 @@ Then navigate to <http://localhost:5000>.
 The server should restart automatically upon changing the project files.
 
 ## Project Structure
-* `app/` - Python server blueprints
+* `app/` - Python server blueprints and helpers
 * `db/` - database-related files
 * `static/` - CSS and JS files
 * `templates/` - Jinja2 HTML templates

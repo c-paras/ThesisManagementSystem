@@ -7,8 +7,8 @@ from flask import jsonify
 from functools import wraps
 
 from helpers import error
-from helpers import get_db
 from helpers import get_fields
+from app.db_manager import sqliteManager as db
 
 import re
 import bcrypt
@@ -44,28 +44,33 @@ def register():
     if not re.match(config.EMAIL_FORMAT, email):
         return error(f'Invalid email format!<br>{config.EMAIL_FORMAT_ERROR}')
 
-    conn = get_db()
-    res = conn.execute('SELECT email FROM users WHERE email = ?', [email])
-    if res.fetchone():
-        conn.close()
+    db.connect()
+    res = db.select_columns('users', ['email'], ['email'], [email])
+    if len(res):
+        db.close()
         return error('Email has already been registered!')
 
-    if len(password) < 8 or not any(str.isdigit(c) for c in password) \
-            or not any(str.isalpha(c) for c in password):
-        msg = 'Password must be at least 8 characters long<br>' + \
-              'and contain at least one digit and one letter!'
+    if len(password) < 8:
+        msg = 'Password must be at least 8 characters long!'
+        db.close()
         return error(msg)
+
     if password != confirm:
+        db.close()
         return error('Passwords do not match!')
 
     if key != config.REGISTRATION_KEY:
+        db.close()
         return error('Invalid registration key!')
 
     hashed_pass = bcrypt.hashpw(password.encode('utf-8'), bcrypt.gensalt())
-    conn.execute('INSERT INTO users (email, password) VALUES (?, ?)',
-                 [email, hashed_pass])
-    conn.commit()
-    conn.close()
+    name = email.split('@')[0]
+    db.insert_single(
+        'users',
+        [name, hashed_pass, email],
+        ['name', 'password', 'email']
+    )
+    db.close()
     return jsonify({'status': 'ok'})
 
 
@@ -79,15 +84,17 @@ def login():
     except Exception as e:
         return e.args
 
-    conn = get_db()
-    res = conn.execute('SELECT password FROM users WHERE email = ?', [email])
-    hashed_password = res.fetchone()
-    if not hashed_password:
-        conn.close()
+    db.connect()
+    res = db.select_columns('users', ['password'], ['email'], [email])
+
+    if not len(res):
+        db.close()
         return error('Unknown email!')
+    hashed_password = res[0]
     if not bcrypt.checkpw(password.encode('utf-8'), hashed_password[0]):
+        db.close()
         return error('Incorrect password!')
 
     session['user'] = email
-    conn.close()
+    db.close()
     return jsonify({'status': 'ok'})
