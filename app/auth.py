@@ -53,11 +53,15 @@ def register():
 
     if len(password) < 8:
         msg = 'Password must be at least 8 characters long<br>'
+        db.close()
         return error(msg)
+
     if password != confirm:
+        db.close()
         return error('Passwords do not match!')
 
     if key != config.REGISTRATION_KEY:
+        db.close()
         return error('Invalid registration key!')
 
     hashed_pass = bcrypt.hashpw(password.encode('utf-8'), bcrypt.gensalt())
