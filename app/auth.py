@@ -7,7 +7,6 @@ from flask import jsonify
 from functools import wraps
 
 from helpers import error
-from helpers import get_db
 from helpers import get_fields
 from app.db_manager import sqliteManager as db
 
