@@ -3,6 +3,7 @@ from flask import g
 
 from app.auth import auth
 from app.home import home
+from app.db_manager import sqliteManager as db
 
 import config
 
@@ -16,9 +17,7 @@ for blueprint in [auth, home]:
 
 @app.teardown_appcontext
 def close_connection(exception):
-    db = getattr(g, '_database', None)
-    if db is not None:
-        db.close()
+    db.close(exception)
 
 
 if __name__ == '__main__':
