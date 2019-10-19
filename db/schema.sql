@@ -115,6 +115,7 @@ CREATE TABLE request_statuses(
     description TEXT
 );
 
+
 DROP TABLE IF EXISTS student_topic;
 CREATE TABLE student_topic(
     student  INTEGER NOT NULL,
