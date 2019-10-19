@@ -3,6 +3,7 @@ from flask import g
 
 from app.auth import auth
 from app.home import home
+from app.search import search
 from app.db_manager import sqliteManager as db
 
 import config
@@ -11,7 +12,7 @@ import config
 app = Flask(__name__)
 app.secret_key = config.SECRET_KEY
 
-for blueprint in [auth, home]:
+for blueprint in [auth, home, search]:
     app.register_blueprint(blueprint)
 
 
