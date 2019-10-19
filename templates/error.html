@@ -6,15 +6,23 @@
       <div class="col s4 offset-s4">
         <img class="responsive-img" src="static/img/error.png">
       </div>
-      <div class="col s12">
-        <h1 class="teal-text">{{ error_code }}</h1>
-      </div>
-      <div class="col s12">
-        <h5>{{ error_name }}</h5>
-      </div>
-      <div class="col s12">
-        <p>{{ error_description }}</p>
-      </div>
+      <h1 class="col s12 teal-text">
+        {{ error_code }}
+      </h1>
+      <h5 class="col s12 ">
+        {{ error_name }}
+      </h5>
+      <p class="col s12 ">
+        {{ error_description }}
+      </p>
+      {% if hide_navbar %}
+        <p class="col s12 ">
+          <a href="/">
+            Click here to log in
+          </a>
+        </p>
+      {% endif %}
+
     </div>
   </div>
 {% endblock %}

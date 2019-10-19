@@ -14,4 +14,5 @@ def default_error_handler(e):
                            title="Error "+str(e.code),
                            error_code=str(e.code),
                            error_name=str(e.name),
-                           error_description=str(e.description))
+                           error_description=str(e.description),
+                           hide_navbar=bool('user' not in session))
