@@ -64,13 +64,15 @@ CREATE TABLE marking_methods(
 DROP TABLE IF EXISTS marks;
 CREATE TABLE marks(
     criteria INTEGER NOT NULL,
-    mark     INTEGER,
-    student  INTEGER NOT NULL,
-    marker   INTEGER NOT NULL,
+    mark      INTEGER,
+    student   INTEGER NOT NULL,
+    marker    INTEGER NOT NULL,
+    feedback  TEXT,
+    file_path TEXT,
     PRIMARY KEY(criteria, student, marker),
     FOREIGN KEY(criteria) REFERENCES task_criteria(id),
-    FOREIGN KEY(student) REFERENCES user(id),
-    FOREIGN KEY(marker) REFERENCES user(id)
+    FOREIGN KEY(student) REFERENCES users(id),
+    FOREIGN KEY(marker) REFERENCES users(id)
 );
 
 
@@ -78,7 +80,6 @@ DROP TABLE IF EXISTS material_attachments;
 CREATE TABLE material_attachments(
     id       INTEGER NOT NULL PRIMARY KEY,
     material INTEGER NOT NULL,
-    name     TEXT NOT NULL,
     path     TEXT NOT NULL,
     FOREIGN KEY(material) REFERENCES materials(id)
 );
@@ -113,9 +114,9 @@ CREATE TABLE student_topic(
     topic    INTEGER NOT NULL,
     assessor INTEGER,
     PRIMARY KEY(student, topic),
-    FOREIGN KEY(student) REFERENCES user(id),
+    FOREIGN KEY(student) REFERENCES users(id),
     FOREIGN KEY(topic) REFERENCES topics(id),
-    FOREIGN KEY(assessor) REFERENCES user(id)
+    FOREIGN KEY(assessor) REFERENCES users(id)
 );
 
 
@@ -140,7 +141,7 @@ CREATE TABLE submissions(
     text    TEXT,
     date    INTEGER NOT NULL,
     PRIMARY KEY(student, task),
-    FOREIGN KEY(student) REFERENCES user(id),
+    FOREIGN KEY(student) REFERENCES users(id),
     FOREIGN KEY(task) REFERENCES tasks(id)
 );
 
@@ -156,6 +157,7 @@ CREATE TABLE tasks(
     visible         INTEGER DEFAULT 1,
     marking_method  INTEGER DEFAULT 0,
     submission_type INTEGER DEFAULT 0,
+    word_limit      INTEGER DEFAULT 1000,
     FOREIGN KEY(marking_method) REFERENCES marking_methods(id),
     FOREIGN KEY(submission_type) REFERENCES submission_types(id),
     FOREIGN KEY(course) REFERENCES courses(id)
@@ -166,7 +168,6 @@ DROP TABLE IF EXISTS task_attachments;
 CREATE TABLE task_attachments(
     id   INTEGER NOT NULL PRIMARY KEY,
     task INTEGER NOT NULL,
-    name TEXT NOT NULL,
     path TEXT NOT NULL,
     FOREIGN KEY(task) REFERENCES tasks(id)
 );
@@ -185,11 +186,12 @@ CREATE TABLE task_criteria(
 
 DROP TABLE IF EXISTS topics;
 CREATE TABLE topics(
-    id         INTEGER NOT NULL PRIMARY KEY,
-    name       TEXT NOT NULL,
-    supervisor INTEGER NOT NULL,
-    visible    INTEGER DEFAULT 1,
-    FOREIGN KEY(supervisor) REFERENCES user(id)
+    id          INTEGER NOT NULL PRIMARY KEY,
+    name        TEXT NOT NULL,
+    supervisor  INTEGER NOT NULL,
+    visible     INTEGER DEFAULT 1,
+    description TEXT NOT NULL,
+    FOREIGN KEY(supervisor) REFERENCES users(id)
 );
 
 
