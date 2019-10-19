@@ -87,7 +87,7 @@ CREATE TABLE material_attachments(
 DROP TABLE IF EXISTS materials;
 CREATE TABLE materials(
     id          INTEGER NOT NULL PRIMARY KEY,
-    session      INTEGER NOT NULL,
+    session     INTEGER NOT NULL,
     name        TEXT NOT NULL,
     visible     INTEGER DEFAULT 1,
     description TEXT,
@@ -169,7 +169,7 @@ DROP TABLE IF EXISTS tasks;
 CREATE TABLE tasks(
     id              INTEGER NOT NULL PRIMARY KEY,
     name            TEXT NOT NULL,
-    session          INTEGER NOT NULL,
+    session         INTEGER NOT NULL,
     deadline        INTEGER NOT NULL,
     description     TEXT,
     size_limit      INTEGER DEFAULT 5, -- in MB's --
@@ -251,9 +251,9 @@ CREATE TABLE users(
 
 DROP TABLE IF EXISTS user_session;
 CREATE TABLE user_session(
-    user   INTEGER NOT NULL,
+    user    INTEGER NOT NULL,
     session INTEGER NOT NULL,
-    role   INTEGER,
+    role    INTEGER,
     FOREIGN KEY(user) REFERENCES users(id),
     FOREIGN KEY(session) REFERENCES sessions(id),
     FOREIGN KEY(role) REFERENCES course_roles(id)
