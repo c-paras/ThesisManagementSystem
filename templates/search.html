@@ -1,6 +1,23 @@
 {% extends "base.html" %}
 
 {% block body %}
-  <p>Search soon!</p>
+  <div class="row">
+    <form class="col s8 offset-m2" id="search-form">
+      <div class="row">
+        <div class="input-field">
+          <i class="material-icons prefix">search</i>
+          <input id="search-input" name="search" type="search" required="" aria-required="true">
+          <label for="search">Search</label>
+          <span class="helper-text" data-error="Search Invalid"></span>
+        </div>
+      </div>
+      <div class="center">
+            <a class="waves-effect waves-light btn" id="search-btn" onclick="searchResults()">Search
+              <i class="material-icons right">send</i>
+            </a>
+      </div>
+    </form>
+  </div>
+  <p id="para"></p>
   <script src="{{ url_for('static', filename='js/Search.js') }}"></script>
 {% endblock %}
