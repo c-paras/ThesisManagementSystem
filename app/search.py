@@ -6,6 +6,7 @@ from app.auth import loggedin
 
 search = Blueprint('search', __name__)
 
+
 @search.route('/search', methods=['GET', 'POST'])
 @loggedin
 def searchTopic():
