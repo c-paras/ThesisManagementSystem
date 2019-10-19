@@ -214,8 +214,8 @@ CREATE TABLE topic_areas(
 );
 
 
-DROP TABLE IF EXISTS topic_request;
-CREATE TABLE topic_request(
+DROP TABLE IF EXISTS topic_requests;
+CREATE TABLE topic_requests(
     student        INTEGER NOT NULL,
     topic          INTEGER NOT NULL,
     status         INTEGER NOT NULL,
