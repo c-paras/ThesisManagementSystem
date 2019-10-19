@@ -108,6 +108,28 @@ CREATE TABLE prerequisites(
 );
 
 
+DROP TABLE IF EXISTS request_topic;
+CREATE TABLE request_topic(
+    student        INTEGER NOT NULL,
+    topic          INTEGER NOT NULL,
+    status         INTEGER NOT NULL,
+    date_created   INTEGER NOT NULL,
+    text           TEXT NOT NULL,
+    date_responded INTEGER,
+    PRIMARY KEY(student, topic),
+    FOREIGN KEY(student) REFERENCES users(id),
+    FOREIGN KEY(topic) REFERENCES topics(id),
+    FOREIGN KEY(status) REFERENCES request_statuses(id)
+);
+
+
+DROP TABLE IF EXISTS request_statuses;
+CREATE TABLE request_statuses(
+    id          INTEGER NOT NULL PRIMARY KEY,
+    name        TEXT NOT NULL,
+    description TEXT
+);
+
 DROP TABLE IF EXISTS student_topic;
 CREATE TABLE student_topic(
     student  INTEGER NOT NULL,
@@ -134,15 +156,17 @@ CREATE TABLE submission_types(
 -- but seems fine for thesis assessments
 DROP TABLE IF EXISTS submissions;
 CREATE TABLE submissions(
-    student INTEGER NOT NULL,
-    task    INTEGER NOT NULL,
-    name    TEXT NOT NULL,
-    path    TEXT,
-    text    TEXT,
-    date    INTEGER NOT NULL,
+    student       INTEGER NOT NULL,
+    task          INTEGER NOT NULL,
+    name          TEXT NOT NULL,
+    path          TEXT,
+    text          TEXT,
+    date_modified INTEGER NOT NULL,
+    status        INTEGER NOT NULL,
     PRIMARY KEY(student, task),
     FOREIGN KEY(student) REFERENCES users(id),
-    FOREIGN KEY(task) REFERENCES tasks(id)
+    FOREIGN KEY(task) REFERENCES tasks(id),
+    FOREIGN KEY(status) REFERENCES request_statuses(id)
 );
 
 

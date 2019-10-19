@@ -43,6 +43,14 @@ class sqliteManager:
         for name in names:
             queries.append((table, [name], ['name']))
 
+        table = 'request_statuses'
+        names = [
+            'pending', 'approved', 'rejected',
+            'marked', 'pending mark', 'cancelled'
+        ]
+        for name in names:
+            queries.append((table, [name], ['name']))
+
         sqliteManager.insert_multiple(queries)
 
     # inserts 1 row in db
