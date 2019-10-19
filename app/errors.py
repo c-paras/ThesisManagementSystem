@@ -14,7 +14,7 @@ errors = Blueprint('errors', __name__)
 @errors.app_errorhandler(501)
 def default_error_handler(e):
     return render_template("error.html",
-                           title="Error "+str(e.code),
+                           title=str(e.code)+" Error",
                            error_code=str(e.code),
                            error_name=str(e.name),
                            error_description=str(e.description),
