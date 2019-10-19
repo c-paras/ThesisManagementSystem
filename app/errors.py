@@ -9,6 +9,9 @@ errors = Blueprint('errors', __name__)
 @errors.app_errorhandler(401)
 @errors.app_errorhandler(403)
 @errors.app_errorhandler(404)
+@errors.app_errorhandler(405)
+@errors.app_errorhandler(500)
+@errors.app_errorhandler(501)
 def default_error_handler(e):
     return render_template("error.html",
                            title="Error "+str(e.code),
