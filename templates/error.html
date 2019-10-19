@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+
+{% block body %}
+  <div class="valign-wrapper" style="height:100%;">
+    <div class="row center-align">
+      <div class="col s4 offset-s4">
+        <img class="responsive-img" src="{{ url_for('static', filename='img/error.png') }}">
+      </div>
+      <h1 class="col s12 teal-text">
+        {{ error_code }} Error
+      </h1>
+      <h5 class="col s12 ">
+        {{ error_name }}
+      </h5>
+      <p class="col s8 offset-s2 ">
+        {{ error_description }}
+      </p>
+      {% if hide_navbar %}
+        <p class="col s12 ">
+          <a href="/">
+            Click here to log in
+          </a>
+        </p>
+      {% endif %}
+
+    </div>
+  </div>
+{% endblock %}
