@@ -108,21 +108,6 @@ CREATE TABLE prerequisites(
 );
 
 
-DROP TABLE IF EXISTS request_topic;
-CREATE TABLE request_topic(
-    student        INTEGER NOT NULL,
-    topic          INTEGER NOT NULL,
-    status         INTEGER NOT NULL,
-    date_created   INTEGER NOT NULL,
-    text           TEXT NOT NULL,
-    date_responded INTEGER,
-    PRIMARY KEY(student, topic),
-    FOREIGN KEY(student) REFERENCES users(id),
-    FOREIGN KEY(topic) REFERENCES topics(id),
-    FOREIGN KEY(status) REFERENCES request_statuses(id)
-);
-
-
 DROP TABLE IF EXISTS request_statuses;
 CREATE TABLE request_statuses(
     id          INTEGER NOT NULL PRIMARY KEY,
@@ -225,6 +210,21 @@ CREATE TABLE topic_areas(
     topic INTEGER NOT NULL,
     name  TEXT NOT NULL,
     FOREIGN KEY(topic) REFERENCES topics(id)
+);
+
+
+DROP TABLE IF EXISTS topic_request;
+CREATE TABLE topic_request(
+    student        INTEGER NOT NULL,
+    topic          INTEGER NOT NULL,
+    status         INTEGER NOT NULL,
+    date_created   INTEGER NOT NULL,
+    text           TEXT NOT NULL,
+    date_responded INTEGER,
+    PRIMARY KEY(student, topic),
+    FOREIGN KEY(student) REFERENCES users(id),
+    FOREIGN KEY(topic) REFERENCES topics(id),
+    FOREIGN KEY(status) REFERENCES request_statuses(id)
 );
 
 
