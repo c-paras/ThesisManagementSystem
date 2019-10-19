@@ -17,13 +17,13 @@ CREATE TABLE allowed_files(
 
 DROP TABLE IF EXISTS announcements;
 CREATE TABLE announcements(
-    id     INTEGER NOT NULL PRIMARY KEY,
-    topic  INTEGER,
-    course INTEGER,
-    text   TEXT NOT NULL,
-    CHECK(topic is NOT NULL or course is NOT NULL),
+    id      INTEGER NOT NULL PRIMARY KEY,
+    topic   INTEGER,
+    session INTEGER,
+    text    TEXT NOT NULL,
+    CHECK(topic is NOT NULL or session is NOT NULL),
     FOREIGN KEY(topic) REFERENCES topics(id),
-    FOREIGN KEY(course) REFERENCES courses(id)
+    FOREIGN KEY(session) REFERENCES sessions(id)
 );
 
 
@@ -37,11 +37,10 @@ CREATE TABLE course_roles(
 
 DROP TABLE IF EXISTS courses;
 CREATE TABLE courses(
-    id         INTEGER NOT NULL PRIMARY KEY,
-    code       TEXT NOT NULL,
-    name       TEXT NOT NULL,
-    start_date INTEGER,
-    end_date   INTEGER
+    id          INTEGER NOT NULL PRIMARY KEY,
+    code        TEXT NOT NULL,
+    name        TEXT NOT NULL,
+    description TEXT
 );
 
 
@@ -88,11 +87,11 @@ CREATE TABLE material_attachments(
 DROP TABLE IF EXISTS materials;
 CREATE TABLE materials(
     id          INTEGER NOT NULL PRIMARY KEY,
-    course      INTEGER NOT NULL,
+    session      INTEGER NOT NULL,
     name        TEXT NOT NULL,
     visible     INTEGER DEFAULT 1,
     description TEXT,
-    FOREIGN KEY(course) REFERENCES courses(id)
+    FOREIGN KEY(session) REFERENCES sessions(id)
 );
 
 
@@ -113,6 +112,16 @@ CREATE TABLE request_statuses(
     id          INTEGER NOT NULL PRIMARY KEY,
     name        TEXT NOT NULL,
     description TEXT
+);
+
+
+DROP TABLE IF EXISTS sessions;
+CREATE TABLE sessions(
+    id         INTEGER NOT NULL PRIMARY KEY,
+    start_date INTEGER,
+    end_date   INTEGER,
+    course     INTEGER,
+    FOREIGN KEY(course) REFERENCES courses(id)
 );
 
 
@@ -160,7 +169,7 @@ DROP TABLE IF EXISTS tasks;
 CREATE TABLE tasks(
     id              INTEGER NOT NULL PRIMARY KEY,
     name            TEXT NOT NULL,
-    course          INTEGER NOT NULL,
+    session          INTEGER NOT NULL,
     deadline        INTEGER NOT NULL,
     description     TEXT,
     size_limit      INTEGER DEFAULT 5, -- in MB's --
@@ -170,7 +179,7 @@ CREATE TABLE tasks(
     word_limit      INTEGER DEFAULT 1000,
     FOREIGN KEY(marking_method) REFERENCES marking_methods(id),
     FOREIGN KEY(submission_type) REFERENCES submission_types(id),
-    FOREIGN KEY(course) REFERENCES courses(id)
+    FOREIGN KEY(session) REFERENCES sessions(id)
 );
 
 
@@ -240,12 +249,12 @@ CREATE TABLE users(
 );
 
 
-DROP TABLE IF EXISTS user_course;
-CREATE TABLE user_course(
+DROP TABLE IF EXISTS user_session;
+CREATE TABLE user_session(
     user   INTEGER NOT NULL,
-    course INTEGER NOT NULL,
+    session INTEGER NOT NULL,
     role   INTEGER,
     FOREIGN KEY(user) REFERENCES users(id),
-    FOREIGN KEY(course) REFERENCES courses(id),
+    FOREIGN KEY(session) REFERENCES sessions(id),
     FOREIGN KEY(role) REFERENCES course_roles(id)
 );
