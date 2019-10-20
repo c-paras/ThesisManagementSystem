@@ -19,9 +19,15 @@ def searchTopic():
         return render_template('search.html',
                                heading='Search Topics', title='Search Topics')
 
-    searchTerms = request.form
-    
+    searchTopic = list(dict.fromkeys(request.form.getlist('tagsTopic')))
+    searchSupervisor = list(dict.fromkeys(request.form.getlist('tagsSupervisor')))
+    searchTopic = list(filter(None, searchTopic))
+    searchSupervisor = list(filter(None, searchSupervisor))
+    searchTerms = request.form.get('search')
+
     print("search terms are")
+    print(searchTopic)
+    print(searchSupervisor)
     print(searchTerms)
 
     db.connect()
@@ -34,4 +40,8 @@ def searchTopic():
         supervisor.append(db.select_columns('users', ['name'],
                                             ['id'], [topic[1]])[0][0])
     print(json.dumps(supervisor))
+
+    topicAreas = db.select_columns('topic_areas',
+                            ['name', 'topic'], None, None)
+    print(topicAreas)
     return jsonify({'status': 'ok', 'topics': res, 'supervisor': supervisor})

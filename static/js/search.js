@@ -60,25 +60,22 @@ function makeCard(title, description) {
 
 function searchResults() {
     const form = $('#search-form');
-    console.log(JSON.stringify(M.Chips.getInstance($('.chips')).chipsData))
-    console.log(form)
     if (!formValid(form)) {
         return;
     }
 
-    var tagData = M.Chips.getInstance($('#supervisor')).chipsData
+    var tagData = M.Chips.getInstance($('#supervisor')).chipsData;
     if (tagData.length > 0) {
-        for (var i = 0; i < tagData.length; i++) {
-            console.log("cool")
-            $('form').append('<input type="hidden" name="tags" value="' + tagData[i].tag + '" />');
+        for (let i = 0; i < tagData.length; i++) {
+            console.log(tagData[i].tag)
+            $('form').append('<input type="hidden" name="tagsSupervisor" value="' + tagData[i].tag + '" />');
         }
     }
-
-    var tagData = M.Chips.getInstance($('#topics')).chipsData
+    tagData = M.Chips.getInstance($('#topics')).chipsData;
     if (tagData.length > 0) {
-        for (var i = 0; i < tagData.length; i++) {
-            console.log("cool")
-            $('form').append('<input type="hidden" name="tags" value="' + tagData[i].tag + '" />');
+        for (let i = 0; i < tagData.length; i++) {
+            console.log(tagData[i].tag)
+            $('form').append('<input type="hidden" name="tagsTopic" value="' + tagData[i].tag + '" />');
         }
     }
 
@@ -92,11 +89,15 @@ function searchResults() {
             var cards = "";
             console.log(res.topics);
             for (i=0; i < res.topics.length; i++) {
-                console.log("yello");
                 cards = cards + makeCard(res.topics[i][0], res.topics[i][2]);
              }
-
-          document.getElementById("results").innerHTML = cards;
+            
+            // for (let i = 0; i < $('form').length; i++) {
+            //     console.log(i)
+            //     $('form')[i].reset()
+            // }
+            $('form :input').val('');
+            document.getElementById("results").innerHTML = cards;
         }
     });
 }
