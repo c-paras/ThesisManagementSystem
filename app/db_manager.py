@@ -143,4 +143,3 @@ class sqliteManager:
         else:
             res = sqliteManager.conn.execute(f'SELECT {columns} FROM {table}')
         return res.fetchall()
-        
