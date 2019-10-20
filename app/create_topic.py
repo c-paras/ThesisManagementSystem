@@ -11,9 +11,8 @@ create_topic = Blueprint('create_topic', __name__)
 
 @create_topic.route('/create_topic', methods=['GET', 'POST'])
 @loggedin
-def create_topic():
+def create():
     return render_template(
         'create_topic.html',
-        heading='My Dashboard',
-        title='Create_topic',
-        hide_navbar=True)
+        heading='Thesis Management System - Create Topic',
+        title='Create_topic')

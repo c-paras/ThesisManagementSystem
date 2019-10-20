@@ -1,5 +1,21 @@
 {% extends "base.html" %}
 
 {% block body %}
-  <p>Coming soon!</p>
+  <div class="row">
+    <form class="col s12">
+      <div class="row">
+        <div class="input-field col s8">
+          <input id="topic" type="text" class="validate" required="" aria-required="true">
+          <label for="topic">Topic</label>
+          <span class="helper-text" data-error="You should have a topic name"></span>
+        </div>
+      </div>
+      <div class="row">
+        <div class="chips">
+          <input class="custom-class">
+        </div>
+      </div>
+    </form>
+  </div>
+  <script src="{{ url_for('static', filename='js/create_topic.js') }}"></script>
 {% endblock %}
