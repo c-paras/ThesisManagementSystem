@@ -61,21 +61,20 @@ function makeCard(title, description) {
 function searchResults() {
     const form = $('#search-form');
     if (!formValid(form)) {
+        console.log("not valid")
         return;
     }
 
     var tagData = M.Chips.getInstance($('#supervisor')).chipsData;
     if (tagData.length > 0) {
         for (let i = 0; i < tagData.length; i++) {
-            console.log(tagData[i].tag)
-            $('form').append('<input type="hidden" name="tagsSupervisor" value="' + tagData[i].tag + '" />');
+            $('form').append('<input type="hidden" name="tagsSupervisor" id="tagsSupervisor" value="' + tagData[i].tag + '" />');
         }
     }
     tagData = M.Chips.getInstance($('#topics')).chipsData;
     if (tagData.length > 0) {
         for (let i = 0; i < tagData.length; i++) {
-            console.log(tagData[i].tag)
-            $('form').append('<input type="hidden" name="tagsTopic" value="' + tagData[i].tag + '" />');
+            $('form').append('<input type="hidden" name="tagsTopic" id="tagsTopic" value="' + tagData[i].tag + '" />');
         }
     }
 
@@ -89,14 +88,21 @@ function searchResults() {
             var cards = "";
             console.log(res.topics);
             for (i=0; i < res.topics.length; i++) {
-                cards = cards + makeCard(res.topics[i][0], res.topics[i][2]);
+                cards = cards + makeCard(res.topics[i][1], res.topics[i][3]);
              }
             
             // for (let i = 0; i < $('form').length; i++) {
             //     console.log(i)
             //     $('form')[i].reset()
             // }
-            $('form :input').val('');
+            $("[id='tagsTopic']").each((function() {
+              $(this).val('')
+            }))
+
+            $("[id='tagsSupervisor']").each((function() {
+              $(this).val('')
+            }))
+            
             document.getElementById("results").innerHTML = cards;
         }
     });
