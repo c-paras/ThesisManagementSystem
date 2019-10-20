@@ -84,19 +84,22 @@
       src="{{ url_for('static', filename='js/helpers.js') }}"
     ></script>
 
-    <script type="text/javascript">
-      /* Activate navbar dropdown */
-      $(document).ready(function () {
-        $('.dropdown-trigger').dropdown({ hover: true })
-      })
-    </script>
+    {% if not hide_navbar %}
+      <script type="text/javascript">
+        /* Activate navbar dropdown */
+        $(document).ready(function () {
+          $('.dropdown-trigger').dropdown({ hover: true })
+        })
+      </script>
+    {% endif %}
 
     <!-- Include page-specific JavaScript automatically -->
     {% set js_file = 'js/' ~ self._TemplateReference__context.name|replace('html', 'js') %}
+    {% set js_include = url_for('static', filename=js_file) %}
     {# The convention is for the JavaScript file to have the same prefix as the HTML template #}
     {# If additional JavaScript files are needed, they must be manually included in the template itself #}
-    {% if js_file|file_exists %}
-      <script type="text/javascript" src="{{ url_for('static', filename=js_file) }}"></script>
+    {% if js_include[1:]|file_exists %}
+      <script type="text/javascript" src="{{ js_include }}"></script>
     {% endif %}
   </body>
 </html>
