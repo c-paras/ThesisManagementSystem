@@ -4,6 +4,7 @@ from flask import g
 from app.auth import auth
 from app.home import home
 from app.errors import errors
+from app.create_topic import create_topic
 from app.db_manager import sqliteManager as db
 
 import config
@@ -12,7 +13,7 @@ import config
 app = Flask(__name__)
 app.secret_key = config.SECRET_KEY
 
-for blueprint in [auth, home, errors]:
+for blueprint in [auth, home, errors, create_topic]:
     app.register_blueprint(blueprint)
 
 
