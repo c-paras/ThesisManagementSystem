@@ -13,4 +13,4 @@ search = Blueprint('search', __name__)
 def searchTopic():
     if request.method == 'GET':
         return render_template('search.html',
-                            heading='Search Topics', title='Search Topics')
+                               heading='Search Topics', title='Search Topics')
