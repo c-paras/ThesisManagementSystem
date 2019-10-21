@@ -22,9 +22,9 @@ def index():
 def dashboard():
     is_student = session['acc_type'] == 'student'
     if(is_student):
-        return studentDashboard()
+        return student_dashboard()
     else:
-        return staffDashboard()
+        return staff_dashboard()
 
 
 def student_dashboard():
