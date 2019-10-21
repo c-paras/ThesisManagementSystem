@@ -1,21 +1,42 @@
 {% extends "base.html" %}
 
 {% block body %}
+
   <div class="row">
-    <form class="col s12">
+    <form class="col s12" id="create_topic-form">
       <div class="row">
-        <div class="input-field col s8">
-          <input id="topic" type="text" class="validate" required="" aria-required="true">
+        <div class="input-field s8">
+          <input id="topic" name="topic" type="text" class="validate" required="" aria-required="true">
           <label for="topic">Topic</label>
-          <span class="helper-text" data-error="You should have a topic name"></span>
+          <span class="helper-text" data-error="You should enter a topic"></span>
         </div>
       </div>
       <div class="row">
-        <div class="chips">
-          <input class="custom-class">
+        <div class="input-field s6">
+          <input id="areas" name="areas" type="text" class="validate">
+          <label for="areas">Topic Areas</label>
         </div>
+      </div>
+      <div class="row">
+        <div class="input-field s6">
+          <input id="prereq" name="prereq" type="text" class="validate">
+          <label for="prereq">Prerequisite</label>
+        </div>
+      </div>
+      <div class="row">
+        <div class="input-field col s8">
+          <textarea id="details" name="details" class="materialize-textarea"></textarea>
+          <label for="details">Topic Details</label>
+        </div>
+      </div>
+      <div class="right">
+        <a class="waves-effect waves-light btn" id="register-btn" onclick="submitCreate()">Create
+          <i class="material-icons right">send</i>
+        </a>
       </div>
     </form>
   </div>
   <script src="{{ url_for('static', filename='js/create_topic.js') }}"></script>
+
+
 {% endblock %}

@@ -1,25 +1,17 @@
-$('.chips').chips();
-$('.chips-initial').chips({
-  data: [{
-    tag: 'Apple',
-  }, {
-    tag: 'Microsoft',
-  }, {
-    tag: 'Google',
-  }],
-});
-$('.chips-placeholder').chips({
-  placeholder: 'Enter a tag',
-  secondaryPlaceholder: '+Tag',
-});
-$('.chips-autocomplete').chips({
-  autocompleteOptions: {
-    data: {
-      'Apple': null,
-      'Microsoft': null,
-      'Google': null
-    },
-    limit: Infinity,
-    minLength: 1
+function submitCreate() {
+  const form = $('#create_topic-form');
+  console.log(form);
+  if (!formValid(form)) {
+    return;
   }
-});
+
+  makeRequest('/create_topic', form, (res) => {
+    if (res.status === 'fail') {
+      flash(res.message, error = true);
+    } else {
+      delayToast('Topic created!', false);
+      window.location.href = '/home';
+    }
+  });
+}
+
