@@ -20,18 +20,18 @@ def index():
 @home.route('/dashboard', methods=['GET'])
 @loggedin
 def dashboard():
-    isStudent = session['accType'] == 'student'
-    if(isStudent):
+    is_student = session['acc_type'] == 'student'
+    if(is_student):
         return studentDashboard()
     else:
         return staffDashboard()
 
 
-def studentDashboard():
+def student_dashboard():
     return render_template('home.html',
                            heading='My Dashboard', title='My Dashboard')
 
 
-def staffDashboard():
+def staff_dashboard():
     return render_template('home.html',
                            heading='My Dashboard', title='My Dashboard')

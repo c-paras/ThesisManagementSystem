@@ -67,11 +67,14 @@ def register():
     name = email.split('@')[0]
 
     # get the id for a student account
-    accType = db.select_columns('account_types', ['id'], ['name'], ['student'])
+    acc_type = db.select_columns('account_types',
+                                 ['id'],
+                                 ['name'],
+                                 ['student'])
 
     db.insert_single(
         'users',
-        [name, hashed_pass, email, accType[0][0]],
+        [name, hashed_pass, email, acc_type[0][0]],
         ['name', 'password', 'email', 'account_type']
     )
     db.close()
@@ -103,12 +106,12 @@ def login():
         return error('Incorrect password!')
 
     # get the current user's account type
-    accType = db.select_columns('account_types',
-                                ['name'],
-                                ['id'],
-                                [res[0][1]])[0][0]
+    acc_type = db.select_columns('account_types',
+                                 ['name'],
+                                 ['id'],
+                                 [res[0][1]])[0][0]
 
     session['user'] = email
-    session['accType'] = accType
+    session['acc_type'] = acc_type
     db.close()
     return jsonify({'status': 'ok'})
