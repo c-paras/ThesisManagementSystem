@@ -18,19 +18,19 @@ def gen_users():
     query = []
     students = []
     for i in range(1, 100):
-        zid = str(1000000 + i)
+        zid = 'z{}'.format(str(1000000 + i))
         students.append(zid)
         query.append(('users',
-                      [zid, zid + '@unsw.edu.au',
+                      [zid, f'{zid}@unsw.edu.au',
                        password, types['student']],
                       ['name', 'email', 'password', 'account_type']))
 
     supervisors = []
     for i in range(1, 10):
-        zid = str(8000000 + i)
+        zid = 'z{}'.format(str(8000000 + i))
         supervisors.append(zid)
         query.append(('users',
-                      [zid, zid + '@unsw.edu.au',
+                      [zid, f'{zid}@unsw.edu.au',
                        password, types['supervisor']],
                       ['name', 'email', 'password', 'account_type']))
     db.insert_multiple(query)
@@ -63,7 +63,6 @@ def create_topic(name, description, supervisor, areas):
 def gen_topics(students, supervisors):
     with open('db/topics.json') as f:
         topics = json.load(f)
-        random.seed(42)
         query = []
         for t in topics:
             supervisor = supervisors[random.randrange(0, len(supervisors))]
@@ -77,6 +76,7 @@ if __name__ == '__main__':
     for tbl in ['users', 'courses', 'topics', 'topic_areas']:
         db.conn.execute(f'DELETE FROM {tbl}')
         db.conn.commit()
+    random.seed(42)
     print('Generating users...')
     students, supervisors = gen_users()
 
