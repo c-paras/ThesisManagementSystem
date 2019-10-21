@@ -29,8 +29,7 @@ def dashboard():
 
 def studentDashboard():
     return render_template('home.html',
-                           heading='My Student Dashboard',
-                           title='My Student Dashboard')
+                           heading='My Dashboard', title='My Dashboard')
 
 
 def staffDashboard():
