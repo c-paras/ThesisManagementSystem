@@ -103,8 +103,7 @@
         "description": "High Resolution Computer Tomography (HRCT) has emerged as an important tool for detection and characterization of lung diseases. A computerized diagnosis system that can accurately quantify",
         "areas": [
             "Artificial Intelligence",
-            "Computer Vision",
-            ""
+            "Computer Vision"
         ]
     },
     {
@@ -207,9 +206,7 @@
         "name": "Rational Bezier Patch Modelling of Anatomical Surfaces",
         "description": "This projects seeks to develop an automated technique for smooth meshing of surfaces of tissues and organs using rational Bezier patches. Such meshing is required for finite element modeling and visualization applications currently being developed within GSBmE. 2D image slices from the Visible Human Project will be utilized to manually enter points lying on the surface of desired organs, generating a user-defined cloud of data points. This data will then be fitted to a 3D surface consisting of rational Bezier patches.",
         "areas": [
-            "Modelling",
-            "",
-            ""
+            "Modelling"
         ]
     },
     {
@@ -226,17 +223,14 @@
         "description": "One of the key services that an OS provides is a managing access to",
         "areas": [
             "Embedded Systems",
-            "Operating Systems",
-            ""
+            "Operating Systems"
         ]
     },
     {
         "name": "Towards Personal Process Management",
         "description": "",
         "areas": [
-            "Software Engineering",
-            "",
-            ""
+            "Software Engineering"
         ]
     },
     {
@@ -279,9 +273,7 @@
         "name": "Frequency estimation in colored noise",
         "description": "Applications of matrix methods such as singular value decomposition and eigenvalue decomposition to frequency estimation using robust differential operators",
         "areas": [
-            "signal processing",
-            "",
-            ""
+            "signal processing"
         ]
     },
     {
@@ -306,9 +298,7 @@
         "name": "On customization of Embedded Processor Systems",
         "description": "Embedded systems are becoming ubiquitous, cheaper, more powerful, and increasingly ever present in people's life. Meeting the stringent design requirements (high performance, small area, low power consumption and additional high security) has been a great challenge in embedded system design. Since embedded systems usually execute a single application or a class of applications, customization can be applied to optimize the design at low expense. This project investigates some customization techniques for embedded processor systems.",
         "areas": [
-            "Embedded Systems",
-            "",
-            ""
+            "Embedded Systems"
         ]
     },
     {
@@ -334,8 +324,7 @@
         "description": "",
         "areas": [
             "Formal Methods",
-            "Operating Systems",
-            ""
+            "Operating Systems"
         ]
     },
     {
@@ -361,8 +350,7 @@
         "description": "This project aims to propose an Application Specific Instruction Set Processor (ASIP)architecture to implement Synthetic Aperture Radar (SAR) processing targeted to FPGA devices. Project will investigate and propose an instruction-set dedicated for SAR applications along with the design and realisation of suitable control and data-path architectures.",
         "areas": [
             "Computer architecuture",
-            "Embedded Systems",
-            ""
+            "Embedded Systems"
         ]
     },
     {
@@ -370,8 +358,7 @@
         "description": "This project is concerned with the design, verification and FPGA implementation of a configurable FFT processor design for SAR application. VHDL model of the configurable FFT processor will be undertaken, along with logic-level simulations for verification and synthesis of the design targeting Xilinx FPGAs.",
         "areas": [
             "Embedded Systems",
-            "Configurable system",
-            ""
+            "Configurable system"
         ]
     },
     {
@@ -379,8 +366,7 @@
         "description": "seL4 is a formally verified microkernel for building secure systems.",
         "areas": [
             "Operating Systems",
-            "Security",
-            ""
+            "Security"
         ]
     },
     {
@@ -388,8 +374,7 @@
         "description": "Qubes is a new operating system architecture for developing secure desktop systems.",
         "areas": [
             "Operating Systems",
-            "Security",
-            ""
+            "Security"
         ]
     },
     {
@@ -415,8 +400,7 @@
         "description": "Data parallel Haskell (DPH), developed at CSE, is an extension of the programming language Haskell to support a flexible, high-level parallel programming model, which is particularly useful in applications like simulation and is part of the Glasgow Haskell Compiler.",
         "areas": [
             "Parallel Systems",
-            "Programming Languages",
-            ""
+            "Programming Languages"
         ]
     },
     {
@@ -424,8 +408,7 @@
         "description": "The goal of this project is to implement a simple graphic description language",
         "areas": [
             "Computer graphics and programming",
-            "Programming Languages",
-            ""
+            "Programming Languages"
         ]
     },
     {
@@ -441,9 +424,7 @@
         "name": "EDSL for data serialisation and de-serialisation",
         "description": "",
         "areas": [
-            "Programming Languages",
-            "",
-            ""
+            "Programming Languages"
         ]
     },
     {
@@ -460,26 +441,19 @@
         "description": "",
         "areas": [
             "Algorithms",
-            "Theory",
-            ""
+            "Theory"
         ]
     },
     {
         "name": "GENERIC TOPIC: Programming Languages & Systems",
         "description": "This entry is a reference to the complete list of thesis topics offered by the Programming Languages & Systems Research Group. Keywords: programming language, compilers, compiler construction, semantics, security, parallelism, parallel programming, functional programming, Haskell, theoreom proving, user interface, embedded.",
-        "areas": [
-            "N/A",
-            "",
-            ""
-        ]
+        "areas": []
     },
     {
         "name": "Speech analysis using robust differential operators",
         "description": "",
         "areas": [
-            "Algorithms",
-            "",
-            ""
+            "Algorithms"
         ]
     },
     {
@@ -504,9 +478,7 @@
         "name": "Smartphone app for activity classification and fall detection",
         "description": "This work will port algorithms we have developed in Matlab to iPhone or Android phone for activity monitoring and fall detection purposes.",
         "areas": [
-            "Biomedical Engineering",
-            "",
-            ""
+            "Biomedical Engineering"
         ]
     },
     {
@@ -514,8 +486,7 @@
         "description": "Partial reconfiguration (PR) is the ability to re-program a portion of the FPGA logic while the remaining part of the design is running. ReSim is an open-source library to support RTL simulation and functional verification of PR designs. This project is to integrate the ReSim library to the latest Xilinx Vivado design suite so as to provide an easy user interface to simulate and implement a PR design. In particular, both ReSim and Vivado use open Tcl APIs and this project aim to integrate the two set of Tcl utilities together. You will be co-supervised by the creator of ReSim, Dr Lingkan (George) Gong, and Dr Oliver Diessel.",
         "areas": [
             "Reconfigurable computing",
-            "Embedded Systems",
-            ""
+            "Embedded Systems"
         ]
     },
     {
@@ -541,8 +512,7 @@
         "description": "Wireless Mesh Networks (WMNs) are a promising technology that is currently being used in a wide range of application areas, including Public Safety, Transportation, Mining, etc. Typically, these networks do not have a central component (router), but each node in the network acts as an independent router, regardless of whether it is connected to another node or not. They allow reconfiguration around broken or blocked paths by ``hopping from node to node until the destination is reached. Unfortunately, the current systems often do not live up to the expectations of end users in terms of performance and reliability, as well as ease of deployment and management. We explore and develop new adaptive network protocols and mechanisms for Wireless Mesh Networks that can overcome the major performance and reliability limitations of current systems. To support the development of these new protocols, the project also aims at new Formal Methods based techniques, which can provide powerful new tools for the design and evaluation of protocols and can provide critical assurance about protocol correctness and performance. Close collaboration with industry partners ensures the use-inspired nature of the project.",
         "areas": [
             "Software Engineering",
-            "Formal Methods",
-            ""
+            "Formal Methods"
         ]
     },
     {
@@ -559,8 +529,7 @@
         "description": "Wireless Mesh Networks (WMNs) are a promising technology that is currently being used in a wide range of application areas, including Public Safety, Transportation, Mining, etc. Typically, these networks do not have a central component (router), but each node in the network acts as an independent router, regardless of whether it is connected to another node or not. They allow reconfiguration around broken or blocked paths by ``hopping from node to node until the destination is reached.",
         "areas": [
             "Formal Methods",
-            "System Modelling",
-            ""
+            "System Modelling"
         ]
     },
     {
@@ -585,9 +554,7 @@
         "name": "Sloth vs eChronos",
         "description": "eChronos is a formally-verified RTOS designed for deeply-embedded systems with no memory protection and single-mode execution. Sloth is a system for a similar application domain, which takes the unusual approach of leaving all scheduling to hardware, by running everything in an interrupt context. This limits the use of Sloth to processors where interrupts mode can be entered by software. This project is to evaluate and quantify the performance advantage of Sloth over eChronos.",
         "areas": [
-            "Operating Systems",
-            "",
-            ""
+            "Operating Systems"
         ]
     },
     {
@@ -603,27 +570,21 @@
         "name": "Embedded algorithms for a low power wearable fall detector",
         "description": "We have been working with a telecare company for alarm monitoring. We are designing a version of this system to include low power fall detection and require a student to do embedded algorithmic development on an MSP430 processor.",
         "areas": [
-            "Biomedical Engineering",
-            "",
-            ""
+            "Biomedical Engineering"
         ]
     },
     {
         "name": "Developing new methods for analysis of next generation genome sequencing data",
         "description": "Next generation sequencing technologies such as Illumina sequencing generates large amount of genome sequence data. However, the genome sequences obtained are incomplete which requires new approaches to detect genome rearrangement and insertions and deletions. In this project, we will develop methods for genome analysis from next generation sequencing data. The bioinformatics honours student will join a research team consisting of postdoctoral fellow and doctoral students working on bacterial genomics",
         "areas": [
-            "Bioinformatics",
-            "",
-            ""
+            "Bioinformatics"
         ]
     },
     {
         "name": "Genome based molecular typing of pathogenic bacteria",
         "description": "Typing of bacterial pathogens is essential in clinical and public health microbiology. Traditionally a range of phenotypic typing methods have been developed and used for identification and differentiation of isolates. Genome sequencing has the potential to replace traditional typing methods as one for all solution and there have been a large number of genomes sequenced for many pathogens. This project will develop methods to use genome data for molecular typing. The bioinformatics honours student will join a research team consisting of postdoctoral fellow and doctoral students working on bacterial genomics.",
         "areas": [
-            "Bioinformatics",
-            "",
-            ""
+            "Bioinformatics"
         ]
     },
     {
@@ -639,9 +600,7 @@
         "name": "Performance profiling of scientific simulation programs on heterogeneous systems",
         "description": "",
         "areas": [
-            "High-Performance-Computing",
-            "",
-            ""
+            "High-Performance-Computing"
         ]
     },
     {
@@ -658,26 +617,14 @@
         "description": "The aim is to develop automated feature extraction and change detection methods from multiple geospatial image data streams. The past few decades have seen a massive increase in the volume of remotely sensed",
         "areas": [
             "Artificial Intelligence",
-            "Computer Vision",
-            ""
+            "Computer Vision"
         ]
     },
     {
         "name": "Using Machine Learning to Model Connections between Poli tical Competition and International Conflict",
         "description": "The study of connections between domestic politics and international relations has been very active and productive in political science over the past two decades. The most prominent example of this is the 'democratic peace' literature, exploring a widely acknowledged empirical finding, that historically democracies have been very unlikely to go to war with each other, although in general they may be no less war-prone than other kinds of state. But explaining why this is the case continue s to challenge both theorists and empirical analysts.",
         "areas": [
-            "Artificial Intelligence",
-            "",
-            ""
-        ]
-    },
-    {
-        "name": "Come and talk about topics of mutual interest",
-        "description": "To be decided",
-        "areas": [
-            "Any",
-            "Configurable system",
-            ""
+            "Artificial Intelligence"
         ]
     },
     {
@@ -973,9 +920,7 @@
         "name": "Web Frontend for ARGUS",
         "description": "A web based front end for ARGUS project which allows the designer to specify the whole design process on a web front end which then can be compiled quickly for execution on an FPGA.",
         "areas": [
-            "Embedded Systems",
-            "",
-            ""
+            "Embedded Systems"
         ]
     },
     {
@@ -1168,9 +1113,7 @@
         "name": "An evaluation of a multiserver OS on seL4",
         "description": "The goal of this project is to evaluate an existing multiserver operating system that runs on the seL4 microkernel.",
         "areas": [
-            "Operating Systems",
-            "",
-            ""
+            "Operating Systems"
         ]
     },
     {
@@ -1522,8 +1465,7 @@
         "description": "",
         "areas": [
             "Algorithms",
-            "Software Engineering",
-            ""
+            "Software Engineering"
         ]
     },
     {
@@ -1992,8 +1934,7 @@
         "description": "",
         "areas": [
             "Biomedical Engineering",
-            "Web Applications",
-            ""
+            "Web Applications"
         ]
     },
     {
@@ -2001,8 +1942,7 @@
         "description": "",
         "areas": [
             "Web Applications",
-            "Learning & Teaching",
-            ""
+            "Learning & Teaching"
         ]
     },
     {
