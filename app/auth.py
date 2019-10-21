@@ -65,10 +65,13 @@ def register():
 
     hashed_pass = bcrypt.hashpw(password.encode('utf-8'), bcrypt.gensalt())
     name = email.split('@')[0]
+
+    accType = db.select_columns('account_types', ['id'], ['name'], ['student'])
+
     db.insert_single(
         'users',
-        [name, hashed_pass, email],
-        ['name', 'password', 'email']
+        [name, hashed_pass, email, accType[0][0]],
+        ['name', 'password', 'email', 'account_type']
     )
     db.close()
     return jsonify({'status': 'ok'})
