@@ -1,0 +1,2249 @@
+[
+    {
+        "name": "Robot Soccer",
+        "description": "RoboCup is an international robot soccer competition whose aim is to encourage advanced research in mobile robots. There are different leagues for different types of robots. One of the leagues is the Standard Platform League, in which UNSW is the current world champion. The competition, which started in 1997, has attracted teams from some of the best robotics research laboratories around the world. UNSW has won the championship four times.",
+        "areas": [
+            "Robotics",
+            "Artificial Intelligence"
+        ]
+    },
+    {
+        "name": "Robot Learning",
+        "description": "Most machine learning systems are one-shot meaning that they learn a single concept from data that are presented all at once. However, an intelligent agent like a robot must collect examples of concepts one by one in a complex environment that may be changing. The learning system must have properties that most common ones do not. It must be incremental , accumulating knowledge and building on already learnt concepts. It must be able to recover from mistakes and cope with a dynamic environment. It can also use active learning . That is, the robot can conduct experiments to test hypotheses.",
+        "areas": [
+            "Machine Learning",
+            "Artificial Intelligence",
+            "Robotics"
+        ]
+    },
+    {
+        "name": "Conversational Agent",
+        "description": "In 1950, Alan Turing devised an imitation game to determine if a computer system could be considered intelligent. The game consists of a human interogator sitting a computer screen and conversing, via a chat program, with another agent. The interogator must guess if the other agent is human or a computer. If it is not possible to tell them apart, the computer could be deamed to be intelligent. Turing predicted that in about 50 years, it would be possible to devise a computer system that would fool the interrogator. So far, Turing's prediction has not been fulfilled. However, even simple conversational agents have their uses. Speech activated systems, like Apple's Siri and Google Now, are becoming more widespread. This project aims to build a conversational agent that uses online knowledge, so as found in Wikipedia and other sources, to be able to converse intelligently with a user.",
+        "areas": [
+            "Artificial Intelligence",
+            "Natural Language Processing"
+        ]
+    },
+    {
+        "name": "Decision support for a home telehealth system",
+        "description": "As part of an on-going R&D project we have developed instruments for recording physiological data from the home of chronically ill patients. There is a need to design knowledge management and decision-support systems to interpret these data.",
+        "areas": [
+            "Data Mining and Analysis"
+        ]
+    },
+    {
+        "name": "Multi-valued Decision Diagram Package",
+        "description": "(Ordered) Binary Decision Diagrams (BDDs) are a succinct representation of boolean functions (from n boolean inputs to a boolean output value) that play a critical role in algorithms for verification and hardware synthesis. Operations on boolean functions can be efficiently computed at the level of this representation, e.g. from the representation Rep(f) of f:{0,1}^n -> {0,1}",
+        "areas": [
+            "Formal Methods",
+            "Algorithms"
+        ]
+    },
+    {
+        "name": "Knowledge Based Analysis of a Distributed Protocol",
+        "description": "Knowledge-theory is a relatively novel approach to the high level design and analyis of distributed protocols. The number of specific protocols that have been studied from this perspective remains small. The project is to undertake the analysis of a new example, either theoretically, or by use of a model checker, MCK, that we have developed at UNSW.",
+        "areas": [
+            "Formal Methods",
+            "Distributed Systems"
+        ]
+    },
+    {
+        "name": "Interpreting a formal security protocol language in an epistemic model checker",
+        "description": "CAPSL is a formal language that enables a cryptographic protocol to be formally",
+        "areas": []
+    },
+    {
+        "name": "Comparative Performance of Model checkers for epistemic logic",
+        "description": "Temporal-Epistemic Logic is a type of formal specification language that focuses on how the knowledge of agents in a distributed or multi-agent system evolves over time. Model checkers are a type of formal verification tool that",
+        "areas": []
+    },
+    {
+        "name": "Bioinformatics of the immune system",
+        "description": "Second to the nervous system, the immune system is the most complex biological system that we know of. It provides us with an amazing adaptative resistance to pathogens and is central to medical research.",
+        "areas": [
+            "Bioinformatics"
+        ]
+    },
+    {
+        "name": "iPhone Application Development",
+        "description": "The project is to define and develop an application for the iPhone platform. You will be responsible for learning the iPhone application programming language (Objective-C) and the basic iPhone interface API.",
+        "areas": [
+            "Artificial Intelligence",
+            "Mobile Computing",
+            "HCI"
+        ]
+    },
+    {
+        "name": "Robots for Urban Search and Rescue",
+        "description": "The task of a robot for urban search and rescue is to enter a disaster site, e.g. after an earthquake or landslide, search for survivors and map the site for the human rescuers to follow. This is a very challenging problem for robotics because it requires improvements in sensing, locomotion, navigation, decision making and learning. This project offers students the opportunity to work in any of these areas using state-of-the-art equipment made available through the ARC Centre of Excellence for Autonomous Systems (CAS).",
+        "areas": [
+            "Robotics"
+        ]
+    },
+    {
+        "name": "Computer simulations for population and evolutionary biology",
+        "description": "Complex processes in population and evolutionary biology often require computer simulations to analyse them. Efficient and accurate methods have been developed to simulate stochastic processes. For example, algorithms such as the tau-leap methods are useful for studying stochastic models. However, as models become more complex and involve more variables, it becomes more difficult to implement those methods. An alternative approach is agent-based (or individual-based) models. This approach has the advantage of allowing an arbitrary degree of complexity in the variables that can be included. However, the approach is also computationally intensive making it challenging to apply to large populations. This project will compare alternative simulation approaches and explore ways to overcome their limitations.",
+        "areas": [
+            "Modelling",
+            "Bioinformatics",
+            "Systems biology"
+        ]
+    },
+    {
+        "name": "When and how to use animation: Connecting human minds to computers.",
+        "description": "This project will involve creating and comparing two simple websites/applications/tasks with and without animation. Some user data will then need to be collected and statistically analysed to establish conditions under which animation is most useful",
+        "areas": [
+            "multimedia",
+            "Psychology",
+            "Human Computer Intreaction"
+        ]
+    },
+    {
+        "name": "Evaluation of Expert Diagnosis for Lung Diseases",
+        "description": "High Resolution Computer Tomography (HRCT) has emerged as an important tool for detection and characterization of lung diseases. A computerized diagnosis system that can accurately quantify",
+        "areas": [
+            "Artificial Intelligence",
+            "Computer Vision",
+            ""
+        ]
+    },
+    {
+        "name": "Click Modular Router on seL4",
+        "description": "Investigate, design, and implement a Click compatible modular network router architecture on seL4 making use of the CAmkES component framework.",
+        "areas": [
+            "Embedded Systems",
+            "Operating Systems"
+        ]
+    },
+    {
+        "name": "A Computer Model of Electrocardiogram Signals",
+        "description": "This project seeks to implement a dynamic computer model of electrocardiogram (ECG) signals in order to generate synthetic ECG waveforms, as well as fitting these to experimental data. The model will be implemented as a java applet, allowing user's to upload experimental data and perform associated parameter fitting.",
+        "areas": [
+            "Modelling"
+        ]
+    },
+    {
+        "name": "Development of a CellML Editor for Biological Models",
+        "description": "Steady advances in numerical computing power have led to vast increases in complexity of published computer models of biological systems. In order to facilitate the exchange of such models between biomedical researchers and educators, an XML based modelling description language known as CellML has been developed. This project seeks to develop a CellML editor in Java, capable of visualising model components and equations, importing sub-components from other CellML models, and storing ancillary metadata associated with any given model.",
+        "areas": [
+            "Software Engineering"
+        ]
+    },
+    {
+        "name": "Visualising and analysing microbial diversity",
+        "description": "Modern technologies for DNA sequencing has allowed large volumes of genetic data to be generated. In recent years, whole genomes of pathogenic bacteria sampled from epidemics have been sequenced. Standard methods have been used to analyse and visualise such data with the aim of better understanding the transmission of infectious disease. Some of these methods may not be appropriate to these new data. The unprecedented resolution of genetic information from molecular epidemiology calls for new approaches and software to be developed to better interpret and represent these kinds of genomic data. This project will contribute to this goal by building on earlier work done in the research group.",
+        "areas": [
+            "Bioinformatics",
+            "Visualization"
+        ]
+    },
+    {
+        "name": "Adaptive E-learning",
+        "description": "The project involves using AI-based planning and machine learning techniques to build flexible",
+        "areas": [
+            "Artificial Intelligence",
+            "Learning and Teaching"
+        ]
+    },
+    {
+        "name": "A Household Mobile Robot",
+        "description": "The project is part of a larger effort in CSE to build a robot for use at home. The hardware is based on a Segway platform with attached Jaco arms. Sensing is provided by Kinect cameras, microphones and laser range finders. The system is programmed using ROS, which is component library and communication system that includes many functions for robots, including vision, localisation and kinematics. The aim of this project is to use this develop the software to allow the robot to interact with humans in a typical domestic setting. This includes moving with and around humans in a safe way that allows them to achieve given tasks cooperatively. A simple task is just to avoid each other when they have to move to specific locations but others may be more complicated, like cooperatively moving a large object.",
+        "areas": [
+            "Robotics",
+            "Artificial Intelligence"
+        ]
+    },
+    {
+        "name": "Computer Simulation of Atrial Fibrillation",
+        "description": "Atrial fibrillation (AF) is the most common sustained heart rhythm disorder, increasing the risk for heart disease and implicated in as many as 25% of all strokes in the elderly. Computer simulation has great potential to increase our understanding of atrial rhythm disorders such as atrial fibrillation.",
+        "areas": [
+            "Modelling",
+            "Biomedical Engineering",
+            "Simulation"
+        ]
+    },
+    {
+        "name": "On Memroy Data Protection for Embedded Processor Systems",
+        "description": "The boom of embedded systems and their wide applications, especially in the",
+        "areas": [
+            "Computer architecuture"
+        ]
+    },
+    {
+        "name": "Design and development of a Kinect-based 3D quantitative facial assessment tool for clinical practice",
+        "description": "",
+        "areas": [
+            "Biomedical Engineering"
+        ]
+    },
+    {
+        "name": "Talking to Robots",
+        "description": "The aim of this project is to combine robotics and speech recognition technologies to create a robot that can converse with you using ordinary speech and natural language.",
+        "areas": [
+            "Artificial Intelligence",
+            "Robotics",
+            "Natural Language Processing"
+        ]
+    },
+    {
+        "name": "Smart Home",
+        "description": "An intelligent environment is a location (e.g. home, office, hospital, etc) that is equipped with sensors, actuators and computers that are networked with each other and the internet. The components are controlled by intelligent agent software that knows the preferences of the occupants and tailors the environment to suit them. The occupants can talk to the environment using speech and natural language and the sensors can monitor the environment. Applications of this technology include creating an assistive environment for elderly or disabled people to help them control devices around the house, remind them to take medication, monitor them for falls or other accidents and so on.",
+        "areas": [
+            "Artificial Intelligence",
+            "Robotics",
+            "Natural Language Processing"
+        ]
+    },
+    {
+        "name": "A 3D Immersive Environment for Visualising Robot Sensor Data",
+        "description": "Our rescue robot has sensors that can create 3D representations of their surroundings. In a rescue, it is helpful for the incident commander to have a graphical visualisation of the data so that he or she can reconstruct the disaster site. The School of Computer Science and Engineering collaborates with the Centre for Interactive CInema, which has a facility (AVIE) that permits users to visualise data in three dimensions using stereo projection onto a 360 degree cylindrical screen. This provides an amazingly realistic immersive environment for visualising all kinds of data.",
+        "areas": [
+            "Virtual Reality",
+            "Robotics",
+            "Human-Robot Interaction"
+        ]
+    },
+    {
+        "name": "Rational Bezier Patch Modelling of Anatomical Surfaces",
+        "description": "This projects seeks to develop an automated technique for smooth meshing of surfaces of tissues and organs using rational Bezier patches. Such meshing is required for finite element modeling and visualization applications currently being developed within GSBmE. 2D image slices from the Visible Human Project will be utilized to manually enter points lying on the surface of desired organs, generating a user-defined cloud of data points. This data will then be fitted to a 3D surface consisting of rational Bezier patches.",
+        "areas": [
+            "Modelling",
+            "",
+            ""
+        ]
+    },
+    {
+        "name": "Modelling and Analysing Economics Data",
+        "description": "",
+        "areas": [
+            "Modelling",
+            "Software Engineering",
+            "Services"
+        ]
+    },
+    {
+        "name": "Shared resources in an seL4-based OS",
+        "description": "One of the key services that an OS provides is a managing access to",
+        "areas": [
+            "Embedded Systems",
+            "Operating Systems",
+            ""
+        ]
+    },
+    {
+        "name": "Towards Personal Process Management",
+        "description": "",
+        "areas": [
+            "Software Engineering",
+            "",
+            ""
+        ]
+    },
+    {
+        "name": "Development of a web based tool for analysis of T cell receptors",
+        "description": "This project is based on the work in Ass Prof Luciani's lab which focus on single cell transcriptomics analysis of T cells.",
+        "areas": [
+            "Bioinformatics",
+            "Visualization",
+            "Software Engineering"
+        ]
+    },
+    {
+        "name": "Concurrency theory and distributed systems",
+        "description": "Groundbreaking research in the foundations of concurrency theory. Any topic that suits both the student and me.",
+        "areas": [
+            "Theory",
+            "Distributed Systems",
+            "Formal Methods"
+        ]
+    },
+    {
+        "name": "Verification of Secure Transaction Protocols",
+        "description": "Multi-level secure databases seek to enforce information flow security",
+        "areas": [
+            "Security",
+            "Formal Methods",
+            "Databases"
+        ]
+    },
+    {
+        "name": "Drowsy and Decay Leakage Control for the Register File/Cache Memory Architecture",
+        "description": "Leakage power is becoming the dominant portion of the chip power for 65nm CMOS technology and below. To reduce the leakage power, the drowsy or decay approach can be adopted. This project is to investigate how the approach can be effectively used in a hierarchical memory system to reduce its leakage power consumption.",
+        "areas": [
+            "Embedded Systems",
+            "Computer architecuture",
+            "Low power systems"
+        ]
+    },
+    {
+        "name": "Frequency estimation in colored noise",
+        "description": "Applications of matrix methods such as singular value decomposition and eigenvalue decomposition to frequency estimation using robust differential operators",
+        "areas": [
+            "signal processing",
+            "",
+            ""
+        ]
+    },
+    {
+        "name": "Social network analysis of viral infections in prison settings",
+        "description": "Molecular epidemiology and social network analysis to track HCV transmission in high-risk communities: injecting drug users in New South Wales prisons",
+        "areas": [
+            "Social simulation",
+            "System Modelling",
+            "Modelling"
+        ]
+    },
+    {
+        "name": "Designing effective instructional animations",
+        "description": "This project will involve creating and comparing two simple websites/applications/tasks with and without animation. Some user data will then need to be collected and statistically analysed to establish conditions under which animation is most useful.",
+        "areas": [
+            "HCI",
+            "Learning and Teaching",
+            "Psychology"
+        ]
+    },
+    {
+        "name": "On customization of Embedded Processor Systems",
+        "description": "Embedded systems are becoming ubiquitous, cheaper, more powerful, and increasingly ever present in people's life. Meeting the stringent design requirements (high performance, small area, low power consumption and additional high security) has been a great challenge in embedded system design. Since embedded systems usually execute a single application or a class of applications, customization can be applied to optimize the design at low expense. This project investigates some customization techniques for embedded processor systems.",
+        "areas": [
+            "Embedded Systems",
+            "",
+            ""
+        ]
+    },
+    {
+        "name": "People to People Recommendation in Social Networks",
+        "description": "Predicting people that other people may like has recently",
+        "areas": [
+            "Machine Learning",
+            "Information Retrieval",
+            "Artificial Intelligence"
+        ]
+    },
+    {
+        "name": "Matching Words and Pictures: Cross-modal Multimedia Web Infomation Aggregation",
+        "description": "The rapid evolution of the Internet and its Web multimedia applications are enabling the delivery of heterogeneous content information, such as news, blog and videos. However, the dramatically increasing of web content has caused information overload, which necessitates information retrieval techniques to efficiently access desired information from multiple information sources and multiple types of content. This project aims to develop new similarity measurement of cross-modal heterogeneous content and its application to multimedia news retrieval.",
+        "areas": [
+            "Machine Learning",
+            "Information Retrieval",
+            "Computer Vision"
+        ]
+    },
+    {
+        "name": "Test vs Proof: The Showdown",
+        "description": "",
+        "areas": [
+            "Formal Methods",
+            "Operating Systems",
+            ""
+        ]
+    },
+    {
+        "name": "Reliable satellite payload design",
+        "description": "A first generation experimental CubeSat platform has been developed and deployed by our group. The next step is to develop a second version of the platform that incorporates the latest research results we have for reliable systems design. The ultimate goal is to evaluate the effectiveness of these designs on actual missions.",
+        "areas": [
+            "Embedded Systems",
+            "Fault tolerance",
+            "Configurable system"
+        ]
+    },
+    {
+        "name": "Formal modelling, verification and analysis of wireless mesh networks",
+        "description": "Applications of process algebra and other formal methods to the verification and analysis of routing algorithms for wireless mesh networks.",
+        "areas": [
+            "Theory",
+            "Wireless mesh networks",
+            "Formal Methods"
+        ]
+    },
+    {
+        "name": "Design of Synthetic Aperture Radar (SAR) Application Specific Instruction Set Processor (ASIP)",
+        "description": "This project aims to propose an Application Specific Instruction Set Processor (ASIP)architecture to implement Synthetic Aperture Radar (SAR) processing targeted to FPGA devices. Project will investigate and propose an instruction-set dedicated for SAR applications along with the design and realisation of suitable control and data-path architectures.",
+        "areas": [
+            "Computer architecuture",
+            "Embedded Systems",
+            ""
+        ]
+    },
+    {
+        "name": "Configurable Low-power FFT Processor Design and Implementation for Synthetic Aperture Radar (SAR) Applications",
+        "description": "This project is concerned with the design, verification and FPGA implementation of a configurable FFT processor design for SAR application. VHDL model of the configurable FFT processor will be undertaken, along with logic-level simulations for verification and synthesis of the design targeting Xilinx FPGAs.",
+        "areas": [
+            "Embedded Systems",
+            "Configurable system",
+            ""
+        ]
+    },
+    {
+        "name": "Secure terminal on seL4",
+        "description": "seL4 is a formally verified microkernel for building secure systems.",
+        "areas": [
+            "Operating Systems",
+            "Security",
+            ""
+        ]
+    },
+    {
+        "name": "Qubes on seL4",
+        "description": "Qubes is a new operating system architecture for developing secure desktop systems.",
+        "areas": [
+            "Operating Systems",
+            "Security",
+            ""
+        ]
+    },
+    {
+        "name": "Deep sequencing analysis of the early infection phase of hepatitis C virus",
+        "description": "Hepatitis C virus is a pathogen that affects humans and monkey, with a prevalence of 2-3% among the Worldwide human population. The disease can be resolved by the host immune response in 40-60% of the cases, while for the other cases the infection results in a chronic disease, such as hepatitis, and sometimes cancer (hepatocellular carcinoma). A major obstacle in designing a vaccine against HCV is the tremendous rapidity at which the virus evolves. HCV mutates very rapidly its genome, at rate that the immune system cannot cope with. The result is a distribution of mutants that escape the immune response. A question that should be answered is how often mutants arise and how fast mutants grow within the host.",
+        "areas": [
+            "Virology- immunology",
+            "Bioinformatics",
+            "Health informatics"
+        ]
+    },
+    {
+        "name": "Use of next generation sequencing to analyse genome evolution in infectious and genetic diseases",
+        "description": "This is a component of a large research project that involves international collaborations with the goal to improve current bioinformatics methods to study the evolution of genomes over time in a variety of diseases.",
+        "areas": [
+            "Bioinformatics",
+            "Systems biology",
+            "Programming Languages"
+        ]
+    },
+    {
+        "name": "Data Parallel Haskell Benchmark Suite",
+        "description": "Data parallel Haskell (DPH), developed at CSE, is an extension of the programming language Haskell to support a flexible, high-level parallel programming model, which is particularly useful in applications like simulation and is part of the Glasgow Haskell Compiler.",
+        "areas": [
+            "Parallel Systems",
+            "Programming Languages",
+            ""
+        ]
+    },
+    {
+        "name": "EDSL for mobile graphic apps",
+        "description": "The goal of this project is to implement a simple graphic description language",
+        "areas": [
+            "Computer graphics and programming",
+            "Programming Languages",
+            ""
+        ]
+    },
+    {
+        "name": "Super Mario Galaxy problem",
+        "description": "Suppose Mario is walking on the surface of a planet. If he starts walking from a known location, in a fixed direction, for a predetermined distance, how quickly can we determine where he will stop?",
+        "areas": [
+            "Theory",
+            "Algorithms",
+            "Geometry"
+        ]
+    },
+    {
+        "name": "EDSL for data serialisation and de-serialisation",
+        "description": "",
+        "areas": [
+            "Programming Languages",
+            "",
+            ""
+        ]
+    },
+    {
+        "name": "Lower bounds for extremal vertex sets in graphs",
+        "description": "A dominating set in a graph is a subset of vertices such that every vertex outside the set has a neighbor in the set. A dominating set is minimal (by inclusion) if it does not contain another dominating set as a subset. It is known that the number of minimal dominating sets in a graph on n vertices is at most 1.7697^n. On the other hand, there exist infinitely many graphs with 15^(n/6) > 1.5704^n minimal dominating sets. The family of graphs providing this lower bound is a disjoint union of n/6 octahedrons, the octahedron being a small graph on 6 vertices with 15 minimal dominating sets.",
+        "areas": [
+            "Algorithms",
+            "Theory",
+            "Discrete Mathematics"
+        ]
+    },
+    {
+        "name": "Measure and Conquer for Efficient Edge Domination",
+        "description": "",
+        "areas": [
+            "Algorithms",
+            "Theory",
+            ""
+        ]
+    },
+    {
+        "name": "GENERIC TOPIC: Programming Languages & Systems",
+        "description": "This entry is a reference to the complete list of thesis topics offered by the Programming Languages & Systems Research Group. Keywords: programming language, compilers, compiler construction, semantics, security, parallelism, parallel programming, functional programming, Haskell, theoreom proving, user interface, embedded.",
+        "areas": [
+            "N/A",
+            "",
+            ""
+        ]
+    },
+    {
+        "name": "Speech analysis using robust differential operators",
+        "description": "",
+        "areas": [
+            "Algorithms",
+            "",
+            ""
+        ]
+    },
+    {
+        "name": "Parameterized Algorithm for k-Leaf Spanning Tree",
+        "description": "In the k-Leaf Spanning Tree problem (k-LST), the input is a graph G on n vertices and an integer k, and the question is whether G has a spanning tree with at least k leafs. k-LST is NP-complete and has applications in communication network design, circuit layouts, and distributed systems. With respect to the parameter k, the current fastest algorithm for this problem has running time 3.72^k*poly(n) [http://arxiv.org/abs/0810.4946].",
+        "areas": [
+            "Algorithms",
+            "Theory",
+            "Discrete Mathematics"
+        ]
+    },
+    {
+        "name": "Parameterized Algorithms for Backdoor Detection",
+        "description": "Backdoor sets aim to explain the good running time of SAT solvers in practice. With the hypothesis that real-world Satisfiability instances exhibit a hidden structure that makes them much easier to solve than worst-case instances, backdoor sets capture the phenomenon that it is often sufficient for a backtracking algorithm to set a small number of key variables to trivialize the formula.",
+        "areas": [
+            "Algorithms",
+            "Theory",
+            "Discrete Mathematics"
+        ]
+    },
+    {
+        "name": "Smartphone app for activity classification and fall detection",
+        "description": "This work will port algorithms we have developed in Matlab to iPhone or Android phone for activity monitoring and fall detection purposes.",
+        "areas": [
+            "Biomedical Engineering",
+            "",
+            ""
+        ]
+    },
+    {
+        "name": "Functional verification of dynamic reconfiguration in Zynq FPGAs",
+        "description": "Partial reconfiguration (PR) is the ability to re-program a portion of the FPGA logic while the remaining part of the design is running. ReSim is an open-source library to support RTL simulation and functional verification of PR designs. This project is to integrate the ReSim library to the latest Xilinx Vivado design suite so as to provide an easy user interface to simulate and implement a PR design. In particular, both ReSim and Vivado use open Tcl APIs and this project aim to integrate the two set of Tcl utilities together. You will be co-supervised by the creator of ReSim, Dr Lingkan (George) Gong, and Dr Oliver Diessel.",
+        "areas": [
+            "Reconfigurable computing",
+            "Embedded Systems",
+            ""
+        ]
+    },
+    {
+        "name": "Space Based Tracking of Aircraft on CubeSats",
+        "description": "Automatic Dependent Surveillance-Broadcast (ADS-B) is a system in which aircraft continually transmit their ID and GPS derived navigational information e.g. precise position. The open access ADS-B signal is used for air traffic control in areas around the world covered by ground stations without the need for radar. There is currently limited coverage across the oceans and in the Arctic, leaving coverage gap for trans-oceanic flights and high-altitude airspace. This gap in the coverage may be alleviated by using space-based ADS-B receivers on CubeSats. This project is concerned with the investigation into and design of prototype Software-Defined-Radio (SDR) CubeSat payload for receiving and decoding ADS-B signals from space. SDR will be initially modeled using Matlab/Simulink then implemented on Field Programmable Gate Array (FPGA) platform and operation validated via the use of Universal Software Radio Peripheral (USRP) front-end.",
+        "areas": [
+            "Algorithms",
+            "Hardware design",
+            "Embedded Systems"
+        ]
+    },
+    {
+        "name": "Computer Simulation of Cardiac Defibrillation",
+        "description": "This project incolves the development of a computer model of cardiac fibrillation and its termination through the application of external defibrillatory electrical currents. The model will be used to refine optimal stimulation parameters for terminating cardiac fibrillation.",
+        "areas": [
+            "Biomedical Engineering",
+            "Modelling",
+            "Health application"
+        ]
+    },
+    {
+        "name": "Model Checking Tool Suite for Protocol Development",
+        "description": "Wireless Mesh Networks (WMNs) are a promising technology that is currently being used in a wide range of application areas, including Public Safety, Transportation, Mining, etc. Typically, these networks do not have a central component (router), but each node in the network acts as an independent router, regardless of whether it is connected to another node or not. They allow reconfiguration around broken or blocked paths by ``hopping from node to node until the destination is reached. Unfortunately, the current systems often do not live up to the expectations of end users in terms of performance and reliability, as well as ease of deployment and management. We explore and develop new adaptive network protocols and mechanisms for Wireless Mesh Networks that can overcome the major performance and reliability limitations of current systems. To support the development of these new protocols, the project also aims at new Formal Methods based techniques, which can provide powerful new tools for the design and evaluation of protocols and can provide critical assurance about protocol correctness and performance. Close collaboration with industry partners ensures the use-inspired nature of the project.",
+        "areas": [
+            "Software Engineering",
+            "Formal Methods",
+            ""
+        ]
+    },
+    {
+        "name": "FPGA-based satellite flight computer",
+        "description": "The goal of this project is to evaluate the possibility of effectively migrating traditional processor-based satellite control functions to a Xilinx Zynq-based platform and to demonstrate this via the implementation of some canonical satellite control functions on a Zynq processing board.",
+        "areas": [
+            "Configurable system",
+            "Satellite systems",
+            "Demonstrator"
+        ]
+    },
+    {
+        "name": "Modelling Network Routing Protocols",
+        "description": "Wireless Mesh Networks (WMNs) are a promising technology that is currently being used in a wide range of application areas, including Public Safety, Transportation, Mining, etc. Typically, these networks do not have a central component (router), but each node in the network acts as an independent router, regardless of whether it is connected to another node or not. They allow reconfiguration around broken or blocked paths by ``hopping from node to node until the destination is reached.",
+        "areas": [
+            "Formal Methods",
+            "System Modelling",
+            ""
+        ]
+    },
+    {
+        "name": "Molecular mimicry in viruses and cancer",
+        "description": "Molecular mimicry is a well-established example of convergent evolution by which viruses evolve protein motifs that interact with host molecular machinery to hijack cellular functions. These short linear motifs (SLiMs) have only a handful of critical positions and a single point mutation is often sufficient to create or destroy a motif occurrence. This may have direct effects, such as eliminating a key regulatory interaction, or more subtle indirect effects by altering/blocking neighbouring interactions. There is much overlap in the breakdown of regulation caused by viruses and cancers - including oncogenic viruses - and so it is likely that many cancers are exploiting similar molecular mimicry mechanisms of protein interaction motifs during tumour development and progression.",
+        "areas": [
+            "Bioinformatics",
+            "Genome informatics",
+            "Systems biology"
+        ]
+    },
+    {
+        "name": "Software for computing graph parameters",
+        "description": "In parameterized computation, algorithms are developed that are efficient whenever some parameters of the instance are small. This project seeks to develop stable and distributable open-source software for computing graph parameters, such as treewidth and feedback vertex set number. The setting is that the user inputs a graph and selects several parameters of interest, and the software computes or approximates these parameters. In particular, for small parameter values (that are most useful from a parameterized algorithms point of view), exact or very good approximations are sought. Additionally, when a small parameter is found, the project will seek to exploit this parameter to speed up the computations for subsequent parameters. Heuristics can be implemented to prioritize which parameters seem most useful for subsequent computations.",
+        "areas": [
+            "Algorithms",
+            "Discrete Mathematics",
+            "Software Engineering"
+        ]
+    },
+    {
+        "name": "Sloth vs eChronos",
+        "description": "eChronos is a formally-verified RTOS designed for deeply-embedded systems with no memory protection and single-mode execution. Sloth is a system for a similar application domain, which takes the unusual approach of leaving all scheduling to hardware, by running everything in an interrupt context. This limits the use of Sloth to processors where interrupts mode can be entered by software. This project is to evaluate and quantify the performance advantage of Sloth over eChronos.",
+        "areas": [
+            "Operating Systems",
+            "",
+            ""
+        ]
+    },
+    {
+        "name": "Stability of matchings",
+        "description": "The Stable Matching With Couples problem is a computational problem to assign residents to hospitals respecting their preferences. The input is a set of hospitals and a set of residents; each hospital has a capacity and a preference over the residents, which is an ordering of residents from most preferred to least preferred; each resident is either single or coupled with another resident; a single resident has a preference over the hospitals, and a couple has a joint preference over pairs of hospitals. The task is to find a stable matching if one exists. A matching is an assignment of residents to hospitals not exceeding the hospital's capacity. A matching is stable if there is no resident and hospital that are unmatched, but would prefer each other over their current match, and there is no couple of residents (r1, r2) and pair of hospitals (h1, h2) such that r1 is not matched to h1 or r2 is not matched to h2 but all of (r1, r2), h1, h2 weakly prefer that r1 is matched to h1 and r2 is matched to h2. However, a stable matching is not guaranteed to exist.",
+        "areas": [
+            "Algorithms",
+            "Artificial Intelligence",
+            "Discrete Mathematics"
+        ]
+    },
+    {
+        "name": "Embedded algorithms for a low power wearable fall detector",
+        "description": "We have been working with a telecare company for alarm monitoring. We are designing a version of this system to include low power fall detection and require a student to do embedded algorithmic development on an MSP430 processor.",
+        "areas": [
+            "Biomedical Engineering",
+            "",
+            ""
+        ]
+    },
+    {
+        "name": "Developing new methods for analysis of next generation genome sequencing data",
+        "description": "Next generation sequencing technologies such as Illumina sequencing generates large amount of genome sequence data. However, the genome sequences obtained are incomplete which requires new approaches to detect genome rearrangement and insertions and deletions. In this project, we will develop methods for genome analysis from next generation sequencing data. The bioinformatics honours student will join a research team consisting of postdoctoral fellow and doctoral students working on bacterial genomics",
+        "areas": [
+            "Bioinformatics",
+            "",
+            ""
+        ]
+    },
+    {
+        "name": "Genome based molecular typing of pathogenic bacteria",
+        "description": "Typing of bacterial pathogens is essential in clinical and public health microbiology. Traditionally a range of phenotypic typing methods have been developed and used for identification and differentiation of isolates. Genome sequencing has the potential to replace traditional typing methods as one for all solution and there have been a large number of genomes sequenced for many pathogens. This project will develop methods to use genome data for molecular typing. The bioinformatics honours student will join a research team consisting of postdoctoral fellow and doctoral students working on bacterial genomics.",
+        "areas": [
+            "Bioinformatics",
+            "",
+            ""
+        ]
+    },
+    {
+        "name": "Detection of referrable stage of diabetic retinopathy in new retinal camera images",
+        "description": "Diabetic retinopathy (DR) is a major cause of irreversible vision loss. DR screening relies on retinal clinical signs (features). Opportunities for computer-aided DR feature detection have emerged with the development of Ultra-Wide-Field (UWF) digital scanning laser technology. UWF imaging covers 82% of retinal area (200?), against 45? in conventional cameras, allowing more clinically relevant retinopathy to be detected. UWF images also provide a high resolution of 3078 x 2702 pixels. The overall goal of the proposed project is to design a computer-aided system for detection and categorising of DR in UWF retinal images. As part of this project eye anatomy segmentation will be considered as well as registration of images from different cameras.",
+        "areas": [
+            "Computer Vision",
+            "Artificial Intelligence",
+            "Image Processing"
+        ]
+    },
+    {
+        "name": "Performance profiling of scientific simulation programs on heterogeneous systems",
+        "description": "",
+        "areas": [
+            "High-Performance-Computing",
+            "",
+            ""
+        ]
+    },
+    {
+        "name": "Registration and Synchronized Visualization of Multi-Modal 3D Magnetic Resonance Images",
+        "description": "Magnetic Resonance Imaging (MRI) has gained a huge popularity across many medical imaging applications due to its superior soft-tissue screening ability. In addition to morphological MRI, newer functional Magnetic Resonance (MR) modalities (Diffusion MRI, Perfusion MRI) have been introduced lately, and used in diagnosis of severe diseases including cancer (in Brain, Prostate, etc) . For a particular diagnostic application 3-dimensional MR data are captured with each MR modality and the registration of multi-modal 3D MR data is one of the most important subtasks in medical",
+        "areas": [
+            "Computer Vision",
+            "Artificial Intelligence",
+            "Image Processing"
+        ]
+    },
+    {
+        "name": "Geospatial Information Extraction from Big Data Streams",
+        "description": "The aim is to develop automated feature extraction and change detection methods from multiple geospatial image data streams. The past few decades have seen a massive increase in the volume of remotely sensed",
+        "areas": [
+            "Artificial Intelligence",
+            "Computer Vision",
+            ""
+        ]
+    },
+    {
+        "name": "Using Machine Learning to Model Connections between Poli tical Competition and International Conflict",
+        "description": "The study of connections between domestic politics and international relations has been very active and productive in political science over the past two decades. The most prominent example of this is the 'democratic peace' literature, exploring a widely acknowledged empirical finding, that historically democracies have been very unlikely to go to war with each other, although in general they may be no less war-prone than other kinds of state. But explaining why this is the case continue s to challenge both theorists and empirical analysts.",
+        "areas": [
+            "Artificial Intelligence",
+            "",
+            ""
+        ]
+    },
+    {
+        "name": "Come and talk about topics of mutual interest",
+        "description": "To be decided",
+        "areas": [
+            "Any",
+            "Configurable system",
+            ""
+        ]
+    },
+    {
+        "name": "Expressiveness of Distributed Systems",
+        "description": "We aim to discover which systems can be implemented in a distributed way---and how---using only asynchronous communication between components, while preserving desirable properties that may be specified in terms of synchronous communication. In connection with this, we try to establish an expressiveness hierarchy of specification formalisms with different communication paradigms.",
+        "areas": [
+            "Theory",
+            "Distributed Systems",
+            "Formal Methods"
+        ]
+    },
+    {
+        "name": "Analysis and Classification of Time-Series X-Ray Crystallography Image Sequences",
+        "description": "X-ray crystallography is one of the main technologies used to determine three-dimensional structure at atomic resolution. The process of creating x-ray crystallography images requires the production of a suitable crystalline sample of the protein, then the irradiation of the crystal with X-radiation. The resultant diffraction patterns are analysed and used to produce a representation of the electron density associated with the protein. Day in and day out crystallography labs produces thousands of images. A crystallisation experiment is time dependent, so each experiment has to be monitored over time from days to months. There are automatic systems to collect images of crystallisation experiments. While automatic imagers can generate millions of data points (images), they do not provide interpretation of the image, leaving crystallographers to study each and every image by the naked eye in order to identify crystals.",
+        "areas": [
+            "Artificial Intelligence",
+            "Computer Vision",
+            "Image Processing"
+        ]
+    },
+    {
+        "name": "Deep learning on satellite images for building extraction",
+        "description": "Deep learning has been broadly applied in computer vision to solve problems like object recognition and scene understanding. Locating and extracting buildings is important for economic and planning purposes. This project focuses on building a deep learning pipeline for detecting buildings from satellite imagery. By using Open Street Maps meta data and open access data, custom convolutional neural networks can be trained to recognize features in satellite data. You will adapt existing data and techniques to the challenge of extracting buildings in Australia.",
+        "areas": [
+            "Artificial Intelligence",
+            "Computer Vision",
+            "Image Processing"
+        ]
+    },
+    {
+        "name": "Reasoning About Actions in Imperfect-Information Games",
+        "description": "General game players (GGPs) are computer systems able to play strategy games based solely on formal game descriptions supplied at \"runtime\" (in other words, they don't know the rules until the game starts). Unlike specialised game players, such as Deep Blue, general game players cannot rely on algorithms designed in advance for specific games; they must discover such algorithms themselves.",
+        "areas": [
+            "Artificial Intelligence"
+        ]
+    },
+    {
+        "name": "Local Search Techniques for General Single-Player Games",
+        "description": "General game players (GGPs) are computer systems able to play strategy games based solely on formal game descriptions supplied at \"runtime\" (in other words, they don't know the rules until the game starts). Unlike specialised game players, such as Deep Blue, general game players cannot rely on algorithms designed in advance for specific games; they must discover such algorithms themselves.",
+        "areas": [
+            "Artificial Intelligence"
+        ]
+    },
+    {
+        "name": "Generating Game-Specific Knowledge to Improve Monte Carlo Tree Search",
+        "description": "General game players (GGPs) are computer systems able to play strategy games based solely on formal game descriptions supplied at \"runtime\" (in other words, they don't know the rules until the game starts). Unlike specialised game players, such as Deep Blue, general game players cannot rely on algorithms designed in advance for specific games; they must discover such algorithms themselves.",
+        "areas": [
+            "Artificial Intelligence",
+            "Machine Learning"
+        ]
+    },
+    {
+        "name": "Belief Revision for General Game Playing",
+        "description": "General game players (GGPs) are computer systems able to play strategy games based solely on formal game descriptions supplied at \"runtime\" (in other words, they don't know the rules until the game starts). Unlike specialised game players, such as Deep Blue, general game players cannot rely on algorithms designed in advance for specific games; they must discover such algorithms themselves.",
+        "areas": [
+            "Artificial Intelligence"
+        ]
+    },
+    {
+        "name": "Theorem Proving for General Game Playing",
+        "description": "General game players (GGPs) are computer systems able to play strategy games based solely on formal game descriptions supplied at \"runtime\" (in other words, they don't know the rules until the game starts). Unlike specialised game players, such as Deep Blue, general game players cannot rely on algorithms designed in advance for specific games; they must discover such algorithms themselves.",
+        "areas": [
+            "Artificial Intelligence",
+            "Formal Methods"
+        ]
+    },
+    {
+        "name": "General Game Playing for Security Games",
+        "description": "General game players (GGPs) are computer systems able to play strategy games based solely on formal game descriptions supplied at \"runtime\" (in other words, they don't know the rules until the game starts). Unlike specialised game players, such as Deep Blue, general game players cannot rely on algorithms designed in advance for specific games; they must discover such algorithms themselves.",
+        "areas": [
+            "Artificial Intelligence",
+            "Game Design"
+        ]
+    },
+    {
+        "name": "Comparative Analysis of Solutions to the Ramification Problem",
+        "description": "The ramification problem in Reasoning About Actions is concerned with finding efficient representations of indirect effects of actions. Several approaches in different representation languages, such as the Situation Calculus, have been developed in the past.",
+        "areas": [
+            "Artificial Intelligence"
+        ]
+    },
+    {
+        "name": "A System for Verifying Modularity in Action Theories",
+        "description": "Action theories like the Situation Calculus are used in agent and robot programs to automatically reason about actions and their effects. Reasoning can be implemented much more efficiently if the formal description of a domain is modular in the sense that all preconditions and effects of actions have been explicitly specified.",
+        "areas": [
+            "Artificial Intelligence"
+        ]
+    },
+    {
+        "name": "A System for Retrograde Analysis in Chess",
+        "description": "Retrograde problems in Chess require to deduce information about the past from a given position. Examples include determining the last move, deciding whether a promotion took place earlier, or deducing the colour of an invisible piece.",
+        "areas": [
+            "Artificial Intelligence"
+        ]
+    },
+    {
+        "name": "General Game-Playing Robot",
+        "description": "General game playing is the attempt to create a new generation of Artificial",
+        "areas": [
+            "Artificial Intelligence",
+            "Robotics"
+        ]
+    },
+    {
+        "name": "Sports IoT with Mobile Depth Sensor",
+        "description": "",
+        "areas": [
+            "Internet of Things",
+            "Machine Learning"
+        ]
+    },
+    {
+        "name": "Privacy-preserving cloud services for Internet of Things",
+        "description": "",
+        "areas": [
+            "Internet of Things",
+            "Security"
+        ]
+    },
+    {
+        "name": "Twitter Data Analysis",
+        "description": "The aim is to develop and evaluate methods for storing and extracting information from Twitter data streams. Project topics can include entity extraction, sentiment analysis, topic modelling and ontology construction, and social network analysis.",
+        "areas": [
+            "Artificial Intelligence",
+            "Data Mining and Analysis",
+            "Machine Learning"
+        ]
+    },
+    {
+        "name": "Language Support for GPU Programming",
+        "description": "",
+        "areas": []
+    },
+    {
+        "name": "Stochastic Computing for Fault Tolerant Systems",
+        "description": "Stochastic Computing (SC), where binary data is represented in the form of digitized probabilities and processed using very simple circuits, when compared with traditional approaches, offer a new paradigm for designing fault tolerant systems.",
+        "areas": [
+            "Fault tolerance",
+            "Reconfigurable computing",
+            "Embedded Systems"
+        ]
+    },
+    {
+        "name": "High-Level Control Programs for Baxter Robot",
+        "description": "This research project is concerned with the design and implementation of high-level control programs for the two-armed Baxter robot with a simulated face. It involves developing high-level control and planning programs in a knowledge representation-based language and implementing them on the Baxter robot architecture.",
+        "areas": [
+            "Artificial Intelligence"
+        ]
+    },
+    {
+        "name": "Execution Monitoring for Robots",
+        "description": "Robots need to monitor the execution of plans in order to detect and correct failures as they occur.",
+        "areas": [
+            "Artificial Intelligence"
+        ]
+    },
+    {
+        "name": "Answer Set Programming for Robot Control",
+        "description": "This research project is concerned with the design and implementation of robot control programs and planning algorithms using the Answer Set Programming paradigm. It involves developing ASP programs and implementing them on an existing robot architecture for the two-armed Baxter robot with a simulated face.",
+        "areas": [
+            "Artificial Intelligence"
+        ]
+    },
+    {
+        "name": "When & how to use gestures: Connecting our bodies & minds to computers",
+        "description": "This project will involve creating and comparing two simple websites/applications/tasks with and without including gestures. Some user data will then need to be collected and statistically analysed to establish conditions under which gesture is most useful.",
+        "areas": [
+            "Cognitive Load Theory",
+            "HCI",
+            "Online Learning"
+        ]
+    },
+    {
+        "name": "Type systems for certified compilation",
+        "description": "The aim of this project is to extend the type system of Cogent, a domain specific language aimed at facilitating the implementation of verified systems to express strong static properties.",
+        "areas": [
+            "Programming Languages",
+            "Formal Methods"
+        ]
+    },
+    {
+        "name": "TableBase: Towards a Table Extraction Management System",
+        "description": "Table extraction as a sub-task of Information Extraction is defined as automatically recognising and extracting data from tables in documents. However, interpreting the extracted tables and the data within is a challenging problem. Some approaches try to map the table data to a predefined schema or ontology, which in most cases result in loss of the original table structure.",
+        "areas": [
+            "Databases"
+        ]
+    },
+    {
+        "name": "Decentralizing big data processing",
+        "description": "Decentralizing big data processing",
+        "areas": [
+            "Big Data",
+            "Web Applications",
+            "Distributed Systems"
+        ]
+    },
+    {
+        "name": "Estimating human body part dimensions from 2D image for malnutrition assessment",
+        "description": "",
+        "areas": [
+            "Biomedical Engineering",
+            "Computer Vision"
+        ]
+    },
+    {
+        "name": "Patient Similarity Modelling for Healthcare",
+        "description": "Healthcare systems are under increasing pressure to identify strategies to improve the current patterns of care. Unstructured and structured data analytics have been widely reported in big data. Using such analytics, personalised clinical and care management decision support could be achieved by insights most relevant to index patient. This project aims to develop new similarity metric framework that combines information from heterogeneous sources for healthcare and medicine.",
+        "areas": [
+            "Machine Learning",
+            "Big Data",
+            "Natural Language Processing"
+        ]
+    },
+    {
+        "name": "Is writing or typing a better way to learn?",
+        "description": "We will be using iPad pros with iPencils to compare writing with typing as a means of learning, and look at how the mode used to create text impacts on recall, understanding and learning. The research involves running an empirical study involving an experimental and control group, followed by statistical analyses of the data.",
+        "areas": [
+            "Cognitive Load Theory",
+            "Human Computer Interaction",
+            "Learning and Teaching"
+        ]
+    },
+    {
+        "name": "Concepts in Programming Languages and Security",
+        "description": "",
+        "areas": [
+            "Formal Methods",
+            "Programming Languages"
+        ]
+    },
+    {
+        "name": "Baxter Cognitive Robot Architecture",
+        "description": "The project involves researching, developing and implementing a cognitive robot architecture for the Baxter robot located on the 5th floor Ainsworth building (J17). In particular the objective for 2017 is to equip the robot with a depth camera (e.g. Kinect) to allow it to maintain a belief state about its surroundings that includes modelling humans in skeletal form. The project includes human robot interaction experiments.",
+        "areas": [
+            "Robotics",
+            "Artificial Intelligence",
+            "Computer Vision"
+        ]
+    },
+    {
+        "name": "Diagnostic Radioentomology: Bees as a Model for Brain Changes Related to Addiction",
+        "description": "",
+        "areas": [
+            "Algorithms",
+            "Image Processing",
+            "Neuroscience"
+        ]
+    },
+    {
+        "name": "Knowledge Graph Construction",
+        "description": "# Project Title:",
+        "areas": [
+            "Natural Language Processing",
+            "Data Mining and Analysis",
+            "Data-Intensive Computing"
+        ]
+    },
+    {
+        "name": "Learning Networks in Accelerate",
+        "description": "",
+        "areas": [
+            "High-Performance-Computing",
+            "Artificial Intelligence",
+            "Programming Languages"
+        ]
+    },
+    {
+        "name": "Crowdsourcing Annotation for Wikipedia",
+        "description": "One of the main obstacles to the effective application of natural language processing techniques in many applications is the lack of large-scale annotated data. These data needs to contain millions of words, covers a large collection of vocabulary and its legal usage, and have high-quality annotations. As of today, such resources are scarce and are typically behind the pay wall and not publicly available!",
+        "areas": [
+            "Natural Language Processing",
+            "Big Data",
+            "Algorithms"
+        ]
+    },
+    {
+        "name": "Mobile app for cardiac rehabilitation",
+        "description": "",
+        "areas": [
+            "Biomedical Engineering"
+        ]
+    },
+    {
+        "name": "Quantifying Tumour Cell Killing by live cell imaging",
+        "description": "",
+        "areas": [
+            "Big Data",
+            "Computer Vision",
+            "Computer graphics and programming"
+        ]
+    },
+    {
+        "name": "Web Frontend for ARGUS",
+        "description": "A web based front end for ARGUS project which allows the designer to specify the whole design process on a web front end which then can be compiled quickly for execution on an FPGA.",
+        "areas": [
+            "Embedded Systems",
+            "",
+            ""
+        ]
+    },
+    {
+        "name": "Smartphone app for telepsychiatry and mental health",
+        "description": "This work will be done in collaboration with colleagues from the Faculty of Medicine to design apps for questionnaire delivery, social media usage and activity monitoring for assessing aspects of mental health and well-being.",
+        "areas": [
+            "Biomedical Engineering"
+        ]
+    },
+    {
+        "name": "BeitaGo",
+        "description": "Do you know AlphaGo? This project is to design a program that plays Go, or Weiqi, an ancient Chinese board game. Unlike AlphaGo, you are supposed to design a light weight program that runs on a PC, or a laptop. You can either work alone or in a group.",
+        "areas": [
+            "Artificial Intelligence",
+            "Algorithms",
+            "Computer graphics and programming"
+        ]
+    },
+    {
+        "name": "Secure Code Broadcast in Wireless Sensor Networks",
+        "description": "This project is to design a distributed algorithm for online code broadcast in wireless sensor network in the presence of selective forward attacks and modification attacks. . By using the distributed algorithm, the base station of a wireless sensor network is able to broadcast a new version of software such that all the sensor nodes will receive the same copy of the software in the presence of the above-mentioned attacks.",
+        "areas": [
+            "Wireless sensor networks",
+            "Algorithms",
+            "Security"
+        ]
+    },
+    {
+        "name": "Structure-based comparison of protein binding sites",
+        "description": "The aim of the project is to develop new computational methods that enable \"local\" comparison of binding sites in proteins or to comparing protein ligands in order to predict whether they are likely to bind to the same binding partner. Our approach represents binding sites and molecules as a high-dimensional point clouds and uses methods borrowed from computer vision to compare them. Projects include: improving pharmacophore generation using LigandScout; developing a benchmark for evaluating binding site comparison methods",
+        "areas": [
+            "Bioinformatics"
+        ]
+    },
+    {
+        "name": "Open Relation Extraction",
+        "description": "Open information extraction (open IE) refers to the extraction of structured relation triples from plain text, such that the schema for these relations does not need to be specified in advance.",
+        "areas": [
+            "Natural Language Processing",
+            "Machine Learning",
+            "Big Data"
+        ]
+    },
+    {
+        "name": "Comparative and functional genomics in yeast",
+        "description": "The latest generation of long-read single molecule real-time (SMRT) sequencing is revolutionising genomics. We are using the",
+        "areas": [
+            "Bioinformatics",
+            "Genome informatics"
+        ]
+    },
+    {
+        "name": "Sequencing and annotation of the cane toad genome",
+        "description": "The latest generation of long-read single molecule real-time (SMRT) sequencing is revolutionising genomics. We are using the",
+        "areas": [
+            "Bioinformatics",
+            "Genome informatics"
+        ]
+    },
+    {
+        "name": "What's a good routing protocol? - Measurements for Comparing Routing Protocols",
+        "description": "Routing protocols specify how routers communicate with each other, disseminates information to select routes between any two nodes on a network and provides the ground for sending data (packets) through a network. They find applications in all types of (communication) networks, such as metropolitan area networks (MAN), local area networks (LAN), virtual private networks (VPN) or wireless mesh networks (WMN). Due to the diversity in applications dozens of (classes of) different protocols have been developed. Often there are several protocols for the same type of networks. In the case of WMNs there are for example reactive protocols, such as AODV or DYMO, and link-state protocols, such as B.A.T.M.A.N. or OLSR.",
+        "areas": [
+            "Formal Methods",
+            "Networks"
+        ]
+    },
+    {
+        "name": "Different Classes of Topologies and Their Effect on Routing Protocols",
+        "description": "Routing protocols specify how routers communicate with each other, disseminates information to select routes between any two nodes on a network and provides the ground for sending data (packets) through a network. They find applications in all types of (communication) networks, such as metropolitan area networks (MAN), local area networks (LAN), virtual private networks (VPN) or wireless mesh networks (WMN). Due to the diversity in applications dozens of (classes of) different protocols have been developed. Often there are several protocols for the same type of networks. In the case of WMNs there are for example reactive protocols, such as AODV or DYMO, and link-state protocols, such as B.A.T.M.A.N. or OLSR.",
+        "areas": [
+            "Formal Methods",
+            "Networks"
+        ]
+    },
+    {
+        "name": "Machine learning on FPGAs",
+        "description": "Begin looking at applicability of FPGA-based hardware to accelerating online learning algorithms with the aim of implementing a demonstration of a useful application.",
+        "areas": [
+            "Online Learning",
+            "High-Performance-Computing",
+            "Reconfigurable computing"
+        ]
+    },
+    {
+        "name": "An image based analysis and exploration of osteoarthritis aetiology and the interaction of tissue compartments",
+        "description": "",
+        "areas": [
+            "Biomedical Engineering",
+            "Algorithms",
+            "Image Processing"
+        ]
+    },
+    {
+        "name": "Smart Watch based vulnerabilities inOn-Screen Keyboard Technology",
+        "description": "Sensor-equipped smartphones and wearables are transforming a variety of mobile apps ranging from health monitoring to digital assistants. However, reliably inferring user behavior and context from noisy and complex sensor data collected under mobile device constraints remains an open problem and a key bottleneck to sensor app development. In recent years, advances in the field of deep learning have resulted in nearly unprecedented gains in related inference tasks such as speech and object recognition. However, although mobile sensing shares many of the same data modeling challenges, we have yet to see deep learning be systematically studied within the sensing domain. If deep learning could lead to significantly more robust and efficient mobile sensor inference it would revolutionize the field by rapidly expanding the number of sensor apps ready for mainstream usage. This project will undertake a feasibility study by prototyping a low-power Deep Neural Network on resource-constrained devices such as smartphones and smart watches.",
+        "areas": [
+            "Artificial Intelligence",
+            "Pervasive computing"
+        ]
+    },
+    {
+        "name": "A Novel Approach to Privacy Preservation in the Internet of Things using Blockchains",
+        "description": "The recent increase in reported incidents of surveillance and security breaches compromising users? privacy call into question the current model, in which third-parties collect and control massive amounts of personal data. The proliferation of connected devices brought about by the rapid adoption of Internet of Things (IoT) will further exacerbate this situation. In this project, we will explore the use of blockchain technology for preserving sensor data privacy in IoT. We have been developing these concepts in our lab for the past few months. This project will specifically focus on implementing and testing our proposed framework in a smart home setting.",
+        "areas": [
+            "Security",
+            "Internet of Things"
+        ]
+    },
+    {
+        "name": "Automated design and analysis of branching algorithms",
+        "description": "The running time of branching algorithms heavily depends on the choice of the local configuration to be branched on. As an example, consider the Maximum Independent Set problem: given a graph G, compute a set S of vertices of maximum size such that the vertices in S are pairwise non-adjacent in G. A select-discard branching rule chooses a vertex v, and considers two subproblems, one where v is added to the independent set that is being computed and one where it is not added. Modern analyses of such branching algorithms take into account how the instance changes in these recursive calls - besides that the number of vertices decreases, some vertices also have their degrees decreased, and all of this information is used to upper bound the number of times the algorithm makes a recursive call. Another branching rule might go over all possibilities to add one vertex from N[v] (the set containing v and its neighbors) to the independent set. Which rule is better depends on the structure of the graph around the vertex v, and for some some such structures it might be more advantageous to choose a neighbor of v to branch on, instead of v.",
+        "areas": [
+            "Algorithms",
+            "Artificial Intelligence",
+            "Discrete Mathematics"
+        ]
+    },
+    {
+        "name": "Segmentation and Symmetry Evaluation of bones from MDCT scans",
+        "description": "Despite developments in medical image processing, correct segmentation and evaluation of bony structures still remains a challenge. The aim of this project is to perform automatic segmentation on MDCT scans of human lungs with prime focus on extracting the ribs. Following the extraction, the project will explore methods to compute geometrical properties of the rib cross-sections, which will then be used in determining whether the rib pairs are symmetrical. The project will have access to patient scans collected by radiologists at Prince of Wales Hospital. The results will be verified by radiologists to ensure accuracy and",
+        "areas": [
+            "Artificial Intelligence",
+            "Image Processing"
+        ]
+    },
+    {
+        "name": "Efficient stencil computations in Accelerate",
+        "description": "Stencil computations [1] are a fundamental building block of many scientific and engineering codes. Although stencil operations often have a succinct declarative specification, deriving an efficient implementation from such a high-level definition can be challenging.",
+        "areas": [
+            "High-Performance-Computing",
+            "Programming Languages",
+            "Compiler"
+        ]
+    },
+    {
+        "name": "Program Synthesis by Hierarchical Evolution",
+        "description": "The aim of this project is to learn a benchmark suite of Program Synthesis problems using the recently introduced Hierarchical Evolutionary Re-Combination Language (HERCL). HERCL combines features from linear and stack based genetic programming, and has been specifically designed for multi-task learning. HERCL programs have previously been evolved for classification [1], control tasks [2], string processing [3] and evolutionary art [4]. It has also been shown that code from simpler, related tasks can be recombined to facilitate the learning of more complex tasks [5].",
+        "areas": [
+            "Machine Learning",
+            "Artificial Intelligence"
+        ]
+    },
+    {
+        "name": "Image annotation tools for crowd sourcing",
+        "description": "Crowd sourcing is an important tool in computer vision and machine learning as it lets one build large datasets. Effective crowd sourcing becomes harder as the complexity of the problem increases and can be challenging for image data. This project is centred around developing a prototype for a user-friendly, web-based image annotation tool suitable for crowd sourcing. Existing solutions are slow, difficult to deploy or too focused on specific tasks. The prototype should address some of these issues and will be trialed by hundreds of users.",
+        "areas": [
+            "Computer Vision",
+            "Artificial Intelligence",
+            "Image Processing"
+        ]
+    },
+    {
+        "name": "seL4 based IoT device",
+        "description": "Internet of Things (IoT) devices are everywhere, and notoriously insecure. This projects investigates using the formally verified seL4 microkernel as the basis for building secure IoT devices. It will require a thorough understanding of seL4 and microkernel-based systems on the one hand, and the security issues faced by IoT devices on the other. The goal is to design, develop and evaluate an IoT device framework that is based on a demonstrably secure software architecture that takes advantage of the proven isolation properties of seL4.",
+        "areas": [
+            "Operating Systems",
+            "Embedded Systems",
+            "Security"
+        ]
+    },
+    {
+        "name": "Real-time estimation of social connections from location and proximity data",
+        "description": "The aim of the project is to estimate social connections between users based on their location and proximity to other users. At the Black Dog Institute we have developed a smart phone app to passively record GPS and Bluetooth data at regular intervals to investigate the relationship between social connectivity and mental health. We use this data to estimate social networks of proximity and relate this to indices of mental health. Previous studies have shown that people at the core of their local networks are more likely to be happy; conversely individuals less central in the group are more likely to show depressive symptoms. We now want to investigate whether we can improve mental health by strengthening people???????s social network. As a first step towards this goal, this project aims to develop and validate an algorithm to identify social connections from location and proximity data collected through the smartphone app. The student will develop an algorithm to estimate the likelihood of social connections from sensor data as it is collected by the app. The student will also develop a user interface on the app to present the estimated social connections to the user for validation. The project involves machine learning/Bayesian inference, network analysis and app development.",
+        "areas": [
+            "Biomedical Engineering",
+            "Health application",
+            "Artificial Intelligence"
+        ]
+    },
+    {
+        "name": "Apps for childhood cancer survivors",
+        "description": "We have a close collaboration with clinicians and psychologists from Sydney Children's Hospital. A number of projects based around design of Apps and web services exists. These include",
+        "areas": [
+            "Biomedical Engineering",
+            "Health application",
+            "Artificial Intelligence"
+        ]
+    },
+    {
+        "name": "Conflict Resolution in Air Traffic Control",
+        "description": "In air traffic control, two or more aircraft are said to be in conflict if they violate separation standards. Conflicts must be avoided to ensure aircraft's safety throughout their trip. The main purpose of this study is to perform an analysis of well-known conflict resolution algorithms in air traffic control.",
+        "areas": [
+            "Intelligent Transport Systems",
+            "Constrained Optimization",
+            "Algorithms"
+        ]
+    },
+    {
+        "name": "An evaluation of a multiserver OS on seL4",
+        "description": "The goal of this project is to evaluate an existing multiserver operating system that runs on the seL4 microkernel.",
+        "areas": [
+            "Operating Systems",
+            "",
+            ""
+        ]
+    },
+    {
+        "name": "3D Placental Volume Image Mosaicking/Stitching",
+        "description": "3D ultrasound provides the ability to measure a whole organ if it fits within the field-of-view of the transducer. For organs that develop over a pregnancy, such as the placenta, this can mean that at later dates in pregnancy this cannot be performed in a single acquisition. This is a problem, as in later pregnancy, pathologies or changes may occur that may not be apparent or be difficult to identify.",
+        "areas": [
+            "Computer Vision",
+            "Computer Graphics",
+            "Artificial Intelligence"
+        ]
+    },
+    {
+        "name": "3D Ultrasound Image Format Parsing/Development",
+        "description": "In medical imaging, commonality of image formats is crucial in order to be able to measure between different systems. Compared to other volumetric (3D) medical imaging modalities such as CT and MRI, 3D ultrasound has as yet no standard common imaging format.",
+        "areas": [
+            "Computer Vision",
+            "Image Processing",
+            "Computer Graphics"
+        ]
+    },
+    {
+        "name": "Atomic Operations: CAS vs LL/SC vs TSX/RTM",
+        "description": "",
+        "areas": [
+            "Concurrency",
+            "Computer architecuture"
+        ]
+    },
+    {
+        "name": "Issues in verified quantitative information flow",
+        "description": "The quantitative information flow view of security recognises that most interesting systems will leak the secrets they guard with some probability. The aim becomes to quantify the leakage and ensure that is at an acceptably low level. A major typical ingredient of formal methods for system development is a compositional notion of refinement. Such a notion can be devised such that A refines B implies not only that the functional behaviour of the A yields no surprises to someone expecting to use B, but also such that the A leaks no more than B, whatever the context is. This is a fairly recent development and there is ample room for contributions ranging from designing and implementing a tool prototype to support a leakage-reducing formal method via designing and implementing efficient algorithms to support such a tool all the way to advancing the theory of what can be refined and how.",
+        "areas": [
+            "Security",
+            "Verification",
+            "Algorithms"
+        ]
+    },
+    {
+        "name": "Formalisation of a type inference algorithm for Cogent",
+        "description": "The Cogent project (http://ts.data61.csiro.au/projects/TS/cogent.pml) concerns the use of a new programming language with sophisticated type system features (specifically uniqueness types) to reduce the cost of formally verifying low-level software systems such as file systems.",
+        "areas": [
+            "Formal Methods",
+            "Programming Languages"
+        ]
+    },
+    {
+        "name": "Applications of local signal approximations",
+        "description": "design and implementation of algorithms for signal processing based on local signal approximations utilizing numerically robust differential operators and special functions",
+        "areas": [
+            "Algorithms",
+            "signal processing"
+        ]
+    },
+    {
+        "name": "Stock Recommendation Aggregation Using Iterative Filtering",
+        "description": "Design, implementation and testing of novel algorithms for optimal aggregation of stock market analysts recommendations of stocks. The goal is to build a robust and effective system that beats the performance of any individual analyst whose recommendations were used in the aggregation process.",
+        "areas": [
+            "Algorithms"
+        ]
+    },
+    {
+        "name": "Smartphone/iPad app for gait assessment and activity classification",
+        "description": "This work will develop an app for iPhone/iPad or Android to perform gait assessment and activity classification. Cross platform tools such as Cordova and REACT Native will be used for development.",
+        "areas": [
+            "Biomedical Engineering"
+        ]
+    },
+    {
+        "name": "App for promoting health eating in childhood cancer survivors",
+        "description": "We have a close collaboration with clinicians and psychologists from Sydney Children's Hospital. A number of projects based around design of Apps and web services exists. These include",
+        "areas": [
+            "Biomedical Engineering",
+            "Health application",
+            "Artificial Intelligence"
+        ]
+    },
+    {
+        "name": "Project in Blockchain, Smart Contracts and CryptoCurrency",
+        "description": "This is a placeholder for a wide range of possible research and/or R&D projects that could be constructed to suit student capability and interests.",
+        "areas": [
+            "Distributed Systems",
+            "Security",
+            "Finance"
+        ]
+    },
+    {
+        "name": "Analysis of Mental Health Related Social Media Interactions",
+        "description": "This work will be done in collaboration with colleagues from the Faculty of Medicine to design apps for questionnaire delivery, social media usage and activity monitoring for assessing aspects of mental health and well-being.",
+        "areas": [
+            "Biomedical Engineering"
+        ]
+    },
+    {
+        "name": "A Configurable Implementation of the ARM Architecture for the Argus Platform",
+        "description": "The ARM architecture represents a significant fraction of the world's computing power, especially in the moblie and embedded markets.",
+        "areas": [
+            "Embedded Systems"
+        ]
+    },
+    {
+        "name": "A Driver Configuration Framework for the Argus Platform",
+        "description": "The Argus platform is designed to allow rapid prototyping of multi-processor systems for use in research. One major limitation is that the operating system or runtime must be manually adapted to match the changing hardware. To address this limitation, the candidate will be enhancing the existing driver framework to support automatic configuration and integration with the bare-metal runtimes and linux driver subsystems. This will lower the difficulty of creating and using custom systems.",
+        "areas": [
+            "Embedded Systems"
+        ]
+    },
+    {
+        "name": "Debug and Monitoring framework for the Argus Platform",
+        "description": "The Argus platform includes a strong simulation framework, which has been used to debug new hardware and software applications.",
+        "areas": []
+    },
+    {
+        "name": "Smart Campus IoT Testbed",
+        "description": "This project will focus on the design and implementation of an IoT testbed on the UNSW campus. We will focus on instrumenting sensors for one of the following two planned deployments - (i) lecture theatre occupancy detection and (ii) car parking space detection. The project will focus on the entire system - deployment of sensors, configuring the network, setting up the back-end server and data analytics. We will collaborate with the School of EET. We also have support from Facilities Management to assist with the physical deployment of sensors. There is scope to define a couple of interesting systems-oriented thesis topic.",
+        "areas": [
+            "Internet of Things",
+            "Sensor Networks"
+        ]
+    },
+    {
+        "name": "A Novel Approach to Privacy Preservation in the Internet of Things using Blockchains",
+        "description": "",
+        "areas": [
+            "Security",
+            "Internet of Things"
+        ]
+    },
+    {
+        "name": "Automating 3D Printing",
+        "description": "The advent of inexpensive 3D printing has made rapid manufacturing of custom objects relatively easy. However, there is still an art to designing the objects so that they can be realised by the printer. This project is open-ended in that there are many different tools and techniques that can be employed to help in the design process. This includes systems that automatically translate high-level designs to concrete specifications for the printer to visual inspection systems to check that the printed object has been manufacture correctly.",
+        "areas": [
+            "Artificial Intelligence"
+        ]
+    },
+    {
+        "name": "ikki: A Companion Robot for Sick Kids",
+        "description": "We are working with the oncology department at Westmead Kids hospital to develop ikki, a companion robot for sick children. These children typically spend months or years of their lives travelling between home, hospital, the clinic and school. Their families have to juggle work commitments, managing the care of their sick child, and meeting the needs of the rest of the family. It is a stressful time for everyone. ikki is a reassuring buddy for the sick child, helps manage their clinical care, and is their constant companion who always has their back in troubling times. ikki also helps relieve the child?s parents of some of their burden. ikki also reports data to the clinical team who can update its care program in response to the child?s condition. ikki is designed to be manufactured at a price point that enables the hospital to provide each sick child with their own ikki, for life. Whilst we are working with sick children in the first instance, we have a full pipeline of other potential applications for ikki. We have a working prototype and plan to go into our first clinical trial in the near future.",
+        "areas": [
+            "Artificial Intelligence"
+        ]
+    },
+    {
+        "name": "Security Audit and Bug Testing",
+        "description": "Analyse the protocols and implementations of newly introduced devices and peripherals to identify security vulnerabilities and threat models. ?Search for vulnerabilities, develop exploits and patches as appropriate.",
+        "areas": [
+            "Security"
+        ]
+    },
+    {
+        "name": "Dynamics and composition of the human microbiome",
+        "description": "Over the past few years the role of the human microbiome in health and disease has garnered increasing research and public attention. This project will involve the analysis of the dynamics and composition of the human gut microbiome in disease. Approximately 500 human samples have been extracted and sequenced on an Illumina MiSeq platform (16S rRNA amplicon sequencing), and the candidate is expected to apply current bioinformatics and biostatistics techniques to analyse this data.",
+        "areas": [
+            "Bioinformatics",
+            "Microbiology"
+        ]
+    },
+    {
+        "name": "Capability-oriented programming interface for seL4",
+        "description": "",
+        "areas": [
+            "Operating Systems",
+            "Security"
+        ]
+    },
+    {
+        "name": "Intelligent document selection and document creation",
+        "description": "The aim of the project is to design and implement algorithms that given an input document built from relatively unstructured text (typically, written correspondence), outputs a highly structured technical document, in two steps. The first step consists in identifying in a pool of linked documents, those that are relevant to the matter raised in the input text. The second step consists in extracting from the identified documents the relevant parts, putting them together possibly with some modifications, and complementing them with suitably tailored but otherwise standard text. The task presents various levels of challenges, that all involve some form of Natural Language Processing, ranging from basic keyword extraction to more advanced techniques such as pattern recognition, parsing, entity extraction, coreference resolution, and uses expert knowledge captured as ripple-down rules. You will be working with industry experts and experienced external programmers within a real start up currently building application prototypes.",
+        "areas": [
+            "Natural Language Processing",
+            "pattern matching",
+            "Information Retrieval"
+        ]
+    },
+    {
+        "name": "A rule-based editing assistant",
+        "description": "When editing documents or writing messages, we are used to getting real time corrections and assistance, in particular to address misspellings and faulty grammatical constructions. The aim of the project is to bring a more sophisticated and personalised assistance to professional editing of documents and having to perform common editing tasks, some of which are similar enough and repeated enough to be identified and performed either automatically or semi-automatically. The application is expected to identify patterns in the way pdf or word documents are edited, and smoothly and non-intrusively interact with users to let them confirm or introduce exceptions to editing rules that can be as simple as italicising text, to more complex changes such as reformulating phrases. In the background, it will involve the building and updating of ripple-down rules, and could require the application of machine learning techniques. You will be working with industry experts and experienced external programmers within a real start up currently building application prototypes.",
+        "areas": [
+            "Artificial Intelligence",
+            "Natural Language Processing",
+            "User Interface Design"
+        ]
+    },
+    {
+        "name": "Apps for Predicting End of Life",
+        "description": "We have a close collaboration with clinicians and psychologists from various hospitals in Sydney and overseas and have piloted a web-based questionnaire for assessing predicting life expectancy in the frail and ill.",
+        "areas": [
+            "Biomedical Engineering",
+            "Health application",
+            "Artificial Intelligence"
+        ]
+    },
+    {
+        "name": "Development of a functional language compiler",
+        "description": "Cogent is a functional programming language written in Haskell for writing trustworthy and efficient systems code.",
+        "areas": [
+            "Programming Languages",
+            "Security"
+        ]
+    },
+    {
+        "name": "Training Deep Learning Models on Distributed GPUs",
+        "description": "",
+        "areas": [
+            "Machine Learning",
+            "Software Engineering"
+        ]
+    },
+    {
+        "name": "Building a Visualization Tool for Navigating Decision Boundaries of Deep Learning Models",
+        "description": "",
+        "areas": [
+            "Software Engineering",
+            "Machine Learning"
+        ]
+    },
+    {
+        "name": "Deep learning for medical image diagnosis",
+        "description": "Remarkable progress has been made in image recognition, primarily due to the available of large-scale annotated datasets (i.e. ImageNet), the revival of deep convolutional neural networks (CNN) and deep transfer learning. Recent research work has proved that medical image classification systems based on CNN can outperform human experts on skin cancer detection.",
+        "areas": [
+            "Computer Vision",
+            "Machine Learning",
+            "Health application"
+        ]
+    },
+    {
+        "name": "Cybersecurity using software defined networking",
+        "description": "In this project you will explore the used of software defined networking (SDN) technology to detect and mitigate cyber-security attacks.",
+        "areas": [
+            "Networks"
+        ]
+    },
+    {
+        "name": "Apps for cardiac rehabilitation and heart health",
+        "description": "We have a close collaboration with clinicians from POW Hospital and colleagues from the Heart Foundation. A number of projects based around design of Apps and web services exists. These include Android and iPhone versions of activity monitoring and clinical measurements for cardiac rehabilitation, as well as a My Heart Health implementation from material provided by the Heart Foundation.",
+        "areas": [
+            "Biomedical Engineering",
+            "Health application",
+            "Artificial Intelligence"
+        ]
+    },
+    {
+        "name": "High level synthesis of reliable FPGA-based application circuits",
+        "description": "We are developing TLegUp, an extension to the LegUp high-level synthesis tool from Toronto University. TLegUp generates triple modular redundant (TMR) circuit descriptions in Verilog from C language specifications of algorithms that are to be implemented in hardware. These circuits are intended for deployment on FPGAs in satellites, where ionising radiation can corrupt their implementation. The circuits generated by TLegUp can be recovered from corruption and automatically resynchronised with their TMR siblings within a specified time bound. This project involves working as a member of a project team to (1) prove the correctness of the approach we have been taking (the enhancements we have introduced to LegUp), (2) to assist with improving the performance of the implemented circuits, and (3) to assist with documenting our developments.",
+        "areas": [
+            "Reconfigurable computing",
+            "Compiler",
+            "Embedded Systems"
+        ]
+    },
+    {
+        "name": "Opponent Modelling in Poker",
+        "description": "The aim is to develop the foundations for an automated tool for opponent modelling in Poker.",
+        "areas": [
+            "Artificial Intelligence"
+        ]
+    },
+    {
+        "name": "'Drug' discovery through mining the insect genome for G protein-coupled receptors",
+        "description": "My laboratory has developed a computational approach to identifying drugs that bind to receptors with no known ligand, so-called orphan G protein-coupled receptors (GPCRs) (Ngo et al., Nature Chem Biol 2017). This work was applied to human receptors. In this thesis topic, the student will work with GPCRs in the genome of pest species, first identifying them and then classifying them based upon phylogeny. Using this information, we will then be able to apply our computational binding site method to identify 'surrogate' ligands to explore their potential as novel insecticide targets.",
+        "areas": [
+            "Bioinformatics",
+            "Genome informatics",
+            "Biochemistry"
+        ]
+    },
+    {
+        "name": "A front end for Internet of Things",
+        "description": "The Internet of Things (IoT) is a natural evolution of the Internet to cover the physical world, enabling many new services that will improve people?s everyday lives, spawn new businesses and make buildings, cities and transport smarter.",
+        "areas": [
+            "Networks"
+        ]
+    },
+    {
+        "name": "Analysing single cell RNA transcript expression in immune, cancer and stem cells",
+        "description": "",
+        "areas": [
+            "Bioinformatics",
+            "Big Data"
+        ]
+    },
+    {
+        "name": "Neural debugging and diagnosing system",
+        "description": "",
+        "areas": [
+            "Natural Language Processing"
+        ]
+    },
+    {
+        "name": "Mixture multiple intelligent knowledge agents using neural network",
+        "description": "",
+        "areas": [
+            "Natural Language Processing"
+        ]
+    },
+    {
+        "name": "High Dimensional Data Recovery",
+        "description": "",
+        "areas": [
+            "Databases"
+        ]
+    },
+    {
+        "name": "Multi-Relation Extraction with Deep Neural Networks",
+        "description": "",
+        "areas": [
+            "Natural Language Processing"
+        ]
+    },
+    {
+        "name": "Entity Linking with Deep Neural Networks",
+        "description": "",
+        "areas": [
+            "Natural Language Processing"
+        ]
+    },
+    {
+        "name": "Can Set Cover be Solved More Accurately in Polynomial Time Using Deep Learning",
+        "description": "",
+        "areas": [
+            "Natural Language Processing"
+        ]
+    },
+    {
+        "name": "A Machine Learning Approach to the Study of Emotion Formation: A Componential View",
+        "description": "",
+        "areas": [
+            "Machine Learning"
+        ]
+    },
+    {
+        "name": "Analytics of Smart Urban and Transport Data",
+        "description": "",
+        "areas": [
+            "Big Data",
+            "Data Mining and Analysis",
+            "Intelligent Transport Systems"
+        ]
+    },
+    {
+        "name": "Dual Trust-aware Recommender System by Incorporating Source Veracity and Users\u2019 Trust Relationships",
+        "description": "",
+        "areas": [
+            "Data Mining and Analysis",
+            "Machine Learning"
+        ]
+    },
+    {
+        "name": "A comparison of voting algorithms for proportional representation",
+        "description": "",
+        "areas": [
+            "Algorithms",
+            "Software Engineering",
+            ""
+        ]
+    },
+    {
+        "name": "A comparison of voting algorithms for proportional representation",
+        "description": "",
+        "areas": [
+            "Algorithms",
+            "Software Engineering"
+        ]
+    },
+    {
+        "name": "Algorithms for Fair Allocation of a Combination of Goods and Chores",
+        "description": "",
+        "areas": [
+            "Algorithms",
+            "Theory"
+        ]
+    },
+    {
+        "name": "Stable Matching Algorithms with Distributional Constraints",
+        "description": "",
+        "areas": [
+            "Algorithms",
+            "Artificial Intelligence",
+            "Theory"
+        ]
+    },
+    {
+        "name": "Collaborative Robot Planning",
+        "description": "",
+        "areas": [
+            "Artificial Intelligence"
+        ]
+    },
+    {
+        "name": "Formalising Theorems from Social Choice Theory",
+        "description": "",
+        "areas": [
+            "Formal Methods",
+            "Algorithms",
+            "Artificial Intelligence"
+        ]
+    },
+    {
+        "name": "Formalising Berge's lemma from Graph Theory",
+        "description": "",
+        "areas": [
+            "Formal Methods",
+            "Algorithms"
+        ]
+    },
+    {
+        "name": "Verifying a C implementation of the Shortest-Path Checker",
+        "description": "",
+        "areas": [
+            "Formal Methods",
+            "Algorithms"
+        ]
+    },
+    {
+        "name": "Porting a Formalization of LLVM from Coq to Isabelle/HOL",
+        "description": "",
+        "areas": [
+            "Formal Methods",
+            "Programming Languages",
+            "Compiler"
+        ]
+    },
+    {
+        "name": "A Simple Proof of Soundness of an Equational Theory for Call-By-Push-Value",
+        "description": "",
+        "areas": [
+            "Formal Methods",
+            "Programming Languages"
+        ]
+    },
+    {
+        "name": "Development of a Framework for Persuasion Analysis in Video",
+        "description": "",
+        "areas": [
+            "Artificial Intelligence"
+        ]
+    },
+    {
+        "name": "Smartphone app for capturing 2D images for human anthropometric measurment",
+        "description": "",
+        "areas": [
+            "Biomedical Engineering",
+            "Software Engineering"
+        ]
+    },
+    {
+        "name": "Snapshots of learning: beyond UX development for learning analytics dashboards",
+        "description": "",
+        "areas": [
+            "Big Data",
+            "HCI"
+        ]
+    },
+    {
+        "name": "Personality Insights: choosing your studies wisely",
+        "description": "",
+        "areas": [
+            "Machine Learning",
+            "Psychology",
+            "Learning & Teaching"
+        ]
+    },
+    {
+        "name": "Do you say it right? Modelling pronunciation in foreign languages",
+        "description": "",
+        "areas": [
+            "Machine Learning",
+            "Algorithms",
+            "Learning & Teaching"
+        ]
+    },
+    {
+        "name": "X-o-bot: knowledge generation for conversational agents",
+        "description": "",
+        "areas": [
+            "Artificial Intelligence",
+            "Natural Language Processing",
+            "Machine Learning"
+        ]
+    },
+    {
+        "name": "VideoLogger: adding metadata to lecture videos",
+        "description": "",
+        "areas": [
+            "Machine Learning",
+            "Artificial Intelligence",
+            "Data Mining and Analysis"
+        ]
+    },
+    {
+        "name": "readmydoc: providing smart support for tutors' marking using writing analytics",
+        "description": "",
+        "areas": [
+            "Natural Language Processing",
+            "Machine Learning",
+            "Learning & Teaching"
+        ]
+    },
+    {
+        "name": "It's not just sentiment: extracting and summarising the student voice",
+        "description": "",
+        "areas": [
+            "Data Mining and Analysis",
+            "Machine Learning",
+            "Learning & Teaching"
+        ]
+    },
+    {
+        "name": "AWS Sumerian for VR application and AI",
+        "description": "",
+        "areas": [
+            "Virtual Reality",
+            "Artificial Intelligence",
+            "Learning & Teaching"
+        ]
+    },
+    {
+        "name": "Brain Computer Interfaces (BCI), Virtual Reality (VR) and Extended Reality (XR): exploration and applications",
+        "description": "",
+        "areas": [
+            "Virtual Reality",
+            "Psychology",
+            "Artificial Intelligence"
+        ]
+    },
+    {
+        "name": "Tracking users in VR: perception, action and intention",
+        "description": "",
+        "areas": [
+            "Virtual Reality",
+            "Data Mining and Analysis",
+            "Psychology"
+        ]
+    },
+    {
+        "name": "Design and develop secure Authorization for app development",
+        "description": "Develop authorization services for login, 2FA, and password resetting for protecting endpoints of various applications",
+        "areas": [
+            "Security",
+            "Software Engineering"
+        ]
+    },
+    {
+        "name": "Design and develop backend services for medical questionnaires and responses",
+        "description": "Develop backend services for medical questionnaires and responses used in various applications",
+        "areas": [
+            "Software Engineering",
+            "Databases"
+        ]
+    },
+    {
+        "name": "Design and develop software cloud services for health data",
+        "description": "Develop services that allow transformation of observational data from various applications to private and public health records.",
+        "areas": [
+            "Software Engineering"
+        ]
+    },
+    {
+        "name": "Mechanised Bilateral Proof",
+        "description": "",
+        "areas": [
+            "Concurrency",
+            "Formal Methods"
+        ]
+    },
+    {
+        "name": "Property-Based-Testing for Cogent",
+        "description": "",
+        "areas": [
+            "Programming Languages",
+            "Formal Methods"
+        ]
+    },
+    {
+        "name": "Deep Learning-based Content Analysis for Microscopy Images",
+        "description": "",
+        "areas": [
+            "Computer Vision",
+            "Machine Learning",
+            "Medical Image Computing"
+        ]
+    },
+    {
+        "name": "Salient Image Feature Extraction with Deep Learning Techniques",
+        "description": "",
+        "areas": [
+            "Computer Vision",
+            "Machine Learning",
+            "Biomedical Engineering"
+        ]
+    },
+    {
+        "name": "Interpreting Deep Learning Representations for Object Detection",
+        "description": "",
+        "areas": [
+            "Computer Vision",
+            "Machine Learning",
+            "Artificial Intelligence"
+        ]
+    },
+    {
+        "name": "Using AI and deep learning to dissect the heterogeneity of pancreatic cancer cells",
+        "description": "",
+        "areas": [
+            "Artificial Intelligence"
+        ]
+    },
+    {
+        "name": "Big data analytics for smart cities: Integration of social media and traffic data sources",
+        "description": "",
+        "areas": [
+            "Big Data",
+            "Data Mining and Analysis",
+            "Intelligent Transport Systems"
+        ]
+    },
+    {
+        "name": "RUSH-2: Development of new firmware for the RUSH platform",
+        "description": "",
+        "areas": [
+            "Embedded Systems",
+            "Fault tolerance",
+            "Reconfigurable computing"
+        ]
+    },
+    {
+        "name": "Image analysis-based quantification of endosomal conversion",
+        "description": "",
+        "areas": [
+            "Medical Image Computing",
+            "Artificial Intelligence",
+            "Bioinformatics"
+        ]
+    },
+    {
+        "name": "Transfer learning in medical image analysis",
+        "description": "",
+        "areas": [
+            "Medical Image Computing",
+            "Artificial Intelligence",
+            "Machine Learning"
+        ]
+    },
+    {
+        "name": "Combining segmentation and registration of multimodal medical image data",
+        "description": "",
+        "areas": [
+            "Medical Image Computing",
+            "Artificial Intelligence",
+            "Machine Learning"
+        ]
+    },
+    {
+        "name": "Blood vessel synthesis using Generative Adversarial Network (GAN)",
+        "description": "",
+        "areas": [
+            "Computer Vision",
+            "Machine Learning",
+            "Medical Image Computing"
+        ]
+    },
+    {
+        "name": "Deep learning to drive medical image based decision making",
+        "description": "",
+        "areas": [
+            "Machine Learning",
+            "Computer Vision",
+            "Medical Image Computing"
+        ]
+    },
+    {
+        "name": "Building an Medical Atlas database",
+        "description": "",
+        "areas": [
+            "Big Data",
+            "Biomedical Engineering",
+            "Data Mining and Analysis"
+        ]
+    },
+    {
+        "name": "Image derived biomarkers for cancer prognostication from distributed medical images",
+        "description": "",
+        "areas": [
+            "Data Mining and Analysis",
+            "Machine Learning",
+            "Medical Image Computing"
+        ]
+    },
+    {
+        "name": "Incorporating missing data and measurement uncertainties into clinical decision support models using machine learning",
+        "description": "",
+        "areas": [
+            "Algorithms",
+            "Data Mining and Analysis",
+            "Machine Learning"
+        ]
+    },
+    {
+        "name": "Machine Learning using Medical Heart Images",
+        "description": "",
+        "areas": [
+            "Machine Learning",
+            "Medical Image Computing",
+            "Modelling"
+        ]
+    },
+    {
+        "name": "Management of XML Electronic Invoices",
+        "description": "",
+        "areas": [
+            "Software Engineering",
+            "Web Applications",
+            "Modelling"
+        ]
+    },
+    {
+        "name": "Proof Translations for Higher-Order Logic",
+        "description": "",
+        "areas": [
+            "Formal Methods"
+        ]
+    },
+    {
+        "name": "Recursive Types for Cogent",
+        "description": "",
+        "areas": [
+            "Programming Languages",
+            "Formal Methods"
+        ]
+    },
+    {
+        "name": "Flowgent: Information-Flow Control for Cogent",
+        "description": "",
+        "areas": [
+            "Security",
+            "Programming Languages",
+            "Formal Methods"
+        ]
+    },
+    {
+        "name": "Sensors and orchestration in learning spaces",
+        "description": "",
+        "areas": [
+            "Internet of Things",
+            "Learning & Teaching",
+            "HCI"
+        ]
+    },
+    {
+        "name": "The speech that Trump never gave",
+        "description": "",
+        "areas": [
+            "Artificial Intelligence",
+            "Machine Learning",
+            "Computer Vision"
+        ]
+    },
+    {
+        "name": "Cogent Proof Infrastructure",
+        "description": "",
+        "areas": [
+            "Formal Methods",
+            "Programming Languages",
+            "Compiler"
+        ]
+    },
+    {
+        "name": "Extending Cogent's Data-Description Language with Layout Polymorphism",
+        "description": "",
+        "areas": [
+            "Compiler",
+            "Programming Languages",
+            "Formal Methods"
+        ]
+    },
+    {
+        "name": "Machine learning in genomics and immunology",
+        "description": "",
+        "areas": [
+            "Machine Learning",
+            "Bioinformatics",
+            "Big Data"
+        ]
+    },
+    {
+        "name": "Implementing data quality controls in blockchain-based systems (Hyperledger Fabric)",
+        "description": "",
+        "areas": [
+            "Software Engineering",
+            "Distributed Systems"
+        ]
+    },
+    {
+        "name": "Implementing data quality controls in blockchain-based systems (Ethereum)",
+        "description": "",
+        "areas": [
+            "Software Engineering",
+            "Distributed Systems"
+        ]
+    },
+    {
+        "name": "Dynamic BWT for large text repositories",
+        "description": "",
+        "areas": [
+            "Information Retrieval",
+            "Big Data",
+            "Databases"
+        ]
+    },
+    {
+        "name": "Self-Sovereign Identity using Blockchain",
+        "description": "",
+        "areas": [
+            "Software Engineering",
+            "Distributed Systems"
+        ]
+    },
+    {
+        "name": "App for post-surgical management of surgical patients",
+        "description": "",
+        "areas": [
+            "Biomedical Engineering",
+            "Web Applications",
+            ""
+        ]
+    },
+    {
+        "name": "New Webcms3 Modules",
+        "description": "",
+        "areas": [
+            "Web Applications",
+            "Learning & Teaching",
+            ""
+        ]
+    },
+    {
+        "name": "Brain to Vision: Reconstructing Your Vision from EEG Brain Signals",
+        "description": "",
+        "areas": [
+            "Machine Learning",
+            "Data Mining and Analysis",
+            "HCI"
+        ]
+    },
+    {
+        "name": "A deep learning Query-by-Example system for Remote Sensing Imagery",
+        "description": "",
+        "areas": [
+            "Artificial Intelligence",
+            "Computer Vision",
+            "Information Retrieval"
+        ]
+    },
+    {
+        "name": "Verifying C Data-Types for Cogent",
+        "description": "",
+        "areas": [
+            "Formal Methods",
+            "Programming Languages",
+            "Algorithms"
+        ]
+    },
+    {
+        "name": "Verifiying computational complexity via first-order logic",
+        "description": "",
+        "areas": [
+            "Theory",
+            "Artificial Intelligence",
+            "Compiler"
+        ]
+    },
+    {
+        "name": "ZedBoard Mandelbrot visualizer",
+        "description": "",
+        "areas": [
+            "Reconfigurable computing",
+            "High-Performance-Computing",
+            "Embedded Systems"
+        ]
+    },
+    {
+        "name": "Text mining for financial forecasting",
+        "description": "",
+        "areas": [
+            "Data Mining and Analysis",
+            "Big Data",
+            "Artificial Intelligence"
+        ]
+    },
+    {
+        "name": "Satellite Imagery Data Enhanced Human Mobility Analysis in Smart Cities",
+        "description": "",
+        "areas": [
+            "Machine Learning",
+            "Data Mining and Analysis",
+            "Internet of Things"
+        ]
+    },
+    {
+        "name": "Transferring Spatial-temporal Patterns across Different Cities",
+        "description": "",
+        "areas": [
+            "Machine Learning",
+            "Data Mining and Analysis",
+            "Internet of Things"
+        ]
+    },
+    {
+        "name": "Participatory budgeting: Models and Algorithms",
+        "description": "",
+        "areas": [
+            "Algorithms",
+            "Artificial Intelligence"
+        ]
+    },
+    {
+        "name": "Privacy protected data analytics",
+        "description": "",
+        "areas": [
+            "Security",
+            "Data Mining and Analysis"
+        ]
+    },
+    {
+        "name": "Analyse and optimise seL4 cold-cache performance",
+        "description": "",
+        "areas": [
+            "Operating Systems"
+        ]
+    },
+    {
+        "name": "Automatic Emotion Recognition from Physiology: A Deep Learning Approach",
+        "description": "",
+        "areas": [
+            "Artificial Intelligence",
+            "Machine Learning",
+            "Psychology"
+        ]
+    },
+    {
+        "name": "A Data-Driven Approach for Learning Speech Indicators of Mild Cognitive Disorder",
+        "description": "",
+        "areas": [
+            "Artificial Intelligence",
+            "Machine Learning",
+            "Psychology"
+        ]
+    },
+    {
+        "name": "The efficient privacy-preserving machine learning on IoT and Cloud",
+        "description": "",
+        "areas": [
+            "Security",
+            "Machine Learning",
+            "Internet of Things"
+        ]
+    },
+    {
+        "name": "The origins of motility: reconstructing the ancient bacterial flagellar motor",
+        "description": "",
+        "areas": [
+            "Bioinformatics",
+            "Big Data",
+            "Databases"
+        ]
+    },
+    {
+        "name": "Insect recognition with 1D convolutional networks",
+        "description": "",
+        "areas": [
+            "Machine Learning",
+            "Artificial Intelligence",
+            "Embedded Systems"
+        ]
+    },
+    {
+        "name": "Traffic flow detection using camera and Lidar",
+        "description": "",
+        "areas": [
+            "Computer Vision",
+            "Intelligent Transport Systems",
+            "Artificial Intelligence"
+        ]
+    },
+    {
+        "name": "Power management on seL4",
+        "description": "",
+        "areas": [
+            "Operating Systems"
+        ]
+    },
+    {
+        "name": "Performance limits of protected real-time OSes",
+        "description": "",
+        "areas": [
+            "Operating Systems"
+        ]
+    },
+    {
+        "name": "Aligning regulatory enhancers: tracing the evolution of multicellular life",
+        "description": "",
+        "areas": [
+            "Bioinformatics",
+            "Algorithms",
+            "Machine Learning"
+        ]
+    },
+    {
+        "name": "Classification of motifs that regulate chromatin accessibility during development",
+        "description": "",
+        "areas": [
+            "Bioinformatics",
+            "Machine Learning"
+        ]
+    },
+    {
+        "name": "Image Processing for automated pulse wave Doppler ultrasound analysis",
+        "description": "",
+        "areas": [
+            "Medical Image Computing",
+            "Machine Learning",
+            "Biomedical Engineering"
+        ]
+    },
+    {
+        "name": "Image Analysis for Automated Rigid Registration for whole organ assessment using 3D ultrasound (3D-US)",
+        "description": "",
+        "areas": [
+            "Biomedical Engineering",
+            "Medical Image Computing",
+            "Computer Vision"
+        ]
+    },
+    {
+        "name": "JMeter for Blockchain Performance Testing",
+        "description": "",
+        "areas": [
+            "Software Engineering",
+            "Distributed Systems"
+        ]
+    },
+    {
+        "name": "Gene Expression Profiling in cancers",
+        "description": "",
+        "areas": [
+            "Bioinformatics",
+            "Machine Learning",
+            "Data Mining and Analysis"
+        ]
+    },
+    {
+        "name": "Envy-free resource allocation for 2 agents",
+        "description": "",
+        "areas": [
+            "Algorithms",
+            "Artificial Intelligence"
+        ]
+    },
+    {
+        "name": "App to assess and treat Benign Paroxysmal Positional Vertigo (BPPV)",
+        "description": "",
+        "areas": [
+            "Software Engineering",
+            "signal processing",
+            "Computer Vision"
+        ]
+    },
+    {
+        "name": "Smart utensils or \u2018Smart cup\u2019 project",
+        "description": "",
+        "areas": [
+            "Signal Processing",
+            "Embedded Systems",
+            "Biomedical Engineering"
+        ]
+    }
+]
