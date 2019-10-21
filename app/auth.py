@@ -66,6 +66,7 @@ def register():
     hashed_pass = bcrypt.hashpw(password.encode('utf-8'), bcrypt.gensalt())
     name = email.split('@')[0]
 
+    # get the id for a student account
     accType = db.select_columns('account_types', ['id'], ['name'], ['student'])
 
     db.insert_single(
@@ -93,11 +94,6 @@ def login():
                             ['email'],
                             [email])
 
-    accType = db.select_columns('account_types',
-                                ['name'],
-                                ['id'],
-                                [res[0][1]])[0][0]
-
     if not len(res):
         db.close()
         return error('Unknown email!')
@@ -105,6 +101,12 @@ def login():
     if not bcrypt.checkpw(password.encode('utf-8'), hashed_password[0]):
         db.close()
         return error('Incorrect password!')
+
+    # get the current user's account type
+    accType = db.select_columns('account_types',
+                                ['name'],
+                                ['id'],
+                                [res[0][1]])[0][0]
 
     session['user'] = email
     session['accType'] = accType
