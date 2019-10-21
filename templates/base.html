@@ -28,10 +28,10 @@
       <ul id="nav-bar-dropdown" class="dropdown-content">
         <li><a href="#!">Search Topics</a></li>
 
-        {% if session['accType'] == 'supervisor' %}
+        {% if session['acc_type'] == 'supervisor' or session['acc_type'] == 'course_admin' %}
           <li><a href="#!">Create Topic</a></li>
           <li><a href="#!">Manage Topics</a></li>
-        {% elif session['accType'] == 'course_admin' %}
+        {% elif session['acc_type'] == 'course_admin' %}
           <li><a href="#!">Create Course</a></li>
           <li><a href="#!">Manage Course</a></li>
           <li><a href="#!">Add Staff</a></li>
