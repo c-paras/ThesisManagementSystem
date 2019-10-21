@@ -27,11 +27,16 @@
       <!-- Dropdown -->
       <ul id="nav-bar-dropdown" class="dropdown-content">
         <li><a href="#!">Search Topics</a></li>
-        <li><a href="#!">Create Topic</a></li>
-        <li><a href="#!">Manage Topics</a></li>
-        <li><a href="#!">Create Course</a></li>
-        <li><a href="#!">Manage Course</a></li>
-        <li><a href="#!">Add Staff</a></li>
+
+        {% if session['accType'] == 'supervisor' %}
+          <li><a href="#!">Create Topic</a></li>
+          <li><a href="#!">Manage Topics</a></li>
+        {% elif session['accType'] == 'course_admin' %}
+          <li><a href="#!">Create Course</a></li>
+          <li><a href="#!">Manage Course</a></li>
+          <li><a href="#!">Add Staff</a></li>
+        {% endif %}
+        
         <li class="divider"></li>
         <li><a href="#!">Change Password</a></li>
         <li><a href="#!">Logout</a></li>
