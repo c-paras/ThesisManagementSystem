@@ -88,7 +88,15 @@ def login():
         return e.args
 
     db.connect()
-    res = db.select_columns('users', ['password'], ['email'], [email])
+    res = db.select_columns('users',
+                            ['password', 'account_type'],
+                            ['email'],
+                            [email])
+
+    accType = db.select_columns('account_types',
+                                ['name'],
+                                ['id'],
+                                [res[0][1]])[0][0]
 
     if not len(res):
         db.close()
@@ -99,5 +107,6 @@ def login():
         return error('Incorrect password!')
 
     session['user'] = email
+    session['accType'] = accType
     db.close()
     return jsonify({'status': 'ok'})
