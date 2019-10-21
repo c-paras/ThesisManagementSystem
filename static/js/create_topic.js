@@ -1,6 +1,5 @@
 function submitCreate() {
   const form = $('#create_topic-form');
-  console.log(form);
   if (!formValid(form)) {
     return;
   }
@@ -14,4 +13,7 @@ function submitCreate() {
     }
   });
 }
+
+
+
 
