@@ -2,11 +2,23 @@ from flask import Blueprint
 from flask import render_template
 from flask import request
 from flask import session
+from functools import wraps
+from flask import abort
 
 from app.auth import loggedin
 from app.helpers import *
 from app.db_manager import sqliteManager as db
 create_topic = Blueprint('create_topic', __name__)
+
+
+def no_auth(func):
+    ''' Raise 403 error if user is not authorized to create topic '''
+    @wraps(func)
+    def wrapper(*args, **kwargs):
+        if session['acc_type'] == 'student':
+            abort(403)
+        return func(*args, **kwargs)
+    return wrapper
 
 
 @create_topic.route('/create_topic', methods=['GET', 'POST'])
