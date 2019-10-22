@@ -61,8 +61,8 @@ function makeCard(title, description, topics, supervisor) {
 }
 
 function makeSearchHeading(num) {
-  var card = `<p class="col s10 offset-m1" style="font-size:50px">${num} Search Results</p>`;
-  return card
+  var card = `<p class="col s10 offset-m1" style="font-size:30px">Search Results (found ${num} matching topics)</p>`;
+  return card;
 }
 
 function searchResults() {
