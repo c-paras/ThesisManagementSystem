@@ -1,46 +1,42 @@
-console.log('Client side javascript file is loaded');
+$('#topics').chips();
+$('#topics').chips({
+    placeholder: 'Enter a topic',
+    secondaryPlaceholder: '+Tag',
+});
+
+$('#topics').chips({
+    autocompleteOptions: {
+      data: {
+        'Robotics': null,
+        'Graphics': null,
+        'User Interfaces': null,
+        'Formal Methods': null,
+      },
+      limit: Infinity,
+      minLength: 1
+    }
+  });
+
+$('#supervisor').chips();
+$('#supervisor').chips({
+    placeholder: 'Enter Supervisor',
+    secondaryPlaceholder: '+Tag',
+});
+
+$('#supervisor').chips({
+    autocompleteOptions: {
+      data: {
+        'z7654321': null,
+        'z0001112': null,
+        'z8000003': null,
+        'z8000001': null,
+      },
+      limit: Infinity,
+      minLength: 1
+    }
+  });
 
 
-window.onload = function initChips(event) {
-    $('#topics').chips();
-    $('#topics').chips({
-        placeholder: 'Enter a topic',
-        secondaryPlaceholder: '+Tag',
-    });
-
-    $('#topics').chips({
-        autocompleteOptions: {
-          data: {
-            'Robotics': null,
-            'Graphics': null,
-            'User Interfaces': null,
-            'Formal Methods': null,
-          },
-          limit: Infinity,
-          minLength: 1
-        }
-      });
-
-    $('#supervisor').chips();
-    $('#supervisor').chips({
-        placeholder: 'Enter Supervisor',
-        secondaryPlaceholder: '+Tag',
-    });
-
-    $('#supervisor').chips({
-        autocompleteOptions: {
-          data: {
-            'z7654321': null,
-            'z0001112': null,
-            'z8000003': null,
-            'z8000001': null,
-          },
-          limit: Infinity,
-          minLength: 1
-        }
-      });
-
-};
 
 function makeCard(title, description, topics, supervisor) {
     var card = `<div class="row">\

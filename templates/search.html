@@ -11,15 +11,21 @@
           <span class="helper-text" data-error="Search Invalid"></span>
         </div>
       </div>
-      <div class="chips chips-autocomplete chips-placeholder" id="topics"></div>
-      <div class="chips chips-autocomplete chips-placeholder" id="supervisor"></div>
-      <p>
-        <label>
-          <input type="checkbox" class="filled-in" checked="checked" name="checkbox-vis"/>
-          <span>Hide topics not longer available</span>
-        </label>
-      </p>
-      <div class="center">
+      <div class="row">
+        <div class="input-field"></div>
+        <div class="chips chips-autocomplete chips-placeholder" id="topics"></div>
+      </div>
+      <div class="row">
+        <div class="chips chips-autocomplete chips-placeholder" id="supervisor"></div>
+      <div class="row" style="margin-top: 30px;">
+        <p>
+          <label>
+            <input type="checkbox" class="filled-in" checked="checked" name="checkbox-vis"/>
+            <span>Hide topics that are no longer on offer</span>
+          </label>
+        </p>
+     </div>
+      <div class="center" style="margin-top: 50px">
         <a class="waves-effect waves-light btn" id="search-btn" onclick="searchResults()">Search
           <i class="material-icons right">send</i>
         </a>
@@ -29,5 +35,4 @@
   <div class="row" id="results">
 
   </div>
-  <script src="{{ url_for('static', filename='js/Search.js') }}"></script>
 {% endblock %}

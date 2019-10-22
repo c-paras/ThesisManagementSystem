@@ -22,6 +22,7 @@ def searchTopic():
 
     stopWords = ['AND', 'THE', 'WAS', 'IS', 'A', 'WE', 'THAT', 'IN', 'TO']
 
+    # getting input from forms
     searchTopic = list(dict.fromkeys(request.form.getlist('tagsTopic')))
     searchSuper = list(dict.fromkeys(request.form.getlist('tagsSupervisor')))
     searchTopic = list(filter(None, searchTopic))
@@ -29,38 +30,45 @@ def searchTopic():
     searchTerms = request.form.get('search')
     searchCheck = request.form.get('checkbox-vis')
 
+    # cleaning up input
     searchTerms = searchTerms.upper()
     searchTerms = re.split(r"\s+", str(searchTerms))
     searchTerms = list(filter(None, searchTerms))
     searchTerms = [word for word in searchTerms if word not in stopWords]
     db.connect()
 
+    # getting topic_area
     topicAreas = []
     if len(searchTopic) > 0:
         for area in searchTopic:
             topicAreas.append(db.select_columns('topic_areas',
                                                 ['name', 'topic'],
                                                 ['name'], [area]))
+    # getting supervisors
     supervisor = []
     if len(searchSuper) > 0:
         for sup in searchSuper:
             supervisor.append(db.select_columns('users', ['name', 'id'],
                                                 ['name'], [sup]))
 
+    # getting rid of empty string and empty results
     topicAreas = [i for sub in topicAreas for i in sub]
     topicAreas = [i for i in topicAreas if i != []]
     supervisor = [i for sub in supervisor for i in sub]
     supervisor = [i for i in supervisor if i != []]
 
+    # Getting topics that match the topic_area and/or
+    # supervisors if supplied
+    # topic_are and superisors ar ORed as described in
+    # user stories
     if len(searchTopic) > 0 and len(topicAreas) == 0:
         return jsonify({'status': 'ok', 'topics': [],
-                    'topicsArea': [],
-                    'topicSupervisor': []})
+                        'topicsArea': [],
+                        'topicSupervisor': []})
     elif len(searchSuper) > 0 and len(supervisor) == 0:
         return jsonify({'status': 'ok', 'topics': [],
-                    'topicsArea': [],
-                    'topicSupervisor': []})
-
+                        'topicsArea': [],
+                        'topicSupervisor': []})
 
     if len(topicAreas) == 0 and len(supervisor) == 0:
         res = db.select_columns('topics',
@@ -94,7 +102,7 @@ def searchTopic():
                                               [sup[1], area[1]]))
         res = [i for sub in temp for i in sub]
 
-
+    # checking if search terms are matched
     matched = [False] * len(res)
     for word in searchTerms:
         for i in range(len(res)):
@@ -112,6 +120,7 @@ def searchTopic():
             if (matched[i]):
                 matchedSearchPhrase.append(res[i])
 
+    # checking if topics are visible or not
     toReturnSearches = []
     if searchCheck == 'on':
         for results in matchedSearchPhrase:
@@ -120,19 +129,19 @@ def searchTopic():
     else:
         toReturnSearches = matchedSearchPhrase
 
+    # getting the topics_areas for the filtered topics
     toReturnTopicArea = []
-
     for topics in toReturnSearches:
         toReturnTopicArea.append(db.select_columns('topic_areas',
                                                    ['name'],
                                                    ['topic'], [topics[0]]))
 
+    # getting the supervisors for the filtered topics
     toReturnSupervisor = []
     for topics in toReturnSearches:
         toReturnSupervisor.append(db.select_columns('users',
                                                     ['name'],
                                                     ['id'], [topics[2]]))
-
 
     return jsonify({'status': 'ok', 'topics': toReturnSearches,
                     'topicsArea': toReturnTopicArea,
