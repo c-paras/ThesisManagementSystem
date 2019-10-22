@@ -65,10 +65,17 @@ def register():
 
     hashed_pass = bcrypt.hashpw(password.encode('utf-8'), bcrypt.gensalt())
     name = email.split('@')[0]
+
+    # get the id for a student account
+    acc_type = db.select_columns('account_types',
+                                 ['id'],
+                                 ['name'],
+                                 ['student'])
+
     db.insert_single(
         'users',
-        [name, hashed_pass, email],
-        ['name', 'password', 'email']
+        [name, hashed_pass, email, acc_type[0][0]],
+        ['name', 'password', 'email', 'account_type']
     )
     db.close()
     return jsonify({'status': 'ok'})
@@ -86,7 +93,8 @@ def login():
 
     db.connect()
     res = db.select_columns('users',
-                            ['password', 'id'],
+
+                            ['password', 'account_type', 'id'],
                             ['email'],
                             [email])
 
@@ -98,7 +106,14 @@ def login():
         db.close()
         return error('Incorrect password!')
 
+    # get the current user's account type
+    acc_type = db.select_columns('account_types',
+                                 ['name'],
+                                 ['id'],
+                                 [res[0][1]])[0][0]
+
     session['user'] = email
-    session['id'] = res[0][1]
+    session['id'] = res[0][2]
+    session['acc_type'] = acc_type
     db.close()
     return jsonify({'status': 'ok'})

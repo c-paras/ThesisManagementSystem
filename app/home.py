@@ -13,13 +13,25 @@ def index():
     if 'user' not in session:
         return render_template('login.html', title='Login', hide_navbar=True)
     else:
-        return render_template('home.html',
-                               heading='My Dashboard', title='My Dashboard')
+        return dashboard()
 
 
 @home.route('/home', methods=['GET'])
 @home.route('/dashboard', methods=['GET'])
 @loggedin
 def dashboard():
+    is_student = session['acc_type'] == 'student'
+    if(is_student):
+        return student_dashboard()
+    else:
+        return staff_dashboard()
+
+
+def student_dashboard():
+    return render_template('home.html',
+                           heading='My Dashboard', title='My Dashboard')
+
+
+def staff_dashboard():
     return render_template('home.html',
                            heading='My Dashboard', title='My Dashboard')
