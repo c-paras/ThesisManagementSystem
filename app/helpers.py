@@ -1,9 +1,4 @@
-from flask import g
 from flask import jsonify
-
-import sqlite3
-
-import config
 
 
 def get_fields(form, fields):
