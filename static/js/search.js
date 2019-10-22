@@ -13,7 +13,7 @@ window.onload = function initChips(event) {
           data: {
             'Robotics': null,
             'Graphics': null,
-            'User Interface': null
+            'User Interfaces': null
           },
           limit: Infinity,
           minLength: 1
@@ -29,9 +29,8 @@ window.onload = function initChips(event) {
     $('#supervisor').chips({
         autocompleteOptions: {
           data: {
-            'Robotics': null,
-            'Graphics': null,
-            'User Interface': null
+            'z7654321': null,
+            'z0001112': null,
           },
           limit: Infinity,
           minLength: 1
@@ -40,12 +39,21 @@ window.onload = function initChips(event) {
 
 };
 
-function makeCard(title, description) {
+function makeCard(title, description, topics, supervisor) {
     var card = `<div class="row">\
-    <div class="col s8 offset-m2">\
+    <div class="col s10 offset-m1">\
       <div class="card white-grey darken-1">\
         <div class="card-content black-text">\
-          <span class="card-title">${title}</span>\
+          <span class="card-title">
+            <p style="text-align:left;">
+              ${title}
+              <span style="float:right;">
+                ${topics}
+              </span>
+            </p>
+            <hr>
+          </span>\
+          <p>Supervisor: ${supervisor}</p>
           <p>${description}</p>\
         </div>\
         <div class="card-action">\
@@ -61,7 +69,6 @@ function makeCard(title, description) {
 function searchResults() {
     const form = $('#search-form');
     if (!formValid(form)) {
-        console.log("not valid")
         return;
     }
 
@@ -88,7 +95,7 @@ function searchResults() {
             var cards = "";
             console.log(res.topics);
             for (i=0; i < res.topics.length; i++) {
-                cards = cards + makeCard(res.topics[i][1], res.topics[i][3]);
+                cards = cards + makeCard(res.topics[i][1], res.topics[i][3], res.topicsArea[i], res.topicSupervisor[i]);
              }
             
             // for (let i = 0; i < $('form').length; i++) {
@@ -96,12 +103,12 @@ function searchResults() {
             //     $('form')[i].reset()
             // }
             $("[id='tagsTopic']").each((function() {
-              $(this).val('')
-            }))
+              $(this).val('');
+            }));
 
             $("[id='tagsSupervisor']").each((function() {
-              $(this).val('')
-            }))
+              $(this).val('');
+            }));
             
             document.getElementById("results").innerHTML = cards;
         }
