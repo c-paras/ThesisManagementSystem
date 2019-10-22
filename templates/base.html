@@ -5,6 +5,9 @@
       TMS - {{ title }}
     </title>
 
+    <!-- Load TMS logo first -->
+    <link type="image/x-icon" href="{{ url_for('static', filename='img/favico.ico') }}" rel="icon">
+
     <!-- Import Google Icon Font -->
     <link type="text/css" rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
 
@@ -22,7 +25,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   </head>
 
-  <body>
+  <body id="tms-top">
     {% if not hide_navbar %}
       <!-- Dropdown -->
       <ul id="nav-bar-dropdown" class="dropdown-content">
@@ -40,37 +43,58 @@
         
         <li class="divider"></li>
         <li><a href="#!">Change Password</a></li>
-        <li><a href="#!">Logout</a></li>
+        <li><a href="/logout">Logout</a></li>
       </ul>
 
       <!-- Navigation -->
-      <nav>
-        <div class="nav-wrapper">
-          <a href="/" class="brand-logo">&nbsp;TMS</a>
-          <ul class="right hide-on-med-and-down">
-            <li>
-              <a class="dropdown-trigger" href="#!" data-target="nav-bar-dropdown">
-                You are logged in as z1111111 <!-- TODO -->
-                <i class="material-icons right">arrow_drop_down</i>
-              </a>
-            </li>
-          </ul>
-        </div>
-      </nav>
+      <div class="navbar-fixed">
+        <nav>
+          <div class="nav-wrapper">
+            <a href="/" class="brand-logo">
+              <div class="valign-wrapper">
+                &nbsp;
+                <img src="{{ url_for('static', filename='img/favico.ico') }}" alt="" height="auto" width="50">
+                &nbsp;TMS
+              </div>
+            </a>
+            <ul class="right hide-on-med-and-down">
+              <li>
+                <a class="dropdown-trigger" href="#!" data-target="nav-bar-dropdown">
+                  You are logged in as z1111111 <!-- TODO -->
+                  <i class="material-icons right">arrow_drop_down</i>
+                </a>
+              </li>
+            </ul>
+          </div>
+        </nav>
+      </div>
     {% endif %}
 
-    <div class="container">
-      {% if not hide_navbar and heading %}
-        {# There should be a heading on any page with a navbar #}
-        {# If heading is blank, do not show <hr> #}
-        <h3>{{ heading }}</h3>
-        <hr>
-      {% endif %}
+    <main>
+      <div class="container" style="padding: 30px !important;">
+        {% if not hide_navbar and heading %}
+          {# There should be a heading on any page with a navbar #}
+          {# If heading is blank, do not show <hr> #}
+          <h4>{{ heading }}</h4>
+          <hr>
+        {% endif %}
 
-      <!-- Page content -->
-      {% block body %}
-      {% endblock %}
-    </div>
+        <!-- Page content -->
+        {% block body %}
+        {% endblock %}
+      </div>
+    </main>
+
+    {% if not hide_navbar %}
+      <footer class="page-footer">
+        <div class="">
+          <div class="container">
+            © 2019 Copyright TMS
+            <a class="grey-text text-lighten-4 right" href="#tms-top">BACK TO TOP</a>
+          </div>
+        </div>
+      </footer>
+    {% endif %}
 
     <!-- JavaScript at end of body for optimized loading -->
     <script
@@ -94,7 +118,7 @@
       <script type="text/javascript">
         /* Activate navbar dropdown */
         $(document).ready(function () {
-          $('.dropdown-trigger').dropdown({ hover: true })
+          $('.dropdown-trigger').dropdown({ hover: true, coverTrigger: false })
         })
       </script>
     {% endif %}

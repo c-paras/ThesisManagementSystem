@@ -1,7 +1,6 @@
 from os import path
 
 from flask import Flask
-from flask import g
 
 from app.auth import auth
 from app.home import home
