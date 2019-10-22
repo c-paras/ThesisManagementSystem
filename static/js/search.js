@@ -13,7 +13,8 @@ window.onload = function initChips(event) {
           data: {
             'Robotics': null,
             'Graphics': null,
-            'User Interfaces': null
+            'User Interfaces': null,
+            'Formal Methods': null,
           },
           limit: Infinity,
           minLength: 1
@@ -31,6 +32,8 @@ window.onload = function initChips(event) {
           data: {
             'z7654321': null,
             'z0001112': null,
+            'z8000003': null,
+            'z8000001': null,
           },
           limit: Infinity,
           minLength: 1

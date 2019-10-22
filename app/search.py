@@ -41,15 +41,26 @@ def searchTopic():
             topicAreas.append(db.select_columns('topic_areas',
                                                 ['name', 'topic'],
                                                 ['name'], [area]))
-
     supervisor = []
     if len(searchSuper) > 0:
         for sup in searchSuper:
             supervisor.append(db.select_columns('users', ['name', 'id'],
                                                 ['name'], [sup]))
-    res = []
+
     topicAreas = [i for sub in topicAreas for i in sub]
+    topicAreas = [i for i in topicAreas if i != []]
     supervisor = [i for sub in supervisor for i in sub]
+    supervisor = [i for i in supervisor if i != []]
+
+    if len(searchTopic) > 0 and len(topicAreas) == 0:
+        return jsonify({'status': 'ok', 'topics': [],
+                    'topicsArea': [],
+                    'topicSupervisor': []})
+    elif len(searchSuper) > 0 and len(supervisor) == 0:
+        return jsonify({'status': 'ok', 'topics': [],
+                    'topicsArea': [],
+                    'topicSupervisor': []})
+
 
     if len(topicAreas) == 0 and len(supervisor) == 0:
         res = db.select_columns('topics',
@@ -69,8 +80,9 @@ def searchTopic():
             temp.append(db.select_columns('topics',
                                           ['id', 'name', 'supervisor',
                                            'description', 'visible'],
-                                          ['id'], [sup[1]]))
+                                          ['supervisor'], [sup[1]]))
         res = [i for sub in temp for i in sub]
+
     elif len(topicAreas) > 0 and len(supervisor) > 0:
         temp = []
         for sup in supervisor:
@@ -81,6 +93,7 @@ def searchTopic():
                                               ['supervisor', 'id'],
                                               [sup[1], area[1]]))
         res = [i for sub in temp for i in sub]
+
 
     matched = [False] * len(res)
     for word in searchTerms:
@@ -119,6 +132,7 @@ def searchTopic():
         toReturnSupervisor.append(db.select_columns('users',
                                                     ['name'],
                                                     ['id'], [topics[2]]))
+
 
     return jsonify({'status': 'ok', 'topics': toReturnSearches,
                     'topicsArea': toReturnTopicArea,
