@@ -1,3 +1,11 @@
 nav {
   background-color: #26a69a;
 }
+
+/* approval and rejection, change color when user hovers over them */
+.approval-icon:hover {
+    color: green !important;
+} 
+.rejection-icon:hover {
+    color: red !important;
+} 
