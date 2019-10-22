@@ -6,7 +6,6 @@ from flask import session
 from app.auth import loggedin
 from app.helpers import *
 from app.db_manager import sqliteManager as db
-
 create_topic = Blueprint('create_topic', __name__)
 
 
@@ -44,6 +43,7 @@ def create():
     topic_id = db.select_columns('topics', ['id'], ['name'], [topic])[0][0]
     print(topic_id)
     for area in areas:
+        area = area.strip()
         db.insert_single('topic_areas',
                          [topic_id, area],
                          ['topic', 'name']
