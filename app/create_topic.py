@@ -8,6 +8,8 @@ from flask import abort
 from app.auth import loggedin
 from app.helpers import *
 from app.db_manager import sqliteManager as db
+
+
 create_topic = Blueprint('create_topic', __name__)
 
 
@@ -27,8 +29,8 @@ def create():
     if request.method == 'GET':
         return render_template(
             'create_topic.html',
-            heading='Thesis Management System - Create Topic',
-            title='Create_topic')
+            heading='Create Topic',
+            title='Create Topic')
 
     try:
         fields = ['topic', 'areas', 'details']

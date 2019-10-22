@@ -3,35 +3,39 @@
 {% block body %}
 
   <div class="row">
-    <form class="col s12" id="create_topic-form">
+    <form class="col s12" id="create-topic-form">
       <div class="row">
         <div class="input-field s8">
+          <i class="material-icons prefix">assignment</i>
           <input id="topic" name="topic" type="text" class="validate" required="" aria-required="true">
           <label for="topic">Topic</label>
           <span class="helper-text" data-error="You should enter a topic"></span>
         </div>
       </div>
       <div class="row">
-        <div class="input-field s6">
+        <div class="input-field s8">
+          <i class="material-icons prefix">bookmark</i>
           <input id="areas" name="areas" type="text" class="validate" required="" aria-required="true">
           <label for="areas">Topic Areas</label>
           <span class="helper-text" data-error="Topic should have at least one area"></span>
         </div>
       </div>
       <div class="row">
-        <div class="input-field s6">
+        <div class="input-field s8">
+          <i class="material-icons prefix">check_circle</i>
           <input id="prereq" name="prereq" type="text" class="validate">
           <label for="prereq">Prerequisite</label>
         </div>
       </div>
       <div class="row">
-        <div class="input-field col s8">
+        <div class="input-field col s12">
+          <i class="material-icons prefix">event_note</i>
           <textarea id="details" name="details" class="materialize-textarea"></textarea>
           <label for="details">Topic Details</label>
         </div>
       </div>
       <div class="row">
-        <div class="right">
+        <div class="center">
           <a class="waves-effect waves-light btn" id="register-btn" onclick="submitCreate()">Create
             <i class="material-icons right">send</i>
           </a>
