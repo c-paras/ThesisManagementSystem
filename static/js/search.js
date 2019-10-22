@@ -60,6 +60,11 @@ function makeCard(title, description, topics, supervisor) {
   return card;
 }
 
+function makeSearchHeading(num) {
+  var card = `<p class="col s10 offset-m1" style="font-size:50px">${num} Search Results</p>`;
+  return card
+}
+
 function searchResults() {
     const form = $('#search-form');
     if (!formValid(form)) {
@@ -86,7 +91,7 @@ function searchResults() {
             console.log(res);
             //const results = document.querySelector("#para")
             //results.textContent = res.topics[0][0]
-            var cards = "";
+            var cards = makeSearchHeading(res.topics.length);
             console.log(res.topics);
             for (i=0; i < res.topics.length; i++) {
                 cards = cards + makeCard(res.topics[i][1], res.topics[i][3], res.topicsArea[i], res.topicSupervisor[i]);
