@@ -38,13 +38,41 @@ def gen_users():
     return (students, supervisors)
 
 
+def get_sessions():
+    ret = []
+    for year in range(2000, 2020):
+        ret.append((datetime.datetime(year, 1, 1, 0, 0, 0),
+                    datetime.datetime(year, 4, 30, 23, 59, 59)))
+        ret.append((datetime.datetime(year, 5, 1, 0, 0, 0),
+                    datetime.datetime(year, 7, 31, 23, 59, 59)))
+        ret.append((datetime.datetime(year, 8, 1, 0, 0, 0),
+                    datetime.datetime(year, 11, 30, 23, 59, 59)))
+    return ret
+
+
 def gen_courses():
-    with open('db/courses.json') as f:
+    with open('db/prereq.json') as f:
         courses = json.load(f)
         query = []
         for c in courses:
             query.append(('courses', [c['code'], c['name']], ['code', 'name']))
             db.insert_multiple(query)
+    with open('db/courses.json') as f:
+        courses = json.load(f)
+        query = []
+        for course in courses:
+            db.insert_single('courses',
+                             [c['code'], c['name']], ['code', 'name'])
+            res = db.select_columns('courses', ['id'],
+                                    ['code'], [course['code']])
+            assert len(res) > 0
+            cid = res[0][0]
+
+            for start, end in get_sessions():
+                query.append(('sessions',
+                              [cid, start.timestamp(), end.timestamp()],
+                              ['course', 'start_date', 'end_date']))
+        db.insert_multiple(query)
 
 
 def create_topic(name, description, supervisor, areas):
@@ -75,53 +103,60 @@ def gen_topics(students, supervisors):
 def gen_tasks():
     with open('db/tasks.json') as f:
         tasks = json.load(f)
+        sessions = get_sessions()
         for t in tasks:
-            dt = '{} {}'.format(t['deadline']['date'], t['deadline']['time'])
-            due = datetime.datetime.strptime(dt, '%Y-%m-%d %H:%M')
-
             res = db.select_columns('courses', ['id'], ['code'], [t['course']])
             assert len(res) > 0
             course_id = res[0][0]
-
-            db.insert_single('sessions', [0, 0, course_id],
-                             ['start_date', 'end_date', 'course'])
-            res = db.select_columns('sessions', ['id'],
-                                    ['start_date', 'end_date', 'course'],
-                                    [0, 0, course_id])
-            assert len(res) > 0
-            session_id = res[0][0]
 
             res = db.select_columns('marking_methods', ['id'], ['name'],
                                     ['{} submission'.format(t['marking'])])
             assert len(res) > 0
             mark_method_id = res[0][0]
 
-            db.insert_single('tasks', [t['name'],
-                                       session_id,
-                                       due.timestamp(),
-                                       t['description'],
-                                       mark_method_id],
-                             ['name', 'session', 'deadline',
-                              'description', 'marking_method'])
+            word_limit = t.get('word-limit', random.randrange(400, 8000))
 
-            res = db.select_columns('tasks', ['id'], ['name', 'session'],
-                                    [t['name'], session_id])
-            assert len(res) > 0
-            task_id = res[0][0]
-
-            for ft in t['files']:
-                res = db.select_columns('file_types', ['id'], ['name'], [ft])
+            for start, end in sessions:
+                res = db.select_columns('sessions', ['id'],
+                                        ['start_date', 'end_date', 'course'],
+                                        [start.timestamp(), end.timestamp(),
+                                         course_id])
                 assert len(res) > 0
-                ft_id = res[0][0]
+                session_id = res[0][0]
 
-                db.insert_single('submission_types', [ft_id, task_id],
-                                 ['file_type', 'task'])
+                due = random.randrange(start.timestamp(), end.timestamp())
+                db.insert_single('tasks', [t['name'],
+                                           session_id,
+                                           due,
+                                           t['description'],
+                                           mark_method_id,
+                                           word_limit],
+                                 ['name', 'session', 'deadline',
+                                  'description', 'marking_method',
+                                  'word_limit'])
+
+                res = db.select_columns('tasks', ['id'], ['name', 'session'],
+                                        [t['name'], session_id])
+                assert len(res) > 0
+                task_id = res[0][0]
+
+                if 'files' not in t:
+                    continue
+
+                for ft in t['files']:
+                    res = db.select_columns('file_types', ['id'],
+                                            ['name'], [ft])
+                    assert len(res) > 0
+                    ft_id = res[0][0]
+
+                    db.insert_single('submission_types', [ft_id, task_id],
+                                     ['file_type', 'task'])
 
 
 if __name__ == '__main__':
     db.connect()
     for tbl in ['users', 'courses', 'topics', 'topic_areas',
-                'tasks', 'submission_types']:
+                'tasks', 'sessions', 'submission_types']:
         db.conn.execute(f'DELETE FROM {tbl}')
     db.conn.commit()
 
