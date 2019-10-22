@@ -28,10 +28,10 @@ def dashboard():
 
 
 def student_dashboard():
-    return render_template('home.html',
+    return render_template('homeStudent.html',
                            heading='My Dashboard', title='My Dashboard')
 
 
 def staff_dashboard():
-    return render_template('home.html',
+    return render_template('homeStaff.html',
                            heading='My Dashboard', title='My Dashboard')
