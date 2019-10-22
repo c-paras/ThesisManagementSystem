@@ -1,5 +1,5 @@
 function submitCreate() {
-  const form = $('#create_topic-form');
+  const form = $('#create-topic-form');
   if (!formValid(form)) {
     return;
   }
