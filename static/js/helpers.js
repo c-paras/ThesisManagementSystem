@@ -78,10 +78,12 @@ $(function () {
  * Enable forms on page to be submitted by pressing the enter/return key.
  */
 $(function () {
-  $('form').each(function () {
-    $(this).keydown(function(event) {
+  $('form').not('.modal-form').each(function () {
+    const form = $(this);
+    const submit = form.find('a:last');
+    form.find('input').keydown(function(event) {
       if (event.keyCode === 13) {
-        $(this).find('a:last').click();
+        submit.click();
         return false;
       }
     });
