@@ -121,8 +121,5 @@ def login():
 
 @auth.route('/logout', methods=['GET', 'POST'])
 def logout():
-    if 'user' in session:
-        del session['user']
-    if 'acc_type' in session:
-        del session['acc_type']
+    session.clear()
     return redirect(url_for('.login'))
