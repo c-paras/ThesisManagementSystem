@@ -1,0 +1,15 @@
+[
+    {
+        "name": "Thesis A Presentation",
+        "description": "Present your initial research you did during Thesis A",
+        "course": "COMP4930",
+        "session": "19-T1",
+        "deadline": {
+            "date": "2019-04-14",
+            "time": "23:55"
+        },
+        "word-limit": null,
+        "marking": "file",
+        "files": [".pdf"]
+    }
+]

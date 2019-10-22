@@ -1,6 +1,7 @@
 from app.db_manager import sqliteManager as db
 import bcrypt
 import random
+import datetime
 import json
 
 
@@ -71,11 +72,59 @@ def gen_topics(students, supervisors):
         db.insert_multiple(query)
 
 
+def gen_tasks():
+    with open('db/tasks.json') as f:
+        tasks = json.load(f)
+        for t in tasks:
+            dt = '{} {}'.format(t['deadline']['date'], t['deadline']['time'])
+            due = datetime.datetime.strptime(dt, '%Y-%m-%d %H:%M')
+
+            res = db.select_columns('courses', ['id'], ['code'], [t['course']])
+            assert len(res) > 0
+            course_id = res[0][0]
+
+            db.insert_single('sessions', [0, 0, course_id],
+                             ['start_date', 'end_date', 'course'])
+            res = db.select_columns('sessions', ['id'],
+                                    ['start_date', 'end_date', 'course'],
+                                    [0, 0, course_id])
+            assert len(res) > 0
+            session_id = res[0][0]
+
+            res = db.select_columns('marking_methods', ['id'], ['name'],
+                                    ['{} submission'.format(t['marking'])])
+            assert len(res) > 0
+            mark_method_id = res[0][0]
+
+            db.insert_single('tasks', [t['name'],
+                                       session_id,
+                                       due.timestamp(),
+                                       t['description'],
+                                       mark_method_id],
+                             ['name', 'session', 'deadline',
+                              'description', 'marking_method'])
+
+            res = db.select_columns('tasks', ['id'], ['name', 'session'],
+                                    [t['name'], session_id])
+            assert len(res) > 0
+            task_id = res[0][0]
+
+            for ft in t['files']:
+                res = db.select_columns('file_types', ['id'], ['name'], [ft])
+                assert len(res) > 0
+                ft_id = res[0][0]
+
+                db.insert_single('submission_types', [ft_id, task_id],
+                                 ['file_type', 'task'])
+
+
 if __name__ == '__main__':
     db.connect()
-    for tbl in ['users', 'courses', 'topics', 'topic_areas']:
+    for tbl in ['users', 'courses', 'topics', 'topic_areas',
+                'tasks', 'submission_types']:
         db.conn.execute(f'DELETE FROM {tbl}')
-        db.conn.commit()
+    db.conn.commit()
+
     random.seed(42)
     print('Generating users...')
     students, supervisors = gen_users()
@@ -85,3 +134,8 @@ if __name__ == '__main__':
 
     print('Generating topics...')
     gen_topics(students, supervisors)
+
+    print('Generating tasks...')
+    gen_tasks()
+
+    print('Done')
