@@ -13,14 +13,14 @@ from app.db_manager import sqliteManager as db
 create_topic = Blueprint('create_topic', __name__)
 
 
-def no_auth(func):
-    ''' Raise 403 error if user is not authorized to create topic '''
-    @wraps(func)
-    def wrapper(*args, **kwargs):
-        if session['acc_type'] == 'student':
-            abort(403)
-        return func(*args, **kwargs)
-    return wrapper
+# def no_auth(func):
+#     ''' Raise 403 error if user is not authorized to create topic '''
+#     @wraps(func)
+#     def wrapper(*args, **kwargs):
+#         if session['acc_type'] == 'student':
+#             abort(403)
+#         return func(*args, **kwargs)
+#     return wrapper
 
 
 @create_topic.route('/create_topic', methods=['GET', 'POST'])
@@ -55,7 +55,7 @@ def create():
         ['name', 'supervisor', 'description']
     )
     topic_id = db.select_columns('topics', ['id'], ['name'], [topic])[0][0]
-    print(topic_id)
+
     for area in areas:
         area = area.strip()
         db.insert_single('topic_areas',
