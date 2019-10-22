@@ -3,18 +3,18 @@
 {% block body %}
   <div class="row">
 
-    <!-- Show student their current materials for their corses -->
+    <!-- Show staff their current topic requests -->
     <div class="section col s10 offset-s1">
       <h5>Topic Requests:</h5>
       <div class="col s10 offset-s1">
-        <table class="striped centered responsive-table">
+        <table class="highlight centered responsive-table">
 
 
           <!-- Table header -->
           <thead>
             <tr>
                 <th>Name</th>
-                <th>ID</th>
+                <th>zID</th>
                 <th>Topic</th>
                 <th>Approve/Reject</th>
             </tr>
@@ -32,7 +32,7 @@
                 <i class="material-icons rejection-icon red-text text-accent-1">cancel</i>
               </td>
             </tr>
-            
+
             <tr>
               <td>John Smith</td>
               <td>z1111111</td>
@@ -47,20 +47,19 @@
       </div>
     </div>
 
-    <!-- Show student their current assessments for their corses -->
+    <!-- Show staff their current students -->
     <div class="section col s10 offset-s1">
-      <h5>Assessments:</h5>
+      <h5>Current Students:</h5>
       <div class="col s10 offset-s1">
-        <table class="highlight centered responsive-table">
+        <table class="striped centered responsive-table">
 
           <!-- Table header -->
           <thead>
             <tr>
-                <th>Course</th>
-                <th>Task</th>
-                <th>Status</th>
-                <th>Supervisor Result</th>
-                <th>Assessor Result</th>
+                <th>Name</th>
+                <th>zID</th>
+                <th>Topic</th>
+                <th>Role</th>
             </tr>
           </thead>
 
@@ -68,39 +67,53 @@
           <!-- Table body, should be replaced with a loop when actually connected to database -->
           <tbody>
             <tr>
-              <td>PLACEHOLDER</td>
-              <td>PLACEHOLDER</td>
-              <td>PLACEHOLDER</td>
-              <td>110%</td>
-              <td>110%</td>
+              <td>Bob Doe</td>
+              <td>z1111114</td>
+              <td>Something to do with Computer Vision</td>
+              <td>Assessor</td>
             </tr>
             <tr>
-              <td>PLACEHOLDER</td>
-              <td>PLACEHOLDER</td>
-              <td>PLACEHOLDER</td>
-              <td>110%</td>
-              <td>110%</td>
+              <td>Bob Doe</td>
+              <td>z1111114</td>
+              <td>Something to do with Computer Vision</td>
+              <td>Assessor</td>
+            </tr>
+          </tbody>
+          
+        </table>
+      </div>
+    </div>
+
+    <!-- Show staff their past students -->
+    <div class="section col s10 offset-s1">
+      <h5>Past Students:</h5>
+      <div class="col s10 offset-s1">
+        <table class="striped centered responsive-table">
+
+          <!-- Table header -->
+          <thead>
+            <tr>
+                <th>Name</th>
+                <th>zID</th>
+                <th>Topic</th>
+                <th>Role</th>
+            </tr>
+          </thead>
+
+
+          <!-- Table body, should be replaced with a loop when actually connected to database -->
+          <tbody>
+            <tr>
+              <td>Bob Doe</td>
+              <td>z1111114</td>
+              <td>Something to do with Computer Vision</td>
+              <td>Assessor</td>
             </tr>
             <tr>
-              <td>PLACEHOLDER</td>
-              <td>PLACEHOLDER</td>
-              <td>PLACEHOLDER</td>
-              <td>-</td>
-              <td>-</td>
-            </tr>
-            <tr>
-              <td>PLACEHOLDER</td>
-              <td>PLACEHOLDER</td>
-              <td>PLACEHOLDER</td>
-              <td>-</td>
-              <td>-</td>
-            </tr>
-            <tr>
-              <td>PLACEHOLDER</td>
-              <td>PLACEHOLDER</td>
-              <td>PLACEHOLDER</td>
-              <td>-</td>
-              <td>-</td>
+              <td>Bob Doe</td>
+              <td>z1111114</td>
+              <td>Something to do with Computer Vision</td>
+              <td>Assessor</td>
             </tr>
           </tbody>
           
