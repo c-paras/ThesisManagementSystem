@@ -1,5 +1,96 @@
 {% extends "base.html" %}
 
 {% block body %}
-  <p>Coming soon!</p>
+  <div class="row">
+
+    <!-- Show student their current materials for their corses -->
+    <div class="section col s10 offset-s1">
+      <h5>Material:</h5>
+      <div class="col s8 offset-s2">
+        <table class="highlight centered responsive-table">
+          <tbody>
+            <tr>
+              <td>PLACEHOLDER</td>
+              <td>
+                <i class="material-icons left">file_download</i>
+              </td>
+            </tr>
+            <tr>
+              <td>PLACEHOLDER</td>
+              <td>
+                <i class="material-icons left">file_download</i>
+              </td>
+            </tr>
+            <tr>
+              <td>PLACEHOLDER</td>
+              <td>
+                <i class="material-icons left">file_download</i>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Show student their current assessments for their corses -->
+    <div class="section col s10 offset-s1">
+      <h5>Assessments:</h5>
+      <div class="col s10 offset-s1">
+        <table class="highlight centered responsive-table">
+
+          <!-- Table header -->
+          <thead>
+            <tr>
+                <th>Course</th>
+                <th>Task</th>
+                <th>Status</th>
+                <th>Supervisor Result</th>
+                <th>Assessor Result</th>
+            </tr>
+          </thead>
+
+
+          <!-- Table body, should be replaced with a loop when actually connected to database -->
+          <tbody>
+            <tr>
+              <td>PLACEHOLDER</td>
+              <td>PLACEHOLDER</td>
+              <td>PLACEHOLDER</td>
+              <td>110%</td>
+              <td>110%</td>
+            </tr>
+            <tr>
+              <td>PLACEHOLDER</td>
+              <td>PLACEHOLDER</td>
+              <td>PLACEHOLDER</td>
+              <td>110%</td>
+              <td>110%</td>
+            </tr>
+            <tr>
+              <td>PLACEHOLDER</td>
+              <td>PLACEHOLDER</td>
+              <td>PLACEHOLDER</td>
+              <td>-</td>
+              <td>-</td>
+            </tr>
+            <tr>
+              <td>PLACEHOLDER</td>
+              <td>PLACEHOLDER</td>
+              <td>PLACEHOLDER</td>
+              <td>-</td>
+              <td>-</td>
+            </tr>
+            <tr>
+              <td>PLACEHOLDER</td>
+              <td>PLACEHOLDER</td>
+              <td>PLACEHOLDER</td>
+              <td>-</td>
+              <td>-</td>
+            </tr>
+          </tbody>
+          
+        </table>
+      </div>
+    </div>
+  </div>
 {% endblock %}

@@ -44,13 +44,8 @@ function makeCard(title, description, topics, supervisor) {
     <div class="col s10 offset-m1">\
       <div class="card white-grey darken-1">\
         <div class="card-content black-text">\
-          <span class="card-title">
-            <p style="text-align:left;">
-              ${title}
-              <span style="float:right;">
-                ${topics}
-              </span>
-            </p>
+          <span class="card-title">${title}</span>
+            <p>Topic Area: ${topics}</p>
             <hr>
           </span>\
           <p>Supervisor: ${supervisor}</p>

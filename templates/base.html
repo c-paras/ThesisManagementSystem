@@ -27,11 +27,17 @@
       <!-- Dropdown -->
       <ul id="nav-bar-dropdown" class="dropdown-content">
         <li><a href="/search">Search Topics</a></li>
-        <li><a href="#!">Create Topic</a></li>
-        <li><a href="#!">Manage Topics</a></li>
-        <li><a href="#!">Create Course</a></li>
-        <li><a href="#!">Manage Course</a></li>
-        <li><a href="#!">Add Staff</a></li>
+
+        {% if session['acc_type'] == 'supervisor' or session['acc_type'] == 'course_admin' %}
+          <li><a href="#!">Create Topic</a></li>
+          <li><a href="#!">Manage Topics</a></li>
+        {% endif %}
+        {% if  session['acc_type'] == 'course_admin' %}
+          <li><a href="#!">Create Course</a></li>
+          <li><a href="#!">Manage Course</a></li>
+          <li><a href="#!">Add Staff</a></li>
+        {% endif %}
+        
         <li class="divider"></li>
         <li><a href="#!">Change Password</a></li>
         <li><a href="#!">Logout</a></li>
@@ -84,12 +90,22 @@
       src="{{ url_for('static', filename='js/helpers.js') }}"
     ></script>
 
-    <script type="text/javascript">
-      /* Activate navbar dropdown */
-      $(document).ready(function () {
-        $('.dropdown-trigger').dropdown({ hover: true })
-      })
-    </script>
+    {% if not hide_navbar %}
+      <script type="text/javascript">
+        /* Activate navbar dropdown */
+        $(document).ready(function () {
+          $('.dropdown-trigger').dropdown({ hover: true })
+        })
+      </script>
+    {% endif %}
 
+    <!-- Include page-specific JavaScript automatically -->
+    {% set js_file = 'js/' ~ self._TemplateReference__context.name|replace('html', 'js') %}
+    {% set js_include = url_for('static', filename=js_file) %}
+    {# The convention is for the JavaScript file to have the same prefix as the HTML template #}
+    {# If additional JavaScript files are needed, they must be manually included in the template itself #}
+    {% if js_include[1:]|file_exists %}
+      <script type="text/javascript" src="{{ js_include }}"></script>
+    {% endif %}
   </body>
 </html>
