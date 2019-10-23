@@ -72,7 +72,7 @@ function searchResults() {
     return;
   }
 
-  const tagData = M.Chips.getInstance($('#supervisor')).chipsData;
+  let tagData = M.Chips.getInstance($('#supervisor')).chipsData;
   if (tagData.length > 0) {
     for (let i = 0; i < tagData.length; i++) {
       $('form').append('<input type="hidden" name="tagsSupervisor" id="tagsSupervisor" value="' + tagData[i].tag + '" />');
@@ -90,7 +90,7 @@ function searchResults() {
     if (res.status === 'fail') {
       flash(res.message, error = true);
     } else {
-      const cards = makeSearchHeading(res.topics.length);
+      let cards = makeSearchHeading(res.topics.length);
       console.log(res.topics);
       for (i=0; i < res.topics.length; i++) {
         cards = cards + makeCard(res.topics[i][1], res.topics[i][3], res.topicsArea[i].join(', '), res.topicSupervisor[i]);
