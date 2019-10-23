@@ -4,29 +4,35 @@
   <div class="row">
     <form class="col s8 offset-m2" id="search-form">
       <div class="row">
-        <div class="input-field">
+        <div class="input-field s8">
           <i class="material-icons prefix">search</i>
           <input id="search-input" name="search" type="text">
           <label for="search">Search</label>
-          <span class="helper-text" data-error="Search Invalid"></span>
         </div>
       </div>
       <div class="row">
-        <div class="input-field"></div>
-        <div class="chips chips-autocomplete chips-placeholder" id="topics"></div>
+        <div class="input-field s8">
+          <i class="material-icons prefix">library_books</i>
+          <div class="chips chips-autocomplete chips-placeholder" id="topics"></div>
+        </div>
       </div>
       <div class="row">
-        <div class="chips chips-autocomplete chips-placeholder" id="supervisor"></div>
+        <div class="input-field s8">
+          <i class="material-icons prefix">person</i>
+          <div class="chips chips-autocomplete chips-placeholder" id="supervisor"></div>
+        </div>
       </div>
       <div class="row" style="margin-top: 30px;">
-        <p>
-          <label>
-            <input type="checkbox" class="filled-in" checked="checked" name="checkbox-vis"/>
-            <span>Hide topics that are no longer on offer</span>
-          </label>
-        </p>
+        <div class="input-field s8">
+          <p>
+            <label>
+              <input type="checkbox" class="filled-in" checked="checked" name="checkbox-vis"/>
+              <span>Hide topics that are no longer on offer</span>
+            </label>
+          </p>
+        </div>
       </div>
-      <div class="center" style="margin-top: 50px">
+      <div class="center" style="margin-top: 45px">
         <a class="waves-effect waves-light btn" id="search-btn" onclick="searchResults()">Search
           <i class="material-icons right">send</i>
         </a>

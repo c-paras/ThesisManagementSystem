@@ -37,14 +37,14 @@ def searchTopic():
     searchTerms = [word for word in searchTerms if word not in stopWords]
     db.connect()
 
-    # getting topic_area
+    # getting submitted topic_area
     topicAreas = []
     if len(searchTopic) > 0:
         for area in searchTopic:
             topicAreas.append(db.select_columns('topic_areas',
                                                 ['name', 'topic'],
                                                 ['name'], [area]))
-    # getting supervisors
+    # getting submitted supervisors
     supervisor = []
     if len(searchSuper) > 0:
         for sup in searchSuper:
@@ -57,10 +57,10 @@ def searchTopic():
     supervisor = [i for sub in supervisor for i in sub]
     supervisor = [i for i in supervisor if i != []]
 
-    # Getting topics that match the topic_area and/or
+    # Getting topics that match the topic_area and
     # supervisors if supplied
-    # topic_are and superisors ar ORed as described in
-    # user stories
+    # multiple topic_ares and supervisors ar ORed as described in
+    # user stories.
     if len(searchTopic) > 0 and len(topicAreas) == 0:
         return jsonify({'status': 'ok', 'topics': [],
                         'topicsArea': [],
