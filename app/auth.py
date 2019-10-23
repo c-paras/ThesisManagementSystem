@@ -98,7 +98,7 @@ def login():
                             ['password', 'account_type', 'id'],
                             ['email'],
                             [email])
-    print(res)
+
     if not len(res):
         db.close()
         return error('Unknown email!')

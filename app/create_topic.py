@@ -37,9 +37,7 @@ def create():
         return e.args
 
     prereqs = list(dict.fromkeys(request.form.getlist('prerequisites')))
-    # just to make sure you can see it is retrieved
     prereqs = [x.lower() for x in prereqs]
-    print(prereqs)
 
     areas = areas.split(',')
 
