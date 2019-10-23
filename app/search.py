@@ -1,10 +1,8 @@
 from flask import Blueprint
 from flask import render_template
-from flask import session
 from flask import request
 from flask import jsonify
 
-import json
 import re
 
 from app.auth import UserRole

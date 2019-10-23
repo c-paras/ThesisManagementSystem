@@ -16,10 +16,8 @@ create_topic = Blueprint('create_topic', __name__)
 @at_least_role(UserRole.STAFF)
 def create():
     if request.method == 'GET':
-        return render_template(
-            'create_topic.html',
-            heading='Create Topic',
-            title='Create Topic')
+        return render_template('create_topic.html', heading='Create Topic',
+                               title='Create Topic')
 
     try:
         fields = ['topic', 'areas', 'details']
@@ -41,11 +39,8 @@ def create():
         db.close()
         return error('A topic with that name already exists!')
 
-    db.insert_single(
-        'topics',
-        [topic, user_id, details],
-        ['name', 'supervisor', 'description']
-        )
+    db.insert_single('topics', [topic, user_id, details],
+                     ['name', 'supervisor', 'description'])
     topic_id = db.select_columns('topics', ['id'], ['name'], [topic])[0][0]
 
     for area in areas:
