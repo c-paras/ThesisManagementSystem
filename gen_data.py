@@ -1,8 +1,9 @@
-from app.db_manager import sqliteManager as db
-import bcrypt
 import random
 import datetime
 import json
+import bcrypt
+
+from app.db_manager import sqliteManager as db
 
 
 def get_all_types():
@@ -53,36 +54,35 @@ def get_sessions():
 def gen_courses():
     with open('db/prereq.json') as f:
         courses = json.load(f)
-        query = []
-        for c in courses:
-            query.append(('courses', [c['code'], c['name']], ['code', 'name']))
-            db.insert_multiple(query)
+        query = [('courses', [c['code'], c['name']], ['code', 'name'])
+                 for c in courses]
+        db.insert_multiple(query)
     with open('db/courses.json') as f:
         courses = json.load(f)
         query = []
-        for course in courses:
+        for c in courses:
             db.insert_single('courses',
                              [c['code'], c['name']], ['code', 'name'])
             res = db.select_columns('courses', ['id'],
-                                    ['code'], [course['code']])
+                                    ['code'], [c['code']])
             assert len(res) > 0
-            cid = res[0][0]
+            course_id = res[0][0]
 
             for start, end in get_sessions():
                 query.append(('sessions',
-                              [cid, start.timestamp(), end.timestamp()],
+                              [course_id, start.timestamp(), end.timestamp()],
                               ['course', 'start_date', 'end_date']))
         db.insert_multiple(query)
 
 
 def create_topic(name, description, supervisor, areas):
-    user_dbid = db.select_columns('users',
-                                  ['id'], ['name'], [supervisor])[0][0]
-    db.insert_single('topics', [name, user_dbid,
-                                f'{name} is a very interesting topic'],
+    res = db.select_columns('users', ['id'], ['name'], [supervisor])
+    assert len(res) > 0
+    user_id = res[0][0]
+    db.insert_single('topics', [name, user_id, description],
                      ['name', 'supervisor', 'description'])
     topic_id = db.select_columns('topics', ['id'], ['name', 'supervisor'],
-                                 [name, user_dbid])[0][0]
+                                 [name, user_id])[0][0]
     query = []
     for area in areas:
         query.append(('topic_areas', [area, topic_id], ['name', 'topic']))
@@ -165,7 +165,7 @@ if __name__ == '__main__':
     students, supervisors = gen_users()
 
     print('Generating courses...')
-    courses = gen_courses()
+    gen_courses()
 
     print('Generating topics...')
     gen_topics(students, supervisors)
