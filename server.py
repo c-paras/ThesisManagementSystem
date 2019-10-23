@@ -4,6 +4,7 @@ from flask import Flask
 
 from app.auth import auth
 from app.home import home
+from app.search import search
 from app.errors import errors
 from app.create_topic import create_topic
 from app.db_manager import sqliteManager as db
@@ -23,7 +24,7 @@ def close_connection(exception):
 def init_app():
 
     # register blueprints
-    for blueprint in [auth, home, errors, create_topic]:
+    for blueprint in [auth, home, errors, create_topic, search]:
         app.register_blueprint(blueprint)
 
     def file_exists(filename):

@@ -29,7 +29,7 @@
     {% if not hide_navbar %}
       <!-- Dropdown -->
       <ul id="nav-bar-dropdown" class="dropdown-content">
-        <li><a href="#!">Search Topics</a></li>
+        <li><a href="/search">Search Topics</a></li>
         {% if session['acc_type'] == 'supervisor' or session['acc_type'] == 'course_admin' %}
           <li><a href="/create_topic">Create Topic</a></li>
           <li><a href="#!">Manage Topics</a></li>
@@ -59,7 +59,8 @@
             <ul class="right hide-on-med-and-down">
               <li>
                 <a class="dropdown-trigger" href="#!" data-target="nav-bar-dropdown">
-                  You are logged in as z1111111 <!-- TODO -->
+                  <i class="material-icons left">account_circle</i>
+                  {{session["user"]}}
                   <i class="material-icons right">arrow_drop_down</i>
                 </a>
               </li>
