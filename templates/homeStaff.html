@@ -7,43 +7,37 @@
     <div class="section col s10 offset-s1">
       <h5>Topic Requests:</h5>
       <div class="col s10 offset-s1">
-        <table class="highlight centered responsive-table">
+        {% if curr_requests|length %}
+          <table class="highlight centered responsive-table">
 
+            <!-- Table header -->
+            <thead>
+              <tr>
+                  <th>Name</th>
+                  <th>zID</th>
+                  <th>Topic</th>
+                  <th>Approve/Reject</th>
+              </tr>
+            </thead>
 
-          <!-- Table header -->
-          <thead>
-            <tr>
-                <th>Name</th>
-                <th>zID</th>
-                <th>Topic</th>
-                <th>Approve/Reject</th>
-            </tr>
-          </thead>
-
-
-          <!-- Table body, should be replaced with a loop when actually connected to database -->
-          <tbody>
-            <tr>
-              <td>John Smith</td>
-              <td>z1111111</td>
-              <td>Something to do with robots</td>
-              <td>
-                <i class="material-icons approval-icon green-text text-lighten-2">check_circle</i>
-                <i class="material-icons rejection-icon red-text text-accent-1">cancel</i>
-              </td>
-            </tr>
-
-            <tr>
-              <td>John Smith</td>
-              <td>z1111111</td>
-              <td>Something to do with robots</td>
-              <td>
-                <i class="material-icons approval-icon green-text text-lighten-2">check_circle</i>
-                <i class="material-icons rejection-icon red-text text-accent-1">cancel</i>
-              </td>
-            </tr>
-          </tbody>
-        </table>
+            <tbody>
+              <!-- if you have requests pending, print out each current request into a table -->
+                {% for request in curr_requests %}
+                  <tr>
+                    <td>{{ request[0] }}</td>
+                    <td>{{ request[1] }}</td>
+                    <td>{{ request[2] }}</td>
+                    <td>
+                      <i class="material-icons approval-icon green-text text-lighten-2">check_circle</i>
+                      <i class="material-icons rejection-icon red-text text-accent-1">cancel</i>
+                    </td>
+                  </tr>
+                {% endfor %}
+            </tbody>
+          </table>
+        {% else %}
+          <p>You have zero topic requests at this time</p>
+        {% endif %}
       </div>
     </div>
 
@@ -51,36 +45,37 @@
     <div class="section col s10 offset-s1">
       <h5>Current Students:</h5>
       <div class="col s10 offset-s1">
-        <table class="striped centered responsive-table">
+        {% if curr_students|length %}
+          <table class="striped centered responsive-table">
 
-          <!-- Table header -->
-          <thead>
-            <tr>
-                <th>Name</th>
-                <th>zID</th>
-                <th>Topic</th>
-                <th>Role</th>
-            </tr>
-          </thead>
+            <!-- Table header -->
+            <thead>
+              <tr>
+                  <th>Name</th>
+                  <th>zID</th>
+                  <th>Topic</th>
+                  <th>Role</th>
+              </tr>
+            </thead>
 
 
-          <!-- Table body, should be replaced with a loop when actually connected to database -->
-          <tbody>
-            <tr>
-              <td>Bob Doe</td>
-              <td>z1111114</td>
-              <td>Something to do with Computer Vision</td>
-              <td>Assessor</td>
-            </tr>
-            <tr>
-              <td>Bob Doe</td>
-              <td>z1111114</td>
-              <td>Something to do with Computer Vision</td>
-              <td>Assessor</td>
-            </tr>
-          </tbody>
-          
-        </table>
+            <!-- Table body, should be replaced with a loop when actually connected to database -->
+            <tbody>
+              {% for student in curr_students %}
+                <tr>
+                    <td>{{ student[0] }}</td>
+                    <td>{{ student[1] }}</td>
+                    <td>{{ student[2] }}</td>
+                    <td>{{ student[3] }}</td>
+                </tr>
+              {% endfor %}
+              <tr>
+            </tbody>
+            
+          </table>
+        {% else %}
+          <p>You have zero students at this time</p>
+        {% endif %}
       </div>
     </div>
 
@@ -88,36 +83,36 @@
     <div class="section col s10 offset-s1">
       <h5>Past Students:</h5>
       <div class="col s10 offset-s1">
-        <table class="striped centered responsive-table">
+        {% if past_students|length %}
+          <table class="striped centered responsive-table">
 
-          <!-- Table header -->
-          <thead>
-            <tr>
-                <th>Name</th>
-                <th>zID</th>
-                <th>Topic</th>
-                <th>Role</th>
-            </tr>
-          </thead>
+            <!-- Table header -->
+            <thead>
+              <tr>
+                  <th>Name</th>
+                  <th>zID</th>
+                  <th>Topic</th>
+                  <th>Role</th>
+              </tr>
+            </thead>
 
 
-          <!-- Table body, should be replaced with a loop when actually connected to database -->
-          <tbody>
-            <tr>
-              <td>Bob Doe</td>
-              <td>z1111114</td>
-              <td>Something to do with Computer Vision</td>
-              <td>Assessor</td>
-            </tr>
-            <tr>
-              <td>Bob Doe</td>
-              <td>z1111114</td>
-              <td>Something to do with Computer Vision</td>
-              <td>Assessor</td>
-            </tr>
-          </tbody>
-          
-        </table>
+            <!-- Table body, should be replaced with a loop when actually connected to database -->
+            <tbody>
+              {% for student in past_students %}
+                <tr>
+                    <td>{{ student[0] }}</td>
+                    <td>{{ student[1] }}</td>
+                    <td>{{ student[2] }}</td>
+                    <td>{{ student[3] }}</td>
+                </tr>
+              {% endfor %}
+            </tbody>
+            
+          </table>
+        {% else %}
+          <p>You have no past students</p>
+        {% endif %}
       </div>
     </div>
   </div>
