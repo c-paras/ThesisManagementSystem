@@ -3,6 +3,7 @@ from flask import render_template
 from flask import session
 
 from app.auth import loggedin
+from app.queries import queries
 
 
 home = Blueprint('home', __name__)
@@ -28,10 +29,43 @@ def dashboard():
 
 
 def student_dashboard():
-    return render_template('home.html',
+    return render_template('homeStudent.html',
                            heading='My Dashboard', title='My Dashboard')
 
 
 def staff_dashboard():
-    return render_template('home.html',
-                           heading='My Dashboard', title='My Dashboard')
+    curr_requests = queries.get_curr_topic_requests(session["user"])
+
+    # need to implement way of deciding between current and past students, best
+    # way would probably be by testing start/end date and current unix
+    # timestamp. Need to wait until 'user_session' table is filled before
+    # this is possible.
+
+    curr_students = []
+    # get current students who I am supervising
+    curr_super_students = queries.get_current_super_students(session["user"])
+
+    for tup_student in curr_super_students:
+        i = list(tup_student)
+        i.append("Supervisor")
+        curr_students.append(i)
+
+    # get current students who I am asessing
+    curr_assess_students = queries.get_current_assess_students(session["user"])
+    for i in curr_assess_students:
+        i = list(tup_student)
+        i.append("Assessor")
+        curr_students.append(i)
+
+    curr_students.extend(curr_assess_students)
+    print(curr_students)
+
+    # for now left blank
+    past_students = []
+
+    return render_template('homeStaff.html',
+                           heading='My Dashboard',
+                           title='My Dashboard',
+                           curr_requests=curr_requests,
+                           curr_students=curr_students,
+                           past_students=past_students)

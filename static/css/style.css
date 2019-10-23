@@ -20,3 +20,11 @@ main {
 .navbar-fixed {
   padding-bottom: 20px;
 }
+
+/* approval and rejection, change color when user hovers over them */
+.approval-icon:hover {
+    color: green !important;
+} 
+.rejection-icon:hover {
+    color: red !important;
+} 
