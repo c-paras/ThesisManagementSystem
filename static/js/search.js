@@ -1,10 +1,5 @@
-$('#topics').chips();
 $('#topics').chips({
   placeholder: 'Enter a topic',
-  secondaryPlaceholder: '+Tag',
-});
-
-$('#topics').chips({
   autocompleteOptions: {
     data: {
       'Robotics': null,
@@ -12,18 +7,13 @@ $('#topics').chips({
       'User Interfaces': null,
       'Formal Methods': null,
     },
-    limit: Infinity,
+    limit: 20,
     minLength: 1
   }
-  });
-
-$('#supervisor').chips();
-$('#supervisor').chips({
-  placeholder: 'Enter Supervisor',
-  secondaryPlaceholder: '+Tag',
 });
 
 $('#supervisor').chips({
+  placeholder: 'Enter Supervisor',
   autocompleteOptions: {
     data: {
       'z7654321': null,
@@ -31,11 +21,10 @@ $('#supervisor').chips({
       'z8000003': null,
       'z8000001': null,
     },
-    limit: Infinity,
+    limit: 20,
     minLength: 1
   }
 });
-
 
 
 function makeCard(title, description, topics, supervisor) {
@@ -49,6 +38,7 @@ function makeCard(title, description, topics, supervisor) {
         </span>\
         <p>Supervisor: ${supervisor}</p>
         <p>Prerequisites: Not implemented yet waiting for db</p>
+        <br>
         <p>${description}</p>\
       </div>\
       <div class="card-action">\
@@ -61,10 +51,6 @@ function makeCard(title, description, topics, supervisor) {
   return card;
 }
 
-function makeSearchHeading(num) {
-  var card = `<p class="col s10 offset-m1" style="font-size:30px; margin-top:0px">Search Results (found ${num} matching topics)</p>`;
-  return card;
-}
 
 function searchResults() {
   const form = $('#search-form');
@@ -90,9 +76,9 @@ function searchResults() {
     if (res.status === 'fail') {
       flash(res.message, error = true);
     } else {
-      let cards = makeSearchHeading(res.topics.length);
       console.log(res.topics);
-      for (i=0; i < res.topics.length; i++) {
+      let cards = ""
+      for (let i=0; i < res.topics.length; i++) {
         cards = cards + makeCard(res.topics[i][1], res.topics[i][3], res.topicsArea[i].join(', '), res.topicSupervisor[i]);
       }
             
@@ -104,8 +90,10 @@ function searchResults() {
       $("[id='tagsSupervisor']").each((function() {
         $(this).val('');
       }));
-            
-      document.getElementById("results").innerHTML = cards;
+      
+      $('#search-title').html('Search Results (found ' + res.topics.length + ' matching topics)')
+      $('#search-title').show()
+      $('#search-results').html(cards);
     }
   });
 }

@@ -63,7 +63,7 @@ def search_topic():
     # multiple topic_ares and supervisors ar ORed as described in
     # user stories.
     if (len(search_topic) > 0 and len(topic_area) == 0) or\
-    (len(search_super) > 0 and len(supervisor) == 0):
+       (len(search_super) > 0 and len(supervisor) == 0):
         return jsonify({'status': 'ok', 'topics': [],
                         'topicsArea': [],
                         'topicSupervisor': []})
