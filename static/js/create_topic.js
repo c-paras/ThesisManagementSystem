@@ -1,6 +1,7 @@
 $('#prereqs').chips({
-  placeholder: 'COMPXXXX',
-  secondaryPlaceholder: '+Tag',
+  placeholder: 'Prerequisite',
+  secondaryPlaceholder: '+ Tag',
+  limit: 20
 });
 
 function submitCreate() {
@@ -23,7 +24,3 @@ function submitCreate() {
     }
   });
 }
-
-
-
-
