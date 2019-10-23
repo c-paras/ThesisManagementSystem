@@ -1,9 +1,19 @@
+$('#prereqs').chips({
+  placeholder: 'COMPXXXX',
+  secondaryPlaceholder: '+Tag',
+});
+
 function submitCreate() {
-  const form = $('#create_topic-form');
+  const form = $('#create-topic-form');
   if (!formValid(form)) {
     return;
   }
-
+  let prereqs = M.Chips.getInstance($('#prereqs')).chipsData;
+  if (prereqs.length > 0) {
+    for (let i = 0; i < prereqs.length; i++) {
+      $('form').append('<input type="hidden" name="prerequisites" id="prerequisites" value="' + prereqs[i].tag + '" />');
+    }
+  }
   makeRequest('/create_topic', form, (res) => {
     if (res.status === 'fail') {
       flash(res.message, error = true);

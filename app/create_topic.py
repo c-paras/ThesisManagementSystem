@@ -2,8 +2,6 @@ from flask import Blueprint
 from flask import render_template
 from flask import request
 from flask import session
-from functools import wraps
-from flask import abort
 
 from app.auth import loggedin
 from app.helpers import *
@@ -37,6 +35,11 @@ def create():
         topic, areas, details = get_fields(request.form, fields)
     except Exception as e:
         return e.args
+
+    prereqs = list(dict.fromkeys(request.form.getlist('prerequisites')))
+    # just to make sure you can see it is retrieved
+    prereqs = [x.lower() for x in prereqs]
+    print(prereqs)
 
     areas = areas.split(',')
 
