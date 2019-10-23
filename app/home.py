@@ -2,7 +2,8 @@ from flask import Blueprint
 from flask import render_template
 from flask import session
 
-from app.auth import loggedin
+from app.auth import UserRole
+from app.auth import at_least_role
 from app.queries import queries
 
 
@@ -19,7 +20,7 @@ def index():
 
 @home.route('/home', methods=['GET'])
 @home.route('/dashboard', methods=['GET'])
-@loggedin
+@at_least_role(UserRole.STUDENT)
 def dashboard():
     is_student = session['acc_type'] == 'student'
     if(is_student):

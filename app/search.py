@@ -7,7 +7,8 @@ from flask import jsonify
 import json
 import re
 
-from app.auth import loggedin
+from app.auth import UserRole
+from app.auth import at_least_role
 from app.db_manager import sqliteManager as db
 from app.helpers import get_fields
 
@@ -15,7 +16,7 @@ search = Blueprint('search', __name__)
 
 
 @search.route('/search', methods=['GET', 'POST'])
-@loggedin
+@at_least_role(UserRole.STUDENT)
 def search_topic():
     if request.method == 'GET':
         return render_template('search.html',
