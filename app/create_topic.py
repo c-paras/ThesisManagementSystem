@@ -48,7 +48,7 @@ def create():
     # only check the name of the topic
     if len(res):
         db.close()
-        return error('Topic topic with that name already exists!')
+        return error('A topic with that name already exists!')
 
     db.insert_single(
         'topics',
@@ -59,10 +59,8 @@ def create():
 
     for area in areas:
         area = area.strip()
-        db.insert_single('topic_areas',
-                         [topic_id, area],
-                         ['topic', 'name']
-                         )
+        db.insert_single('topic_areas', [topic_id, area],
+                         ['topic', 'name'])
 
     # for prereq in prereqs:
     #
