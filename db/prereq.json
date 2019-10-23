@@ -1,0 +1,298 @@
+[
+    {
+        "code": "COMP3121",
+        "name": "Algorithms and Programming Techniques"
+    },
+    {
+        "code": "COMP3131",
+        "name": "Programming Languages and Compilers"
+    },
+    {
+        "code": "COMP3141",
+        "name": "Software System Design and Implementation"
+    },
+    {
+        "code": "COMP3151",
+        "name": "Foundations of Concurrency"
+    },
+    {
+        "code": "COMP3153",
+        "name": "Algorithmic Verification"
+    },
+    {
+        "code": "COMP3161",
+        "name": "Concepts of Programming Languages"
+    },
+    {
+        "code": "COMP3211",
+        "name": "Computer Architecture"
+    },
+    {
+        "code": "COMP3222",
+        "name": "Digital Circuits and Systems"
+    },
+    {
+        "code": "COMP3231",
+        "name": "Operating Systems"
+    },
+    {
+        "code": "COMP3311",
+        "name": "Database Systems"
+    },
+    {
+        "code": "COMP3331",
+        "name": "Computer Networks and Applications"
+    },
+    {
+        "code": "COMP3411",
+        "name": "Artificial Intelligence"
+    },
+    {
+        "code": "COMP3421",
+        "name": "Computer Graphics"
+    },
+    {
+        "code": "COMP3431",
+        "name": "Robotic Software Architecture"
+    },
+    {
+        "code": "COMP3511",
+        "name": "Human Computer Interaction"
+    },
+    {
+        "code": "COMP3601",
+        "name": "Design Project A"
+    },
+    {
+        "code": "COMP3821",
+        "name": "Extended Algorithms and Programming Techniques"
+    },
+    {
+        "code": "COMP3891",
+        "name": "Extended Operating Systems"
+    },
+    {
+        "code": "COMP3900",
+        "name": "Computer Science Project"
+    },
+    {
+        "code": "COMP3901",
+        "name": "Special Project A"
+    },
+    {
+        "code": "COMP3902",
+        "name": "Special Project B"
+    },
+    {
+        "code": "COMP4121",
+        "name": "Advanced and Parallel Algorithms"
+    },
+    {
+        "code": "COMP4128",
+        "name": "Programming Challenges"
+    },
+    {
+        "code": "COMP4141",
+        "name": "Theory of Computation"
+    },
+    {
+        "code": "COMP4161",
+        "name": "Advanced Topics in Software Verification"
+    },
+    {
+        "code": "COMP4336",
+        "name": "Mobile Data Networking"
+    },
+    {
+        "code": "COMP4337",
+        "name": "Securing Wireless Networks"
+    },
+    {
+        "code": "COMP4418",
+        "name": "Knowledge Representation and Reasoning"
+    },
+    {
+        "code": "COMP4511",
+        "name": "User Interface Design and Construction"
+    },
+    {
+        "code": "COMP4601",
+        "name": "Design Project B"
+    },
+    {
+        "code": "COMP4920",
+        "name": "Management and Ethics"
+    },
+    {
+        "code": "COMP4930",
+        "name": "Thesis Part A"
+    },
+    {
+        "code": "COMP4931",
+        "name": "Thesis Part B"
+    },
+    {
+        "code": "COMP4941",
+        "name": "Thesis Part B"
+    },
+    {
+        "code": "COMP4951",
+        "name": "Research Thesis A"
+    },
+    {
+        "code": "COMP4952",
+        "name": "Research Thesis B"
+    },
+    {
+        "code": "COMP4953",
+        "name": "Research Thesis C"
+    },
+    {
+        "code": "COMP4961",
+        "name": "Computer Science Thesis A"
+    },
+    {
+        "code": "COMP4962",
+        "name": "Computer Science Thesis B"
+    },
+    {
+        "code": "COMP4963",
+        "name": "Computer Science Thesis C"
+    },
+    {
+        "code": "COMP6324",
+        "name": "Internet of Things Service Design and Engineering"
+    },
+    {
+        "code": "COMP6441",
+        "name": "Security Engineering and Cyber Security"
+    },
+    {
+        "code": "COMP6443",
+        "name": "Web Application Security and Testing"
+    },
+    {
+        "code": "COMP6445",
+        "name": "Digital Forensics"
+    },
+    {
+        "code": "COMP6447",
+        "name": "System and Software Security Assessment"
+    },
+    {
+        "code": "COMP6448",
+        "name": "Security Engineering Masterclass"
+    },
+    {
+        "code": "COMP6451",
+        "name": "Cryptocurrency and Distributed Ledger Technologies"
+    },
+    {
+        "code": "COMP6452",
+        "name": "Software Architecture for Blockchain Applications"
+    },
+    {
+        "code": "COMP6714",
+        "name": "Information Retrieval and Web Search"
+    },
+    {
+        "code": "COMP6721",
+        "name": "(In-)Formal Methods: The Lost Art"
+    },
+    {
+        "code": "COMP6733",
+        "name": "Internet of Things Experimental Design Studio"
+    },
+    {
+        "code": "COMP6741",
+        "name": "Parameterized and Exact Computation"
+    },
+    {
+        "code": "COMP6752",
+        "name": "Modelling Concurrent Systems"
+    },
+    {
+        "code": "COMP6771",
+        "name": "Advanced C++ Programming"
+    },
+    {
+        "code": "COMP6841",
+        "name": "Extended Security Engineering and Cyber Security"
+    },
+    {
+        "code": "COMP6843",
+        "name": "Extended Web Application Security and Testing"
+    },
+    {
+        "code": "COMP6845",
+        "name": "Extended Digital Forensics and Incident Response"
+    },
+    {
+        "code": "COMP9242",
+        "name": "Advanced Operating Systems"
+    },
+    {
+        "code": "COMP9243",
+        "name": "Distributed Systems"
+    },
+    {
+        "code": "COMP9301",
+        "name": "Cyber Security Project"
+    },
+    {
+        "code": "COMP9302",
+        "name": "Cyber Security Project B"
+    },
+    {
+        "code": "COMP9313",
+        "name": "Big Data Management"
+    },
+    {
+        "code": "COMP9315",
+        "name": "Database Systems Implementation"
+    },
+    {
+        "code": "COMP9318",
+        "name": "Data Warehousing and Data Mining"
+    },
+    {
+        "code": "COMP9319",
+        "name": "Web Data Compression and Search"
+    },
+    {
+        "code": "COMP9321",
+        "name": "Data Services Engineering"
+    },
+    {
+        "code": "COMP9322",
+        "name": "Software Service Design and Engineering"
+    },
+    {
+        "code": "COMP9323",
+        "name": "Software as a Service Project"
+    },
+    {
+        "code": "COMP9332",
+        "name": "Network Routing and Switching"
+    },
+    {
+        "code": "COMP9334",
+        "name": "Capacity Planning of Computer Systems and Networks"
+    },
+    {
+        "code": "COMP9417",
+        "name": "Machine Learning and Data Mining"
+    },
+    {
+        "code": "COMP9418",
+        "name": "Advanced Topics in Statistical Machine Learning"
+    },
+    {
+        "code": "COMP9444",
+        "name": "Neural Networks and Deep Learning"
+    },
+    {
+        "code": "COMP9517",
+        "name": "Computer Vision"
+    }
+]

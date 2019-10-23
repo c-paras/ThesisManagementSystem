@@ -25,6 +25,9 @@ sh config.sh
 
 # Initialize an empty database
 sqlite3 db/thesis.db < db/schema.sql
+
+# Populate database with dummy data
+python3 gen_data.py
 ```
 
 ## Usage
