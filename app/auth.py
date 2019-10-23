@@ -1,9 +1,11 @@
 from flask import abort
 from flask import Blueprint
+from flask import redirect
 from flask import render_template
 from flask import request
 from flask import session
 from flask import jsonify
+from flask import url_for
 from functools import wraps
 
 from app.helpers import error
@@ -115,3 +117,9 @@ def login():
     session['acc_type'] = acc_type
     db.close()
     return jsonify({'status': 'ok'})
+
+
+@auth.route('/logout', methods=['GET', 'POST'])
+def logout():
+    session.clear()
+    return redirect(url_for('.login'))
