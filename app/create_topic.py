@@ -66,17 +66,17 @@ def create():
                          ['topic', 'name']
                          )
 
-    for prereq in prereqs:
-
-        prereq = prereq.strip()
-        course_id = db.select_columns(
-            'courses', ['id'], ['code'], [prereq]
-            )
-        db.insert_single(
-            'prerequisites',
-            [0, course_id, topic_id],
-            ['type', 'course', 'topic']
-            )
+    # for prereq in prereqs:
+    #
+    #     prereq = prereq.strip()
+    #     course_id = db.select_columns(
+    #         'courses', ['id'], ['code'], [prereq]
+    #         )
+    #     db.insert_single(
+    #         'prerequisites',
+    #         [0, course_id, topic_id],
+    #         ['type', 'course', 'topic']
+    #         )
 
     db.close()
     return jsonify({'status': 'ok'})
