@@ -62,11 +62,7 @@ def search_topic():
     # supervisors if supplied
     # multiple topic_ares and supervisors ar ORed as described in
     # user stories.
-    if len(search_topic) > 0 and len(topic_area) == 0:
-        return jsonify({'status': 'ok', 'topics': [],
-                        'topicsArea': [],
-                        'topicSupervisor': []})
-    elif len(search_super) > 0 and len(supervisor) == 0:
+    if (len(search_topic) > 0 and len(topic_area) == 0) or (len(search_super) > 0 and len(supervisor) == 0):
         return jsonify({'status': 'ok', 'topics': [],
                         'topicsArea': [],
                         'topicSupervisor': []})
@@ -134,15 +130,15 @@ def search_topic():
     to_return_topic_area = []
     for topics in to_return_searches:
         to_return_topic_area.append(db.select_columns('topic_areas',
-                                                   ['name'],
-                                                   ['topic'], [topics[0]]))
+                                                      ['name'],
+                                                      ['topic'], [topics[0]]))
 
     # getting the supervisors for the filtered topics
     to_return_supervisor = []
     for topics in to_return_searches:
         to_return_supervisor.append(db.select_columns('users',
-                                                    ['name'],
-                                                    ['id'], [topics[2]]))
+                                                      ['name'],
+                                                      ['id'], [topics[2]]))
 
     return jsonify({'status': 'ok', 'topics': to_return_searches,
                     'topicsArea': to_return_topic_area,
