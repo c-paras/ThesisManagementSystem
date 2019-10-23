@@ -143,7 +143,7 @@ CREATE TABLE submission_types(
     task      INTEGER NOT NULL,
     PRIMARY KEY(file_type, task),
     FOREIGN KEY(file_type) REFERENCES file_types(id),
-    FOREIGN KEY(task) REFERENCES file_types(tasks)
+    FOREIGN KEY(task) REFERENCES tasks(id)
 );
 
 
@@ -175,10 +175,8 @@ CREATE TABLE tasks(
     size_limit      INTEGER DEFAULT 5, -- in MB's --
     visible         INTEGER DEFAULT 1,
     marking_method  INTEGER DEFAULT 0,
-    submission_type INTEGER DEFAULT 0,
     word_limit      INTEGER DEFAULT 1000,
     FOREIGN KEY(marking_method) REFERENCES marking_methods(id),
-    FOREIGN KEY(submission_type) REFERENCES submission_types(id),
     FOREIGN KEY(session) REFERENCES sessions(id)
 );
 

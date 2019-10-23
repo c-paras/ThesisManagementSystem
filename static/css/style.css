@@ -1,5 +1,24 @@
-nav {
+nav, .page-footer {
   background-color: #26a69a;
+  max-height: 70px;
+}
+
+footer, .page-footer {
+  height: 60px;
+}
+
+/* sticky footer */
+body {
+  display: flex;
+  min-height: 100vh;
+  flex-direction: column;
+}
+main {
+  flex: 1 0 auto;
+}
+
+.navbar-fixed {
+  padding-bottom: 20px;
 }
 
 /* approval and rejection, change color when user hovers over them */
