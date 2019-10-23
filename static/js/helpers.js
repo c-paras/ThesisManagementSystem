@@ -85,7 +85,7 @@ $(function () {
     /* to prevent form submission in textaea fields */
     form.find('input').each(function () {
       /* to prevent form submission in chips fields */
-      if (!$(this).parent().hasClass('chips')) {
+      if (!$(this).parent().hasClass('enter-no-submit')) {
         $(this).keydown(function(event) {
           if (event.keyCode === 13) {
             submit.click();
