@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+
+{% block body %}
+  <div class="row">
+    <form class="col s8 offset-m2" id="create-topic-form">
+      <div class="row">
+        <div class="input-field">
+          <i class="material-icons prefix">assignment</i>
+          <input id="topic" name="topic" type="text" class="validate" required="" aria-required="true">
+          <label for="topic">Topic Title</label>
+          <span class="helper-text" data-error="Topic title is required"></span>
+        </div>
+      </div>
+      <div class="row">
+        <div class="input-field">
+          <i class="material-icons prefix">bookmark</i>
+          <input id="areas" name="areas" type="text" class="validate" required="" aria-required="true">
+          <label for="areas">Topic Areas</label>
+          <span class="helper-text" data-error="At least one topic area is required"></span>
+        </div>
+      </div>
+      <div class="row">
+        <div class="input-field">
+          <i class="material-icons prefix">check_circle</i>
+          <div class="chips enter-no-submit" id="prereqs"></div>
+          <span class="helper-text" data-error="Field is required"></span>
+        </div>
+      </div>
+      <div class="row">
+        <div class="input-field">
+          <i class="material-icons prefix">event_note</i>
+          <textarea
+            id="details" name="details" class="materialize-textarea validate"
+            required="" aria-required="true"
+          ></textarea>
+          <label for="details">Topic Details</label>
+          <span class="helper-text" data-error="Topic details are required"></span>
+        </div>
+      </div>
+      <div class="row">
+        <div class="center">
+          <a class="waves-effect waves-light btn" id="register-btn" onclick="submitCreate()">Create
+            <i class="material-icons right">send</i>
+          </a>
+        </div>
+      </div>
+    </form>
+  </div>
+{% endblock %}

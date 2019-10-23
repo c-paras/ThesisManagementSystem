@@ -95,7 +95,7 @@ def login():
 
     db.connect()
     res = db.select_columns('users',
-                            ['password', 'account_type'],
+                            ['password', 'account_type', 'id'],
                             ['email'],
                             [email])
 
@@ -106,7 +106,6 @@ def login():
     if not bcrypt.checkpw(password.encode('utf-8'), hashed_password[0]):
         db.close()
         return error('Incorrect password!')
-
     # get the current user's account type
     acc_type = db.select_columns('account_types',
                                  ['name'],
@@ -114,6 +113,7 @@ def login():
                                  [res[0][1]])[0][0]
 
     session['user'] = email
+    session['id'] = res[0][2]
     session['acc_type'] = acc_type
     db.close()
     return jsonify({'status': 'ok'})

@@ -28,7 +28,7 @@ function markFieldValid(field, valid) {
  */
 function formValid(form) {
   let invalid = false;
-  form.find('input').each(function () {
+  form.find('input,textarea').each(function () {
     if ($(this).val() === '' && $(this).attr('required')) {
       invalid = true;
     }
@@ -81,11 +81,19 @@ $(function () {
   $('form').not('.modal-form').each(function () {
     const form = $(this);
     const submit = form.find('a:last');
-    form.find('input').keydown(function(event) {
-      if (event.keyCode === 13) {
-        submit.click();
-        return false;
+
+    /* to prevent form submission in textaea fields */
+    form.find('input').each(function () {
+      /* to prevent form submission in chips fields */
+      if (!$(this).parent().hasClass('enter-no-submit')) {
+        $(this).keydown(function(event) {
+          if (event.keyCode === 13) {
+            submit.click();
+            return false;
+          }
+        });
       }
     });
+
   });
 });
