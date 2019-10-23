@@ -48,7 +48,7 @@ def create():
     # only check the name of the topic
     if len(res):
         db.close()
-        return error('Topic has already exist')
+        return error('Topic topic with that name already exists!')
 
     db.insert_single(
         'topics',
