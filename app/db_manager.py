@@ -143,3 +143,9 @@ class sqliteManager:
         else:
             res = sqliteManager.conn.execute('SELECT {columns} FROM {table}')
         return res.fetchall()
+
+    # runs a custom SQLite query
+
+    def customQuery(query):
+        res = sqliteManager.conn.execute(query)
+        return res.fetchall()
