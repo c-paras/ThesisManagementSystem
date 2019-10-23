@@ -28,7 +28,7 @@ function markFieldValid(field, valid) {
  */
 function formValid(form) {
   let invalid = false;
-  form.find('input').each(function () {
+  form.find('input,textarea').each(function () {
     if ($(this).val() === '' && $(this).attr('required')) {
       invalid = true;
     }
