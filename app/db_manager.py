@@ -141,7 +141,7 @@ class sqliteManager:
                 where_val
             )
         else:
-            res = sqliteManager.conn.execute('SELECT {columns} FROM {table}')
+            res = sqliteManager.conn.execute(f'SELECT {columns} FROM {table}')
         return res.fetchall()
 
     # runs a custom SQLite query
