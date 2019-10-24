@@ -116,6 +116,11 @@ class sqliteManager:
         )
         sqliteManager.conn.commit()
 
+    def delete_all(table):
+        res = sqliteManager.conn.execute(
+            f'DELETE FROM {table}'
+        )
+        sqliteManager.conn.commit()
     # executes all deletes in list before commit
     # format for each item in list is
     # same as delete_rows
@@ -144,8 +149,26 @@ class sqliteManager:
             res = sqliteManager.conn.execute(f'SELECT {columns} FROM {table}')
         return res.fetchall()
 
+    # returns all specified columns
+    # where clause is only joined by AND
+    # operator is what's used in the sql WHERE query
+    # table = string, all others are lists
+
+    def select_columns_operator(table, columns,
+                                where_col, where_val, operator):
+        columns = ','.join(columns)
+        if where_col is not None:
+            placeholder = (' '+operator+' ? AND ').join(where_col) + ' '+operator+' ?'
+            res = sqliteManager.conn.execute(
+                f'SELECT {columns} FROM {table} WHERE {placeholder}',
+                where_val
+            )
+        else:
+            res = sqliteManager.conn.execute(f'SELECT {columns} FROM {table}')
+        return res.fetchall()
+
     # runs a custom SQLite query
 
-    def customQuery(query):
+    def custom_query(query):
         res = sqliteManager.conn.execute(query)
         return res.fetchall()

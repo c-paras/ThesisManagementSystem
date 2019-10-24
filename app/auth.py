@@ -6,6 +6,8 @@ from flask import request
 from flask import session
 from flask import jsonify
 from flask import url_for
+
+from enum import Enum
 from functools import wraps
 
 from app.helpers import error
@@ -21,13 +23,40 @@ import config
 auth = Blueprint('auth', __name__)
 
 
-def loggedin(func):
-    ''' Raise 403 error if user is not logged in '''
-    @wraps(func)
-    def wrapper(*args, **kwargs):
-        if 'user' not in session:
-            abort(403)
-        return func(*args, **kwargs)
+# user privillege levels
+class UserRole(Enum):
+    #  PUBLIC = 0 # possibly used in future
+    STUDENT = 1
+    STAFF = 2  # supervisor or assessor
+    COURSE_ADMIN = 3  # thesis admin
+    #  ADMIN = 4 # possibly used in future
+
+
+def is_at_least_role(role):
+    ''' Check if user's role type is sufficient for access '''
+    actual_role = session['acc_type']
+    r = role.value
+    if role == UserRole.STUDENT:
+        return True
+    elif actual_role == 'supervisor' and r <= UserRole.STAFF.value:
+        return True
+    elif actual_role == 'course_admin' and r <= UserRole.COURSE_ADMIN.value:
+        return True
+    else:
+        return False
+
+
+def at_least_role(role):
+    ''' Raise 403 error if user is trying to access a disallowed route '''
+    def wrapper(f):
+        @wraps(f)
+        def wrapped(*args, **kwargs):
+            if 'user' not in session:
+                abort(403)
+            if not is_at_least_role(role):
+                abort(403)
+            return f(*args, **kwargs)
+        return wrapped
     return wrapper
 
 
@@ -95,7 +124,7 @@ def login():
 
     db.connect()
     res = db.select_columns('users',
-                            ['password', 'account_type'],
+                            ['password', 'account_type', 'id'],
                             ['email'],
                             [email])
 
@@ -114,6 +143,7 @@ def login():
                                  [res[0][1]])[0][0]
 
     session['user'] = email
+    session['id'] = res[0][2]
     session['acc_type'] = acc_type
     db.close()
     return jsonify({'status': 'ok'})
