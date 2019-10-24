@@ -66,8 +66,10 @@ def staff_dashboard():
     for tup_student in assess_students:
         i = list(tup_student)
         i.append('Assessor')
-        print(i.pop(3))
-        curr_students.append(i)
+        if(datetime.now().timestamp() < i.pop(3)):
+            curr_students.append(i)
+        else:
+            past_students.append(i)
 
     return render_template('homeStaff.html',
                            heading='My Dashboard',
