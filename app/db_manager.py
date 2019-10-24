@@ -116,6 +116,11 @@ class sqliteManager:
         )
         sqliteManager.conn.commit()
 
+    def delete_all(table):
+        res = sqliteManager.conn.execute(
+            f'DELETE FROM {table}'
+        )
+        sqliteManager.conn.commit()
     # executes all deletes in list before commit
     # format for each item in list is
     # same as delete_rows
