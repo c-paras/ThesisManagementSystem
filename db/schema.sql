@@ -237,9 +237,9 @@ CREATE TABLE topics(
 
 DROP TABLE IF EXISTS topic_to_area;
 CREATE TABLE topic_to_area(
-    id          INTEGER NOT NULL PRIMARY KEY,
     topic       INTEGER NOT NULL,
     topic_area  INTEGER NOT NULL,
+    PRIMARY KEY(topic, topic_area),
     FOREIGN KEY(topic) REFERENCES topics(id),
     FOREIGN KEY(topic_area) REFERENCES topic_areas(id)
 );
