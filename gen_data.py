@@ -38,16 +38,28 @@ def gen_users():
     return (students, supervisors)
 
 
-def get_sessions():
+def gen_sessions():
     ret = []
     for year in range(2000, 2020):
-        ret.append((datetime.datetime(year, 1, 1, 0, 0, 0),
-                    datetime.datetime(year, 4, 30, 23, 59, 59)))
-        ret.append((datetime.datetime(year, 5, 1, 0, 0, 0),
-                    datetime.datetime(year, 7, 31, 23, 59, 59)))
-        ret.append((datetime.datetime(year, 8, 1, 0, 0, 0),
-                    datetime.datetime(year, 11, 30, 23, 59, 59)))
-    return ret
+        ret.append(
+            'sessions',
+            [year, 1, datetime.datetime(year, 1, 1, 0, 0, 0),
+                datetime.datetime(year, 4, 30, 23, 59, 59)],
+            ['year', 'term', 'start_date', 'end_date']
+        )
+        ret.append(
+            'sessions',
+            [year, 2, datetime.datetime(year, 5, 1, 0, 0, 0),
+                datetime.datetime(year, 7, 31, 23, 59, 59)],
+            ['year', 'term', 'start_date', 'end_date']
+        )
+        ret.append(
+            'sessions',
+            [year, 3, datetime.datetime(year, 8, 1, 0, 0, 0),
+                datetime.datetime(year, 11, 30, 23, 59, 59)],
+            ['year', 'term', 'start_date', 'end_date']
+        )
+    db.insert_multiple(ret)
 
 
 def gen_courses():
@@ -68,10 +80,10 @@ def gen_courses():
             assert len(res) > 0
             cid = res[0][0]
 
-            for start, end in get_sessions():
+            for year, term, start, end in gen_sessions():
                 query.append(('sessions',
-                              [cid, start.timestamp(), end.timestamp()],
-                              ['course', 'start_date', 'end_date']))
+                              [year, term, start.timestamp(), end.timestamp()],
+                              ['year', 'term', 'start_date', 'end_date']))
         db.insert_multiple(query)
 
 
@@ -116,11 +128,10 @@ def gen_tasks():
 
             word_limit = t.get('word-limit', random.randrange(400, 8000))
 
-            for start, end in sessions:
+            for year, term, _, _ in sessions:
                 res = db.select_columns('sessions', ['id'],
-                                        ['start_date', 'end_date', 'course'],
-                                        [start.timestamp(), end.timestamp(),
-                                         course_id])
+                                        ['year', 'term'],
+                                        [year, term])
                 assert len(res) > 0
                 session_id = res[0][0]
 
