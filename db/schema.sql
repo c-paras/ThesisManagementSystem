@@ -51,7 +51,8 @@ CREATE TABLE courses(
     id          INTEGER NOT NULL PRIMARY KEY,
     code        TEXT NOT NULL,
     name        TEXT NOT NULL,
-    description TEXT
+    description TEXT,
+    prereq      INTEGER
 );
 
 
