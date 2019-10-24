@@ -128,8 +128,17 @@ def gen_course_offering():
 def gen_topic_areas(topic_id, areas):
     query = []
     for area in areas:
-        query.append(('topic_areas', [area, topic_id], ['name', 'topic']))
-    db.insert_multiple(query)
+        res = db.select_columns('topic_area', ['name'], ['name'], area)
+        if len(res) == 0:
+            db.insert_single(
+                'topic_areas', [area, topic_id], ['name', 'topic']
+            )
+        area_id = db.select_columns(
+            'topic_areas', ['id'], ['name'], area
+        )[0][0]
+        db.insert_single(
+            'topic_to_area', [topic_id, area_id], ['topic', 'topic_area']
+        )
 
 
 def gen_topics():
@@ -147,7 +156,7 @@ def gen_topics():
                                         ["account_type"],
                                         [supervisor_type])
 
-        topic_id = 0
+        topic_id = 1
         for t in topics:
             supervisor = supervisors[random.randrange(0, len(supervisors))][0]
             query.append((
