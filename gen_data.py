@@ -15,28 +15,31 @@ def get_all_types():
 
 
 def gen_users():
-    types = get_all_types()
-    password = bcrypt.hashpw('password1'.encode('utf-8'), bcrypt.gensalt())
-    query = []
-    students = []
-    for i in range(1, 100):
-        zid = 'z{}'.format(str(1000000 + i))
-        students.append(zid)
-        query.append(('users',
-                      [zid, f'{zid}@unsw.edu.au',
-                       password, types['student']],
-                      ['name', 'email', 'password', 'account_type']))
+    with open('db/names.json') as f:
+        names = json.load(f)
+        types = get_all_types()
+        password = bcrypt.hashpw('password1'.encode('utf-8'), bcrypt.gensalt())
+        query = []
+        students = []
+        for i in range(1, 100):
+            zid = 'z{}'.format(str(1000000 + i))
+            students.append(zid)
+            name = names[random.randrange(0, 500)]["name"]
+            query.append(('users',
+                          [name, f'{zid}@unsw.edu.au',
+                           password, types['student']],
+                          ['name', 'email', 'password', 'account_type']))
 
-    supervisors = []
-    for i in range(1, 10):
-        zid = 'z{}'.format(str(8000000 + i))
-        supervisors.append(zid)
-        query.append(('users',
-                      [zid, f'{zid}@unsw.edu.au',
-                       password, types['supervisor']],
-                      ['name', 'email', 'password', 'account_type']))
-    db.insert_multiple(query)
-    return (students, supervisors)
+        supervisors = []
+        for i in range(1, 10):
+            zid = 'z{}'.format(str(8000000 + i))
+            supervisors.append(zid)
+            name = names[random.randrange(0, 500)]["name"]
+            query.append(('users',
+                          [name, f'{zid}@unsw.edu.au',
+                           password, types['supervisor']],
+                          ['name', 'email', 'password', 'account_type']))
+        db.insert_multiple(query)
 
 
 def gen_sessions():
@@ -122,26 +125,34 @@ def gen_course_offering():
                                      ['course', 'session'])
 
 
-def create_topic(name, description, supervisor, areas):
-    res = db.select_columns('users', ['id'], ['name'], [supervisor])
-    assert len(res) > 0
-    user_id = res[0][0]
-    db.insert_single('topics', [name, user_id, description],
+def create_topic(name, description, supervisor_id, areas):
+    db.insert_single('topics', [name, supervisor_id, description],
                      ['name', 'supervisor', 'description'])
     topic_id = db.select_columns('topics', ['id'], ['name', 'supervisor'],
-                                 [name, user_id])[0][0]
+                                 [name, supervisor_id])[0][0]
     query = []
     for area in areas:
         query.append(('topic_areas', [area, topic_id], ['name', 'topic']))
     return query
 
 
-def gen_topics(students, supervisors):
+def gen_topics():
     with open('db/topics.json') as f:
         topics = json.load(f)
         query = []
+
+        supervisor_type = db.select_columns("account_types",
+                                            ["id"],
+                                            ["name"],
+                                            ["supervisor"])[0][0]
+
+        supervisors = db.select_columns("users",
+                                        ["id"],
+                                        ["account_type"],
+                                        [supervisor_type])
+
         for t in topics:
-            supervisor = supervisors[random.randrange(0, len(supervisors))]
+            supervisor = supervisors[random.randrange(0, len(supervisors))][0]
             query.extend(create_topic(t['name'], t['description'],
                                       supervisor, t['areas']))
         db.insert_multiple(query)
@@ -150,11 +161,6 @@ def gen_topics(students, supervisors):
 def gen_tasks():
     with open('db/tasks.json') as f:
         tasks = json.load(f)
-        # sessions = db.select_columns("sessions",
-        #                              ["id", "start_date", "end_date"],
-        #                              None, None)
-        # for i in sessions:
-        #     print(i)
 
         for t in tasks:
             res = db.select_columns('courses', ['id'], ['code'], [t['course']])
@@ -174,7 +180,6 @@ def gen_tasks():
                                           [course_id])
 
             for offer_id, session_id in offerings:
-                print(str(offer_id)+" | "+str(session_id))
                 date = db.select_columns("sessions",
                                          ["start_date", "end_date"],
                                          ["id"],
@@ -220,7 +225,7 @@ if __name__ == '__main__':
 
     random.seed(42)
     print('Generating users...')
-    students, supervisors = gen_users()
+    gen_users()
 
     print('Generating courses...')
     gen_courses()
@@ -232,7 +237,7 @@ if __name__ == '__main__':
     gen_course_offering()
 
     print('Generating topics...')
-    gen_topics(students, supervisors)
+    gen_topics()
 
     print('Generating tasks...')
     gen_tasks()
