@@ -372,12 +372,58 @@ def gen_student_topics():
                          ["student", "topic", "assessor"])
 
 
+def gen_topic_requests():
+    # get first supervisor
+    supervisor_type = db.select_columns("account_types",
+                                        ["id"],
+                                        ["name"],
+                                        ["supervisor"])[0][0]
+
+    main_sup_id = db.select_columns("users",
+                                    ["id"],
+                                    ["account_type"],
+                                    [supervisor_type])[0][0]
+
+    #
+    # Add students supervisor_0 is being requested by
+    #
+
+    # get possible topics
+    topics = db.select_columns("topics",
+                               ["id"],
+                               ["supervisor"],
+                               [main_sup_id])
+
+    # get all students
+    student_type = db.select_columns("account_types",
+                                     ["id"],
+                                     ["name"],
+                                     ["student"])[0][0]
+    students = db.select_columns("users",
+                                 ["id"],
+                                 ["account_type"],
+                                 [student_type])
+
+    # enroll current and past students students
+    student_ids = list(range(int(len(students)/3),
+                             int(len(students)/3+3)))
+
+    for i in student_ids:
+        topic_id = random.randrange(0, len(topics))
+        db.insert_single('topic_requests',
+                         [students[i][0], topics[topic_id][0],
+                          1, datetime.datetime.now().timestamp(),
+                          "FAKE_GEN_DATA"],
+                         ["student", "topic", "status",
+                          "date_created", "text"])
+
+
 if __name__ == '__main__':
     db.connect()
     for tbl in ['users', 'courses', 'topics', 'topic_areas',
                 'tasks', 'sessions', 'submission_types',
                 'course_offerings', 'enrollments',
-                'student_topic']:
+                'student_topic', 'topic_requests']:
         db.delete_all(tbl)
     db.conn.commit()
 
@@ -405,5 +451,8 @@ if __name__ == '__main__':
 
     print('Generating students topics...')
     gen_student_topics()
+
+    print('Generating topic requests...')
+    gen_topic_requests()
 
     print('Done')
