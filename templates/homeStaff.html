@@ -25,7 +25,7 @@
                 {% for request in curr_requests %}
                   <tr>
                     <td>{{ request[0] }}</td>
-                    <td>{{ request[1] }}</td>
+                    <td>{{ request[1].split('@')[0] }}</td>
                     <td>{{ request[2] }}</td>
                     <td>
                       <i class="material-icons approval-icon green-text text-lighten-2">check_circle</i>
@@ -64,7 +64,7 @@
               {% for student in curr_students %}
                 <tr>
                     <td>{{ student[0] }}</td>
-                    <td>{{ student[1] }}</td>
+                    <td>{{ student[1].split('@')[0] }}</td>
                     <td>{{ student[2] }}</td>
                     <td>{{ student[3] }}</td>
                 </tr>
@@ -102,7 +102,7 @@
               {% for student in past_students %}
                 <tr>
                     <td>{{ student[0] }}</td>
-                    <td>{{ student[1] }}</td>
+                    <td>{{ student[1].split('@')[0] }}</td>
                     <td>{{ student[2] }}</td>
                     <td>{{ student[3] }}</td>
                 </tr>

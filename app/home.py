@@ -4,6 +4,8 @@ from flask import render_template
 from flask import session
 from flask import url_for
 
+from datetime import datetime
+
 from app.auth import UserRole
 from app.auth import at_least_role
 from app.queries import queries
@@ -45,26 +47,29 @@ def staff_dashboard():
     # this is possible.
 
     curr_students = []
-    # get current students who I am supervising
-    curr_super_students = queries.get_current_super_students(session['user'])
+    past_students = []
 
-    for tup_student in curr_super_students:
+    # get students who I am supervising
+    super_students = queries.get_current_super_students(session['user'])
+
+    # get students who I am assessing
+    assess_students = queries.get_current_assess_students(session['user'])
+
+    for tup_student in super_students:
         i = list(tup_student)
         i.append('Supervisor')
-        curr_students.append(i)
+        if(datetime.now().timestamp() < i.pop(3)):
+            curr_students.append(i)
+        else:
+            past_students.append(i)
 
-    # get current students who I am asessing
-    curr_assess_students = queries.get_current_assess_students(session['user'])
-    for i in curr_assess_students:
+    for tup_student in assess_students:
         i = list(tup_student)
         i.append('Assessor')
-        curr_students.append(i)
-
-    curr_students.extend(curr_assess_students)
-    print(curr_students)
-
-    # for now left blank
-    past_students = []
+        if(datetime.now().timestamp() < i.pop(3)):
+            curr_students.append(i)
+        else:
+            past_students.append(i)
 
     return render_template('homeStaff.html',
                            heading='My Dashboard',
