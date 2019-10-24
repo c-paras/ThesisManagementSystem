@@ -9,6 +9,7 @@ from app.auth import UserRole
 from app.auth import at_least_role
 from app.db_manager import sqliteManager as db
 from app.helpers import get_fields
+from app.queries import queries
 
 search = Blueprint('search', __name__)
 
@@ -41,9 +42,8 @@ def search_topic():
     topic_area = []
     if len(search_topic) > 0:
         for area in search_topic:
-            topic_area.append(db.select_columns('topic_areas',
-                                                ['name', 'topic'],
-                                                ['name'], [area]))
+            topic_area.append(queries.search_topic_areas(area))
+
     # getting submitted supervisors
     supervisor = []
     if len(search_super) > 0:
@@ -129,9 +129,7 @@ def search_topic():
     # getting the topics_areas for the filtered topics
     to_return_topic_area = []
     for topics in to_return_searches:
-        to_return_topic_area.append(db.select_columns('topic_areas',
-                                                      ['name'],
-                                                      ['topic'], [topics[0]]))
+        to_return_topic_area.append(queries.get_topic_areas(topics[0]))
 
     # getting the supervisors for the filtered topics
     to_return_supervisor = []
