@@ -28,7 +28,7 @@ def search_topic():
     search_topic = list(filter(None, search_topic))
     search_super = list(filter(None, search_super))
     search_terms = request.form.get('search')
-    searchCheck = request.form.get('checkbox-vis')
+    search_check = request.form.get('checkbox-vis')
 
     # cleaning up input
     search_terms = search_terms.upper()
@@ -119,7 +119,7 @@ def search_topic():
 
     # checking if topics are visible or not
     to_return_searches = []
-    if searchCheck == 'on':
+    if search_check == 'on':
         for results in matched_search_phrase:
             if results[4] == 1:
                 to_return_searches.append(results)
