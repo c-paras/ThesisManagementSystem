@@ -150,9 +150,12 @@ def gen_topics(students, supervisors):
 def gen_tasks():
     with open('db/tasks.json') as f:
         tasks = json.load(f)
-        sessions = db.select_columns("sessions",
-                                     ["id", "start_date", "end_date"],
-                                     None, None)
+        # sessions = db.select_columns("sessions",
+        #                              ["id", "start_date", "end_date"],
+        #                              None, None)
+        # for i in sessions:
+        #     print(i)
+
         for t in tasks:
             res = db.select_columns('courses', ['id'], ['code'], [t['course']])
             assert len(res) > 0
@@ -165,17 +168,21 @@ def gen_tasks():
 
             word_limit = t.get('word-limit', random.randrange(400, 8000))
 
-            for session_id, start, end in sessions:
-                res = db.select_columns('course_offerings', ['id'],
-                                        ['course', 'session'],
-                                        [course_id, session_id])
-                if len(res) == 0:
-                    continue
-                course_offer_id = res[0][0]
+            offerings = db.select_columns('course_offerings',
+                                          ['id', 'session'],
+                                          ['course'],
+                                          [course_id])
 
-                due = random.randrange(start, end)
+            for offer_id, session_id in offerings:
+                print(str(offer_id)+" | "+str(session_id))
+                date = db.select_columns("sessions",
+                                         ["start_date", "end_date"],
+                                         ["id"],
+                                         [session_id])
+
+                due = random.randrange(date[0][0], date[0][1])
                 db.insert_single('tasks', [t['name'],
-                                           course_offer_id,
+                                           offer_id,
                                            due,
                                            t['description'],
                                            mark_method_id,
@@ -186,7 +193,7 @@ def gen_tasks():
 
                 res = db.select_columns('tasks', ['id'],
                                         ['name', 'course_offering'],
-                                        [t['name'], course_offer_id])
+                                        [t['name'], offer_id])
                 assert len(res) > 0
                 task_id = res[0][0]
 
