@@ -27,6 +27,17 @@ CREATE TABLE announcements(
 );
 
 
+DROP TABLE IF EXISTS course_offerings;
+CREATE TABLE course_offerings(
+    id          INTEGER NOT NULL PRIMARY KEY,
+    course      INTEGER NOT NULL,
+    session     INTEGER NOT NULL,
+    description TEXT,
+    FOREIGN KEY(course) REFERENCES courses(id),
+    FOREIGN KEY(session) REFERENCES sessions(id)
+);
+
+
 DROP TABLE IF EXISTS course_roles;
 CREATE TABLE course_roles(
     id          INTEGER NOT NULL PRIMARY KEY,
@@ -40,23 +51,13 @@ CREATE TABLE courses(
     id          INTEGER NOT NULL PRIMARY KEY,
     code        TEXT NOT NULL,
     name        TEXT NOT NULL,
-    description TEXT
+    description TEXT,
+    prereq      INTEGER
 );
-
-
-DROP TABLE IF EXISTS course_offerings;
-CREATE TABLE course_offerings(
-    id      INTEGER NOT NULL PRIMARY KEY,
-    course  INTEGER NOT NULL,
-    session INTEGER NOT NULL,
-    FOREIGN KEY(course) REFERENCES courses(id),
-    FOREIGN KEY(session) REFERENCES sessions(id)
-);
-
 
 
 DROP TABLE IF EXISTS enrollments;
-CREATE TABLE user_session(
+CREATE TABLE enrollments(
     user            INTEGER NOT NULL,
     course_offering INTEGER NOT NULL,
     role            INTEGER,

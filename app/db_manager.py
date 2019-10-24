@@ -151,6 +151,6 @@ class sqliteManager:
 
     # runs a custom SQLite query
 
-    def customQuery(query):
+    def custom_query(query):
         res = sqliteManager.conn.execute(query)
         return res.fetchall()

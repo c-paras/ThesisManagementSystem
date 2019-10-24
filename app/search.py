@@ -1,13 +1,12 @@
 from flask import Blueprint
 from flask import render_template
-from flask import session
 from flask import request
 from flask import jsonify
 
-import json
 import re
 
-from app.auth import loggedin
+from app.auth import UserRole
+from app.auth import at_least_role
 from app.db_manager import sqliteManager as db
 from app.helpers import get_fields
 
@@ -15,7 +14,7 @@ search = Blueprint('search', __name__)
 
 
 @search.route('/search', methods=['GET', 'POST'])
-@loggedin
+@at_least_role(UserRole.STUDENT)
 def search_topic():
     if request.method == 'GET':
         return render_template('search.html',
@@ -29,7 +28,7 @@ def search_topic():
     search_topic = list(filter(None, search_topic))
     search_super = list(filter(None, search_super))
     search_terms = request.form.get('search')
-    searchCheck = request.form.get('checkbox-vis')
+    search_check = request.form.get('checkbox-vis')
 
     # cleaning up input
     search_terms = search_terms.upper()
@@ -104,10 +103,10 @@ def search_topic():
     matched = [False] * len(res)
     for word in search_terms:
         for i in range(len(res)):
-            if (re.search(word, res[i][1].upper())):
+            if re.search(word, res[i][1].upper()):
                 matched[i] = True
 
-            if (re.search(word, res[i][3].upper())):
+            if re.search(word, res[i][3].upper()):
                 matched[i] = True
 
     matched_search_phrase = []
@@ -115,12 +114,12 @@ def search_topic():
         matched_search_phrase = res
     else:
         for i in range(len(res)):
-            if (matched[i]):
+            if matched[i]:
                 matched_search_phrase.append(res[i])
 
     # checking if topics are visible or not
     to_return_searches = []
-    if searchCheck == 'on':
+    if search_check == 'on':
         for results in matched_search_phrase:
             if results[4] == 1:
                 to_return_searches.append(results)

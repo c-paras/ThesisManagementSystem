@@ -3,7 +3,8 @@ from flask import render_template
 from flask import request
 from flask import session
 
-from app.auth import loggedin
+from app.auth import UserRole
+from app.auth import at_least_role
 from app.helpers import *
 from app.db_manager import sqliteManager as db
 
@@ -11,24 +12,12 @@ from app.db_manager import sqliteManager as db
 create_topic = Blueprint('create_topic', __name__)
 
 
-# def no_auth(func):
-#     ''' Raise 403 error if user is not authorized to create topic '''
-#     @wraps(func)
-#     def wrapper(*args, **kwargs):
-#         if session['acc_type'] == 'student':
-#             abort(403)
-#         return func(*args, **kwargs)
-#     return wrapper
-
-
 @create_topic.route('/create_topic', methods=['GET', 'POST'])
-@loggedin
+@at_least_role(UserRole.STAFF)
 def create():
     if request.method == 'GET':
-        return render_template(
-            'create_topic.html',
-            heading='Create Topic',
-            title='Create Topic')
+        return render_template('create_topic.html', heading='Create Topic',
+                               title='Create Topic')
 
     try:
         fields = ['topic', 'areas', 'details']
@@ -50,11 +39,8 @@ def create():
         db.close()
         return error('A topic with that name already exists!')
 
-    db.insert_single(
-        'topics',
-        [topic, user_id, details],
-        ['name', 'supervisor', 'description']
-        )
+    db.insert_single('topics', [topic, user_id, details],
+                     ['name', 'supervisor', 'description'])
     topic_id = db.select_columns('topics', ['id'], ['name'], [topic])[0][0]
 
     for area in areas:
