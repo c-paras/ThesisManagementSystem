@@ -105,8 +105,8 @@ def register():
 
     db.insert_single(
         'users',
-        [hashed_pass, email, acc_type[0][0]],
-        ['password', 'email', 'account_type']
+        [name, hashed_pass, email, acc_type[0][0]],
+        ['name', 'password', 'email', 'account_type']
     )
     db.close()
     return jsonify({'status': 'ok'})
