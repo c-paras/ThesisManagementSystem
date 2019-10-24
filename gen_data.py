@@ -80,14 +80,16 @@ def gen_sessions():
 def gen_courses():
     with open('db/prereq.json') as f:
         courses = json.load(f)
-        query = [('courses', [c['code'], c['name']], ['code', 'name'])
-                 for c in courses]
-        db.insert_multiple(query)
+        for c in courses:
+            db.insert_single('courses',
+                             [c['code'], c['name'], 1],
+                             ['code', 'name', 'prereq'])
     with open('db/courses.json') as f:
         courses = json.load(f)
         for c in courses:
             db.insert_single('courses',
-                             [c['code'], c['name']], ['code', 'name'])
+                             [c['code'], c['name'], 0],
+                             ['code', 'name', 'prereq'])
 
 
 def gen_course_offering():
