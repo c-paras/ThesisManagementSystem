@@ -217,11 +217,77 @@ def gen_tasks():
                                      ['file_type', 'task'])
 
 
+def gen_enrollments():
+
+    # get all sessions in the years (2018, 2019, 2020) and put each year into
+    # a list
+    all_years = []
+    for year in range(2018, 2021):
+        res = db.select_columns("sessions",
+                                ["id"],
+                                ["year"],
+                                [year])
+        all_years.append(res)
+
+    # get all courses for old semesters
+    courses_sem = []
+    for code in ["COMP4930", "COMP4931"]:
+        courses_sem += db.select_columns("courses",
+                                         ["id"],
+                                         ["code"],
+                                         [code])
+
+    # get all courses for old semesters
+    courses_tri = []
+    for code in ["COMP4951", "COMP4952", "COMP4953"]:
+        courses_tri += db.select_columns("courses",
+                                         ["id"],
+                                         ["code"],
+                                         [code])
+
+    # get all students
+    student_type = db.select_columns("account_types",
+                                     ["id"],
+                                     ["name"],
+                                     ["student"])[0][0]
+    students = db.select_columns("users",
+                                 ["id"],
+                                 ["account_type"],
+                                 [student_type])
+
+    # create entries in the enrollments table
+    for i, (student, ) in enumerate(students):
+
+        # decide what year current student is enrolled in
+        if i < (len(students)/3):
+            sessions = all_years[1]  # 2019
+            courses = courses_tri
+        elif i < (2 * len(students)/3):
+            sessions = all_years[0]  # 2018
+            courses = courses_sem
+        else:
+            sessions = all_years[2]  # 2020
+            courses = courses_tri
+
+        # enroll the student
+        for i, (course, ) in enumerate(courses):
+            course_offering = db.select_columns("course_offerings",
+                                                ["id"],
+                                                ["session", "course"],
+                                                [sessions[i][0], course])
+            assert len(course_offering) > 0
+
+            course_offering = course_offering[0][0]
+            db.insert_single('enrollments',
+                             [student, course_offering],
+                             ["user", "course_offering"])
+
+
 if __name__ == '__main__':
     db.connect()
     for tbl in ['users', 'courses', 'topics', 'topic_areas',
                 'tasks', 'sessions', 'submission_types',
-                'course_offerings']:
+                'course_offerings', 'enrollments']:
         db.delete_all(tbl)
     db.conn.commit()
 
@@ -243,5 +309,8 @@ if __name__ == '__main__':
 
     print('Generating tasks...')
     gen_tasks()
+
+    print('Generating enrollments...')
+    gen_enrollments()
 
     print('Done')
