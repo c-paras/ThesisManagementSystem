@@ -262,7 +262,7 @@ CREATE TABLE topic_requests(
 DROP TABLE IF EXISTS users;
 CREATE TABLE users(
     id           INTEGER NOT NULL PRIMARY KEY,
-    name         TEXT NOT NULL,
+    name         TEXT,
     email        TEXT NOT NULL,
     password     TEXT NOT NULL,
     account_type INTEGER,
