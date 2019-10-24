@@ -80,14 +80,16 @@ def gen_sessions():
 def gen_courses():
     with open('db/prereq.json') as f:
         courses = json.load(f)
-        query = [('courses', [c['code'], c['name']], ['code', 'name'])
-                 for c in courses]
-        db.insert_multiple(query)
+        for c in courses:
+            db.insert_single('courses',
+                             [c['code'], c['name'], 1],
+                             ['code', 'name', 'prereq'])
     with open('db/courses.json') as f:
         courses = json.load(f)
         for c in courses:
             db.insert_single('courses',
-                             [c['code'], c['name']], ['code', 'name'])
+                             [c['code'], c['name'], 0],
+                             ['code', 'name', 'prereq'])
 
 
 def gen_course_offering():
@@ -225,11 +227,189 @@ def gen_tasks():
                                      ['file_type', 'task'])
 
 
+def gen_enrollments():
+    types = get_all_types()
+
+    # get all sessions in the years (2018, 2019, 2020) and put each year into
+    # a list
+    all_years = []
+    for year in range(2018, 2021):
+        res = db.select_columns("sessions",
+                                ["id"],
+                                ["year"],
+                                [year])
+        all_years.append(res)
+
+    # get all courses for old semesters
+    courses_sem = []
+    for code in ["COMP4930", "COMP4931"]:
+        courses_sem += db.select_columns("courses",
+                                         ["id"],
+                                         ["code"],
+                                         [code])
+
+    # get all courses for old semesters
+    courses_tri = []
+    for code in ["COMP4951", "COMP4952", "COMP4953"]:
+        courses_tri += db.select_columns("courses",
+                                         ["id"],
+                                         ["code"],
+                                         [code])
+
+    # get all students
+    students = db.select_columns("users",
+                                 ["id"],
+                                 ["account_type"],
+                                 [types["student"]])
+
+    # create entries in the enrollments table
+    for i, (student, ) in enumerate(students):
+
+        # decide what year current student is enrolled in
+        if i < int(len(students)/3):
+            sessions = all_years[1]  # 2019
+            courses = courses_tri
+        elif i < int(len(students)/2):
+            sessions = all_years[2]  # 2020
+            courses = courses_tri
+        else:
+            sessions = all_years[0]  # 2018
+            courses = courses_sem
+
+        # enroll the student
+        for i, (course, ) in enumerate(courses):
+            course_offering = db.select_columns("course_offerings",
+                                                ["id"],
+                                                ["session", "course"],
+                                                [sessions[i][0], course])
+            assert len(course_offering) > 0
+
+            course_offering = course_offering[0][0]
+            db.insert_single('enrollments',
+                             [student, course_offering],
+                             ["user", "course_offering"])
+
+
+def gen_student_topics():
+    types = get_all_types()
+    # get first supervisor
+
+    main_sup_id = db.select_columns("users",
+                                    ["id"],
+                                    ["account_type"],
+                                    [types["supervisor"]])[0][0]
+
+    #
+    # Add students supervisor_0 is supervising
+    #
+
+    # get possible topics
+    topics = db.select_columns("topics",
+                               ["id"],
+                               ["supervisor"],
+                               [main_sup_id])
+
+    # get all students
+    students = db.select_columns("users",
+                                 ["id"],
+                                 ["account_type"],
+                                 [types["student"]])
+
+    # enroll current and past students students
+    tot_curr_stu = 3
+    student_ids = list(range(0, tot_curr_stu))
+    student_ids.extend(list(range(int(len(students)/2),
+                                  int(len(students)/2+tot_curr_stu))))
+
+    for i in student_ids:
+        topic_id = random.randrange(0, len(topics))
+        db.insert_single('student_topic',
+                         [students[i][0], topics[topic_id][0]],
+                         ["student", "topic"])
+
+    #
+    # Add students supervisor_0 is assessing
+    #
+
+    other_super = db.select_columns("users",
+                                    ["id"],
+                                    ["account_type"],
+                                    [types["supervisor"]])[1][0]
+
+    # get possible topics
+    topics = db.select_columns("topics",
+                               ["id"],
+                               ["supervisor"],
+                               [other_super])
+
+    # get all students
+    students = db.select_columns("users",
+                                 ["id"],
+                                 ["account_type"],
+                                 [types["student"]])
+
+    # enroll current and past students students
+
+    student_ids = list(range(tot_curr_stu,
+                             2*tot_curr_stu))
+    student_ids.extend(list(range(int(len(students)/2+tot_curr_stu),
+                                  int(len(students)/2+tot_curr_stu*2))))
+
+    for i in student_ids:
+        topic_id = random.randrange(0, len(topics))
+        db.insert_single('student_topic',
+                         [students[i][0],
+                          topics[topic_id][0],
+                          main_sup_id],
+                         ["student", "topic", "assessor"])
+
+
+def gen_topic_requests():
+    types = get_all_types()
+    # get first supervisor
+
+    main_sup_id = db.select_columns("users",
+                                    ["id"],
+                                    ["account_type"],
+                                    [types["supervisor"]])[0][0]
+
+    #
+    # Add students supervisor_0 is being requested by
+    #
+
+    # get possible topics
+    topics = db.select_columns("topics",
+                               ["id"],
+                               ["supervisor"],
+                               [main_sup_id])
+
+    # get all students
+    students = db.select_columns("users",
+                                 ["id"],
+                                 ["account_type"],
+                                 [types["student"]])
+
+    # enroll current and past students students
+    student_ids = list(range(int(len(students)/3),
+                             int(len(students)/3+3)))
+
+    for i in student_ids:
+        topic_id = random.randrange(0, len(topics))
+        db.insert_single('topic_requests',
+                         [students[i][0], topics[topic_id][0],
+                          1, datetime.datetime.now().timestamp(),
+                          "FAKE_GEN_DATA"],
+                         ["student", "topic", "status",
+                          "date_created", "text"])
+
+
 if __name__ == '__main__':
     db.connect()
     for tbl in ['users', 'courses', 'topics', 'topic_areas',
                 'tasks', 'sessions', 'submission_types',
-                'course_offerings', 'topic_to_area']:
+                'course_offerings', 'enrollments',
+                'student_topic', 'topic_requests',
+                'topic_to_area']:
         db.delete_all(tbl)
 
     random.seed(42)
@@ -251,5 +431,4 @@ if __name__ == '__main__':
     print('Generating tasks...')
     gen_tasks()
 
-    db.close()
     print('Done')

@@ -8,7 +8,7 @@ class queries:
         db.connect()
 
         res = db.custom_query("""
-                                SELECT stu.name, stu.name, t.name
+                                SELECT stu.name, stu.email, t.name
                                 FROM users stu
                                 INNER JOIN topic_requests tr
                                     ON stu.id = tr.student
@@ -30,7 +30,8 @@ class queries:
         db.connect()
 
         res = db.custom_query("""
-                                SELECT stu.name, stu.name, t.name
+                                SELECT stu.name, stu.email, t.name,
+                                       MAX(sess.end_date)
                                 FROM users stu
                                 INNER JOIN student_topic st
                                     ON st.student = stu.id
@@ -38,7 +39,14 @@ class queries:
                                     ON t.id = st.topic
                                 INNER JOIN users sup
                                     ON sup.id = t.supervisor
-                                WHERE sup.email = "{my_email}";
+                                INNER JOIN enrollments en
+                                    ON en.user = stu.id
+                                INNER JOIN course_offerings co
+                                    ON co.id = en.course_offering
+                                INNER JOIN sessions sess
+                                    ON sess.id = co.session
+                                WHERE sup.email = "{my_email}"
+                                GROUP BY stu.id;
                              """.format(my_email=email))
 
         db.close()
@@ -49,7 +57,8 @@ class queries:
         db.connect()
 
         res = db.custom_query("""
-                                SELECT stu.name, stu.name, t.name
+                                SELECT stu.name, stu.email, t.name,
+                                       MAX(sess.end_date)
                                 FROM users stu
                                 INNER JOIN student_topic st
                                     ON st.student = stu.id
@@ -57,7 +66,14 @@ class queries:
                                     ON t.id = st.topic
                                 INNER JOIN users sup
                                     ON sup.id = st.assessor
-                                WHERE sup.email = "{my_email}";
+                                INNER JOIN enrollments en
+                                    ON en.user = stu.id
+                                INNER JOIN course_offerings co
+                                    ON co.id = en.course_offering
+                                INNER JOIN sessions sess
+                                    ON sess.id = co.session
+                                WHERE sup.email = "{my_email}"
+                                GROUP BY stu.id;
                              """.format(my_email=email))
 
         db.close()
