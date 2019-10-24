@@ -41,26 +41,37 @@ def gen_users():
 
 def gen_sessions():
     ret = []
-    for year in range(2000, 2020):
-        ret.append(
-            'sessions',
-            [year, 1, datetime.datetime(year, 1, 1, 0, 0, 0),
-                datetime.datetime(year, 4, 30, 23, 59, 59)],
-            ['year', 'term', 'start_date', 'end_date']
-        )
-        ret.append(
-            'sessions',
-            [year, 2, datetime.datetime(year, 5, 1, 0, 0, 0),
-                datetime.datetime(year, 7, 31, 23, 59, 59)],
-            ['year', 'term', 'start_date', 'end_date']
-        )
-        ret.append(
-            'sessions',
-            [year, 3, datetime.datetime(year, 8, 1, 0, 0, 0),
-                datetime.datetime(year, 11, 30, 23, 59, 59)],
-            ['year', 'term', 'start_date', 'end_date']
-        )
-    db.insert_multiple(ret)
+    for year in range(2000, 2019):
+        ret.append([year, 1,
+                    datetime.datetime(year, 1, 1, 0, 0, 0).timestamp(),
+                    datetime.datetime(year, 6, 30, 23, 59, 59).timestamp()
+                    ])
+        ret.append([year, 2,
+                    datetime.datetime(year, 7, 1, 0, 0, 0).timestamp(),
+                    datetime.datetime(year, 11, 30, 23, 59, 59).timestamp()
+                    ])
+
+    for year in range(2019, 2021):
+        ret.append([year, 1,
+                    datetime.datetime(year, 1, 1, 0, 0, 0).timestamp(),
+                    datetime.datetime(year, 4, 30, 23, 59, 59).timestamp()
+                    ])
+        ret.append([year, 2,
+                    datetime.datetime(year, 5, 1, 0, 0, 0).timestamp(),
+                    datetime.datetime(year, 7, 31, 23, 59, 59).timestamp()
+                    ])
+        ret.append([year, 3,
+                    datetime.datetime(year, 8, 1, 0, 0, 0).timestamp(),
+                    datetime.datetime(year, 11, 30, 23, 59, 59).timestamp()
+                    ])
+
+    query = []
+    for sess in ret:
+        query.append(('sessions',
+                      sess,
+                      ['year', 'term', 'start_date', 'end_date']))
+    db.insert_multiple(query)
+    return ret
 
 
 def gen_courses():
@@ -71,20 +82,44 @@ def gen_courses():
         db.insert_multiple(query)
     with open('db/courses.json') as f:
         courses = json.load(f)
-        query = []
         for c in courses:
             db.insert_single('courses',
                              [c['code'], c['name']], ['code', 'name'])
+
+
+def gen_course_offering():
+    with open('db/courses.json') as f:
+        query = []
+        for c in json.load(f):
             res = db.select_columns('courses', ['id'],
                                     ['code'], [c['code']])
             assert len(res) > 0
             course_id = res[0][0]
+            if(c['semester']):
+                # create offerings for thesis A/B in years before 2019
+                session_ids = db.select_columns_operator("sessions",
+                                                         ["id"],
+                                                         ["year"],
+                                                         ["2019"],
+                                                         "<")
 
-            for year, term, start, end in gen_sessions():
-                query.append(('sessions',
-                              [year, term, start.timestamp(), end.timestamp()],
-                              ['year', 'term', 'start_date', 'end_date']))
-        db.insert_multiple(query)
+                for session_id in session_ids:
+                    db.insert_single('course_offerings',
+                                     [course_id, session_id[0]],
+                                     ['course', 'session'])
+
+            else:
+                # create offering for thesis A/B/C in years after 2018
+                session_ids = db.select_columns_operator("sessions",
+                                                         ["id"],
+                                                         ["year"],
+                                                         ["2019"],
+                                                         ">=")
+
+                for session_id in session_ids:
+                    db.insert_single('course_offerings',
+                                     [course_id, session_id[0]],
+                                     ['course', 'session'])
 
 
 def create_topic(name, description, supervisor, areas):
@@ -115,7 +150,9 @@ def gen_topics(students, supervisors):
 def gen_tasks():
     with open('db/tasks.json') as f:
         tasks = json.load(f)
-        sessions = get_sessions()
+        sessions = db.select_columns("sessions",
+                                     ["id", "start_date", "end_date"],
+                                     None, None)
         for t in tasks:
             res = db.select_columns('courses', ['id'], ['code'], [t['course']])
             assert len(res) > 0
@@ -128,26 +165,28 @@ def gen_tasks():
 
             word_limit = t.get('word-limit', random.randrange(400, 8000))
 
-            for year, term, _, _ in sessions:
-                res = db.select_columns('sessions', ['id'],
-                                        ['year', 'term'],
-                                        [year, term])
-                assert len(res) > 0
-                session_id = res[0][0]
+            for session_id, start, end in sessions:
+                res = db.select_columns('course_offerings', ['id'],
+                                        ['course', 'session'],
+                                        [course_id, session_id])
+                if len(res) == 0:
+                    continue
+                course_offer_id = res[0][0]
 
-                due = random.randrange(start.timestamp(), end.timestamp())
+                due = random.randrange(start, end)
                 db.insert_single('tasks', [t['name'],
-                                           session_id,
+                                           course_offer_id,
                                            due,
                                            t['description'],
                                            mark_method_id,
                                            word_limit],
-                                 ['name', 'session', 'deadline',
+                                 ['name', 'course_offering', 'deadline',
                                   'description', 'marking_method',
                                   'word_limit'])
 
-                res = db.select_columns('tasks', ['id'], ['name', 'session'],
-                                        [t['name'], session_id])
+                res = db.select_columns('tasks', ['id'],
+                                        ['name', 'course_offering'],
+                                        [t['name'], course_offer_id])
                 assert len(res) > 0
                 task_id = res[0][0]
 
@@ -167,8 +206,9 @@ def gen_tasks():
 if __name__ == '__main__':
     db.connect()
     for tbl in ['users', 'courses', 'topics', 'topic_areas',
-                'tasks', 'sessions', 'submission_types']:
-        db.conn.execute(f'DELETE FROM {tbl}')
+                'tasks', 'sessions', 'submission_types',
+                'course_offerings']:
+        db.delete_all(tbl)
     db.conn.commit()
 
     random.seed(42)
@@ -177,6 +217,12 @@ if __name__ == '__main__':
 
     print('Generating courses...')
     gen_courses()
+
+    print('Generating sessions...')
+    gen_sessions()
+
+    print('Generating course offerings...')
+    gen_course_offering()
 
     print('Generating topics...')
     gen_topics(students, supervisors)
