@@ -103,10 +103,10 @@ def search_topic():
     matched = [False] * len(res)
     for word in search_terms:
         for i in range(len(res)):
-            if (re.search(word, res[i][1].upper())):
+            if re.search(word, res[i][1].upper()):
                 matched[i] = True
 
-            if (re.search(word, res[i][3].upper())):
+            if re.search(word, res[i][3].upper()):
                 matched[i] = True
 
     matched_search_phrase = []
@@ -114,7 +114,7 @@ def search_topic():
         matched_search_phrase = res
     else:
         for i in range(len(res)):
-            if (matched[i]):
+            if matched[i]:
                 matched_search_phrase.append(res[i])
 
     # checking if topics are visible or not
