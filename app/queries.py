@@ -7,7 +7,7 @@ class queries:
     def get_curr_topic_requests(email):
         db.connect()
 
-        res = db.customQuery("""
+        res = db.custom_query("""
                                 SELECT stu.name, stu.name, t.name
                                 FROM users stu
                                 INNER JOIN topic_requests tr
@@ -29,7 +29,7 @@ class queries:
     def get_current_super_students(email):
         db.connect()
 
-        res = db.customQuery("""
+        res = db.custom_query("""
                                 SELECT stu.name, stu.name, t.name
                                 FROM users stu
                                 INNER JOIN student_topic st
@@ -48,7 +48,7 @@ class queries:
     def get_current_assess_students(email):
         db.connect()
 
-        res = db.customQuery("""
+        res = db.custom_query("""
                                 SELECT stu.name, stu.name, t.name
                                 FROM users stu
                                 INNER JOIN student_topic st

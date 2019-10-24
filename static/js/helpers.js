@@ -97,3 +97,17 @@ $(function () {
 
   });
 });
+
+/*
+ * Manually add and remove active class from chips fields.
+ * This makes chips fields consistent with normal input fields.
+ */
+$(function () {
+  $('.chips input').on('focus', function() {
+    $(this).parent().siblings('.prefix').addClass('active');
+  });
+
+  $('.chips input').on('blur', function() {
+    $(this).parent().siblings('.prefix').removeClass('active');
+  });
+});

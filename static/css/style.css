@@ -23,8 +23,25 @@ main {
 
 /* approval and rejection, change color when user hovers over them */
 .approval-icon:hover {
-    color: green !important;
-} 
+  color: green !important;
+}
 .rejection-icon:hover {
-    color: red !important;
-} 
+  color: red !important;
+}
+
+/* darker placeholder text */
+/* https://stackoverflow.com/questions/15497550/change-input-placeholder-color-darker */
+::-webkit-input-placeholder {
+  color: grey;
+  opacity: 1 !important; /* for older chrome versions. may no longer apply. */
+}
+:-moz-placeholder { /* Firefox 18- */
+  color: grey;
+}
+::-moz-placeholder { /* Firefox 19+ */
+  color: grey;
+  opacity: 1 !important;
+}
+:-ms-input-placeholder {
+  color: grey;
+}
