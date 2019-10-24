@@ -218,6 +218,7 @@ def gen_tasks():
 
 
 def gen_enrollments():
+    types = get_all_types()
 
     # get all sessions in the years (2018, 2019, 2020) and put each year into
     # a list
@@ -246,14 +247,10 @@ def gen_enrollments():
                                          [code])
 
     # get all students
-    student_type = db.select_columns("account_types",
-                                     ["id"],
-                                     ["name"],
-                                     ["student"])[0][0]
     students = db.select_columns("users",
                                  ["id"],
                                  ["account_type"],
-                                 [student_type])
+                                 [types["student"]])
 
     # create entries in the enrollments table
     for i, (student, ) in enumerate(students):
@@ -284,16 +281,13 @@ def gen_enrollments():
 
 
 def gen_student_topics():
+    types = get_all_types()
     # get first supervisor
-    supervisor_type = db.select_columns("account_types",
-                                        ["id"],
-                                        ["name"],
-                                        ["supervisor"])[0][0]
 
     main_sup_id = db.select_columns("users",
                                     ["id"],
                                     ["account_type"],
-                                    [supervisor_type])[0][0]
+                                    [types["supervisor"]])[0][0]
 
     #
     # Add students supervisor_0 is supervising
@@ -306,14 +300,10 @@ def gen_student_topics():
                                [main_sup_id])
 
     # get all students
-    student_type = db.select_columns("account_types",
-                                     ["id"],
-                                     ["name"],
-                                     ["student"])[0][0]
     students = db.select_columns("users",
                                  ["id"],
                                  ["account_type"],
-                                 [student_type])
+                                 [types["student"]])
 
     # enroll current and past students students
     tot_curr_stu = 3
@@ -330,15 +320,11 @@ def gen_student_topics():
     #
     # Add students supervisor_0 is assessing
     #
-    supervisor_type = db.select_columns("account_types",
-                                        ["id"],
-                                        ["name"],
-                                        ["supervisor"])[0][0]
 
     other_super = db.select_columns("users",
                                     ["id"],
                                     ["account_type"],
-                                    [supervisor_type])[1][0]
+                                    [types["supervisor"]])[1][0]
 
     # get possible topics
     topics = db.select_columns("topics",
@@ -347,14 +333,10 @@ def gen_student_topics():
                                [other_super])
 
     # get all students
-    student_type = db.select_columns("account_types",
-                                     ["id"],
-                                     ["name"],
-                                     ["student"])[0][0]
     students = db.select_columns("users",
                                  ["id"],
                                  ["account_type"],
-                                 [student_type])
+                                 [types["student"]])
 
     # enroll current and past students students
 
@@ -373,16 +355,13 @@ def gen_student_topics():
 
 
 def gen_topic_requests():
+    types = get_all_types()
     # get first supervisor
-    supervisor_type = db.select_columns("account_types",
-                                        ["id"],
-                                        ["name"],
-                                        ["supervisor"])[0][0]
 
     main_sup_id = db.select_columns("users",
                                     ["id"],
                                     ["account_type"],
-                                    [supervisor_type])[0][0]
+                                    [types["supervisor"]])[0][0]
 
     #
     # Add students supervisor_0 is being requested by
@@ -395,14 +374,10 @@ def gen_topic_requests():
                                [main_sup_id])
 
     # get all students
-    student_type = db.select_columns("account_types",
-                                     ["id"],
-                                     ["name"],
-                                     ["student"])[0][0]
     students = db.select_columns("users",
                                  ["id"],
                                  ["account_type"],
-                                 [student_type])
+                                 [types["student"]])
 
     # enroll current and past students students
     student_ids = list(range(int(len(students)/3),
