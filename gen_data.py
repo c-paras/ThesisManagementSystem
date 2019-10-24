@@ -8,7 +8,7 @@ from app.db_manager import sqliteManager as db
 
 def get_all_types():
     types = {}
-    res = db.conn.execute('SELECT name, id FROM account_types').fetchall()
+    res = db.select_columns('account_types', ['name', 'id'])
     for name, iden in res:
         types[name] = iden
     return types
@@ -125,15 +125,11 @@ def gen_course_offering():
                                      ['course', 'session'])
 
 
-def create_topic(name, description, supervisor_id, areas):
-    db.insert_single('topics', [name, supervisor_id, description],
-                     ['name', 'supervisor', 'description'])
-    topic_id = db.select_columns('topics', ['id'], ['name', 'supervisor'],
-                                 [name, supervisor_id])[0][0]
+def gen_topic_areas(topic_id, areas):
     query = []
     for area in areas:
         query.append(('topic_areas', [area, topic_id], ['name', 'topic']))
-    return query
+    db.insert_multiple(query)
 
 
 def gen_topics():
@@ -151,10 +147,15 @@ def gen_topics():
                                         ["account_type"],
                                         [supervisor_type])
 
+        topic_id = 0
         for t in topics:
             supervisor = supervisors[random.randrange(0, len(supervisors))][0]
-            query.extend(create_topic(t['name'], t['description'],
-                                      supervisor, t['areas']))
+            query.append((
+                'topics', [topic_id, t['name'], supervisor, t['description']],
+                ['id', 'name', 'supervisor', 'description']
+            ))
+            gen_topic_areas(topic_id, t['areas'])
+            topic_id += 1
         db.insert_multiple(query)
 
 
@@ -221,7 +222,6 @@ if __name__ == '__main__':
                 'tasks', 'sessions', 'submission_types',
                 'course_offerings']:
         db.delete_all(tbl)
-    db.conn.commit()
 
     random.seed(42)
     print('Generating users...')
@@ -242,4 +242,5 @@ if __name__ == '__main__':
     print('Generating tasks...')
     gen_tasks()
 
+    db.close()
     print('Done')

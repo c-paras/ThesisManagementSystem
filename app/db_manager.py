@@ -116,6 +116,7 @@ class sqliteManager:
         )
         sqliteManager.conn.commit()
 
+    # deletes all items in table
     def delete_all(table):
         res = sqliteManager.conn.execute(
             f'DELETE FROM {table}'
@@ -137,7 +138,7 @@ class sqliteManager:
     # where clause is only joined by AND
     # table = string, all others are lists
 
-    def select_columns(table, columns, where_col, where_val):
+    def select_columns(table, columns, where_col=None, where_val=None):
         columns = ','.join(columns)
         if where_col is not None:
             placeholder = ' = ? AND '.join(where_col) + ' = ?'
@@ -158,7 +159,9 @@ class sqliteManager:
                                 where_col, where_val, operator):
         columns = ','.join(columns)
         if where_col is not None:
-            placeholder = (' '+operator+' ? AND ').join(where_col) + ' '+operator+' ?'
+            placeholder = (
+                ' '+operator+' ? AND '
+            ).join(where_col) + ' '+operator+' ?'
             res = sqliteManager.conn.execute(
                 f'SELECT {columns} FROM {table} WHERE {placeholder}',
                 where_val
