@@ -262,12 +262,12 @@ def gen_enrollments():
         if i < (len(students)/3):
             sessions = all_years[1]  # 2019
             courses = courses_tri
-        elif i < (2 * len(students)/3):
-            sessions = all_years[0]  # 2018
-            courses = courses_sem
-        else:
+        elif i < (len(students)/2):
             sessions = all_years[2]  # 2020
             courses = courses_tri
+        else:
+            sessions = all_years[0]  # 2018
+            courses = courses_sem
 
         # enroll the student
         for i, (course, ) in enumerate(courses):
@@ -283,11 +283,52 @@ def gen_enrollments():
                              ["user", "course_offering"])
 
 
+def gen_student_topics():
+    # get first supervisor
+    supervisor_type = db.select_columns("account_types",
+                                        ["id"],
+                                        ["name"],
+                                        ["supervisor"])[0][0]
+
+    supervisor_id = db.select_columns("users",
+                                      ["id"],
+                                      ["account_type"],
+                                      [supervisor_type])[0][0]
+
+    # get possible topics
+    topics = db.select_columns("topics",
+                               ["id"],
+                               ["supervisor"],
+                               [supervisor_id])
+
+    # get all students
+    student_type = db.select_columns("account_types",
+                                     ["id"],
+                                     ["name"],
+                                     ["student"])[0][0]
+    students = db.select_columns("users",
+                                 ["id"],
+                                 ["account_type"],
+                                 [student_type])
+
+    # enroll current and past students students
+    student_ids = list(range(0, 5))
+    student_ids.extend(list(range(int(len(students)/2),
+                                  int(len(students)/2+5))))
+
+    for i in student_ids:
+        topic_id = random.randrange(0, len(topics))
+        db.insert_single('student_topic',
+                         [students[i][0], topics[topic_id][0]],
+                         ["student", "topic"])
+
+
 if __name__ == '__main__':
     db.connect()
     for tbl in ['users', 'courses', 'topics', 'topic_areas',
                 'tasks', 'sessions', 'submission_types',
-                'course_offerings', 'enrollments']:
+                'course_offerings', 'enrollments',
+                'student_topic']:
         db.delete_all(tbl)
     db.conn.commit()
 
@@ -312,5 +353,8 @@ if __name__ == '__main__':
 
     print('Generating enrollments...')
     gen_enrollments()
+
+    print('Generating students topics...')
+    gen_student_topics()
 
     print('Done')
