@@ -128,13 +128,13 @@ def gen_course_offering():
 def gen_topic_areas(topic_id, areas):
     query = []
     for area in areas:
-        res = db.select_columns('topic_area', ['name'], ['name'], area)
+        res = db.select_columns('topic_areas', ['name'], ['name'], [area])
         if len(res) == 0:
             db.insert_single(
-                'topic_areas', [area, topic_id], ['name', 'topic']
+                'topic_areas', [area], ['name']
             )
         area_id = db.select_columns(
-            'topic_areas', ['id'], ['name'], area
+            'topic_areas', ['id'], ['name'], [area]
         )[0][0]
         db.insert_single(
             'topic_to_area', [topic_id, area_id], ['topic', 'topic_area']
@@ -229,7 +229,7 @@ if __name__ == '__main__':
     db.connect()
     for tbl in ['users', 'courses', 'topics', 'topic_areas',
                 'tasks', 'sessions', 'submission_types',
-                'course_offerings']:
+                'course_offerings', 'topic_to_area']:
         db.delete_all(tbl)
 
     random.seed(42)
