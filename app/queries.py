@@ -31,7 +31,7 @@ class queries:
 
         res = db.custom_query("""
                                 SELECT stu.name, stu.email, t.name,
-                                       sess.end_date
+                                       MAX(sess.end_date)
                                 FROM users stu
                                 INNER JOIN student_topic st
                                     ON st.student = stu.id
@@ -45,7 +45,8 @@ class queries:
                                     ON co.id = en.course_offering
                                 INNER JOIN sessions sess
                                     ON sess.id = co.session
-                                WHERE sup.email = "{my_email}";
+                                WHERE sup.email = "{my_email}"
+                                GROUP BY stu.id;
                              """.format(my_email=email))
 
         db.close()
@@ -57,7 +58,7 @@ class queries:
 
         res = db.custom_query("""
                                 SELECT stu.name, stu.email, t.name,
-                                       sess.end_date
+                                       MAX(sess.end_date)
                                 FROM users stu
                                 INNER JOIN student_topic st
                                     ON st.student = stu.id
@@ -71,7 +72,8 @@ class queries:
                                     ON co.id = en.course_offering
                                 INNER JOIN sessions sess
                                     ON sess.id = co.session
-                                WHERE sup.email = "{my_email}";
+                                WHERE sup.email = "{my_email}"
+                                GROUP BY stu.id;
                              """.format(my_email=email))
 
         db.close()
