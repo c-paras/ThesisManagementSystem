@@ -249,8 +249,7 @@ DROP TABLE IF EXISTS topic_areas;
 CREATE TABLE topic_areas(
     id          INTEGER NOT NULL PRIMARY KEY,
     name        TEXT NOT NULL,
-    description TEXT,
-    FOREIGN KEY(topic) REFERENCES topics(id)
+    description TEXT
 );
 
 
