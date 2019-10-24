@@ -30,7 +30,7 @@ class queries:
         db.connect()
 
         res = db.custom_query("""
-                                SELECT stu.name, stu.name, t.name
+                                SELECT stu.name, stu.email, t.name
                                 FROM users stu
                                 INNER JOIN student_topic st
                                     ON st.student = stu.id
@@ -49,7 +49,7 @@ class queries:
         db.connect()
 
         res = db.custom_query("""
-                                SELECT stu.name, stu.name, t.name
+                                SELECT stu.name, stu.email, t.name
                                 FROM users stu
                                 INNER JOIN student_topic st
                                     ON st.student = stu.id

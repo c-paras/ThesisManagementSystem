@@ -53,7 +53,7 @@ def staff_dashboard():
         i.append('Supervisor')
         curr_students.append(i)
 
-    # get current students who I am asessing
+    # get current students who I am assessing
     curr_assess_students = queries.get_current_assess_students(session['user'])
     for i in curr_assess_students:
         i = list(tup_student)
@@ -61,7 +61,6 @@ def staff_dashboard():
         curr_students.append(i)
 
     curr_students.extend(curr_assess_students)
-    print(curr_students)
 
     # for now left blank
     past_students = []
