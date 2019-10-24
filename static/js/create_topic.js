@@ -1,6 +1,5 @@
 $('#prereqs').chips({
-  placeholder: 'Prerequisite',
-  secondaryPlaceholder: '+ Tag',
+  placeholder: 'Add Prerequisite',
   limit: 20
 });
 
