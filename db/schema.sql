@@ -56,7 +56,7 @@ CREATE TABLE course_offerings(
 
 
 DROP TABLE IF EXISTS enrollments;
-CREATE TABLE user_session(
+CREATE TABLE enrollments(
     user            INTEGER NOT NULL,
     course_offering INTEGER NOT NULL,
     role            INTEGER,
