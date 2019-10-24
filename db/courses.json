@@ -1,38 +1,53 @@
 [
     {
         "code": "COMP4930",
-        "name": "Thesis Part A"
+        "name": "Thesis Part A",
+        "semester":true 
     },
     {
         "code": "COMP4931",
-        "name": "Thesis Part B"
+        "name": "Thesis Part B",
+        "semester":true 
+
     },
     {
         "code": "COMP4941",
-        "name": "Thesis Part B"
+        "name": "Thesis Part B",
+        "semester":true 
+
     },
     {
         "code": "COMP4951",
-        "name": "Research Thesis A"
+        "name": "Research Thesis A",
+        "semester":false 
+
     },
     {
         "code": "COMP4952",
-        "name": "Research Thesis B"
+        "name": "Research Thesis B",
+        "semester":false 
+
     },
     {
         "code": "COMP4953",
-        "name": "Research Thesis C"
+        "name": "Research Thesis C",
+        "semester":false 
+
     },
     {
         "code": "COMP4961",
-        "name": "Computer Science Thesis A"
+        "name": "Computer Science Thesis A",
+        "semester":false 
+
     },
     {
         "code": "COMP4962",
-        "name": "Computer Science Thesis B"
+        "name": "Computer Science Thesis B",
+        "semester":false 
     },
     {
         "code": "COMP4963",
-        "name": "Computer Science Thesis C"
+        "name": "Computer Science Thesis C",
+        "semester":false 
     }
 ]

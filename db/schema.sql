@@ -21,7 +21,7 @@ CREATE TABLE announcements(
     topic           INTEGER,
     course_offering INTEGER,
     text            TEXT NOT NULL,
-    CHECK(topic is NOT NULL or session is NOT NULL),
+    CHECK(topic is NOT NULL or course_offering is NOT NULL),
     FOREIGN KEY(topic) REFERENCES topics(id),
     FOREIGN KEY(course_offering) REFERENCES course_offerings(id)
 );
@@ -122,7 +122,7 @@ DROP TABLE IF EXISTS prerequisites;
 CREATE TABLE prerequisites(
     id     INTEGER NOT NULL PRIMARY KEY,
     type   INTEGER NOT NULL,
-    mark   integeR,
+    mark   INTEGER,
     topic  INTEGER NOT NULL,
     course INTEGER NOT NULL,
     FOREIGN KEY(topic) REFERENCES topics(id),
