@@ -259,10 +259,10 @@ def gen_enrollments():
     for i, (student, ) in enumerate(students):
 
         # decide what year current student is enrolled in
-        if i < (len(students)/3):
+        if i < int(len(students)/3):
             sessions = all_years[1]  # 2019
             courses = courses_tri
-        elif i < (len(students)/2):
+        elif i < int(len(students)/2):
             sessions = all_years[2]  # 2020
             courses = courses_tri
         else:
@@ -290,16 +290,20 @@ def gen_student_topics():
                                         ["name"],
                                         ["supervisor"])[0][0]
 
-    supervisor_id = db.select_columns("users",
-                                      ["id"],
-                                      ["account_type"],
-                                      [supervisor_type])[0][0]
+    main_sup_id = db.select_columns("users",
+                                    ["id"],
+                                    ["account_type"],
+                                    [supervisor_type])[0][0]
+
+    #
+    # Add students supervisor_0 is supervising
+    #
 
     # get possible topics
     topics = db.select_columns("topics",
                                ["id"],
                                ["supervisor"],
-                               [supervisor_id])
+                               [main_sup_id])
 
     # get all students
     student_type = db.select_columns("account_types",
@@ -312,15 +316,60 @@ def gen_student_topics():
                                  [student_type])
 
     # enroll current and past students students
-    student_ids = list(range(0, 5))
+    tot_curr_stu = 3
+    student_ids = list(range(0, tot_curr_stu))
     student_ids.extend(list(range(int(len(students)/2),
-                                  int(len(students)/2+5))))
+                                  int(len(students)/2+tot_curr_stu))))
 
     for i in student_ids:
         topic_id = random.randrange(0, len(topics))
         db.insert_single('student_topic',
                          [students[i][0], topics[topic_id][0]],
                          ["student", "topic"])
+
+    #
+    # Add students supervisor_0 is assessing
+    #
+    supervisor_type = db.select_columns("account_types",
+                                        ["id"],
+                                        ["name"],
+                                        ["supervisor"])[0][0]
+
+    other_super = db.select_columns("users",
+                                    ["id"],
+                                    ["account_type"],
+                                    [supervisor_type])[1][0]
+
+    # get possible topics
+    topics = db.select_columns("topics",
+                               ["id"],
+                               ["supervisor"],
+                               [other_super])
+
+    # get all students
+    student_type = db.select_columns("account_types",
+                                     ["id"],
+                                     ["name"],
+                                     ["student"])[0][0]
+    students = db.select_columns("users",
+                                 ["id"],
+                                 ["account_type"],
+                                 [student_type])
+
+    # enroll current and past students students
+
+    student_ids = list(range(tot_curr_stu,
+                             2*tot_curr_stu))
+    student_ids.extend(list(range(int(len(students)/2+tot_curr_stu),
+                                  int(len(students)/2+tot_curr_stu*2))))
+
+    for i in student_ids:
+        topic_id = random.randrange(0, len(topics))
+        db.insert_single('student_topic',
+                         [students[i][0],
+                          topics[topic_id][0],
+                          main_sup_id],
+                         ["student", "topic", "assessor"])
 
 
 if __name__ == '__main__':
