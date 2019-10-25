@@ -8,8 +8,8 @@ function submitRequest() {
       flash(res.message, error = true);
     } else {
       flash('Request sent!', error = false);
-      $('#request-modal').modal('close');
     }
+    $('#request-modal').modal('close');
   });
 }
 

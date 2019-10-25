@@ -9,6 +9,8 @@ from app.auth import at_least_role
 from app.helpers import *
 from app.db_manager import sqliteManager as db
 
+import sqlite3
+
 
 request_topic = Blueprint('request_topic', __name__)
 
@@ -22,14 +24,22 @@ def request_new_topic():
     except ValueError as e:
         return e.args
 
-    # TODO: handle possible error case where topic id is invalid
-    # TODO: handle possible error case where topic already requested
-
     db.connect()
+
+    res = db.select_columns('topics', ['id'], ['id'], [topic])
+    if not len(res):
+        db.close()
+        return error('No such topic exists!')
+
     user_id = session['id']
     now = datetime.now().timestamp()
-    db.insert_single('topic_requests', [user_id, topic, 1, now, message],
-                     ['student', 'topic', 'status', 'date_created', 'text'])
+    try:
+        db.insert_single('topic_requests', [user_id, topic, 1, now, message],
+                         ['student', 'topic',
+                         'status', 'date_created', 'text'])
+    except sqlite3.IntegrityError:
+        db.close()
+        return error('You have already requested this topic!')
 
     db.close()
     return jsonify({'status': 'ok'})
