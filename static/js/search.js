@@ -99,6 +99,7 @@ function searchResults() {
       if (!res.canRequest) {
         $('[name="request-btn"]').each(function () {
           $(this).attr('href', '#!');
+          $(this).prop('onclick', null);
           $(this).click(function () {
             flash('Only students enrolled in a thesis course may request a topic!', error = true);
           });
