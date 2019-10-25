@@ -86,7 +86,7 @@ $(function () {
     form.find('input').each(function () {
       /* to prevent form submission in chips fields */
       if (!$(this).parent().hasClass('enter-no-submit')) {
-        $(this).keydown(function(event) {
+        $(this).keydown(function (event) {
           if (event.keyCode === 13) {
             submit.click();
             return false;
@@ -103,11 +103,11 @@ $(function () {
  * This makes chips fields consistent with normal input fields.
  */
 $(function () {
-  $('.chips input').on('focus', function() {
+  $('.chips input').on('focus', function () {
     $(this).parent().siblings('.prefix').addClass('active');
   });
 
-  $('.chips input').on('blur', function() {
+  $('.chips input').on('blur', function () {
     $(this).parent().siblings('.prefix').removeClass('active');
   });
 });
