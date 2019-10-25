@@ -4,12 +4,12 @@ function submitRequest() {
     return;
   }
   makeRequest('/request_topic', form, (res) => {
+    $('#request-modal').modal('close');
     if (res.status === 'fail') {
       flash(res.message, error = true);
     } else {
       flash('Request sent!', error = false);
     }
-    $('#request-modal').modal('close');
   });
 }
 
