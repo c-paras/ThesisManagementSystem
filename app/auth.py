@@ -116,6 +116,9 @@ def register():
 
 @auth.route('/login', methods=['GET', 'POST'])
 def login():
+    if 'user' in session:
+        # if already logged in, redirect to home page
+        return redirect(url_for('home.dashboard'))
     if request.method == 'GET':
         return render_template('login.html', title='Login', hide_navbar=True)
 

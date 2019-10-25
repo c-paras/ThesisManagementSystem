@@ -15,13 +15,6 @@ home = Blueprint('home', __name__)
 
 
 @home.route('/', methods=['GET'])
-def index():
-    if 'user' not in session:
-        return redirect(url_for('auth.login'))
-    else:
-        return dashboard()
-
-
 @home.route('/home', methods=['GET'])
 @home.route('/dashboard', methods=['GET'])
 @at_least_role(UserRole.PUBLIC)
