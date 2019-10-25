@@ -20,7 +20,7 @@ def create():
                                title='Create Topic')
 
     try:
-        fields = ['topic', 'areas', 'details']
+        fields = ['topic', 'topic-areas', 'details']
         topic, areas, details = get_fields(request.form, fields)
     except Exception as e:
         return e.args
