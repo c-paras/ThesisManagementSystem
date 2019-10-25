@@ -26,7 +26,7 @@ $('#supervisor').chips({
   }
 });
 
-function makeCard(title, description, topics, supervisor) {
+function makeCard(id, title, description, topics, supervisor) {
   const card = `<div class="row">\
   <div class="col s10 offset-m1">\
     <div class="card white-grey darken-1">
@@ -41,7 +41,7 @@ function makeCard(title, description, topics, supervisor) {
         <p>${description}</p>
       </div>
       <div class="card-action">
-        <a class="modal-trigger" href="#request-modal">Request Topic</a>
+        <a class="modal-trigger" href="#request-modal" onclick="loadTopic(${id})">Request Topic</a>
       </div>
     </div>
   </div>
@@ -75,7 +75,8 @@ function searchResults() {
     } else {
       let cards = '';
       for (let i = 0; i < res.topics.length; i++) {
-        cards = cards + makeCard(res.topics[i][1], res.topics[i][3], res.topicsArea[i].join(', '), res.topicSupervisor[i]);
+        cards = cards + makeCard(res.topics[i][0], res.topics[i][1],
+          res.topics[i][3], res.topicsArea[i].join(', '), res.topicSupervisor[i]);
       }
 
       $("[id='tagsTopic']").each((function () {

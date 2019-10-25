@@ -12,3 +12,7 @@ function submitRequest() {
     }
   });
 }
+
+function loadTopic(topic) {
+  $('#request-form').find('#topic').val(topic);
+}
