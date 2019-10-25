@@ -1,6 +1,7 @@
 from flask import Blueprint
 from flask import render_template
 from flask import request
+from flask import session
 from flask import jsonify
 
 import re
@@ -32,7 +33,7 @@ def search_topic():
 
     # cleaning up input
     search_terms = search_terms.upper()
-    search_terms = re.split(r"\s+", str(search_terms))
+    search_terms = re.split(r'\s+', str(search_terms))
     search_terms = list(filter(None, search_terms))
     search_terms = [word for word in search_terms if word not in stop_words]
     db.connect()
@@ -139,4 +140,5 @@ def search_topic():
 
     return jsonify({'status': 'ok', 'topics': to_return_searches,
                     'topicsArea': to_return_topic_area,
-                    'topicSupervisor': to_return_supervisor})
+                    'topicSupervisor': to_return_supervisor,
+                    'canRequest': session['acc_type'] == 'student'})

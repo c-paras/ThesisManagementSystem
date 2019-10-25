@@ -5,7 +5,7 @@ $('#topics').chips({
       'Robotics': null,
       'Graphics': null,
       'User Interfaces': null,
-      'Formal Methods': null,
+      'Formal Methods': null
     },
     limit: 20,
     minLength: 1
@@ -19,7 +19,7 @@ $('#supervisor').chips({
       'z7654321': null,
       'z0001112': null,
       'z8000003': null,
-      'z8000001': null,
+      'z8000001': null
     },
     limit: 20,
     minLength: 1
@@ -41,7 +41,12 @@ function makeCard(id, title, description, topics, supervisor) {
         <p>${description}</p>
       </div>
       <div class="card-action">
-        <a class="modal-trigger" href="#request-modal" onclick="loadTopic(${id})">Request Topic</a>
+        <a
+          name="request-btn" class="modal-trigger"
+          href="#request-modal" onclick="loadTopic(${id})"
+        >
+          Request Topic
+        </a>
       </div>
     </div>
   </div>
@@ -75,7 +80,7 @@ function searchResults() {
     } else {
       let cards = '';
       for (let i = 0; i < res.topics.length; i++) {
-        cards = cards + makeCard(res.topics[i][0], res.topics[i][1],
+        cards += makeCard(res.topics[i][0], res.topics[i][1],
           res.topics[i][3], res.topicsArea[i].join(', '), res.topicSupervisor[i]);
       }
 
@@ -87,9 +92,18 @@ function searchResults() {
         $(this).val('');
       }));
 
-      $('#search-title').html('Search Results (found ' + res.topics.length + ' matching topics)');
+      $('#search-title').html(`Search Results (found ${res.topics.length} matching topics)`);
       $('#search-title').show();
       $('#search-results').html(cards);
+
+      if (!res.canRequest) {
+        $('[name="request-btn"]').each(function () {
+          $(this).attr('href', '#!');
+          $(this).click(function () {
+            flash('Only students enrolled in a thesis course may request a topic!', error = true);
+          });
+        });
+      }
     }
   });
 }
