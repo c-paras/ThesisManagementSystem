@@ -26,7 +26,9 @@ def index():
 @home.route('/dashboard', methods=['GET'])
 @at_least_role(UserRole.PUBLIC)
 def dashboard():
-    is_student = session['acc_type'] == 'student'
+    user_type = session['acc_type']
+    is_student = user_type in ['public', 'student']
+    # TODO: public user home page
     if is_student:
         return student_dashboard()
     else:
