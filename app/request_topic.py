@@ -34,12 +34,15 @@ def request_new_topic():
         db.close()
         return error('No such topic exists!')
 
+    res = db.select_columns('request_statuses', ['id'], ['name'], ['pending'])
+
     user_id = session['id']
     now = datetime.now().timestamp()
     try:
-        db.insert_single('topic_requests', [user_id, topic, 1, now, message],
+        db.insert_single('topic_requests',
+                         [user_id, topic, res[0][0], now, message],
                          ['student', 'topic',
-                         'status', 'date_created', 'text'])
+                          'status', 'date_created', 'text'])
     except sqlite3.IntegrityError:
         db.close()
         return error('You have already requested this topic!')
