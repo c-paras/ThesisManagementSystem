@@ -1,16 +1,22 @@
 $('#topics').chips({
   placeholder: 'Enter a topic',
   autocompleteOptions: {
-    data: {
-      'Robotics': null,
-      'Graphics': null,
-      'User Interfaces': null,
-      'Formal Methods': null,
-    },
+    data: fetch('/searchTopicChips', {
+      headers: {
+        'Content-Type': 'application/x-www-form-urlencoded',
+        'Accept': 'application/json'
+      },
+      method: 'POST',
+    }),
     limit: 20,
     minLength: 1
   }
 });
+
+// let newObject = {}
+// for (const key of array) {
+//   newObject[key] = null
+// }
 
 $('#supervisor').chips({
   placeholder: 'Enter Supervisor',

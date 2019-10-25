@@ -141,3 +141,15 @@ def search_topic():
     return jsonify({'status': 'ok', 'topics': to_return_searches,
                     'topicsArea': to_return_topic_area,
                     'topicSupervisor': to_return_supervisor})
+
+
+@search.route('/searchTopicChips', methods=['POST'])
+@at_least_role(UserRole.STUDENT)
+def getTopicChips():
+    chips = db.select_columns('topic_areas', ['name'])
+    jsonChips = {}
+    for chip in chips:
+        jsonChips[chip] = None
+    print(jsonChips.keys)
+    print("hello")
+    return jsonify(jsonChips)
