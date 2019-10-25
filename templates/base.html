@@ -116,9 +116,12 @@
 
     {% if not hide_navbar %}
       <script type="text/javascript">
-        /* Activate navbar dropdown */
         $(document).ready(function () {
-          $('.dropdown-trigger').dropdown({ hover: true, coverTrigger: false })
+          /* Activate navbar dropdown */
+          $('.dropdown-trigger').dropdown({ hover: true, coverTrigger: false });
+
+          /* Initialize modals */
+          $('.modal').modal();
         })
       </script>
     {% endif %}

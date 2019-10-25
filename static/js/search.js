@@ -42,7 +42,7 @@ function makeCard(title, description, topics, supervisor) {
         <p>${description}</p>\
       </div>\
       <div class="card-action">\
-        <a href="#">Request Topic</a>\
+        <a class="modal-trigger" href="#request-modal">Request Topic</a>\
       </div>\
     </div>\
   </div>\
