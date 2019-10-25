@@ -20,25 +20,51 @@ def gen_users():
         types = get_all_types()
         password = bcrypt.hashpw('password1'.encode('utf-8'), bcrypt.gensalt())
         query = []
+
+        # student users
         students = []
         for i in range(1, 100):
             zid = 'z{}'.format(str(1000000 + i))
             students.append(zid)
-            name = names[random.randrange(0, 500)]["name"]
+            name = names[random.randrange(0, 500)]['name']
             query.append(('users',
                           [name, f'{zid}@unsw.edu.au',
                            password, types['student']],
                           ['name', 'email', 'password', 'account_type']))
 
+        # public users
+        public = []
+        for i in range(1, 20):
+            zid = 'z{}'.format(str(4000000 + i))
+            public.append(zid)
+            name = names[random.randrange(0, 500)]['name']
+            query.append(('users',
+                          [name, f'{zid}@unsw.edu.au',
+                           password, types['public']],
+                          ['name', 'email', 'password', 'account_type']))
+
+        # supervisor/assessor users
         supervisors = []
         for i in range(1, 10):
             zid = 'z{}'.format(str(8000000 + i))
             supervisors.append(zid)
-            name = names[random.randrange(0, 500)]["name"]
+            name = names[random.randrange(0, 500)]['name']
             query.append(('users',
                           [name, f'{zid}@unsw.edu.au',
                            password, types['supervisor']],
                           ['name', 'email', 'password', 'account_type']))
+
+        # course admin users
+        course_admin = []
+        for i in range(1, 6):
+            zid = 'z{}'.format(str(9000000 + i))
+            course_admin.append(zid)
+            name = names[random.randrange(0, 500)]['name']
+            query.append(('users',
+                          [name, f'{zid}@unsw.edu.au',
+                           password, types['course_admin']],
+                          ['name', 'email', 'password', 'account_type']))
+
         db.insert_multiple(query)
 
 
@@ -102,11 +128,11 @@ def gen_course_offering():
             course_id = res[0][0]
             if(c['semester']):
                 # create offerings for thesis A/B in years before 2019
-                session_ids = db.select_columns_operator("sessions",
-                                                         ["id"],
-                                                         ["year"],
-                                                         ["2019"],
-                                                         "<")
+                session_ids = db.select_columns_operator('sessions',
+                                                         ['id'],
+                                                         ['year'],
+                                                         ['2019'],
+                                                         '<')
 
                 for session_id in session_ids:
                     db.insert_single('course_offerings',
@@ -115,11 +141,11 @@ def gen_course_offering():
 
             else:
                 # create offering for thesis A/B/C in years after 2018
-                session_ids = db.select_columns_operator("sessions",
-                                                         ["id"],
-                                                         ["year"],
-                                                         ["2019"],
-                                                         ">=")
+                session_ids = db.select_columns_operator('sessions',
+                                                         ['id'],
+                                                         ['year'],
+                                                         ['2019'],
+                                                         '>=')
 
                 for session_id in session_ids:
                     db.insert_single('course_offerings',
@@ -148,14 +174,14 @@ def gen_topics():
         topics = json.load(f)
         query = []
 
-        supervisor_type = db.select_columns("account_types",
-                                            ["id"],
-                                            ["name"],
-                                            ["supervisor"])[0][0]
+        supervisor_type = db.select_columns('account_types',
+                                            ['id'],
+                                            ['name'],
+                                            ['supervisor'])[0][0]
 
-        supervisors = db.select_columns("users",
-                                        ["id"],
-                                        ["account_type"],
+        supervisors = db.select_columns('users',
+                                        ['id'],
+                                        ['account_type'],
                                         [supervisor_type])
 
         topic_id = 1
@@ -192,9 +218,9 @@ def gen_tasks():
                                           [course_id])
 
             for offer_id, session_id in offerings:
-                date = db.select_columns("sessions",
-                                         ["start_date", "end_date"],
-                                         ["id"],
+                date = db.select_columns('sessions',
+                                         ['start_date', 'end_date'],
+                                         ['id'],
                                          [session_id])
 
                 due = random.randrange(date[0][0], date[0][1])
@@ -234,33 +260,33 @@ def gen_enrollments():
     # a list
     all_years = []
     for year in range(2018, 2021):
-        res = db.select_columns("sessions",
-                                ["id"],
-                                ["year"],
+        res = db.select_columns('sessions',
+                                ['id'],
+                                ['year'],
                                 [year])
         all_years.append(res)
 
     # get all courses for old semesters
     courses_sem = []
-    for code in ["COMP4930", "COMP4931"]:
-        courses_sem += db.select_columns("courses",
-                                         ["id"],
-                                         ["code"],
+    for code in ['COMP4930', 'COMP4931']:
+        courses_sem += db.select_columns('courses',
+                                         ['id'],
+                                         ['code'],
                                          [code])
 
     # get all courses for old semesters
     courses_tri = []
-    for code in ["COMP4951", "COMP4952", "COMP4953"]:
-        courses_tri += db.select_columns("courses",
-                                         ["id"],
-                                         ["code"],
+    for code in ['COMP4951', 'COMP4952', 'COMP4953']:
+        courses_tri += db.select_columns('courses',
+                                         ['id'],
+                                         ['code'],
                                          [code])
 
     # get all students
-    students = db.select_columns("users",
-                                 ["id"],
-                                 ["account_type"],
-                                 [types["student"]])
+    students = db.select_columns('users',
+                                 ['id'],
+                                 ['account_type'],
+                                 [types['student']])
 
     # create entries in the enrollments table
     for i, (student, ) in enumerate(students):
@@ -278,42 +304,42 @@ def gen_enrollments():
 
         # enroll the student
         for i, (course, ) in enumerate(courses):
-            course_offering = db.select_columns("course_offerings",
-                                                ["id"],
-                                                ["session", "course"],
+            course_offering = db.select_columns('course_offerings',
+                                                ['id'],
+                                                ['session', 'course'],
                                                 [sessions[i][0], course])
             assert len(course_offering) > 0
 
             course_offering = course_offering[0][0]
             db.insert_single('enrollments',
                              [student, course_offering],
-                             ["user", "course_offering"])
+                             ['user', 'course_offering'])
 
 
 def gen_student_topics():
     types = get_all_types()
     # get first supervisor
 
-    main_sup_id = db.select_columns("users",
-                                    ["id"],
-                                    ["account_type"],
-                                    [types["supervisor"]])[0][0]
+    main_sup_id = db.select_columns('users',
+                                    ['id'],
+                                    ['account_type'],
+                                    [types['supervisor']])[0][0]
 
     #
     # Add students supervisor_0 is supervising
     #
 
     # get possible topics
-    topics = db.select_columns("topics",
-                               ["id"],
-                               ["supervisor"],
+    topics = db.select_columns('topics',
+                               ['id'],
+                               ['supervisor'],
                                [main_sup_id])
 
     # get all students
-    students = db.select_columns("users",
-                                 ["id"],
-                                 ["account_type"],
-                                 [types["student"]])
+    students = db.select_columns('users',
+                                 ['id'],
+                                 ['account_type'],
+                                 [types['student']])
 
     # enroll current and past students students
     tot_curr_stu = 3
@@ -325,28 +351,28 @@ def gen_student_topics():
         topic_id = random.randrange(0, len(topics))
         db.insert_single('student_topic',
                          [students[i][0], topics[topic_id][0]],
-                         ["student", "topic"])
+                         ['student', 'topic'])
 
     #
     # Add students supervisor_0 is assessing
     #
 
-    other_super = db.select_columns("users",
-                                    ["id"],
-                                    ["account_type"],
-                                    [types["supervisor"]])[1][0]
+    other_super = db.select_columns('users',
+                                    ['id'],
+                                    ['account_type'],
+                                    [types['supervisor']])[1][0]
 
     # get possible topics
-    topics = db.select_columns("topics",
-                               ["id"],
-                               ["supervisor"],
+    topics = db.select_columns('topics',
+                               ['id'],
+                               ['supervisor'],
                                [other_super])
 
     # get all students
-    students = db.select_columns("users",
-                                 ["id"],
-                                 ["account_type"],
-                                 [types["student"]])
+    students = db.select_columns('users',
+                                 ['id'],
+                                 ['account_type'],
+                                 [types['student']])
 
     # enroll current and past students students
 
@@ -361,33 +387,33 @@ def gen_student_topics():
                          [students[i][0],
                           topics[topic_id][0],
                           main_sup_id],
-                         ["student", "topic", "assessor"])
+                         ['student', 'topic', 'assessor'])
 
 
 def gen_topic_requests():
     types = get_all_types()
     # get first supervisor
 
-    main_sup_id = db.select_columns("users",
-                                    ["id"],
-                                    ["account_type"],
-                                    [types["supervisor"]])[0][0]
+    main_sup_id = db.select_columns('users',
+                                    ['id'],
+                                    ['account_type'],
+                                    [types['supervisor']])[0][0]
 
     #
     # Add students supervisor_0 is being requested by
     #
 
     # get possible topics
-    topics = db.select_columns("topics",
-                               ["id"],
-                               ["supervisor"],
+    topics = db.select_columns('topics',
+                               ['id'],
+                               ['supervisor'],
                                [main_sup_id])
 
     # get all students
-    students = db.select_columns("users",
-                                 ["id"],
-                                 ["account_type"],
-                                 [types["student"]])
+    students = db.select_columns('users',
+                                 ['id'],
+                                 ['account_type'],
+                                 [types['student']])
 
     # enroll current and past students students
     student_ids = list(range(int(len(students)/3),
@@ -398,9 +424,9 @@ def gen_topic_requests():
         db.insert_single('topic_requests',
                          [students[i][0], topics[topic_id][0],
                           1, datetime.datetime.now().timestamp(),
-                          "FAKE_GEN_DATA"],
-                         ["student", "topic", "status",
-                          "date_created", "text"])
+                          'FAKE_GEN_DATA'],
+                         ['student', 'topic', 'status',
+                          'date_created', 'text'])
 
 
 if __name__ == '__main__':

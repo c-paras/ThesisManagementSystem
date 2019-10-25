@@ -15,7 +15,7 @@ search = Blueprint('search', __name__)
 
 
 @search.route('/search', methods=['GET', 'POST'])
-@at_least_role(UserRole.STUDENT)
+@at_least_role(UserRole.PUBLIC)
 def search_topic():
     if request.method == 'GET':
         return render_template('search.html',

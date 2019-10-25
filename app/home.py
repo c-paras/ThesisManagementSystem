@@ -24,7 +24,7 @@ def index():
 
 @home.route('/home', methods=['GET'])
 @home.route('/dashboard', methods=['GET'])
-@at_least_role(UserRole.STUDENT)
+@at_least_role(UserRole.PUBLIC)
 def dashboard():
     is_student = session['acc_type'] == 'student'
     if is_student:
