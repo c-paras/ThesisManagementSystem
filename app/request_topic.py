@@ -18,12 +18,15 @@ request_topic = Blueprint('request_topic', __name__)
 @request_topic.route('/request_topic', methods=['POST'])
 @at_least_role(UserRole.STUDENT)
 def request_new_topic():
+    if session['acc_type'] != 'student':
+        # only students are allowed to request topics
+        # disallow ALL other users from requesting
+        return error('You must be a student to request a topic!')
     try:
         fields = ['topic', 'message']
         topic, message = get_fields(request.form, fields)
     except ValueError as e:
         return e.args
-
     db.connect()
 
     res = db.select_columns('topics', ['id'], ['id'], [topic])
