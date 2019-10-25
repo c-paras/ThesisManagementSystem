@@ -43,7 +43,7 @@ function makeCard(id, title, description, topics, supervisor) {
       <div class="card-action">
         <a
           name="request-btn" class="modal-trigger"
-          href="#request-modal" onclick="loadTopic(${id})"
+          href="#request-modal" onclick="loadTopic(${id}, '${supervisor}')"
         >
           Request Topic
         </a>

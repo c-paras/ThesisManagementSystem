@@ -67,7 +67,7 @@
               <textarea
                 id="message" name="message" class="materialize-textarea validate"
                 required="" aria-required="true"
-              ></textarea>
+              >{{ topic_request_text|replace('FOOTER', session['name']) }}</textarea>
               <label for="message">Message</label>
               <span class="helper-text" data-error="A message is required"></span>
             </div>

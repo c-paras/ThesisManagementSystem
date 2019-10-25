@@ -126,7 +126,7 @@ def login():
 
     db.connect()
     res = db.select_columns('users',
-                            ['password', 'account_type', 'id'],
+                            ['password', 'account_type', 'id', 'name'],
                             ['email'],
                             [email])
 
@@ -145,6 +145,7 @@ def login():
                                  [res[0][1]])[0][0]
 
     session['user'] = email
+    session['name'] = res[0][3]
     session['id'] = res[0][2]
     session['acc_type'] = acc_type
     db.close()

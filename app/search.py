@@ -11,6 +11,9 @@ from app.auth import at_least_role
 from app.db_manager import sqliteManager as db
 from app.queries import queries
 
+import config
+
+
 search = Blueprint('search', __name__)
 
 
@@ -19,6 +22,7 @@ search = Blueprint('search', __name__)
 def search_topic():
     if request.method == 'GET':
         return render_template('search.html',
+                               topic_request_text=config.TOPIC_REQUEST_TEXT,
                                heading='Search Topics', title='Search Topics')
 
     stop_words = ['AND', 'THE', 'WAS', 'IS', 'A', 'WE', 'THAT', 'IN', 'TO']
