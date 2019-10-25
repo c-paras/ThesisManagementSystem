@@ -59,10 +59,17 @@
 
       <!-- Modal body -->
       <div class="row">
-        <form class="input-field col s12 modal-form">
-          <i class="material-icons prefix">mode_edit</i>
-          <textarea id="request-msg" class="materialize-textarea"></textarea>
-          <label for="request-msg">Message</label>
+        <form class="input-field col s12 modal-form" id="request-form" name="request-form">
+          <div class="input-field">
+            <i class="material-icons prefix">mode_edit</i>
+            <textarea
+              id="message" name="message" class="materialize-textarea validate"
+              required="" aria-required="true"
+            ></textarea>
+            <label for="message">Message</label>
+            <span class="helper-text" data-error="A message is required"></span>
+          </div>
+          <input type="hidden" name="topic" id="topic" value="1"> <!-- TODO: load this dynamically -->
         </form>
       </div>
 
@@ -72,7 +79,10 @@
           <a href="#!" id="btn-cancel" class="modal-action modal-close waves-effect waves-red red btn">
             Cancel
           </a>
-          <a href="#!" id="btn-request" class="modal-action modal-close waves-effect waves-teal teal btn">
+          <a
+            href="#!" id="btn-request" onclick="submitRequest()"
+            class="modal-action waves-effect waves-teal teal btn"
+          >
             Request
           </a>
         </div>
@@ -80,5 +90,7 @@
 
     </div>
   </div>
+
+  <script type="text/javascript" src="{{ url_for('static', filename='js/request.js') }}" defer></script>
 
 {% endblock %}
