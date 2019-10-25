@@ -26,31 +26,28 @@ $('#supervisor').chips({
   }
 });
 
-
 function makeCard(title, description, topics, supervisor) {
   const card = `<div class="row">\
   <div class="col s10 offset-m1">\
-    <div class="card white-grey darken-1">\
-      <div class="card-content black-text">\
+    <div class="card white-grey darken-1">
+      <div class="card-content black-text">
         <span class="card-title">${title}</span>
           <p>Topic Area: ${topics}</p>
           <hr>
-        </span>\
+        </span>
         <p>Supervisor: ${supervisor}</p>
         <p>Prerequisites: Not implemented yet waiting for db</p>
         <br>
-        <p>${description}</p>\
-      </div>\
-      <div class="card-action">\
-        <a class="modal-trigger" href="#request-modal">Request Topic</a>\
-      </div>\
-    </div>\
-  </div>\
+        <p>${description}</p>
+      </div>
+      <div class="card-action">
+        <a class="modal-trigger" href="#request-modal">Request Topic</a>
+      </div>
+    </div>
+  </div>
   </div>`;
-
   return card;
 }
-
 
 function searchResults() {
   const form = $('#search-form');
@@ -72,7 +69,7 @@ function searchResults() {
     }
   }
 
- makeRequest('/search', form, (res) => {
+  makeRequest('/search', form, (res) => {
     if (res.status === 'fail') {
       flash(res.message, error = true);
     } else {
@@ -80,7 +77,6 @@ function searchResults() {
       for (let i = 0; i < res.topics.length; i++) {
         cards = cards + makeCard(res.topics[i][1], res.topics[i][3], res.topicsArea[i].join(', '), res.topicSupervisor[i]);
       }
-            
 
       $("[id='tagsTopic']").each((function() {
         $(this).val('');
@@ -89,11 +85,10 @@ function searchResults() {
       $("[id='tagsSupervisor']").each((function() {
         $(this).val('');
       }));
-      
+
       $('#search-title').html('Search Results (found ' + res.topics.length + ' matching topics)');
       $('#search-title').show();
       $('#search-results').html(cards);
     }
   });
 }
-
