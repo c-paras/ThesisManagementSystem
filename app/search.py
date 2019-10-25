@@ -8,7 +8,6 @@ import re
 from app.auth import UserRole
 from app.auth import at_least_role
 from app.db_manager import sqliteManager as db
-from app.helpers import get_fields
 from app.queries import queries
 
 search = Blueprint('search', __name__)

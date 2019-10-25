@@ -13,7 +13,7 @@ $('#topics').chips({
 });
 
 $('#supervisor').chips({
-  placeholder: 'Enter Supervisor',
+  placeholder: 'Enter supervisor',
   autocompleteOptions: {
     data: {
       'z7654321': null,
@@ -76,9 +76,8 @@ function searchResults() {
     if (res.status === 'fail') {
       flash(res.message, error = true);
     } else {
-      console.log(res.topics);
-      let cards = ""
-      for (let i=0; i < res.topics.length; i++) {
+      let cards = '';
+      for (let i = 0; i < res.topics.length; i++) {
         cards = cards + makeCard(res.topics[i][1], res.topics[i][3], res.topicsArea[i].join(', '), res.topicSupervisor[i]);
       }
             
@@ -91,8 +90,8 @@ function searchResults() {
         $(this).val('');
       }));
       
-      $('#search-title').html('Search Results (found ' + res.topics.length + ' matching topics)')
-      $('#search-title').show()
+      $('#search-title').html('Search Results (found ' + res.topics.length + ' matching topics)');
+      $('#search-title').show();
       $('#search-results').html(cards);
     }
   });

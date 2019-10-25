@@ -457,4 +457,13 @@ if __name__ == '__main__':
     print('Generating tasks...')
     gen_tasks()
 
+    print('Generating enrollments...')
+    gen_enrollments()
+
+    print('Generating student topics...')
+    gen_student_topics()
+
+    print('Generating topic requests...')
+    gen_topic_requests()
+
     print('Done')

@@ -20,9 +20,9 @@ def create():
                                title='Create Topic')
 
     try:
-        fields = ['topic', 'areas', 'details']
+        fields = ['topic', 'topic-areas', 'details']
         topic, areas, details = get_fields(request.form, fields)
-    except Exception as e:
+    except ValueError as e:
         return e.args
 
     prereqs = list(dict.fromkeys(request.form.getlist('prerequisites')))
