@@ -23,8 +23,8 @@ def gen_users():
 
         # student users
         students = []
-        for i in range(1, 100):
-            zid = 'z{}'.format(str(1000000 + i))
+        for i in range(100):
+            zid = 'z{}'.format(str(1000001 + i))
             students.append(zid)
             name = names[random.randrange(0, 500)]['name']
             query.append(('users',
@@ -34,8 +34,8 @@ def gen_users():
 
         # public users
         public = []
-        for i in range(1, 20):
-            zid = 'z{}'.format(str(4000000 + i))
+        for i in range(20):
+            zid = 'z{}'.format(str(4000001 + i))
             public.append(zid)
             name = names[random.randrange(0, 500)]['name']
             query.append(('users',
@@ -45,8 +45,8 @@ def gen_users():
 
         # supervisor/assessor users
         supervisors = []
-        for i in range(1, 10):
-            zid = 'z{}'.format(str(8000000 + i))
+        for i in range(10):
+            zid = 'z{}'.format(str(8000001 + i))
             supervisors.append(zid)
             name = names[random.randrange(0, 500)]['name']
             query.append(('users',
@@ -56,8 +56,8 @@ def gen_users():
 
         # course admin users
         course_admin = []
-        for i in range(1, 6):
-            zid = 'z{}'.format(str(9000000 + i))
+        for i in range(5):
+            zid = 'z{}'.format(str(9000001 + i))
             course_admin.append(zid)
             name = names[random.randrange(0, 500)]['name']
             query.append(('users',
