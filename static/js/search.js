@@ -78,11 +78,11 @@ function searchResults() {
         cards = cards + makeCard(res.topics[i][1], res.topics[i][3], res.topicsArea[i].join(', '), res.topicSupervisor[i]);
       }
 
-      $("[id='tagsTopic']").each((function() {
+      $("[id='tagsTopic']").each((function () {
         $(this).val('');
       }));
 
-      $("[id='tagsSupervisor']").each((function() {
+      $("[id='tagsSupervisor']").each((function () {
         $(this).val('');
       }));
 
