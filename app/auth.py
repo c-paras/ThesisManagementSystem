@@ -116,6 +116,9 @@ def register():
 
 @auth.route('/login', methods=['GET', 'POST'])
 def login():
+    if 'user' in session:
+        # if already logged in, redirect to home page
+        return redirect(url_for('home.dashboard'))
     if request.method == 'GET':
         return render_template('login.html', title='Login', hide_navbar=True)
 
@@ -126,7 +129,7 @@ def login():
 
     db.connect()
     res = db.select_columns('users',
-                            ['password', 'account_type', 'id'],
+                            ['password', 'account_type', 'id', 'name'],
                             ['email'],
                             [email])
 
@@ -145,6 +148,7 @@ def login():
                                  [res[0][1]])[0][0]
 
     session['user'] = email
+    session['name'] = res[0][3]
     session['id'] = res[0][2]
     session['acc_type'] = acc_type
     db.close()
