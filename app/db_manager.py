@@ -21,7 +21,7 @@ class sqliteManager:
             sqliteManager.conn = None
 
     def init_db():
-        print("First time running db, initializing some tables")
+        print('First time running db, initializing some tables')
         queries = []
         table = 'course_roles'
         names = ['student', 'staff']
@@ -29,7 +29,9 @@ class sqliteManager:
             queries.append((table, [name], ['name']))
 
         table = 'account_types'
-        names = ['student', 'course_admin', 'supervisor']
+        names = [
+            'public', 'student', 'supervisor', 'course_admin', 'super_admin'
+        ]
         for name in names:
             queries.append((table, [name], ['name']))
 
