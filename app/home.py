@@ -34,7 +34,7 @@ def dashboard():
 
 
 def student_dashboard():
-    return render_template('homeStudent.html',
+    return render_template('home_student.html',
                            heading='My Dashboard', title='My Dashboard')
 
 
@@ -71,7 +71,7 @@ def staff_dashboard():
         else:
             past_students.append(i)
 
-    return render_template('homeStaff.html',
+    return render_template('home_staff.html',
                            heading='My Dashboard',
                            title='My Dashboard',
                            curr_requests=curr_requests,
