@@ -21,7 +21,7 @@ class sqliteManager:
             sqliteManager.conn = None
 
     def init_db():
-        print('First time running db, initializing some tables')
+        print('Initializing necessary tables...')
         queries = []
         table = 'course_roles'
         names = ['student', 'staff']

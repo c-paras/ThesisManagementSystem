@@ -17,8 +17,14 @@
       </p>
       {% if hide_navbar %}
         <p class="col s12">
-          <a href="/">
+          <a href="/login">
             Click here to log in
+          </a>
+        </p>
+      {% else %}
+        <p class="col s12">
+          <a href="javascript:history.back()">
+            Click here to go back
           </a>
         </p>
       {% endif %}

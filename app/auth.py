@@ -54,7 +54,9 @@ def at_least_role(role):
         @wraps(f)
         def wrapped(*args, **kwargs):
             if 'user' not in session:
-                abort(403)
+                return render_template(
+                    'login.html', title='Login', hide_navbar=True
+                )
             if not is_at_least_role(role):
                 abort(403)
             return f(*args, **kwargs)
