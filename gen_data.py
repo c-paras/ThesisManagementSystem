@@ -4,6 +4,7 @@ import json
 import bcrypt
 
 from app.db_manager import sqliteManager as db
+from app.queries import queries as db_queries
 
 
 def get_all_types():
@@ -429,6 +430,102 @@ def gen_topic_requests():
                           'date_created', 'text'])
 
 
+def gen_materials():
+    course_offerings = db.select_columns('course_offerings', ['id', 'course'])
+
+    # currently adds a presentation and report for each thesis
+    for course in course_offerings:
+
+        # filtering out any courses not a thesis
+        name = db.select_columns(
+            'courses', ['name'], ['id'], [course[1]]
+        )
+        if len(name) == 0:
+            continue
+        name = name[0][0].lower()
+        if 'thesis' not in name:
+            continue
+        # entering 2 materials for each thesis
+        queries = []
+        queries.append((
+            'materials',
+            ['Course outline', course[0]],
+            ['name', 'course_offering']
+        ))
+        queries.append((
+            'materials',
+            [f'Sample report {name}', course[0]],
+            ['name', 'course_offering']
+        ))
+        db.insert_multiple(queries)
+
+
+def gen_material_attachments():
+    materials = db.select_columns('materials', ['id'])
+
+    for material in materials:
+        path = "img/chicken.jpg"
+        db.insert_single(
+            'material_attachments',
+            [material[0], path],
+            ['material', 'path']
+        )
+
+
+def gen_task_critera():
+    tasks = db.select_columns('tasks', ['id', 'name'])
+
+    for task in tasks:
+        queries = []
+        print(task[0])
+        queries.append((
+            'task_criteria',
+            [task[0], 'content', 80],
+            ['task', 'name', 'max_mark']
+        ))
+        queries.append((
+            'task_criteria',
+            [task[0], 'presentation', 20],
+            ['task', 'name', 'max_mark']
+        ))
+        db.insert_multiple(queries)
+
+
+def gen_marks():
+    acc_types = get_all_types()
+    students = db.select_columns(
+        'users', ['id'], ['account_type'], [acc_types['student']]
+    )
+
+    for student in students:
+        markers = db_queries.get_user_ass_sup(student[0])
+        if len(markers) == 0:
+            continue
+        markers = markers[0]
+        if None in markers:
+            continue
+        tasks = db_queries.get_user_tasks(student[0])
+        for task in tasks:
+            criteria_ids = db.select_columns(
+                'task_criteria', ['id', 'max_mark'], ['task'], [task[0]]
+            )
+            queries = []
+            for criteria in criteria_ids:
+                mark = random.randrange(criteria[1])
+                feedback = "smile face"
+                path = "img/chicken.jpg"
+                queries.append((
+                    'marks',
+                    [criteria[0], mark, student[0], markers[0], feedback, path]
+                ))
+                mark = random.randrange(criteria[1])
+                queries.append((
+                    'marks',
+                    [criteria[0], mark, student[0], markers[1], feedback, path]
+                ))
+            db.insert_multiple(queries)
+
+
 if __name__ == '__main__':
     db.connect()
     for tbl in ['users', 'courses', 'topics', 'topic_areas',
@@ -436,7 +533,9 @@ if __name__ == '__main__':
                 'course_offerings', 'enrollments',
                 'student_topic', 'topic_requests',
                 'topic_to_area', 'course_roles', 'account_types',
-                'file_types', 'marking_methods', 'request_statuses']:
+                'file_types', 'marking_methods', 'request_statuses',
+                'materials', 'material_attachments',
+                'task_criteria', 'marks']:
         db.delete_all(tbl)
     db.init_db()
 
@@ -467,6 +566,19 @@ if __name__ == '__main__':
 
     print('Generating topic requests...')
     gen_topic_requests()
+
+    print('Generating materials...')
+    gen_materials()
+
+    print('Generating material attachments...')
+    gen_material_attachments()
+
+    print('Generating task critera...')
+    gen_task_critera()
+
+    db.delete_all('marks')
+    print('Generating marks')
+    gen_marks()
 
     db.close()
     print('Done')
