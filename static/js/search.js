@@ -1,4 +1,4 @@
-function makeCard(title, description, topics, supervisor) {
+function makeCard(id, title, description, topics, supervisor) {
   const card = `<div class="row">\
   <div class="col s10 offset-m1">\
     <div class="card white-grey darken-1">
@@ -32,21 +32,14 @@ function searchResults() {
     return;
   }
 
-  let tagData = M.Chips.getInstance($('#supervisor')).chipsData;
-  if (tagData.length > 0) {
-    for (let i = 0; i < tagData.length; i++) {
-      $('form').append('<input type="hidden" name="tagsSupervisor" id="tagsSupervisor" value="' + tagData[i].tag + '" />');
-    }
+  const data = {
+    "searchTerm": $("[id='search-input']").val(),
+    "checkbox": $("[id='checkbox-vis']").is(':checked'),
+    "topicArea": M.Chips.getInstance($('#topics')).chipsData,
+    "supervisor":  M.Chips.getInstance($('#supervisor')).chipsData
   }
 
-  tagData = M.Chips.getInstance($('#topics')).chipsData;
-  if (tagData.length > 0) {
-    for (let i = 0; i < tagData.length; i++) {
-      $('form').append('<input type="hidden" name="tagsTopic" id="tagsTopic" value="' + tagData[i].tag + '" />');
-    }
-  }
-
-  makeRequest('/search', form, (res) => {
+  makeRequestCustomData('/search', data, (res) => {
     if (res.status === 'fail') {
       flash(res.message, error = true);
     } else {

@@ -54,6 +54,25 @@ function makeRequest(endpoint, form, callback) {
 }
 
 /*
+ * Make an API call to backend and call the sepcified
+ * call back function to process the JSON response.
+ * Use this function for custom data to be sent 
+ * else use makeRequest()
+ */
+function makeRequestCustomData(endpoint, data, callback) {
+  fetch(endpoint, {
+    headers: {
+      //'Content-Type': 'application/x-www-form-urlencoded',
+      'Accept': 'application/json'
+    },
+    method: 'POST',
+    body: JSON.stringify(data)
+  })
+  .then(res => res.json())
+  .then(callback);
+}
+
+/*
  * Load toast message into localStorage for display on subsequent page load.
  */
 function delayToast(msg, err) {

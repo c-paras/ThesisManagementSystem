@@ -5,6 +5,7 @@ from flask import session
 from flask import jsonify
 
 import re
+import json
 
 from app.auth import UserRole
 from app.auth import at_least_role
@@ -28,13 +29,12 @@ def search_topic():
     stop_words = ['AND', 'THE', 'WAS', 'IS', 'A', 'WE', 'THAT', 'IN', 'TO']
 
     # getting input from forms
-    search_topic = list(dict.fromkeys(request.form.getlist('tagsTopic')))
-    search_super = list(dict.fromkeys(request.form.getlist('tagsSupervisor')))
-    search_topic = list(filter(None, search_topic))
-    search_super = list(filter(None, search_super))
-    search_terms = request.form.get('search')
-    search_check = request.form.get('checkbox-vis')
-
+    data = json.loads(request.data)
+    search_topic = [topic['tag'] for topic in data['topicArea']]
+    search_super = [supers['tag'] for supers in data['supervisor']]
+    search_terms = data['searchTerm']
+    search_check = data['checkbox']
+    
     # cleaning up input
     search_terms = search_terms.upper()
     search_terms = re.split(r'\s+', str(search_terms))
@@ -123,7 +123,7 @@ def search_topic():
 
     # checking if topics are visible or not
     to_return_searches = []
-    if search_check == 'on':
+    if search_check:
         for results in matched_search_phrase:
             if results[4] == 1:
                 to_return_searches.append(results)
