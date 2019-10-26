@@ -66,7 +66,7 @@ function searchResults() {
       } else {
         $('#search-title').html('Your search returned no matching topics');
       }
-      
+
       $('#search-title').show();
       $('#search-results').html(cards);
     }
@@ -103,9 +103,9 @@ function loadPage() {
     });
 
     searchResults();
-  })
+  });
 
-  return
+  return;
 }
 
 loadPage();
