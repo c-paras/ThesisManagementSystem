@@ -139,9 +139,9 @@ def search_topic():
     to_return_supervisor = []
     for topics in to_return_searches:
         to_return_supervisor.append(db.select_columns('users',
-                                                      ['name'],
+                                                      ['name', 'email'],
                                                       ['id'], [topics[2]]))
-
+    print(to_return_supervisor)
     return jsonify({'status': 'ok', 'topics': to_return_searches,
                     'topicsArea': to_return_topic_area,
                     'topicSupervisor': to_return_supervisor})

@@ -14,7 +14,7 @@
         }
     });  
 */
-;
+
 (function($, window, document, undefined) {
 
     var MaterializePagination = function(elem, options) {
