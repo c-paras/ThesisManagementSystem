@@ -78,9 +78,9 @@ class sqliteManager:
     # same format as insert_single
 
     def insert_multiple(inserts):
-        for table, values, columns in inserts:
+        for table, values, *columns in inserts:
             placeholder = ','.join('?' * len(values))
-            if columns is None:
+            if columns is None or len(columns) == 0:
                 res = sqliteManager.conn.execute(
                     f'INSERT INTO {table} VALUES ({placeholder})',
                     values
