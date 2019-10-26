@@ -8,14 +8,13 @@ import re
 from app.auth import UserRole
 from app.auth import at_least_role
 from app.db_manager import sqliteManager as db
-from app.helpers import get_fields
 from app.queries import queries
 
 search = Blueprint('search', __name__)
 
 
 @search.route('/search', methods=['GET', 'POST'])
-@at_least_role(UserRole.STUDENT)
+@at_least_role(UserRole.PUBLIC)
 def search_topic():
     if request.method == 'GET':
         return render_template('search.html',
@@ -143,13 +142,20 @@ def search_topic():
                     'topicSupervisor': to_return_supervisor})
 
 
-@search.route('/searchTopicChips', methods=['POST'])
+@search.route('/searchChips', methods=['GET'])
 @at_least_role(UserRole.STUDENT)
 def getTopicChips():
-    chips = db.select_columns('topic_areas', ['name'])
-    jsonChips = {}
-    for chip in chips:
-        jsonChips[chip] = None
-    print(jsonChips.keys)
-    print("hello")
-    return jsonify(jsonChips)
+    db.connect()
+    topic_area = db.select_columns('topic_areas', ['name'])
+    supervisors = db.select_columns('users', ['name'], ['account_type'], [2])
+
+    chips_topic_area = {}
+    for topic in topic_area:
+        chips_topic_area[topic[0]] = None
+
+    chips_supervisor = {}
+    for sup in supervisors:
+        chips_supervisor[sup[0]] = None
+
+    return jsonify({'status': 'ok', 'chipsTopic': chips_topic_area,
+                    'chipsSuper': chips_supervisor})

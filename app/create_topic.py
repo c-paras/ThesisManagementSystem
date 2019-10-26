@@ -20,9 +20,9 @@ def create():
                                title='Create Topic')
 
     try:
-        fields = ['topic', 'areas', 'details']
+        fields = ['topic', 'topic-areas', 'details']
         topic, areas, details = get_fields(request.form, fields)
-    except Exception as e:
+    except ValueError as e:
         return e.args
 
     prereqs = list(dict.fromkeys(request.form.getlist('prerequisites')))
@@ -45,8 +45,26 @@ def create():
 
     for area in areas:
         area = area.strip()
-        db.insert_single('topic_areas', [topic_id, area],
-                         ['topic', 'name'])
+
+        # get area_id if area in database
+        area_id = db.select_columns("topic_areas",
+                                    ["id"],
+                                    ["name"],
+                                    [area])
+        # else add area to database
+        if len(area_id) == 0:
+            db.insert_single('topic_areas',
+                             [area],
+                             ['name'])
+            area_id = db.select_columns("topic_areas",
+                                        ["id"],
+                                        ["name"],
+                                        [area])
+
+        # add to linking table
+        db.insert_single('topic_to_area',
+                         [topic_id, area_id[0][0]],
+                         ['topic', 'topic_area'])
 
     # for prereq in prereqs:
     #

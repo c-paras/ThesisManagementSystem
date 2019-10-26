@@ -25,18 +25,20 @@ auth = Blueprint('auth', __name__)
 
 # user privillege levels
 class UserRole(Enum):
-    #  PUBLIC = 0 # possibly used in future
-    STUDENT = 1
-    STAFF = 2  # supervisor or assessor
-    COURSE_ADMIN = 3  # thesis admin
-    #  ADMIN = 4 # possibly used in future
+    PUBLIC = 0        # default user type - can only search for topics
+    STUDENT = 1       # students are promoted from public type
+    STAFF = 2         # supervisor or assessor
+    COURSE_ADMIN = 3  # thesis admins
+    SUPER_ADMIN = 4   # unused; possibly needed in future
 
 
 def is_at_least_role(role):
     ''' Check if user's role type is sufficient for access '''
     actual_role = session['acc_type']
     r = role.value
-    if role == UserRole.STUDENT:
+    if role == UserRole.PUBLIC or actual_role == 'super_admin':
+        return True
+    elif actual_role == 'student' and r <= UserRole.STUDENT.value:
         return True
     elif actual_role == 'supervisor' and r <= UserRole.STAFF.value:
         return True
@@ -69,7 +71,7 @@ def register():
     try:
         fields = ['email', 'password', 'confirm-password', 'registration-key']
         email, password, confirm, key = get_fields(request.form, fields)
-    except Exception as e:
+    except ValueError as e:
         return e.args
 
     if not re.match(config.EMAIL_FORMAT, email):
@@ -119,7 +121,7 @@ def login():
 
     try:
         email, password = get_fields(request.form, ['email', 'password'])
-    except Exception as e:
+    except ValueError as e:
         return e.args
 
     db.connect()

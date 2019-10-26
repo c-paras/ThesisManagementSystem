@@ -13,8 +13,8 @@ errors = Blueprint('errors', __name__)
 @errors.app_errorhandler(500)
 @errors.app_errorhandler(501)
 def default_error_handler(e):
-    return render_template("error.html",
-                           title=str(e.code)+" Error",
+    return render_template('error.html',
+                           title=f'{e.code} Error',
                            error_code=str(e.code),
                            error_name=str(e.name),
                            error_description=str(e.description),

@@ -1,38 +1,3 @@
-$('#topics').chips({
-  placeholder: 'Enter a topic',
-  autocompleteOptions: {
-    data: fetch('/searchTopicChips', {
-      headers: {
-        'Content-Type': 'application/x-www-form-urlencoded',
-        'Accept': 'application/json'
-      },
-      method: 'POST',
-    }),
-    limit: 20,
-    minLength: 1
-  }
-});
-
-// let newObject = {}
-// for (const key of array) {
-//   newObject[key] = null
-// }
-
-$('#supervisor').chips({
-  placeholder: 'Enter Supervisor',
-  autocompleteOptions: {
-    data: {
-      'z7654321': null,
-      'z0001112': null,
-      'z8000003': null,
-      'z8000001': null,
-    },
-    limit: 20,
-    minLength: 1
-  }
-});
-
-
 function makeCard(title, description, topics, supervisor) {
   const card = `<div class="row">\
   <div class="col s10 offset-m1">\
@@ -82,7 +47,6 @@ function searchResults() {
     if (res.status === 'fail') {
       flash(res.message, error = true);
     } else {
-      console.log(res.topics);
       let cards = "";
       for (let i=0; i < res.topics.length; i++) {
         cards = cards + makeCard(res.topics[i][1], res.topics[i][3], res.topicsArea[i].join(', '), res.topicSupervisor[i]);
@@ -97,14 +61,52 @@ function searchResults() {
         $(this).val('');
       }));
       
-      $('#search-title').html('Search Results (found ' + res.topics.length + ' matching topics)');
+      if (res.topics.length > 0) {
+        $('#search-title').html('Search Results (found ' + res.topics.length + ' matching topics)');
+      } else {
+        $('#search-title').html('Your search returned no matching topics');
+      }
+      
       $('#search-title').show();
       $('#search-results').html(cards);
     }
   });
 }
 
-$(document).ready( function () {
-  searchResults();
-});
+function loadPage() {
+  fetch('/searchChips', {
+    headers: {
+      'Content-Type': 'application/x-www-form-urlencoded',
+      'Accept': 'application/json'
+    },
+    method: 'GET',
+  })
+  .then(res => res.json())
+  .then((res) => {
+
+    $('#topics').chips({
+      placeholder: 'Enter a topic',
+      autocompleteOptions: {
+        data: res.chipsTopic,
+        limit: 20,
+        minLength: 1
+      }
+    });
+
+    $('#supervisor').chips({
+      placeholder: 'Enter a topic',
+      autocompleteOptions: {
+        data: res.chipsSuper,
+        limit: 20,
+        minLength: 1
+      }
+    });
+
+    searchResults();
+  })
+
+  return
+}
+
+loadPage();
 
