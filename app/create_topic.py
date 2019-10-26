@@ -5,7 +5,8 @@ from flask import session
 
 from app.auth import UserRole
 from app.auth import at_least_role
-from app.helpers import *
+from app.helpers import error
+from app.helpers import get_fields
 from app.db_manager import sqliteManager as db
 
 
@@ -47,18 +48,18 @@ def create():
         area = area.strip()
 
         # get area_id if area in database
-        area_id = db.select_columns("topic_areas",
-                                    ["id"],
-                                    ["name"],
+        area_id = db.select_columns('topic_areas',
+                                    ['id'],
+                                    ['name'],
                                     [area])
         # else add area to database
         if len(area_id) == 0:
             db.insert_single('topic_areas',
                              [area],
                              ['name'])
-            area_id = db.select_columns("topic_areas",
-                                        ["id"],
-                                        ["name"],
+            area_id = db.select_columns('topic_areas',
+                                        ['id'],
+                                        ['name'],
                                         [area])
 
         # add to linking table

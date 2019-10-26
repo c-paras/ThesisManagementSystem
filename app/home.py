@@ -1,8 +1,6 @@
 from flask import Blueprint
-from flask import redirect
 from flask import render_template
 from flask import session
-from flask import url_for
 
 from datetime import datetime
 
@@ -15,18 +13,13 @@ home = Blueprint('home', __name__)
 
 
 @home.route('/', methods=['GET'])
-def index():
-    if 'user' not in session:
-        return redirect(url_for('auth.login'))
-    else:
-        return dashboard()
-
-
 @home.route('/home', methods=['GET'])
 @home.route('/dashboard', methods=['GET'])
 @at_least_role(UserRole.PUBLIC)
 def dashboard():
-    is_student = session['acc_type'] == 'student'
+    user_type = session['acc_type']
+    is_student = user_type in ['public', 'student']
+    # TODO: public user home page
     if is_student:
         return student_dashboard()
     else:
@@ -34,7 +27,7 @@ def dashboard():
 
 
 def student_dashboard():
-    return render_template('homeStudent.html',
+    return render_template('home_student.html',
                            heading='My Dashboard', title='My Dashboard')
 
 
@@ -71,7 +64,7 @@ def staff_dashboard():
         else:
             past_students.append(i)
 
-    return render_template('homeStaff.html',
+    return render_template('home_staff.html',
                            heading='My Dashboard',
                            title='My Dashboard',
                            curr_requests=curr_requests,

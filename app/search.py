@@ -1,6 +1,7 @@
 from flask import Blueprint
 from flask import render_template
 from flask import request
+from flask import session
 from flask import jsonify
 
 import re
@@ -10,6 +11,9 @@ from app.auth import at_least_role
 from app.db_manager import sqliteManager as db
 from app.queries import queries
 
+import config
+
+
 search = Blueprint('search', __name__)
 
 
@@ -18,6 +22,7 @@ search = Blueprint('search', __name__)
 def search_topic():
     if request.method == 'GET':
         return render_template('search.html',
+                               topic_request_text=config.TOPIC_REQUEST_TEXT,
                                heading='Search Topics', title='Search Topics')
 
     stop_words = ['AND', 'THE', 'WAS', 'IS', 'A', 'WE', 'THAT', 'IN', 'TO']
@@ -32,7 +37,7 @@ def search_topic():
 
     # cleaning up input
     search_terms = search_terms.upper()
-    search_terms = re.split(r"\s+", str(search_terms))
+    search_terms = re.split(r'\s+', str(search_terms))
     search_terms = list(filter(None, search_terms))
     search_terms = [word for word in search_terms if word not in stop_words]
     db.connect()

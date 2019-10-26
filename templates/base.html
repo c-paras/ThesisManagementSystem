@@ -11,14 +11,14 @@
     <!-- Import Google Icon Font -->
     <link type="text/css" rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
 
-    <!-- Import materialize.css -->
+    <!-- Import Materialize CSS -->
     <link
       type="text/css"
       rel="stylesheet"
       href="{{ url_for('static', filename='css/materialize.min.css') }}" media="screen,projection"
     >
 
-    <!-- Custom CSS and materialize overrides -->
+    <!-- Custom CSS and Materialize overrides -->
     <link href="{{ url_for('static', filename='css/style.css') }}" rel="stylesheet">
 
     <!-- Let browser know website is optimized for mobile -->
@@ -30,17 +30,20 @@
       <!-- Dropdown -->
       <ul id="nav-bar-dropdown" class="dropdown-content">
         <li><a href="/search">Search Topics</a></li>
+
         {% if session['acc_type'] == 'supervisor' or session['acc_type'] == 'course_admin' %}
           <li><a href="/create_topic">Create Topic</a></li>
           <li><a href="#!">Manage Topics</a></li>
         {% endif %}
-        {% if  session['acc_type'] == 'course_admin' %}
+
+        {% if session['acc_type'] == 'course_admin' %}
           <li><a href="#!">Create Course</a></li>
           <li><a href="#!">Manage Course</a></li>
           <li><a href="#!">Add Staff</a></li>
         {% endif %}
 
         <li class="divider"></li>
+
         <li><a href="#!">Change Password</a></li>
         <li><a href="/logout">Logout</a></li>
       </ul>
@@ -49,10 +52,13 @@
       <div class="navbar-fixed">
         <nav>
           <div class="nav-wrapper">
-            <a href="/" class="brand-logo">
+            <a href="/home" class="brand-logo">
               <div class="valign-wrapper">
                 &nbsp;
-                <img src="{{ url_for('static', filename='img/favico.ico') }}" alt="" height="auto" width="50">
+                <img
+                  src="{{ url_for('static', filename='img/favico.ico') }}"
+                  alt="" height="auto" width="50"
+                >
                 &nbsp;TMS
               </div>
             </a>
@@ -71,7 +77,12 @@
     {% endif %}
 
     <main>
-      <div class="container" style="padding: 30px !important;">
+      <div
+        class="container"
+        {% if not hide_navbar and not heading %}
+          style="padding: 20px !important;"
+        {% endif %}
+      >
         {% if not hide_navbar and heading %}
           {# There should be a heading on any page with a navbar #}
           {# If heading is blank, do not show <hr> #}
@@ -87,11 +98,9 @@
 
     {% if not hide_navbar %}
       <footer class="page-footer">
-        <div class="">
-          <div class="container">
-            © 2019 Copyright TMS
-            <a class="grey-text text-lighten-4 right" href="#tms-top">BACK TO TOP</a>
-          </div>
+        <div class="container">
+          © 2019 Copyright TMS
+          <a class="grey-text text-lighten-4 right" href="#tms-top">BACK TO TOP</a>
         </div>
       </footer>
     {% endif %}
@@ -116,9 +125,12 @@
 
     {% if not hide_navbar %}
       <script type="text/javascript">
-        /* Activate navbar dropdown */
         $(document).ready(function () {
-          $('.dropdown-trigger').dropdown({ hover: true, coverTrigger: false })
+          /* Activate navbar dropdown */
+          $('.dropdown-trigger').dropdown({ hover: true, coverTrigger: false });
+
+          /* Initialize modals */
+          $('.modal').modal();
         })
       </script>
     {% endif %}

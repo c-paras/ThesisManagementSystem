@@ -38,10 +38,18 @@
       </div>
     </form>
   </div>
+
+  <!-- Search results -->
   <div class="row" id="results">
     <h5 class="col s10 offset-m1" id="search-title"></h5>
     <div id="search-results">
-
     </div>
   </div>
+
+  {% if session['acc_type'] == 'student' %}
+    {% include "modals/request.html" %}
+    <script type="text/javascript" src="{{ url_for('static', filename='js/request.js') }}" defer></script>
+  {% endif %}
+
+
 {% endblock %}
