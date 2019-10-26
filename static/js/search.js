@@ -37,17 +37,18 @@ function searchResults() {
     "checkbox": $("[id='checkbox-vis']").is(':checked'),
     "topicArea": M.Chips.getInstance($('#topics')).chipsData,
     "supervisor":  M.Chips.getInstance($('#supervisor')).chipsData
-  }
+  };
 
   makeRequestCustomData('/search', data, (res) => {
     if (res.status === 'fail') {
       flash(res.message, error = true);
     } else {
-      let cards = '';
+      let cards = [];
       for (let i = 0; i < res.topics.length; i++) {
-        cards += makeCard(res.topics[i][0], res.topics[i][1],
-          res.topics[i][3], res.topicsArea[i].join(', '), res.topicSupervisor[i]);
+        cards.push(makeCard(res.topics[i][0], res.topics[i][1],
+          res.topics[i][3], res.topicsArea[i].join(', '), res.topicSupervisor[i]));
       }
+      console.log(cards.length)
 
       $("[id='tagsTopic']").each((function () {
         $(this).val('');
@@ -63,8 +64,25 @@ function searchResults() {
         $('#search-title').html('Your search returned no matching topics');
       }
 
+
+      $.myTopicCards = cards
+      console.log($.myTopicCards)
+
       $('#search-title').show();
-      $('#search-results').html(cards);
+      $('#search-results').html(cards.slice(0, 10));
+      $('#page').html('')
+      $('#page').materializePagination({
+        align: 'center',
+        lastPage:  Math.ceil(cards.length/10),
+        firstPage:  1,
+        useUrlParameter: false,
+        onClickCallback: function(requestedPage){
+            console.log('Requested page from #pagination-long: '+ requestedPage);
+            nextPage(requestedPage)
+        }
+      });
+
+      console.log($('#page'))
 
       if (!res.canRequest) {
         $('[name="request-btn"]').each(function () {
@@ -112,6 +130,11 @@ function loadPage() {
   });
 
   return;
+}
+
+function nextPage(requestedPage) {
+   let cards = $.myTopicCards
+   $('#search-results').html(cards.slice(requestedPage*10, requestedPage*10 + 10));
 }
 
 loadPage();

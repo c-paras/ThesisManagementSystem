@@ -34,7 +34,7 @@ def search_topic():
     search_super = [supers['tag'] for supers in data['supervisor']]
     search_terms = data['searchTerm']
     search_check = data['checkbox']
-    
+
     # cleaning up input
     search_terms = search_terms.upper()
     search_terms = re.split(r'\s+', str(search_terms))
