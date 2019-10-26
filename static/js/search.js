@@ -30,7 +30,7 @@ function makeCard(id, title, description, topics, supervisor, email) {
 
 function nextPage(requestedPage) {
   let cards = $.myTopicCards;
-  $('#search-results').html(cards.slice(requestedPage*10, requestedPage*10 + 10));
+  $('#search-results').html(cards.slice(requestedPage*10 - 10, requestedPage*10));
 }
 
 function searchResults() {
