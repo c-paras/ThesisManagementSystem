@@ -435,8 +435,10 @@ if __name__ == '__main__':
                 'tasks', 'sessions', 'submission_types',
                 'course_offerings', 'enrollments',
                 'student_topic', 'topic_requests',
-                'topic_to_area']:
+                'topic_to_area', 'course_roles', 'account_types',
+                'file_types', 'marking_methods', 'request_statuses']:
         db.delete_all(tbl)
+    db.init_db()
 
     random.seed(42)
     print('Generating users...')
@@ -466,4 +468,5 @@ if __name__ == '__main__':
     print('Generating topic requests...')
     gen_topic_requests()
 
+    db.close()
     print('Done')
