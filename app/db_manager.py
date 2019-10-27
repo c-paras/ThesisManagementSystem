@@ -40,19 +40,24 @@ class sqliteManager:
         for name in names:
             queries.append((table, [name], ['name']))
 
-        table = 'marking_methods'
+        table = 'submission_methods'
         names = ['text submission', 'file submission']
+        for name in names:
+            queries.append((table, [name], ['name']))
+
+        table = 'marking_methods'
+        names = ['requires approval', 'requires mark']
         for name in names:
             queries.append((table, [name], ['name']))
 
         table = 'request_statuses'
         names = [
             'pending', 'approved', 'rejected',
-            'marked', 'pending mark', 'cancelled'
+            'marked', 'pending mark', 'cancelled',
+            'not submitted'
         ]
         for name in names:
             queries.append((table, [name], ['name']))
-
         sqliteManager.insert_multiple(queries)
 
     # inserts 1 row in db
@@ -86,7 +91,7 @@ class sqliteManager:
                     values
                 )
             else:
-                columns = ','.join(columns)
+                columns = ','.join(columns[0])
                 res = sqliteManager.conn.execute(
                     f'INSERT INTO {table} ({columns}) VALUES ({placeholder})',
                     values

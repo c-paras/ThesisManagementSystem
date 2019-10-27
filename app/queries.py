@@ -131,7 +131,7 @@ class queries:
     def get_user_tasks(user_id):
         res = db.custom_query(
             """
-                SELECT t.id, t.name, c.name
+                SELECT t.id, t.name, sm.name, c.name, rs.name
                 FROM users u
                 INNER JOIN enrollments e
                     ON e.user = u.id
@@ -141,6 +141,12 @@ class queries:
                     ON c.id = co.course
                 INNER JOIN tasks t
                     ON t.course_offering = co.id
+                INNER JOIN submission_methods sm
+                    ON sm.id = t.submission_method
+                INNER JOIN submissions s
+                    ON s.task = t.id
+                INNER JOIN request_statuses rs
+                    ON rs.id = s.status
                 WHERE u.id = "{id}";
             """.format(id=user_id)
         )

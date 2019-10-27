@@ -207,9 +207,14 @@ def gen_tasks():
             course_id = res[0][0]
 
             res = db.select_columns('marking_methods', ['id'], ['name'],
-                                    ['{} submission'.format(t['marking'])])
+                                    ['requires {}'.format(t['marking'])])
             assert len(res) > 0
             mark_method_id = res[0][0]
+
+            submission_type = db.select_columns('marking_methods', ['id'], ['name'],
+                                    ['{} submission'.format(t['submission'])])
+            
+            sub_method_id = res[0][0]
 
             word_limit = t.get('word-limit', random.randrange(400, 8000))
 
@@ -225,15 +230,14 @@ def gen_tasks():
                                          [session_id])
 
                 due = random.randrange(date[0][0], date[0][1])
-                db.insert_single('tasks', [t['name'],
-                                           offer_id,
-                                           due,
-                                           t['description'],
-                                           mark_method_id,
-                                           word_limit],
-                                 ['name', 'course_offering', 'deadline',
-                                  'description', 'marking_method',
-                                  'word_limit'])
+                db.insert_single(
+                    'tasks', 
+                    [t['name'], offer_id, due, t['description'],
+                    mark_method_id, word_limit, sub_method_id],
+                    ['name', 'course_offering', 'deadline',
+                    'description', 'marking_method', 'word_limit',
+                    'submission_method']
+                )
 
                 res = db.select_columns('tasks', ['id'],
                                         ['name', 'course_offering'],
@@ -477,7 +481,6 @@ def gen_task_critera():
 
     for task in tasks:
         queries = []
-        print(task[0])
         queries.append((
             'task_criteria',
             [task[0], 'content', 80],
@@ -535,7 +538,7 @@ if __name__ == '__main__':
                 'topic_to_area', 'course_roles', 'account_types',
                 'file_types', 'marking_methods', 'request_statuses',
                 'materials', 'material_attachments',
-                'task_criteria', 'marks']:
+                'task_criteria', 'marks', 'submission_methods']:
         db.delete_all(tbl)
     db.init_db()
 

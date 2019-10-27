@@ -1,62 +1,85 @@
 [
     {
+        "name": "Thesis Abstract",
+        "description": "Present your initial research you did during Thesis A",
+        "course": "COMP4930",
+        "marking": "approval",
+        "submission": "text"
+    },
+    {
         "name": "Thesis A Presentation",
         "description": "Present your initial research you did during Thesis A",
         "course": "COMP4930",
-        "marking": "file",
+        "marking": "mark",
+        "submission": "file",
         "files": [".pdf"]
     },
     {
         "name": "Thesis B Presentation",
         "description": "Present your initial research you did during Thesis A",
         "course": "COMP4931",
-        "marking": "file",
+        "marking": "mark",
+        "submission": "file",
         "files": [".pdf"]
     },
     {
         "name": "Thesis B Prime Presentation",
         "description": "Present your initial research you did during Thesis A",
         "course": "COMP4941",
-        "marking": "file",
+        "marking": "mark",
+        "submission": "file",
         "files": [".pdf"]
+    },
+    {
+        "name": "Thesis Abstract",
+        "description": "Present your initial research you did during Thesis A",
+        "course": "COMP4951",
+        "marking": "approval",
+        "submission": "text"
     },
     {
         "name": "Thesis A Presentation",
         "description": "Present your research you did during Research Thesis A",
         "course": "COMP4951",
-        "marking": "file",
+        "marking": "mark",
+        "submission": "file",
         "files": [".pdf"]
     },
     {
-        "name": "Thesis A Presentation",
+        "name": "Thesis B Presentation",
         "description": "Present your research you did during Research Thesis B",
         "course": "COMP4952",
-        "marking": "file",
+        "marking": "mark",
+        "submission": "file",
         "files": [".pdf"]
     },
     {
-        "name": "Thesis A Presentation",
+        "name": "Thesis C Presentation",
         "description": "Present your research you did during Research Thesis C",
         "course": "COMP4953",
-        "marking": "file",
+        "marking": "mark",
+        "submission": "file",
         "files": [".pdf"]
     },
     {
         "name": "Thesis A Report",
         "description": "Report on your results you did during Thesis A",
         "course": "COMP4961",
-        "marking": "text"
+        "marking": "mark",
+        "submission": "text"
     },
     {
         "name": "Thesis B Report",
         "description": "Report on your results you did during Thesis B",
         "course": "COMP4962",
-        "marking": "text"
+        "marking": "mark",
+        "submission": "text"
     },
     {
         "name": "Thesis C Report",
         "description": "Report on your results you did during Thesis C",
         "course": "COMP4963",
-        "marking": "text"
+        "marking": "mark",
+        "submission": "text"
     }
 ]
