@@ -1,32 +1,4 @@
-$('#topics').chips({
-  placeholder: 'Enter a topic',
-  autocompleteOptions: {
-    data: {
-      'Robotics': null,
-      'Graphics': null,
-      'User Interfaces': null,
-      'Formal Methods': null
-    },
-    limit: 20,
-    minLength: 1
-  }
-});
-
-$('#supervisor').chips({
-  placeholder: 'Enter supervisor',
-  autocompleteOptions: {
-    data: {
-      'z7654321': null,
-      'z0001112': null,
-      'z8000003': null,
-      'z8000001': null
-    },
-    limit: 20,
-    minLength: 1
-  }
-});
-
-function makeCard(id, title, description, topics, supervisor) {
+function makeCard(id, title, description, topics, supervisor, email) {
   const card = `<div class="row">\
   <div class="col s10 offset-m1">\
     <div class="card white-grey darken-1">
@@ -35,7 +7,9 @@ function makeCard(id, title, description, topics, supervisor) {
           <p>Topic Area: ${topics}</p>
           <hr>
         </span>
-        <p>Supervisor: ${supervisor}</p>
+        <p>Supervisor: ${supervisor}
+        <a href="mailto:${email}" target="_top"> (${email})</a>
+        </p>
         <p>Prerequisites: Not implemented yet waiting for db</p>
         <br>
         <p>${description}</p>
@@ -54,34 +28,32 @@ function makeCard(id, title, description, topics, supervisor) {
   return card;
 }
 
+function nextPage(requestedPage) {
+  let cards = $.myTopicCards;
+  $('#search-results').html(cards.slice(requestedPage*10 - 10, requestedPage*10));
+}
+
 function searchResults() {
   const form = $('#search-form');
   if (!formValid(form)) {
     return;
   }
 
-  let tagData = M.Chips.getInstance($('#supervisor')).chipsData;
-  if (tagData.length > 0) {
-    for (let i = 0; i < tagData.length; i++) {
-      $('form').append('<input type="hidden" name="tagsSupervisor" id="tagsSupervisor" value="' + tagData[i].tag + '" />');
-    }
-  }
+  const data = {
+    "searchTerm": $("[id='search-input']").val(),
+    "checkbox": $("[id='checkbox-vis']").is(':checked'),
+    "topicArea": M.Chips.getInstance($('#topics')).chipsData,
+    "supervisor":  M.Chips.getInstance($('#supervisor')).chipsData
+  };
 
-  tagData = M.Chips.getInstance($('#topics')).chipsData;
-  if (tagData.length > 0) {
-    for (let i = 0; i < tagData.length; i++) {
-      $('form').append('<input type="hidden" name="tagsTopic" id="tagsTopic" value="' + tagData[i].tag + '" />');
-    }
-  }
-
-  makeRequest('/search', form, (res) => {
+  makeRequestCustomData('/search', data, (res) => {
     if (res.status === 'fail') {
       flash(res.message, error = true);
     } else {
-      let cards = '';
+      let cards = [];
       for (let i = 0; i < res.topics.length; i++) {
-        cards += makeCard(res.topics[i][0], res.topics[i][1],
-          res.topics[i][3], res.topicsArea[i].join(', '), res.topicSupervisor[i]);
+        cards.push(makeCard(res.topics[i][0], res.topics[i][1],
+          res.topics[i][3], res.topicsArea[i].join(', '), res.topicSupervisor[i][0][0], res.topicSupervisor[i][0][1]));
       }
 
       $("[id='tagsTopic']").each((function () {
@@ -91,10 +63,28 @@ function searchResults() {
       $("[id='tagsSupervisor']").each((function () {
         $(this).val('');
       }));
+      
+      if (res.topics.length > 0) {
+        $('#search-title').html('Search Results (found ' + res.topics.length + ' matching topics)');
+      } else {
+        $('#search-title').html('Your search returned no matching topics');
+      }
 
-      $('#search-title').html(`Search Results (found ${res.topics.length} matching topics)`);
+
+      $.myTopicCards = cards;
+
       $('#search-title').show();
-      $('#search-results').html(cards);
+      $('#search-results').html(cards.slice(0, 10));
+      $('#page').html('');
+      $('#page').materializePagination({
+        align: 'center',
+        lastPage:  Math.ceil(cards.length/10),
+        firstPage:  1,
+        useUrlParameter: false,
+        onClickCallback: function(requestedPage){
+            nextPage(requestedPage);
+        }
+      });
 
       if (!res.canRequest) {
         $('[name="request-btn"]').each(function () {
@@ -108,3 +98,40 @@ function searchResults() {
     }
   });
 }
+
+function loadPage() {
+  fetch('/searchChips', {
+    headers: {
+      'Content-Type': 'application/x-www-form-urlencoded',
+      'Accept': 'application/json'
+    },
+    method: 'GET',
+  })
+  .then(res => res.json())
+  .then((res) => {
+
+    $('#topics').chips({
+      placeholder: 'Enter a topic',
+      autocompleteOptions: {
+        data: res.chipsTopic,
+        limit: 20,
+        minLength: 1
+      }
+    });
+
+    $('#supervisor').chips({
+      placeholder: 'Enter a topic',
+      autocompleteOptions: {
+        data: res.chipsSuper,
+        limit: 20,
+        minLength: 1
+      }
+    });
+
+    searchResults();
+  });
+
+  return;
+}
+
+loadPage();
