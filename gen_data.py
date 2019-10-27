@@ -7,9 +7,17 @@ from app.db_manager import sqliteManager as db
 from app.queries import queries as db_queries
 
 
-def get_all_types():
+def get_all_account_types():
     types = {}
     res = db.select_columns('account_types', ['name', 'id'])
+    for name, iden in res:
+        types[name] = iden
+    return types
+
+
+def get_all_request_types():
+    types = {}
+    res = db.select_columns('request_statuses', ['name', 'id'])
     for name, iden in res:
         types[name] = iden
     return types
@@ -18,7 +26,7 @@ def get_all_types():
 def gen_users():
     with open('db/names.json') as f:
         names = json.load(f)
-        types = get_all_types()
+        types = get_all_account_types()
         password = bcrypt.hashpw('password1'.encode('utf-8'), bcrypt.gensalt())
         query = []
 
@@ -261,7 +269,7 @@ def gen_tasks():
 
 
 def gen_enrollments():
-    types = get_all_types()
+    types = get_all_account_types()
 
     # get all sessions in the years (2018, 2019, 2020) and put each year into
     # a list
@@ -324,7 +332,7 @@ def gen_enrollments():
 
 
 def gen_student_topics():
-    types = get_all_types()
+    types = get_all_account_types()
     # get first supervisor
 
     main_sup_id = db.select_columns('users',
@@ -398,7 +406,7 @@ def gen_student_topics():
 
 
 def gen_topic_requests():
-    types = get_all_types()
+    types = get_all_account_types()
     # get first supervisor
 
     main_sup_id = db.select_columns('users',
@@ -497,7 +505,7 @@ def gen_task_critera():
 
 
 def gen_marks():
-    acc_types = get_all_types()
+    acc_types = get_all_account_types()
     students = db.select_columns(
         'users', ['id'], ['account_type'], [acc_types['student']]
     )
@@ -530,6 +538,36 @@ def gen_marks():
                 ))
             db.insert_multiple(queries)
 
+def gen_submissions():
+    acc_types = get_all_account_types()
+    request_types = get_all_request_types()
+    students = db.select_columns(
+        'users', ['id'], ['account_type'], [acc_types['student']]
+    )
+
+    for student in students:
+        tasks = db_queries.get_user_tasks(student[0])
+        now = datetime.datetime.now().timestamp()
+        queries = []
+        for task in tasks:
+            # if task is in the future, don't create a submission
+            if task[4] > now:
+                continue
+            if 'approval' in task[3]:
+                queries.append((
+                    'submissions',
+                    [student[0], task[0], 'smiley',
+                        'img/chicken.jpg','ez', now, request_types['approved']
+                    ]
+                ))
+            else:
+                queries.append((
+                    'submissions',
+                    [student[0], task[0], 'smiley',
+                        'img/chicken.jpg','ez', now, request_types['marked']
+                    ]
+                ))
+        db.insert_multiple(queries)
 
 if __name__ == '__main__':
     db.connect()
@@ -540,7 +578,8 @@ if __name__ == '__main__':
                 'topic_to_area', 'course_roles', 'account_types',
                 'file_types', 'marking_methods', 'request_statuses',
                 'materials', 'material_attachments',
-                'task_criteria', 'marks', 'submission_methods']:
+                'task_criteria', 'marks', 'submission_methods',
+                'submissions']:
         db.delete_all(tbl)
     db.init_db()
 
@@ -580,10 +619,12 @@ if __name__ == '__main__':
 
     print('Generating task critera...')
     gen_task_critera()
-
-    db.delete_all('marks')
-    print('Generating marks')
+    
+    print('Generating marks...')
     gen_marks()
+
+    print("Generating submissions...")
+    gen_submissions()
 
     db.close()
     print('Done')
