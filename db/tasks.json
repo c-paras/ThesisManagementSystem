@@ -1,7 +1,7 @@
 [
     {
         "name": "Thesis Abstract",
-        "description": "Present your initial research you did during Thesis A",
+        "description": "Present your initial idea",
         "course": "COMP4930",
         "marking": "approval",
         "submission": "text"
@@ -16,7 +16,7 @@
     },
     {
         "name": "Thesis B Presentation",
-        "description": "Present your initial research you did during Thesis A",
+        "description": "Present your initial research you did during Thesis B",
         "course": "COMP4931",
         "marking": "mark",
         "submission": "file",
@@ -24,7 +24,7 @@
     },
     {
         "name": "Thesis B Prime Presentation",
-        "description": "Present your initial research you did during Thesis A",
+        "description": "Present your initial research you did during Thesis B",
         "course": "COMP4941",
         "marking": "mark",
         "submission": "file",
@@ -32,7 +32,7 @@
     },
     {
         "name": "Thesis Abstract",
-        "description": "Present your initial research you did during Thesis A",
+        "description": "Present your initial idea",
         "course": "COMP4951",
         "marking": "approval",
         "submission": "text"

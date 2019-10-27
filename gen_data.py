@@ -211,9 +211,11 @@ def gen_tasks():
             assert len(res) > 0
             mark_method_id = res[0][0]
 
-            submission_type = db.select_columns('marking_methods', ['id'], ['name'],
-                                    ['{} submission'.format(t['submission'])])
-            
+            submission_type = db.select_columns(
+                'marking_methods',
+                ['id'], ['name'], ['{} submission'.format(t['submission'])]
+            )
+
             sub_method_id = res[0][0]
 
             word_limit = t.get('word-limit', random.randrange(400, 8000))
@@ -231,12 +233,12 @@ def gen_tasks():
 
                 due = random.randrange(date[0][0], date[0][1])
                 db.insert_single(
-                    'tasks', 
+                    'tasks',
                     [t['name'], offer_id, due, t['description'],
-                    mark_method_id, word_limit, sub_method_id],
+                        mark_method_id, word_limit, sub_method_id],
                     ['name', 'course_offering', 'deadline',
-                    'description', 'marking_method', 'word_limit',
-                    'submission_method']
+                        'description', 'marking_method', 'word_limit',
+                        'submission_method']
                 )
 
                 res = db.select_columns('tasks', ['id'],
