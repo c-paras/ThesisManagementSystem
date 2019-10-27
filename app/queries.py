@@ -131,7 +131,7 @@ class queries:
     def get_user_tasks(user_id):
         res = db.custom_query(
             """
-                SELECT 
+                SELECT
                 t.id, t.name, c.name, mm.name, t.deadline
                 FROM users u
                 INNER JOIN enrollments e

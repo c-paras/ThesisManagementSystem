@@ -538,6 +538,7 @@ def gen_marks():
                 ))
             db.insert_multiple(queries)
 
+
 def gen_submissions():
     acc_types = get_all_account_types()
     request_types = get_all_request_types()
@@ -557,17 +558,17 @@ def gen_submissions():
                 queries.append((
                     'submissions',
                     [student[0], task[0], 'smiley',
-                        'img/chicken.jpg','ez', now, request_types['approved']
-                    ]
+                        'img/chicken.jpg', 'ez', now,
+                        request_types['approved']]
                 ))
             else:
                 queries.append((
                     'submissions',
                     [student[0], task[0], 'smiley',
-                        'img/chicken.jpg','ez', now, request_types['marked']
-                    ]
+                        'img/chicken.jpg', 'ez', now, request_types['marked']]
                 ))
         db.insert_multiple(queries)
+
 
 if __name__ == '__main__':
     db.connect()
@@ -619,7 +620,7 @@ if __name__ == '__main__':
 
     print('Generating task critera...')
     gen_task_critera()
-    
+
     print('Generating marks...')
     gen_marks()
 
