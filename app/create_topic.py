@@ -33,6 +33,15 @@ def create():
     # to make sure that "COMP" are upper case
     prereqs = [x.upper() for x in prereqs]
 
+    for prereq in prereqs:
+        prereq = prereq.strip()
+        course_id = db.select_columns(
+            'courses', ['id'], ['code'], [prereq]
+        )
+
+        if len(course_id) == 0:
+            return error('Sorry, you have to enter a valid course code!')
+
     db.connect()
     user_id = session['id']
     res = db.select_columns('topics', ['name'], ['name'], [topic])
