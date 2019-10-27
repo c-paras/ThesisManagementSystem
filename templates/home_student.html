@@ -45,41 +45,15 @@
 
           <!-- Table body, should be replaced with a loop when actually connected to database -->
           <tbody>
-            <tr>
-              <td>PLACEHOLDER</td>
-              <td>PLACEHOLDER</td>
-              <td>PLACEHOLDER</td>
-              <td>110%</td>
-              <td>110%</td>
-            </tr>
-            <tr>
-              <td>PLACEHOLDER</td>
-              <td>PLACEHOLDER</td>
-              <td>PLACEHOLDER</td>
-              <td>110%</td>
-              <td>110%</td>
-            </tr>
-            <tr>
-              <td>PLACEHOLDER</td>
-              <td>PLACEHOLDER</td>
-              <td>PLACEHOLDER</td>
-              <td>-</td>
-              <td>-</td>
-            </tr>
-            <tr>
-              <td>PLACEHOLDER</td>
-              <td>PLACEHOLDER</td>
-              <td>PLACEHOLDER</td>
-              <td>-</td>
-              <td>-</td>
-            </tr>
-            <tr>
-              <td>PLACEHOLDER</td>
-              <td>PLACEHOLDER</td>
-              <td>PLACEHOLDER</td>
-              <td>-</td>
-              <td>-</td>
-            </tr>
+            {% for task in tasks %}
+              <tr>
+                <td>{{task[0]}}</td>
+                <td>{{task[1]}}</td>
+                <td>{{task[2]}}</td>
+                <td>{{task[3]}}</td>
+                <td>{{task[4]}}</td>
+              </tr>
+            {% endfor %}
           </tbody>
 
         </table>
