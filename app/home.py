@@ -78,19 +78,18 @@ def student_dashboard():
                         ['criteria', 'student', 'marker'],
                         [c[0], session['id'], assessor]
                     )
-                    print(assessor)
-                    if len(mark) == 0:
-                        assessor_mark += mark[0]
+                    if len(mark) != 0:
+                        assessor_mark += mark[0][0]
                     else:
                         assessor_mark = -1
                 if supervisor is not None and supervisor != -1:
                     mark = db.select_columns(
                         'marks', ['mark'],
                         ['criteria', 'student', 'marker'],
-                        [c[0], session['id'], assessor]
+                        [c[0], session['id'], supervisor]
                     )
                     if len(mark) != 0:
-                        supervisor_mark += mark[0]
+                        supervisor_mark += mark[0][0]
                     else:
                         supervisor_mark = -1
             if supervisor_mark <= 0:
