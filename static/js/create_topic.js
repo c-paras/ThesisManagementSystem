@@ -1,6 +1,6 @@
 $('#prereqs').chips({
   placeholder: 'Add Prerequisite',
-  limit: 20
+  limit: 10
 });
 
 function submitCreate() {
