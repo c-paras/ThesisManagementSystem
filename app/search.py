@@ -163,4 +163,4 @@ def getTopicChips():
         chips_supervisor[sup[0]] = None
 
     return jsonify({'status': 'ok', 'chipsTopic': chips_topic_area,
-                    'chipsSuper': chips_supervisor})
+                    'chipsSuper': chips_supervisor, 'canRequest': session['acc_type'] == 'student'})

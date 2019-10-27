@@ -7,6 +7,10 @@ footer, .page-footer {
   height: 60px;
 }
 
+.waves-effect.active {
+  background-color: #26a69a !important;
+}
+
 /* sticky footer */
 body {
   display: flex;
