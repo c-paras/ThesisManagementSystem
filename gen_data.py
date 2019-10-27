@@ -461,11 +461,12 @@ def gen_materials():
             continue
         # entering 2 materials for each thesis
         queries = []
-        queries.append((
-            'materials',
-            ['Course outline', course[0]],
-            ['name', 'course_offering']
-        ))
+        if 'a' in name:
+            queries.append((
+                'materials',
+                ['Course outline', course[0]],
+                ['name', 'course_offering']
+            ))
         queries.append((
             'materials',
             [f'Sample report {name}', course[0]],
