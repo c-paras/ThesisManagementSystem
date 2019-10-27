@@ -1,16 +1,15 @@
+import json
+
 from flask import Blueprint
+from flask import jsonify
 from flask import render_template
 from flask import request
 from flask import session
-from flask import jsonify
-
-import json
 
 from app.auth import UserRole
 from app.auth import at_least_role
-from app.helpers import error
 from app.db_manager import sqliteManager as db
-
+from app.helpers import error
 
 create_topic = Blueprint('create_topic', __name__)
 
@@ -76,16 +75,13 @@ def create():
         prereq = prereq.strip()
         course_id = db.select_columns(
             'courses', ['id'], ['code'], [prereq]
-            )
+        )
 
-        if len(course_id) == 0:
-            db.close()
-            return error('No such course in the database')
-
-        db.insert_single(
-            'prerequisites',
-            [0, topic_id, course_id[0][0]],
-            ['type', 'topic', 'course']
+        if len(course_id) != 0:
+            db.insert_single(
+                'prerequisites',
+                [0, topic_id, course_id[0][0]],
+                ['type', 'topic', 'course']
             )
 
     db.close()
