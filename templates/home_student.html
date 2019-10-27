@@ -9,24 +9,18 @@
       <div class="col s8 offset-s2">
         <table class="highlight centered responsive-table">
           <tbody>
-            <tr>
-              <td>PLACEHOLDER</td>
-              <td>
-                <i class="material-icons left">file_download</i>
-              </td>
-            </tr>
-            <tr>
-              <td>PLACEHOLDER</td>
-              <td>
-                <i class="material-icons left">file_download</i>
-              </td>
-            </tr>
-            <tr>
-              <td>PLACEHOLDER</td>
-              <td>
-                <i class="material-icons left">file_download</i>
-              </td>
-            </tr>
+            {% for material in materials %}
+              <tr>
+                <td>{{material[0]}}</td>
+                {% for attachment in material[1] %}
+                  <td>
+                    <a href="{{ url_for('static', filename='img/chicken.jpg') }}">
+                      <i class="material-icons left">file_download</i>
+                    </a>
+                  </td>
+                {% endfor %}
+              </tr>
+            {% endfor %}
           </tbody>
         </table>
       </div>
