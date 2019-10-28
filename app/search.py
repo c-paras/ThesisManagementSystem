@@ -144,7 +144,8 @@ def search_topic():
 
     return jsonify({'status': 'ok', 'topics': to_return_searches,
                     'topicsArea': to_return_topic_area,
-                    'topicSupervisor': to_return_supervisor})
+                    'topicSupervisor': to_return_supervisor,
+                    'canRequest': session['acc_type'] == 'student'})
 
 
 @search.route('/searchChips', methods=['GET'])
@@ -163,5 +164,4 @@ def getTopicChips():
         chips_supervisor[sup[0]] = None
 
     return jsonify({'status': 'ok', 'chipsTopic': chips_topic_area,
-                    'chipsSuper': chips_supervisor,
-                    'canRequest': session['acc_type'] == 'student'})
+                    'chipsSuper': chips_supervisor})
