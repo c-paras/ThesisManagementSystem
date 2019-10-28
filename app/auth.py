@@ -54,9 +54,7 @@ def at_least_role(role):
         @wraps(f)
         def wrapped(*args, **kwargs):
             if 'user' not in session:
-                return render_template(
-                    'login.html', title='Login', hide_navbar=True
-                )
+                return redirect(url_for('auth.login'))
             if not is_at_least_role(role):
                 abort(403)
             return f(*args, **kwargs)
@@ -71,8 +69,8 @@ def register():
                                title='Register', hide_navbar=True)
 
     try:
-        fields = ['email', 'password', 'confirm-password', 'registration-key']
-        email, password, confirm, key = get_fields(request.form, fields)
+        fields = ['email', 'password', 'confirm-password']
+        email, password, confirm = get_fields(request.form, fields)
     except ValueError as e:
         return e.args
 
@@ -94,18 +92,14 @@ def register():
         db.close()
         return error('Passwords do not match!')
 
-    if key != config.REGISTRATION_KEY:
-        db.close()
-        return error('Invalid registration key!')
-
     hashed_pass = bcrypt.hashpw(password.encode('utf-8'), bcrypt.gensalt())
     name = email.split('@')[0]
 
-    # get the id for a student account
+    # get the id for a public account
     acc_type = db.select_columns('account_types',
                                  ['id'],
                                  ['name'],
-                                 ['student'])
+                                 ['public'])
 
     db.insert_single(
         'users',
