@@ -1,14 +1,15 @@
+import json
+
 from flask import Blueprint
+from flask import jsonify
 from flask import render_template
 from flask import request
 from flask import session
 
 from app.auth import UserRole
 from app.auth import at_least_role
-from app.helpers import error
-from app.helpers import get_fields
 from app.db_manager import sqliteManager as db
-
+from app.helpers import error
 
 create_topic = Blueprint('create_topic', __name__)
 
@@ -21,15 +22,25 @@ def create():
                                title='Create Topic')
 
     try:
-        fields = ['topic', 'topic-areas', 'details']
-        topic, areas, details = get_fields(request.form, fields)
+        data = json.loads(request.data)
+        topic = data['topic']
+        areas = [area['tag'] for area in data['topic_area']]
+        prereqs = [prereq['tag'] for prereq in data['prereqs']]
+        details = data['details']
     except ValueError as e:
         return e.args
 
-    prereqs = list(dict.fromkeys(request.form.getlist('prerequisites')))
-    prereqs = [x.lower() for x in prereqs]
+    # to make sure that "COMP" are upper case
+    prereqs = [x.upper() for x in prereqs]
 
-    areas = areas.split(',')
+    for prereq in prereqs:
+        prereq = prereq.strip()
+        course_id = db.select_columns(
+            'courses', ['id'], ['code'], [prereq]
+        )
+
+        if len(course_id) == 0:
+            return error('Sorry, you have to enter a valid course code!')
 
     db.connect()
     user_id = session['id']
@@ -42,6 +53,7 @@ def create():
 
     db.insert_single('topics', [topic, user_id, details],
                      ['name', 'supervisor', 'description'])
+
     topic_id = db.select_columns('topics', ['id'], ['name'], [topic])[0][0]
 
     for area in areas:
@@ -67,17 +79,19 @@ def create():
                          [topic_id, area_id[0][0]],
                          ['topic', 'topic_area'])
 
-    # for prereq in prereqs:
-    #
-    #     prereq = prereq.strip()
-    #     course_id = db.select_columns(
-    #         'courses', ['id'], ['code'], [prereq]
-    #         )
-    #     db.insert_single(
-    #         'prerequisites',
-    #         [0, course_id, topic_id],
-    #         ['type', 'course', 'topic']
-    #         )
+    for prereq in prereqs:
+
+        prereq = prereq.strip()
+        course_id = db.select_columns(
+            'courses', ['id'], ['code'], [prereq]
+        )
+
+        if len(course_id) != 0:
+            db.insert_single(
+                'prerequisites',
+                [0, topic_id, course_id[0][0]],
+                ['type', 'topic', 'course']
+            )
 
     db.close()
     return jsonify({'status': 'ok'})

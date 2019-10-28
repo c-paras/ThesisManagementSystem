@@ -1,6 +1,11 @@
 $('#prereqs').chips({
   placeholder: 'Add Prerequisite',
-  limit: 20
+  limit: 10
+});
+
+$('#areas').chips({
+  placeholder: 'Add Topic area',
+  limit: 10
 });
 
 function submitCreate() {
@@ -8,17 +13,19 @@ function submitCreate() {
   if (!formValid(form)) {
     return;
   }
-  const prereqs = M.Chips.getInstance($('#prereqs')).chipsData;
-  if (prereqs.length > 0) {
-    for (let i = 0; i < prereqs.length; i++) {
-      $('form').append('<input type="hidden" name="prerequisites" id="prerequisites" value="' + prereqs[i].tag + '" />');
-    }
-  }
-  makeRequest('/create_topic', form, (res) => {
-    if (res.status === 'fail') {
+  const data = {
+    "topic": $("[id='topic']").val(),
+    "topic_area": M.Chips.getInstance($('#areas')).chipsData,
+    "prereqs": M.Chips.getInstance($('#prereqs')).chipsData,
+    "details": $("[id='details']").val()
+  };
+
+  console.log(data);
+  makeRequestCustomData('/create_topic', data, (res) =>{
+    if (res.status === 'fail'){
       flash(res.message, error = true);
     } else {
-      delayToast('Topic created!', false);
+      delayToast('Topic created', false);
       window.location.href = '/home';
     }
   });
