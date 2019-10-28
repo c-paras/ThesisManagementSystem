@@ -7,6 +7,7 @@ from datetime import datetime
 from app.auth import UserRole
 from app.auth import at_least_role
 from app.queries import queries
+from app.db_manager import sqliteManager as db
 
 
 home = Blueprint('home', __name__)
@@ -27,11 +28,35 @@ def dashboard():
 
 
 def student_dashboard():
+    my_id = session['id']
+    db.connect()
+    all_materials = queries.get_user_materials(session['id'])
+
+    cur_materials = []
+    for material in all_materials:
+        now = datetime.now().timestamp()
+        # if now < material[2] or now > material[3]:
+        # if we wanted to split current, previous or
+        # future we would do the above line
+        attachments = db.select_columns(
+            'material_attachments',
+            ['path'],
+            ['id'],
+            [material[0]]
+        )
+        cur_attachments = []
+        for attachment in attachments:
+            cur_attachments.append(attachment[0])
+        cur_materials.append((material[1], cur_attachments))
+    db.close()
     return render_template('home_student.html',
-                           heading='My Dashboard', title='My Dashboard')
+                           heading='My Dashboard',
+                           title='My Dashboard',
+                           materials=cur_materials)
 
 
 def staff_dashboard():
+    db.connect()
     curr_requests = queries.get_curr_topic_requests(session['user'])
 
     # need to implement way of deciding between current and past students, best
@@ -48,6 +73,7 @@ def staff_dashboard():
     # get students who I am assessing
     assess_students = queries.get_current_assess_students(session['user'])
 
+    db.close()
     for tup_student in super_students:
         i = list(tup_student)
         i.append('Supervisor')

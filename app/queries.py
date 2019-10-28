@@ -5,8 +5,6 @@ class queries:
 
     # gets the current requests for a given supervisor's email
     def get_curr_topic_requests(email):
-        db.connect()
-
         res = db.custom_query("""
                                 SELECT stu.name, stu.email, t.name
                                 FROM users stu
@@ -21,14 +19,10 @@ class queries:
                                 WHERE sup.email = "{my_email}"
                                     AND rs.name = "pending";
                              """.format(my_email=email))
-
-        db.close()
         return res
 
     # gets the current requests for a given supervisor's email
     def get_current_super_students(email):
-        db.connect()
-
         res = db.custom_query("""
                                 SELECT stu.name, stu.email, t.name,
                                        MAX(sess.end_date)
@@ -48,14 +42,10 @@ class queries:
                                 WHERE sup.email = "{my_email}"
                                 GROUP BY stu.id;
                              """.format(my_email=email))
-
-        db.close()
         return res
 
     # gets the current requests for a given supervisor's email
     def get_current_assess_students(email):
-        db.connect()
-
         res = db.custom_query("""
                                 SELECT stu.name, stu.email, t.name,
                                        MAX(sess.end_date)
@@ -75,8 +65,6 @@ class queries:
                                 WHERE sup.email = "{my_email}"
                                 GROUP BY stu.id;
                              """.format(my_email=email))
-
-        db.close()
         return res
 
     # seares the topic_area table for an area, and returns a list of the topic
@@ -106,4 +94,57 @@ class queries:
                                 WHERE t.id = "{id}";
                              """.format(id=topic_id))
 
+        return res
+
+    def get_user_materials(user_id):
+        res = db.custom_query(
+            """
+                SELECT m.id, m.name, s.start_date, s.end_date
+                FROM users u
+                INNER JOIN enrollments e
+                    ON e.user = u.id
+                INNER JOIN course_offerings co
+                    ON co.id = e.course_offering
+                INNER JOIN sessions s
+                    ON s.id = co.session
+                INNER JOIN materials m
+                    on m.course_offering = co.id
+                WHERE u.id = "{id}";
+            """.format(id=user_id)
+        )
+        return res
+
+    def get_user_ass_sup(user_id):
+        res = db.custom_query(
+            """
+                SELECT st.assessor, t.supervisor
+                FROM users u
+                INNER JOIN student_topic st
+                    ON st.student = u.id
+                INNER JOIN topics t
+                    ON t.id = st.topic
+                WHERE u.id = "{id}";
+            """.format(id=user_id)
+        )
+        return res
+
+    def get_user_tasks(user_id):
+        res = db.custom_query(
+            """
+                SELECT
+                t.id, t.name, c.name, mm.name, t.deadline
+                FROM users u
+                INNER JOIN enrollments e
+                    ON e.user = u.id
+                INNER JOIN course_offerings co
+                    ON co.id = e.course_offering
+                INNER JOIN courses c
+                    ON c.id = co.course
+                INNER JOIN tasks t
+                    ON t.course_offering = co.id
+                INNER JOIN marking_methods mm
+                    ON mm.id = t.marking_method
+                WHERE u.id = "{id}";
+            """.format(id=user_id)
+        )
         return res

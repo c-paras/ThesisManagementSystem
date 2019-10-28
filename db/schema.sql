@@ -160,6 +160,14 @@ CREATE TABLE student_topic(
 );
 
 
+DROP TABLE IF EXISTS submission_methods;
+CREATE TABLE submission_methods(
+    id          INTEGER NOT NULL PRIMARY KEY,
+    name        TEXT NOT NULL,
+    description TEXT
+);
+
+
 DROP TABLE IF EXISTS submission_types;
 CREATE TABLE submission_types(
     file_type INTEGER NOT NULL,
@@ -190,16 +198,18 @@ CREATE TABLE submissions(
 
 DROP TABLE IF EXISTS tasks;
 CREATE TABLE tasks(
-    id              INTEGER NOT NULL PRIMARY KEY,
-    name            TEXT NOT NULL,
-    course_offering INTEGER NOT NULL,
-    deadline        INTEGER NOT NULL,
-    description     TEXT,
-    size_limit      INTEGER DEFAULT 5, -- in MB's --
-    visible         INTEGER DEFAULT 1,
-    marking_method  INTEGER DEFAULT 0,
-    word_limit      INTEGER DEFAULT 1000,
+    id                 INTEGER NOT NULL PRIMARY KEY,
+    name               TEXT NOT NULL,
+    course_offering    INTEGER NOT NULL,
+    deadline           INTEGER NOT NULL,
+    description        TEXT,
+    size_limit         INTEGER DEFAULT 5, -- in MB's --
+    visible            INTEGER DEFAULT 1,
+    submission_method  INTEGER DEFAULT 0,
+    marking_method     INTEGER DEFAULT 0,
+    word_limit         INTEGER DEFAULT 1000,
     FOREIGN KEY(marking_method) REFERENCES marking_methods(id),
+    FOREIGN KEY(submission_method) REFERENCES submission_methods(id),
     FOREIGN KEY(course_offering) REFERENCES course_offerings(id)
 );
 
