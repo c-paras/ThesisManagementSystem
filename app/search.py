@@ -148,7 +148,7 @@ def search_topic():
 
 
 @search.route('/searchChips', methods=['GET'])
-@at_least_role(UserRole.STUDENT)
+@at_least_role(UserRole.PUBLIC)
 def getTopicChips():
     db.connect()
     topic_area = db.select_columns('topic_areas', ['name'])
