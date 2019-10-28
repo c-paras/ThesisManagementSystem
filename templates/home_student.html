@@ -4,25 +4,29 @@
   <div class="row">
 
     <!-- Show student their current materials for their corses -->
-    <div class="section col s10 offset-m2">
+    <div class="section col s10 offset-s1">
       <h5>Material:</h5>
-      <div class="col s8 offset-s2">
-        <table class="highlight centered responsive-table">
-          <tbody>
-            {% for material in materials %}
-              <tr>
-                <td>{{material[0]}}</td>
-                {% for attachment in material[1] %}
-                  <td>
-                    <a href="{{ url_for('static', filename='img/chicken.jpg') }}">
-                      <i class="material-icons left">file_download</i>
-                    </a>
-                  </td>
-                {% endfor %}
-              </tr>
-            {% endfor %}
-          </tbody>
-        </table>
+      <div class="col s10 offset-s1">
+        {% if materials|length %}
+          <table class="highlight centered responsive-table">
+            <tbody>
+              {% for material in materials %}
+                <tr>
+                  <td>{{material[0]}}</td>
+                  {% for attachment in material[1] %}
+                    <td>
+                      <a href="{{ url_for('static', filename='img/chicken.jpg') }}">
+                        <i class="material-icons left">file_download</i>
+                      </a>
+                    </td>
+                  {% endfor %}
+                </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        {% else %}
+          <p>There are no course materials at this time.</p>
+        {% endif %}
       </div>
     </div>
 
@@ -30,33 +34,37 @@
     <div class="section col s10 offset-s1">
       <h5>Assessments:</h5>
       <div class="col s10 offset-s1">
-        <table class="highlight centered responsive-table">
+        {% if tasks|length %}
+          <table class="highlight centered responsive-table">
 
-          <!-- Table header -->
-          <thead>
-            <tr>
-              <th>Course</th>
-              <th>Task</th>
-              <th>Status</th>
-              <th>Supervisor Result</th>
-              <th>Assessor Result</th>
-            </tr>
-          </thead>
-
-          <!-- Table body, should be replaced with a loop when actually connected to database -->
-          <tbody>
-            {% for task in tasks %}
+            <!-- Table header -->
+            <thead>
               <tr>
-                <td>{{task[0]}}</td>
-                <td>{{task[1]}}</td>
-                <td>{{task[2]}}</td>
-                <td>{{task[3]}}</td>
-                <td>{{task[4]}}</td>
+                <th>Course</th>
+                <th>Task</th>
+                <th>Status</th>
+                <th>Supervisor Result</th>
+                <th>Assessor Result</th>
               </tr>
-            {% endfor %}
-          </tbody>
+            </thead>
 
-        </table>
+            <!-- Table body, should be replaced with a loop when actually connected to database -->
+            <tbody>
+              {% for task in tasks %}
+                <tr>
+                  <td>{{task[0]}}</td>
+                  <td>{{task[1]}}</td>
+                  <td>{{task[2]}}</td>
+                  <td>{{task[3]}}</td>
+                  <td>{{task[4]}}</td>
+                </tr>
+              {% endfor %}
+            </tbody>
+
+          </table>
+        {% else %}
+          <p>There are no assessments at this time.</p>
+        {% endif %}
       </div>
     </div>
   </div>
