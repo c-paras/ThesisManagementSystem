@@ -31,6 +31,7 @@ function makeCard(id, title, description, topics, supervisor, email) {
 function nextPage(requestedPage) {
   let cards = $.myTopicCards;
   $('#search-results').html(cards.slice(requestedPage*10 - 10, requestedPage*10));
+  $(window).scrollTop($('a#search-btn').offset().top);
 }
 
 function searchResults() {

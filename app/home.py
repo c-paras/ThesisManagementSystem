@@ -19,10 +19,14 @@ home = Blueprint('home', __name__)
 @at_least_role(UserRole.PUBLIC)
 def dashboard():
     user_type = session['acc_type']
-    is_student = user_type in ['public', 'student']
+
     # TODO: public user home page
-    if is_student:
+    if user_type == 'student':
         return student_dashboard()
+    elif user_type == 'public':
+        return render_template('home_public.html',
+                               heading='My Dashboard',
+                               title='My Dashboard')
     else:
         return staff_dashboard()
 

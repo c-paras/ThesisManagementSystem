@@ -144,11 +144,12 @@ def search_topic():
 
     return jsonify({'status': 'ok', 'topics': to_return_searches,
                     'topicsArea': to_return_topic_area,
-                    'topicSupervisor': to_return_supervisor})
+                    'topicSupervisor': to_return_supervisor,
+                    'canRequest': session['acc_type'] == 'student'})
 
 
 @search.route('/searchChips', methods=['GET'])
-@at_least_role(UserRole.STUDENT)
+@at_least_role(UserRole.PUBLIC)
 def getTopicChips():
     db.connect()
     topic_area = db.select_columns('topic_areas', ['name'])
