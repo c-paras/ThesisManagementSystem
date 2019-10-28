@@ -4,7 +4,7 @@ $('#prereqs').chips({
 });
 
 $('#areas').chips({
-  placeholder: 'Add Topic area',
+  placeholder: 'Add Topic Area',
   limit: 10
 });
 
@@ -20,9 +20,8 @@ function submitCreate() {
     "details": $("[id='details']").val()
   };
 
-  console.log(data);
   makeRequestCustomData('/create_topic', data, (res) =>{
-    if (res.status === 'fail'){
+    if (res.status === 'fail') {
       flash(res.message, error = true);
     } else {
       delayToast('Topic created', false);

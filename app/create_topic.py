@@ -80,7 +80,6 @@ def create():
                          ['topic', 'topic_area'])
 
     for prereq in prereqs:
-
         prereq = prereq.strip()
         course_id = db.select_columns(
             'courses', ['id'], ['code'], [prereq]
