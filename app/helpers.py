@@ -1,9 +1,11 @@
 import smtplib
 
-from email.mime.multipart import MIMEMultipart
-from email.mime.text import MIMEText
 from flask import jsonify
 from flask import render_template
+
+from email.mime.multipart import MIMEMultipart
+from email.mime.text import MIMEText
+from threading import Thread
 
 import config
 
@@ -48,8 +50,14 @@ def send_email(to, name, subject, messages):
     body = render_template('email.html', name=name,
                            messages=messages, url=config.SITE_HOME)
     msg.attach(MIMEText(body, 'html'))
+    Thread(target=do_email_send, args=[to, msg]).start()
 
-    # Send the email over SMTP
+
+def do_email_send(to, msg):
+    '''
+    Send an email over SMTP. This function is not meant to be called
+    directly. It is invoked by `send_email' in a new thread.
+    '''
     server = smtplib.SMTP('smtp.gmail.com', 587)
     server.starttls()
     server.login(config.SYSTEM_EMAIL, config.SYSTEM_PASSWORD)
