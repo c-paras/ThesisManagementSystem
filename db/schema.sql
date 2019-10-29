@@ -285,8 +285,6 @@ CREATE TABLE users(
     email        TEXT NOT NULL,
     password     TEXT NOT NULL,
     account_type INTEGER,
+    confirm_code TEXT,
     FOREIGN KEY(account_type) REFERENCES account_types(id)
 );
-
-
-

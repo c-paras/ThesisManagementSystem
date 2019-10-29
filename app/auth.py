@@ -17,6 +17,7 @@ from app.db_manager import sqliteManager as db
 
 import re
 import bcrypt
+import uuid
 
 import config
 
@@ -65,17 +66,6 @@ def at_least_role(role):
 
 @auth.route('/register', methods=['GET', 'POST'])
 def register():
-    # sample email for testing
-    url = config.SITE_HOME
-    send_email(to='',  # TODO
-               name='John Smith',
-               subject='Thesis B Demo Marks',
-               messages=[
-                   'Your submission for assessment item "Thesis B' +
-                   ' Demo" in the course COMP4952 has been marked.',
-                   f'You can view your results here: {url}.'
-               ])
-
     if request.method == 'GET':
         return render_template('register.html',
                                title='Register', hide_navbar=True)
@@ -113,10 +103,19 @@ def register():
                                  ['name'],
                                  ['public'])
 
+    confirm_code = uuid.uuid1()
+    activation_link = 'TODO'
+    send_email(to=email, name='John Smith',
+               subject='Confirm Account Registration', messages=[
+                   'You recently registered for an account on TMS.',
+                   f'To activiate your account, click ' +
+                   '<a href="{activation_link}">here</a>.'
+               ])
+
     db.insert_single(
         'users',
-        [name, hashed_pass, email, acc_type[0][0]],
-        ['name', 'password', 'email', 'account_type']
+        [name, hashed_pass, email, acc_type[0][0], str(confirm_code)],
+        ['name', 'password', 'email', 'account_type', 'confirm_code']
     )
     db.close()
     return jsonify({'status': 'ok'})
