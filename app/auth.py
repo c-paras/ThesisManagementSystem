@@ -1,5 +1,6 @@
 from flask import abort
 from flask import Blueprint
+from flask import flash
 from flask import redirect
 from flask import render_template
 from flask import request
@@ -134,6 +135,7 @@ def confirm():
 
     if len(stored_code) and confirm_code == stored_code[0][0]:
         db.update_rows('users', [''], ['confirm_code'], ['name'], [user])
+        flash('Account activated! You can now log in.', 'success')
     db.close()
     return redirect(url_for('.login'))
 

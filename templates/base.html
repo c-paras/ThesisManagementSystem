@@ -139,6 +139,17 @@
       </script>
     {% endif %}
 
+    <!-- Render flashed messages from the backend -->
+    <script type="text/javascript">
+      {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+          {% for type, message in messages %}
+            flash('{{ message }}', '{{ type }}' == 'error')
+          {% endfor %}
+        {% endif %}
+      {% endwith %}
+    </script>
+
     <!-- Include page-specific JavaScript automatically -->
     {% set js_file = 'js/' ~ self._TemplateReference__context.name|replace('html', 'js') %}
     {% set js_include = url_for('static', filename=js_file) %}
