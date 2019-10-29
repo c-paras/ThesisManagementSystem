@@ -110,9 +110,7 @@ def register():
 
     # get the id for a public account
     acc_type = db.select_columns('account_types',
-                                 ['id'],
-                                 ['name'],
-                                 ['public'])
+                                 ['id'], ['name'], ['public'])
 
     confirm_code = uuid.uuid1()
     activation_link = url_for('.confirm', user=name,
