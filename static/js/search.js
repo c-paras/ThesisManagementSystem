@@ -121,7 +121,7 @@ function loadPage() {
     });
 
     $('#supervisor').chips({
-      placeholder: 'Enter a topic',
+      placeholder: 'Enter a supervisor',
       autocompleteOptions: {
         data: res.chipsSuper,
         limit: 20,
