@@ -14,7 +14,7 @@ from app.queries import queries
 manage_topic = Blueprint('manage_topic', __name__)
 
 
-@manage_topic.route('/manage_topic', methods=['GET'])
+@manage_topic.route('/manage_topic', methods=['GET', 'POST'])
 @at_least_role(UserRole.STAFF)
 def manage():
     db.connect()
