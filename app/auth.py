@@ -153,7 +153,8 @@ def login():
 
     db.connect()
     res = db.select_columns('users',
-                            ['password', 'account_type', 'id', 'name'],
+                            ['password', 'account_type',
+                             'id', 'name', 'confirm_code'],
                             ['email'],
                             [email])
 
@@ -164,6 +165,9 @@ def login():
     if not bcrypt.checkpw(password.encode('utf-8'), hashed_password[0]):
         db.close()
         return error('Incorrect password!')
+    if res[0][4] != '':
+        db.close()
+        return error('You must first confirm your account!')
 
     # get the current user's account type
     acc_type = db.select_columns('account_types',
