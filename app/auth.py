@@ -12,6 +12,7 @@ from functools import wraps
 
 from app.helpers import error
 from app.helpers import get_fields
+from app.helpers import send_email
 from app.db_manager import sqliteManager as db
 
 import re
@@ -64,6 +65,14 @@ def at_least_role(role):
 
 @auth.route('/register', methods=['GET', 'POST'])
 def register():
+    # sample email for testing
+    url = config.SITE_HOME
+    send_email(to='',  # TODO
+               subject='Thesis A Demo Marks',
+               body='Your submission for assessment item "Thesis A Demo"' +
+               ' in the course COMP4951 has been marked.\n' +
+               f'You can view your results here: {url}.')
+
     if request.method == 'GET':
         return render_template('register.html',
                                title='Register', hide_navbar=True)

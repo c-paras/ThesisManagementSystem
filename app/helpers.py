@@ -1,4 +1,10 @@
+import smtplib
+
+from email.mime.multipart import MIMEMultipart
+from email.mime.text import MIMEText
 from flask import jsonify
+
+import config
 
 
 def get_fields(form, fields):
@@ -23,3 +29,23 @@ def error(msg):
     if not (msg.endswith('.') or msg.endswith('!')):
         msg += '!'
     return jsonify({'status': 'fail', 'message': msg})
+
+
+def send_email(to, subject, body):
+    '''
+    Send an email to the specified address.
+    '''
+
+    # Construct email
+    msg = MIMEMultipart()
+    msg['From'] = config.SYSTEM_EMAIL
+    msg['To'] = to
+    msg['Subject'] = subject
+    msg.attach(MIMEText(body, 'plain'))
+
+    # Send the email over SMTP
+    server = smtplib.SMTP('smtp.gmail.com', 587)
+    server.starttls()
+    server.login(config.SYSTEM_EMAIL, config.SYSTEM_PASSWORD)
+    server.sendmail(config.SYSTEM_EMAIL, to, msg.as_string())
+    server.quit()
