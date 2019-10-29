@@ -91,7 +91,6 @@ def create():
 
     # now insert prereqs
     for i in range(len(course_ids)):
-
         db.insert_single(
             'prerequisites',
             [0, topic_id, course_ids[i]],

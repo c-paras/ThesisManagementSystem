@@ -5,6 +5,9 @@
 function flash(msg, error = false) {
   M.Toast.dismissAll();
   const color = (error) ? 'red' : 'blue';
+  if (!(msg.endsWith('.') || msg.endsWith('!'))) {
+    msg += '!';
+  }
   M.toast({html: msg, classes: `${color} darken-1 rounded`});
 }
 
