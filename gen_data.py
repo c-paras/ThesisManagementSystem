@@ -572,16 +572,17 @@ def gen_submissions():
 
 if __name__ == '__main__':
     db.connect()
-    for tbl in ['users', 'courses', 'topics', 'topic_areas',
-                'tasks', 'sessions', 'submission_types',
-                'course_offerings', 'enrollments',
-                'student_topic', 'topic_requests',
-                'topic_to_area', 'course_roles', 'account_types',
-                'file_types', 'marking_methods', 'request_statuses',
-                'materials', 'material_attachments',
-                'task_criteria', 'marks', 'submission_methods',
-                'submissions']:
-        db.delete_all(tbl)
+
+    print('Dropping all existing tables...')
+    tables = db.custom_query('''
+        SELECT name
+        FROM sqlite_master
+        WHERE type = 'table'
+        AND name NOT LIKE 'sqlite_%';
+    ''')
+    for tbl in tables:
+        db.delete_all(tbl[0])
+
     db.init_db()
 
     random.seed(42)
