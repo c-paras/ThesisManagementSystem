@@ -29,6 +29,7 @@ def gen_users():
         types = get_all_account_types()
         password = bcrypt.hashpw('password1'.encode('utf-8'), bcrypt.gensalt())
         query = []
+        timestamp = 946645140
 
         # student users
         students = []
@@ -38,8 +39,9 @@ def gen_users():
             name = names[random.randrange(0, 500)]['name']
             query.append(('users',
                           [name, f'{zid}@unsw.edu.au',
-                           password, types['student']],
-                          ['name', 'email', 'password', 'account_type']))
+                           password, types['student'], timestamp],
+                          ['name', 'email', 'password',
+                           'account_type', 'date_created']))
 
         # public users
         public = []
@@ -49,8 +51,9 @@ def gen_users():
             name = names[random.randrange(0, 500)]['name']
             query.append(('users',
                           [name, f'{zid}@unsw.edu.au',
-                           password, types['public']],
-                          ['name', 'email', 'password', 'account_type']))
+                           password, types['public'], timestamp],
+                          ['name', 'email', 'password',
+                           'account_type', 'date_created']))
 
         # supervisor/assessor users
         supervisors = []
@@ -60,8 +63,9 @@ def gen_users():
             name = names[random.randrange(0, 500)]['name']
             query.append(('users',
                           [name, f'{zid}@unsw.edu.au',
-                           password, types['supervisor']],
-                          ['name', 'email', 'password', 'account_type']))
+                           password, types['supervisor'], timestamp],
+                          ['name', 'email', 'password',
+                           'account_type', 'date_created']))
 
         # course admin users
         course_admin = []
@@ -71,8 +75,9 @@ def gen_users():
             name = names[random.randrange(0, 500)]['name']
             query.append(('users',
                           [name, f'{zid}@unsw.edu.au',
-                           password, types['course_admin']],
-                          ['name', 'email', 'password', 'account_type']))
+                           password, types['course_admin'], timestamp],
+                          ['name', 'email', 'password',
+                           'account_type', 'date_created']))
 
         db.insert_multiple(query)
 

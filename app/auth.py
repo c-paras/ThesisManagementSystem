@@ -8,6 +8,7 @@ from flask import session
 from flask import jsonify
 from flask import url_for
 
+from datetime import datetime
 from enum import Enum
 from functools import wraps
 
@@ -81,10 +82,19 @@ def register():
         return error(f'Invalid email format!<br>{config.EMAIL_FORMAT_ERROR}')
 
     db.connect()
-    res = db.select_columns('users', ['email'], ['email'], [email])
+    res = db.select_columns('users', ['email', 'date_created', 'confirm_code'],
+                            ['email'], [email])
+
+    now = datetime.now().timestamp()
     if len(res):
-        db.close()
-        return error('Email has already been registered!')
+        if res[0][2] != '' and res[0][1] + config.ACCOUNT_EXPIRY < now:
+            # expire unactivated accounts every 24 hours
+            db.delete_rows('users', ['email'], [email])
+            db.close()
+            db.connect()
+        else:
+            db.close()
+            return error('This email has already been registered!')
 
     if len(password) < 8:
         msg = 'Password must be at least 8 characters long!'
@@ -111,13 +121,15 @@ def register():
                messages=[
                    'You recently registered for an account on TMS.',
                    'To activiate your account, click ' +
-                   f'<a href="{activation_link}">here</a>.'
+                   f'<a href="{activation_link}">here</a>.',
+                   'This link will expire in 24 hours.'
                ])
 
     db.insert_single(
         'users',
-        [name, hashed_pass, email, acc_type[0][0], str(confirm_code)],
-        ['name', 'password', 'email', 'account_type', 'confirm_code']
+        [name, hashed_pass, email, acc_type[0][0], str(confirm_code), now],
+        ['name', 'password', 'email', 'account_type', 'confirm_code',
+         'date_created']
     )
     db.close()
     return jsonify({'status': 'ok'})
@@ -129,11 +141,19 @@ def confirm():
     user = request.args.get('user', '')
     db.connect()
 
-    # get the user's confirm code
-    stored_code = db.select_columns('users', ['confirm_code'],
-                                    ['name'], [user])
+    # get the user's confirm code & creation date
+    res = db.select_columns('users', ['confirm_code', 'date_created'],
+                            ['name'], [user])
 
-    if len(stored_code) and confirm_code == stored_code[0][0]:
+    expired = False
+    now = datetime.now().timestamp()
+    if len(res) and res[0][1] + config.ACCOUNT_EXPIRY < now:
+        expired = True  # expire unactivated accounts every 24 hours
+        db.delete_rows('users', ['name'], [user])
+        flash('This activation link has expired!<br>' +
+              'You must register your account again.', 'error')
+    if not expired and len(res) and confirm_code == res[0][0]:
+        # clear confirm code to "mark" account as activated
         db.update_rows('users', [''], ['confirm_code'], ['name'], [user])
         flash('Account activated! You can now log in.', 'success')
     db.close()
