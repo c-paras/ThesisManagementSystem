@@ -104,12 +104,13 @@ def register():
                                  ['public'])
 
     confirm_code = uuid.uuid1()
-    activation_link = 'TODO'
-    send_email(to=email, name='John Smith',
-               subject='Confirm Account Registration', messages=[
+    activation_link = url_for('.confirm', user=name,
+                              confirm_code=confirm_code, _external=True)
+    send_email(to=email, name=email, subject='Confirm Account Registration',
+               messages=[
                    'You recently registered for an account on TMS.',
-                   f'To activiate your account, click ' +
-                   '<a href="{activation_link}">here</a>.'
+                   'To activiate your account, click ' +
+                   f'<a href="{activation_link}">here</a>.'
                ])
 
     db.insert_single(
@@ -119,6 +120,22 @@ def register():
     )
     db.close()
     return jsonify({'status': 'ok'})
+
+
+@auth.route('/confirm', methods=['GET'])
+def confirm():
+    confirm_code = request.args.get('confirm_code', '')
+    user = request.args.get('user', '')
+    db.connect()
+
+    # get the user's confirm code
+    stored_code = db.select_columns('users', ['confirm_code'],
+                                    ['name'], [user])
+
+    if len(stored_code) and confirm_code == stored_code[0][0]:
+        db.update_rows('users', [''], ['confirm_code'], ['name'], [user])
+    db.close()
+    return redirect(url_for('.login'))
 
 
 @auth.route('/login', methods=['GET', 'POST'])

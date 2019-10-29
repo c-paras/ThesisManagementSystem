@@ -19,6 +19,7 @@ TOPIC_REQUEST_TEXT = 'Dear HEADER\n\n' + \
     'Kind Regards\nFOOTER'
 
 SITE_HOME = 'http://localhost:5000/'
+SERVER_NAME = 'localhost:5000'
 
 SYSTEM_EMAIL = 'tms.thesis.management.system@gmail.com'
 SYSTEM_PASSWORD = 'Thesis000'
