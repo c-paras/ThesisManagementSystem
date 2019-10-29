@@ -1,0 +1,61 @@
+{% extends "base.html" %}
+
+{% block body %}
+  <div class="row">
+    <div class="section col s12">
+      <h5>Current Topics:</h5>
+      <form class="col s12" id="manage-topic-form">
+        <div class="right">
+          <a class="waves-effect waves-light btn" id="checkall-btn" onclick="submitCreate()">Disable All Topics
+            <i class="material-icons right">send</i>
+          </a>
+        </div>
+        {% if curr_topics|length %}
+          <table class="striped centered responsive-table">
+
+            <!-- Table header -->
+            <thead>
+              <tr>
+                <th>Title</th>
+                <th>Topic Areas</th>
+                <th>Available</th>
+              </tr>
+            </thead>
+
+            <tbody>
+              {% for topic in curr_topics %}
+                <tr>
+                  <td>{{ topic[0] }}</td>
+                  <td>{{ topic[1] }}</td>
+                  <td>
+                    {% if topic[2] == 1 %}
+                      <label>
+                        <input type="checkbox" id="{{ topic[0] }}" class="filled-in" name="{{ topic[0] }}"
+                               checked="checked"/>
+                        <span></span>
+                      </label>
+                    {% else %}
+                      <label>
+                        <input type="checkbox" id="{{ topic[0] }}" class="filled-in" name="{{ topic[0] }}"/>
+                        <span></span>
+                      </label>
+                    {% endif %}
+                  </td>
+                </tr>
+              {% endfor %}
+            </tbody>
+
+          </table>
+        {% else %}
+          <p>You have no topics at this time</p>
+        {% endif %}
+        <div class="center">
+          <a class="waves-effect waves-light btn" id="save-btn" onclick="submitManage()">Save Changes
+            <i class="material-icons right">send</i>
+          </a>
+        </div>
+
+      </form>
+    </div>
+  </div>
+{% endblock %}
