@@ -68,10 +68,13 @@ def register():
     # sample email for testing
     url = config.SITE_HOME
     send_email(to='',  # TODO
-               subject='Thesis A Demo Marks',
-               body='Your submission for assessment item "Thesis A Demo"' +
-               ' in the course COMP4951 has been marked.\n' +
-               f'You can view your results here: {url}.')
+               name='John Smith',
+               subject='Thesis B Demo Marks',
+               messages=[
+                   'Your submission for assessment item "Thesis B' +
+                   ' Demo" in the course COMP4952 has been marked.',
+                   f'You can view your results here: {url}.'
+               ])
 
     if request.method == 'GET':
         return render_template('register.html',

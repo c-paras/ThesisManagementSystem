@@ -3,6 +3,7 @@ import smtplib
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
 from flask import jsonify
+from flask import render_template
 
 import config
 
@@ -31,17 +32,22 @@ def error(msg):
     return jsonify({'status': 'fail', 'message': msg})
 
 
-def send_email(to, subject, body):
+def send_email(to, name, subject, messages):
     '''
-    Send an email to the specified address.
+    Send an email to the specified address. Use a base template
+    for the email structure and attach any messages to the body
+    of the HTML email, as well as the person's name and subject.
     '''
 
-    # Construct email
+    # Construct the email and headers
     msg = MIMEMultipart()
     msg['From'] = config.SYSTEM_EMAIL
     msg['To'] = to
-    msg['Subject'] = subject
-    msg.attach(MIMEText(body, 'plain'))
+    msg['Subject'] = '{} | TMS'.format(subject)
+    msg.add_header('Content-Type', 'text/html')
+    body = render_template('email.html', name=name,
+                           messages=messages, url=config.SITE_HOME)
+    msg.attach(MIMEText(body, 'html'))
 
     # Send the email over SMTP
     server = smtplib.SMTP('smtp.gmail.com', 587)
