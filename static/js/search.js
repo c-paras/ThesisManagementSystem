@@ -1,3 +1,5 @@
+let canRequest;
+
 function makeCard(id, title, description, topics, supervisor, email) {
   const card = `<div class="row">\
   <div class="col s10 offset-m1">\
@@ -28,10 +30,23 @@ function makeCard(id, title, description, topics, supervisor, email) {
   return card;
 }
 
+function updateCanRequest() {
+  if (!canRequest) {
+    $('[name="request-btn"]').each(function () {
+      $(this).attr('href', '#!');
+      $(this).prop('onclick', null);
+      $(this).click(function () {
+        flash('Only students enrolled in a thesis course may request a topic!', error = true);
+      });
+    });
+  }
+}
+
 function nextPage(requestedPage) {
   let cards = $.myTopicCards;
   $('#search-results').html(cards.slice(requestedPage*10 - 10, requestedPage*10));
   $(window).scrollTop($('a#search-btn').offset().top);
+  updateCanRequest();
 }
 
 function searchResults() {
@@ -44,17 +59,19 @@ function searchResults() {
     "searchTerm": $("[id='search-input']").val(),
     "checkbox": $("[id='checkbox-vis']").is(':checked'),
     "topicArea": M.Chips.getInstance($('#topics')).chipsData,
-    "supervisor":  M.Chips.getInstance($('#supervisor')).chipsData
+    "supervisor": M.Chips.getInstance($('#supervisor')).chipsData
   };
 
-  makeRequestCustomData('/search', data, (res) => {
+  makePOSTRequest('/search', data, (res) => {
     if (res.status === 'fail') {
       flash(res.message, error = true);
     } else {
       let cards = [];
       for (let i = 0; i < res.topics.length; i++) {
         cards.push(makeCard(res.topics[i][0], res.topics[i][1],
-          res.topics[i][3], res.topicsArea[i].join(', '), res.topicSupervisor[i][0][0], res.topicSupervisor[i][0][1]));
+          res.topics[i][3], res.topicsArea[i].join(', '),
+          res.topicSupervisor[i][0][0], res.topicSupervisor[i][0][1])
+        );
       }
 
       $("[id='tagsTopic']").each((function () {
@@ -64,13 +81,12 @@ function searchResults() {
       $("[id='tagsSupervisor']").each((function () {
         $(this).val('');
       }));
-      
+
       if (res.topics.length > 0) {
         $('#search-title').html('Search Results (found ' + res.topics.length + ' matching topics)');
       } else {
         $('#search-title').html('Your search returned no matching topics');
       }
-
 
       $.myTopicCards = cards;
 
@@ -79,37 +95,22 @@ function searchResults() {
       $('#page').html('');
       $('#page').materializePagination({
         align: 'center',
-        lastPage:  Math.ceil(cards.length/10),
-        firstPage:  1,
+        lastPage: Math.ceil(cards.length/10),
+        firstPage: 1,
         useUrlParameter: false,
-        onClickCallback: function(requestedPage){
-            nextPage(requestedPage);
+        onClickCallback: function(requestedPage) {
+          nextPage(requestedPage);
         }
       });
 
-      if (!res.canRequest) {
-        $('[name="request-btn"]').each(function () {
-          $(this).attr('href', '#!');
-          $(this).prop('onclick', null);
-          $(this).click(function () {
-            flash('Only students enrolled in a thesis course may request a topic!', error = true);
-          });
-        });
-      }
+      canRequest = res.canRequest;
+      updateCanRequest();
     }
   });
 }
 
 function loadPage() {
-  fetch('/searchChips', {
-    headers: {
-      'Content-Type': 'application/x-www-form-urlencoded',
-      'Accept': 'application/json'
-    },
-    method: 'GET',
-  })
-  .then(res => res.json())
-  .then((res) => {
+  makeGETRequest('/search_chips', (res) => {
 
     $('#topics').chips({
       placeholder: 'Enter a topic',
