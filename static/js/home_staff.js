@@ -12,7 +12,7 @@ function openRequestModal(studentId, topicId) {
         'topic_id': topicId
     };
 
-    makeRequestCustomData('/lookup_request', data, (res) => {
+    makePOSTRequest('/lookup_request', data, (res) => {
         if(res.status === 'fail') {
             flash(res.message, error = true);
             return;
