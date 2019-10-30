@@ -71,7 +71,7 @@
                   </div>
                 </form>
               </li>
-              <li><a href="/search">Advanced Search</a></li>
+              <li><a onclick="searchResultsNavBar()">Advanced Search</a></li>
               {% if session['acc_type'] == 'supervisor' or session['acc_type'] == 'course_admin' %}
                 <li>
                   <a class="dropdown-trigger" href="#!" data-target="nav-bar-dropdown-topics">
