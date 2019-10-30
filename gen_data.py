@@ -244,7 +244,13 @@ def gen_tasks():
                                          ['id'],
                                          [session_id])
 
-                due = random.randrange(date[0][0], date[0][1])
+                due = datetime.datetime.fromtimestamp(
+                                random.randrange(date[0][0], date[0][1])
+                                ).replace(hour=23,
+                                          minute=59,
+                                          second=59
+                                          ).timestamp()
+
                 db.insert_single(
                     'tasks',
                     [t['name'], offer_id, due, t['description'],
@@ -498,12 +504,12 @@ def gen_task_critera():
         queries = []
         queries.append((
             'task_criteria',
-            [task[0], 'content', 80],
+            [task[0], 'Content', 80],
             ['task', 'name', 'max_mark']
         ))
         queries.append((
             'task_criteria',
-            [task[0], 'presentation', 20],
+            [task[0], 'Presentation', 20],
             ['task', 'name', 'max_mark']
         ))
         db.insert_multiple(queries)
