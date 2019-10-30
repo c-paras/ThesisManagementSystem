@@ -154,7 +154,8 @@ def staff_dashboard():
     # get students who I am assessing
     assess_students = queries.get_current_assess_students(session['user'])
 
-    all_supervisors = queries.get_users_of_type('supervisor')
+    all_supervisors = filter(lambda s: s['id'] != session['id'],
+                             queries.get_users_of_type('supervisor'))
 
     for tup_student in super_students:
         i = list(tup_student)
