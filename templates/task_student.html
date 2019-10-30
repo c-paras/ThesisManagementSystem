@@ -59,7 +59,7 @@
                   <td>{{task[3]}}</td>
                   <td>{{task[4]}}</td>
                   <td>
-                    <a class="waves-effect waves-light btn-small" href="{{ url_for('tasks.view_task', tID=task[5]) }}">View Task</a>
+                    <a class="waves-effect waves-light btn-small" href="{{ url_for('home.dashboard', tID=task[5]) }}">View Task</a>
                   </td>
                 </tr>
               {% endfor %}
