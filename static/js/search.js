@@ -59,10 +59,10 @@ function searchResults() {
     "searchTerm": $("[id='search-input']").val(),
     "checkbox": $("[id='checkbox-vis']").is(':checked'),
     "topicArea": M.Chips.getInstance($('#topics')).chipsData,
-    "supervisor":  M.Chips.getInstance($('#supervisor')).chipsData
+    "supervisor": M.Chips.getInstance($('#supervisor')).chipsData
   };
 
-  makeRequestCustomData('/search', data, (res) => {
+  makePOSTRequest('/search', data, (res) => {
     if (res.status === 'fail') {
       flash(res.message, error = true);
     } else {
@@ -81,13 +81,12 @@ function searchResults() {
       $("[id='tagsSupervisor']").each((function () {
         $(this).val('');
       }));
-      
+
       if (res.topics.length > 0) {
         $('#search-title').html('Search Results (found ' + res.topics.length + ' matching topics)');
       } else {
         $('#search-title').html('Your search returned no matching topics');
       }
-
 
       $.myTopicCards = cards;
 
@@ -96,11 +95,11 @@ function searchResults() {
       $('#page').html('');
       $('#page').materializePagination({
         align: 'center',
-        lastPage:  Math.ceil(cards.length/10),
-        firstPage:  1,
+        lastPage: Math.ceil(cards.length/10),
+        firstPage: 1,
         useUrlParameter: false,
-        onClickCallback: function(requestedPage){
-            nextPage(requestedPage);
+        onClickCallback: function(requestedPage) {
+          nextPage(requestedPage);
         }
       });
 
@@ -111,15 +110,7 @@ function searchResults() {
 }
 
 function loadPage() {
-  fetch('/searchChips', {
-    headers: {
-      'Content-Type': 'application/x-www-form-urlencoded',
-      'Accept': 'application/json'
-    },
-    method: 'GET',
-  })
-  .then(res => res.json())
-  .then((res) => {
+  makeGETRequest('/search_chips', (res) => {
 
     $('#topics').chips({
       placeholder: 'Enter a topic',
