@@ -30,7 +30,7 @@ function openRequestModal(studentId, topicId) {
         $('#topic-name').text(res.topicName);
 
         const d = new Date(res.reqDate);
-        $('#date-requested').text(d.toLocaleString());
+        $('#date-requested').text(d.toLocaleDateString() + ' at ' + d.toLocaleTimeString());
         toggleViewAssessor();
         const modal = M.Modal.getInstance($('#request-modal'));
         modal.open();
@@ -53,7 +53,6 @@ function submitRequest() {
         location.reload();
     });
 }
-
 
 $(function() {
     // Initialise materalize style select statements
