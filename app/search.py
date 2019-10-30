@@ -142,10 +142,31 @@ def search_topic():
                                                       ['name', 'email'],
                                                       ['id'], [topics[2]]))
 
+    preqs = []
+    for topics in to_return_searches:
+        preqs.append(db.select_columns('prerequisites',
+                                       ['course'],
+                                       ['topic'], [topics[0]]))
+
+    preqs_course = []
+    print(preqs)
+    for pre in preqs:
+        if len(pre) == 0:
+            preqs_course.append([])
+        else:
+            temp = []
+            for course in pre:
+                print(course)
+                temp.append(db.select_columns('courses',
+                                              ['code'],
+                                              ['id'], [course[0]])[0][0])
+            preqs_course.append(temp)
+    print(preqs_course)
     return jsonify({'status': 'ok', 'topics': to_return_searches,
                     'topicsArea': to_return_topic_area,
                     'topicSupervisor': to_return_supervisor,
-                    'canRequest': session['acc_type'] == 'student'})
+                    'canRequest': session['acc_type'] == 'student',
+                    'preqs': preqs_course})
 
 
 @search.route('/search_chips', methods=['GET'])
