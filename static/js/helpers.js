@@ -72,10 +72,6 @@ function makeRequestCustomData(endpoint, data, callback) {
   .then(callback);
 }
 
-function getResultsSearchBar() {
-  console.log($("#search-bar").val())
-}
-
 /*
  * Load toast message into localStorage for display on subsequent page load.
  */

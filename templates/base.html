@@ -62,33 +62,33 @@
               </div>
             </a>
             <ul class="right hide-on-med-and-down">
-              <li>    
+              <li>
                 <form>
                   <div class="input-field">
                     <input id="search-bar" type="search" required onclick="searchResults()">
                     <label class="label-icon" for="search"><i class="material-icons">search</i></label>
                     <i class="material-icons">close</i>
-                    </div>
-                </form>       
-                </li>
+                  </div>
+                </form>
+              </li>
               <li><a href="/search">Advanced Search</a></li>
               {% if session['acc_type'] == 'supervisor' or session['acc_type'] == 'course_admin' %}
-              <li>
-                <a class="dropdown-trigger" href="#!" data-target="nav-bar-dropdown-topics">
-                   Topics
-                  <i class="material-icons right">arrow_drop_down</i>
-                </a>
-              </li>
+                <li>
+                  <a class="dropdown-trigger" href="#!" data-target="nav-bar-dropdown-topics">
+                    Topics
+                    <i class="material-icons right">arrow_drop_down</i>
+                  </a>
+                </li>
               {% endif %}
 
               {% if session['acc_type'] == 'course_admin' %}
-              <li>
-                <a class="dropdown-trigger" href="#!" data-target="nav-bar-dropdown-courses">
-                   Courses
-                  <i class="material-icons right">arrow_drop_down</i>
-                </a>
-              </li>
-              <li><a href="#!">Add staff</a></li>
+                <li>
+                  <a class="dropdown-trigger" href="#!" data-target="nav-bar-dropdown-courses">
+                    Courses
+                    <i class="material-icons right">arrow_drop_down</i>
+                  </a>
+                </li>
+                <li><a href="#!">Add staff</a></li>
               {% endif %}
               <li>
                 <a class="dropdown-trigger" href="#!" data-target="nav-bar-dropdown">
