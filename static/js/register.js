@@ -7,7 +7,10 @@ function submitRegister() {
     if (res.status === 'fail') {
       flash(res.message, error = true);
     } else {
-      delayToast('Account created!', false);
+      delayToast(
+        'Account created!<br>You have been sent an activation email.',
+        false
+      );
       window.location.href = '/login';
     }
   });
