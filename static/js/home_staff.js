@@ -37,11 +37,12 @@ function openRequestModal(studentId, topicId) {
     });
 }
 
-function submitRequest() {
+function sendResponse() {
     const form = $('#respond-form');
     const assessor = form.find('select[name=assessor]');
-    if($('#accept-check').prop('checked') && assessor.val() === null) {
-        flash('Must select assessor', true);
+    const accepted = $('#accept-check').prop('checked');
+    if(accepted && assessor.val() === null) {
+        flash('You must select assessor!', true);
         return;
     }
     makeRequest('/respond_request', form, (res) => {
@@ -49,7 +50,11 @@ function submitRequest() {
             flash(res.message, error = true);
             return;
         }
-        delayToast('Response sent');
+        if(accepted) {
+            delayToast('Request approved!<br>Student has been notified');
+        } else {
+            delayToast('Request rejected!<br>Student has been notified');
+        }
         location.reload();
     });
 }
