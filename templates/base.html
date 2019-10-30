@@ -29,23 +29,22 @@
     {% if not hide_navbar %}
       <!-- Dropdown -->
       <ul id="nav-bar-dropdown" class="dropdown-content">
-        <li><a href="/search">Search Topics</a></li>
-
-        {% if session['acc_type'] == 'supervisor' or session['acc_type'] == 'course_admin' %}
-          <li><a href="/create_topic">Create Topic</a></li>
-          <li><a href="#!">Manage Topics</a></li>
-        {% endif %}
-
-        {% if session['acc_type'] == 'course_admin' %}
-          <li><a href="#!">Create Course</a></li>
-          <li><a href="#!">Manage Course</a></li>
-          <li><a href="#!">Add Staff</a></li>
-        {% endif %}
-
-        <li class="divider"></li>
-
         <li><a href="#!">Change Password</a></li>
         <li><a href="/logout">Logout</a></li>
+      </ul>
+
+      <ul id="nav-bar-dropdown-search" class="dropdown-content">
+        <li><a href="/search">Search Topics</a></li>
+      </ul>
+
+      <ul id="nav-bar-dropdown-topics" class="dropdown-content">
+        <li><a href="/search"><h5>Create Topics</h5></a></li>
+        <li><a href="/search"><h5>Manage Topics</h5></a></li>
+      </ul>
+
+      <ul id="nav-bar-dropdown-courses" class="dropdown-content">
+        <li><a href="/search"><h5>Create Course</h5></a></li>
+        <li><a href="/search"><h5>Manage Course</h5></a></li>
       </ul>
 
       <!-- Navigation -->
@@ -63,6 +62,34 @@
               </div>
             </a>
             <ul class="right hide-on-med-and-down">
+              <li>    
+                <form>
+                  <div class="input-field">
+                    <input id="search-bar" type="search" required onclick="searchResults()">
+                    <label class="label-icon" for="search"><i class="material-icons">search</i></label>
+                    <i class="material-icons">close</i>
+                    </div>
+                </form>       
+                </li>
+              <li><a href="/search">Advanced Search</a></li>
+              {% if session['acc_type'] == 'supervisor' or session['acc_type'] == 'course_admin' %}
+              <li>
+                <a class="dropdown-trigger" href="#!" data-target="nav-bar-dropdown-topics">
+                   Topics
+                  <i class="material-icons right">arrow_drop_down</i>
+                </a>
+              </li>
+              {% endif %}
+
+              {% if session['acc_type'] == 'course_admin' %}
+              <li>
+                <a class="dropdown-trigger" href="#!" data-target="nav-bar-dropdown-courses">
+                   Courses
+                  <i class="material-icons right">arrow_drop_down</i>
+                </a>
+              </li>
+              <li><a href="#!">Add staff</a></li>
+              {% endif %}
               <li>
                 <a class="dropdown-trigger" href="#!" data-target="nav-bar-dropdown">
                   <i class="material-icons left">account_circle</i>
