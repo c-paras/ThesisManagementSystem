@@ -20,7 +20,6 @@ home = Blueprint('home', __name__)
 def dashboard():
     user_type = session['acc_type']
 
-    # TODO: public user home page
     if user_type == 'student':
         return student_dashboard()
     elif user_type == 'public':
@@ -32,7 +31,6 @@ def dashboard():
 
 
 def student_dashboard():
-    my_id = session['id']
     db.connect()
     all_materials = queries.get_user_materials(session['id'])
 
@@ -52,11 +50,84 @@ def student_dashboard():
         for attachment in attachments:
             cur_attachments.append(attachment[0])
         cur_materials.append((material[1], cur_attachments))
+
+    assessor = -1
+    supervisor = -1
+    markers = queries.get_user_ass_sup(session['id'])
+    if len(markers) > 0:
+        assessor = markers[0][0]
+        supervisor = markers[0][1]
+
+    tasks = []
+    my_tasks = queries.get_user_tasks(session['id'])
+    for task in my_tasks:
+        status = get_sub_status(session['id'], task[0])
+        if 'approval' in task[3]:
+            tasks.append((
+                task[2], task[1], status, '-', '-'
+            ))
+        else:
+            criteria = db.select_columns(
+                'task_criteria', ['id', 'max_mark'], ['task'], [task[0]]
+            )
+            total_max_mark = 0
+            supervisor_mark = 0
+            assessor_mark = 0
+            for c in criteria:
+                total_max_mark += c[1]
+                if assessor is not None and assessor != -1:
+                    mark = db.select_columns(
+                        'marks', ['mark'],
+                        ['criteria', 'student', 'marker'],
+                        [c[0], session['id'], assessor]
+                    )
+                    if len(mark) != 0:
+                        assessor_mark += mark[0][0]
+                    else:
+                        assessor_mark = -1
+                if supervisor is not None and supervisor != -1:
+                    mark = db.select_columns(
+                        'marks', ['mark'],
+                        ['criteria', 'student', 'marker'],
+                        [c[0], session['id'], supervisor]
+                    )
+                    if len(mark) != 0:
+                        supervisor_mark += mark[0][0]
+                    else:
+                        supervisor_mark = -1
+            if supervisor_mark <= 0:
+                supervisor_mark = '-'
+            if assessor_mark <= 0:
+                assessor_mark = '-'
+            tasks.append((
+                task[2], task[1], status, supervisor_mark, assessor_mark
+            ))
+
     db.close()
     return render_template('home_student.html',
                            heading='My Dashboard',
                            title='My Dashboard',
-                           materials=cur_materials)
+                           materials=cur_materials,
+                           tasks=tasks)
+
+
+def get_sub_status(user, task):
+    status = 'not submitted'
+    submission = db.select_columns(
+        'submissions',
+        ['status'],
+        ['student', 'task'],
+        [user, task]
+    )
+    if len(submission) > 0:
+        status_name = db.select_columns(
+            'request_statuses',
+            ['name'],
+            ['id'],
+            [submission[0][0]]
+        )
+        status = status_name[0][0]
+    return status
 
 
 def staff_dashboard():

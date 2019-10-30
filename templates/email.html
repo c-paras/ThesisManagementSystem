@@ -1,0 +1,14 @@
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+  </head>
+  <body>
+    <p>Dear {{ name }}</p>
+    {% for message in messages %}
+      <p>{{ message|safe }}</p>
+    {% endfor %}
+    <hr>
+    <p>This mail is sent from an unmonitored mailbox. Please do not reply.</p>
+    <p>© 2019 Copyright <a href="{{ url }}">TMS</a></p>
+  </body>
+</html>

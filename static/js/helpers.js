@@ -37,8 +37,8 @@ function formValid(form) {
 }
 
 /*
- * Make an API call to the backend and call the specified
- * callback function to process the JSON response.
+ * Make a POST request to the backend with a serialized form.
+ * Call the specified callback function to process the JSON response.
  */
 function makeRequest(endpoint, form, callback) {
   fetch(endpoint, {
@@ -54,15 +54,31 @@ function makeRequest(endpoint, form, callback) {
 }
 
 /*
- * Make an API call to backend and call the sepcified
- * call back function to process the JSON response.
- * Use this function for custom data to be sent 
- * else use makeRequest()
+ * Make a GET request to the backend and call the specified callback
+ * function to process the JSON response. Use this function for data
+ * retrieval from the backend.
  */
-function makeRequestCustomData(endpoint, data, callback) {
+function makeGETRequest(endpoint, callback) {
   fetch(endpoint, {
     headers: {
-      //'Content-Type': 'application/x-www-form-urlencoded',
+      'Content-Type': 'application/x-www-form-urlencoded',
+      'Accept': 'application/json'
+    },
+    method: 'GET'
+  })
+  .then(res => res.json())
+  .then(callback);
+}
+
+/*
+ * Make a POST request to the backend and call the specified callback
+ * function to process the JSON response. Use this function for posting
+ * data to the backend that is not inside a form.
+ */
+function makePOSTRequest(endpoint, data, callback) {
+  fetch(endpoint, {
+    headers: {
+      'Content-Type': 'Content-Type: multipart/form-data',
       'Accept': 'application/json'
     },
     method: 'POST',
