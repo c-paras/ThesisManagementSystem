@@ -116,6 +116,8 @@
     </div>
   </div>
 
-  {% include "modals/respond_topic.html" %}
+  {% if curr_requests|length %}
+    {% include "modals/respond_topic.html" %}
+  {% endif %}
 
 {% endblock %}
