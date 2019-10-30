@@ -1,5 +1,6 @@
 from flask import abort
 from flask import Blueprint
+from flask import flash
 from flask import redirect
 from flask import render_template
 from flask import request
@@ -7,15 +8,18 @@ from flask import session
 from flask import jsonify
 from flask import url_for
 
+from datetime import datetime
 from enum import Enum
 from functools import wraps
 
 from app.helpers import error
 from app.helpers import get_fields
+from app.helpers import send_email
 from app.db_manager import sqliteManager as db
 
 import re
 import bcrypt
+import uuid
 
 import config
 
@@ -78,10 +82,19 @@ def register():
         return error(f'Invalid email format!<br>{config.EMAIL_FORMAT_ERROR}')
 
     db.connect()
-    res = db.select_columns('users', ['email'], ['email'], [email])
+    res = db.select_columns('users', ['email', 'date_created', 'confirm_code'],
+                            ['email'], [email])
+
+    now = datetime.now().timestamp()
     if len(res):
-        db.close()
-        return error('Email has already been registered!')
+        if res[0][2] != '' and res[0][1] + config.ACCOUNT_EXPIRY < now:
+            # expire unactivated accounts every 24 hours
+            db.delete_rows('users', ['email'], [email])
+            db.close()
+            db.connect()
+        else:
+            db.close()
+            return error('This email has already been registered!')
 
     if len(password) < 8:
         msg = 'Password must be at least 8 characters long!'
@@ -97,17 +110,52 @@ def register():
 
     # get the id for a public account
     acc_type = db.select_columns('account_types',
-                                 ['id'],
-                                 ['name'],
-                                 ['public'])
+                                 ['id'], ['name'], ['public'])
+
+    confirm_code = uuid.uuid1()
+    activation_link = url_for('.confirm', user=name,
+                              confirm_code=confirm_code, _external=True)
+    send_email(to=email, name=email, subject='Confirm Account Registration',
+               messages=[
+                   'You recently registered for an account on TMS.',
+                   'To activiate your account, click ' +
+                   f'<a href="{activation_link}">here</a>.',
+                   'This link will expire in 24 hours.'
+               ])
 
     db.insert_single(
         'users',
-        [name, hashed_pass, email, acc_type[0][0]],
-        ['name', 'password', 'email', 'account_type']
+        [name, hashed_pass, email, acc_type[0][0], str(confirm_code), now],
+        ['name', 'password', 'email', 'account_type', 'confirm_code',
+         'date_created']
     )
     db.close()
     return jsonify({'status': 'ok'})
+
+
+@auth.route('/confirm', methods=['GET'])
+def confirm():
+    confirm_code = request.args.get('confirm_code', '')
+    user = request.args.get('user', '')
+    db.connect()
+
+    # get the user's confirm code & creation date
+    res = db.select_columns('users', ['confirm_code', 'date_created'],
+                            ['name'], [user])
+
+    expired = False
+    now = datetime.now().timestamp()
+    if len(res) and res[0][1] + config.ACCOUNT_EXPIRY < now:
+        expired = True  # expire unactivated accounts every 24 hours
+        db.delete_rows('users', ['name'], [user])
+        flash('This activation link has expired!<br>' +
+              'You must register your account again.', 'error')
+    if not expired and len(res) and confirm_code == res[0][0]:
+        # clear confirm code to "mark" account as activated
+        db.update_rows('users', [''], ['confirm_code'], ['name'], [user])
+        flash('Account activated! You can now log in.', 'success')
+    db.close()
+    return redirect(url_for('.login'))
 
 
 @auth.route('/login', methods=['GET', 'POST'])
@@ -125,7 +173,8 @@ def login():
 
     db.connect()
     res = db.select_columns('users',
-                            ['password', 'account_type', 'id', 'name'],
+                            ['password', 'account_type',
+                             'id', 'name', 'confirm_code'],
                             ['email'],
                             [email])
 
@@ -136,6 +185,9 @@ def login():
     if not bcrypt.checkpw(password.encode('utf-8'), hashed_password[0]):
         db.close()
         return error('Incorrect password!')
+    if res[0][4] != '':
+        db.close()
+        return error('You must first confirm your account!')
 
     # get the current user's account type
     acc_type = db.select_columns('account_types',
