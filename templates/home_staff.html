@@ -16,7 +16,7 @@
                 <th>Name</th>
                 <th>zID</th>
                 <th>Topic</th>
-                <th>Approve/Reject</th>
+                <th>Review</th>
               </tr>
             </thead>
 
@@ -24,12 +24,14 @@
               <!-- if you have requests pending, print out each current request into a table -->
               {% for request in curr_requests %}
                 <tr>
-                  <td>{{ request[0] }}</td>
-                  <td>{{ request[1].split('@')[0] }}</td>
-                  <td>{{ request[2] }}</td>
+                  <td>{{ request['stu_name'] }}</td>
+                  <td>{{ request['stu_email'].split('@')[0] }}</td>
+                  <td>{{ request['topic_name'] }}</td>
                   <td>
-                    <i class="material-icons approval-icon green-text text-lighten-2">check_circle</i>
-                    <i class="material-icons rejection-icon red-text text-accent-1">cancel</i>
+                    <a class="waves-effect waves-light btn-floating btn-small" href="#"
+                       onclick="openRequestModal({{ request['stu_id'] }}, {{ request['topic_id'] }})">
+                      <i class="large material-icons">insert_chart</i>
+                    </a>
                   </td>
                 </tr>
               {% endfor %}
@@ -113,4 +115,7 @@
       </div>
     </div>
   </div>
+
+  {% include "modals/respond_topic.html" %}
+
 {% endblock %}

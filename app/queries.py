@@ -2,11 +2,50 @@ from app.db_manager import sqliteManager as db
 
 
 class queries:
+    def respond_topic(student_id, topic_id, status, timestamp):
+        db.custom_query("""UPDATE topic_requests
+                           SET status = (SELECT id
+                                         FROM request_statuses WHERE name = ?),
+                               date_responded = ?
+                           WHERE student = ? AND topic = ?""",
+                        [status, timestamp, student_id, topic_id])
+
+    def lookup_topic_request(student_id, topic_id):
+        res = db.custom_query("""
+                                 SELECT users.name, users.email,
+                                 topics.name, tq.date_created,
+                                 request_statuses.name
+                                 FROM topic_requests tq
+                                 INNER JOIN topics
+                                     ON topics.id = tq.topic
+                                 INNER JOIN users
+                                     ON tq.student = users.id
+                                 INNER JOIN request_statuses
+                                     ON tq.status = request_statuses.id
+                                 WHERE tq.student = ? AND tq.topic = ?
+                              """, [student_id, topic_id])
+        return [{'userName': r[0],
+                 'email': r[1],
+                 'topicName': r[2],
+                 'reqDate': r[3],
+                 'reqStatus': r[4]} for r in res]
+
+    def get_users_of_type(acc_type):
+        res = db.custom_query("""
+                                 SELECT users.id, users.name, email FROM users
+                                 INNER JOIN account_types
+                                     ON users.account_type = account_types.id
+                                 WHERE account_types.name = ?
+                              """, [acc_type])
+        return [{'id': r[0],
+                 'name': r[1],
+                 'email': r[2]} for r in res]
 
     # gets the current requests for a given supervisor's email
     def get_curr_topic_requests(email):
         res = db.custom_query("""
-                                SELECT stu.name, stu.email, t.name
+                                SELECT stu.id, t.id,
+                                       stu.name, stu.email, t.name
                                 FROM users stu
                                 INNER JOIN topic_requests tr
                                     ON stu.id = tr.student
@@ -16,9 +55,9 @@ class queries:
                                     ON t.supervisor = sup.id
                                 INNER JOIN request_statuses rs
                                     ON tr.status = rs.id
-                                WHERE sup.email = "{my_email}"
+                                WHERE sup.email = ?
                                     AND rs.name = "pending";
-                             """.format(my_email=email))
+                             """, [email])
         return res
 
     # gets the current requests for a given supervisor's email
