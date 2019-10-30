@@ -7,7 +7,7 @@
       <form class="col s12" id="manage-topic-form">
         <div class="right">
           <a class="waves-effect waves-light btn" id="checkall-btn">Disable All Topics
-            <i class="material-icons right">send</i>
+            <i class="material-icons right">close</i>
           </a>
         </div>
         {% if curr_topics|length %}
@@ -44,7 +44,7 @@
                   </td>
                   <td>
                     <a class="waves-effect waves-light btn-floating btn-small" onclick="" id="{{ topic[0] }}" href="#">
-                      <i class="large material-icons">insert_chart</i>
+                      <i class="large material-icons">assignment</i>
                     </a>
                   </td>
                 </tr>
@@ -57,7 +57,7 @@
         {% endif %}
         <div class="center">
           <a class="waves-effect waves-light btn" id="save-btn" onclick="submitManage()">Save Changes
-            <i class="material-icons right">send</i>
+            <i class="material-icons right">beenhere</i>
           </a>
         </div>
       </form>
