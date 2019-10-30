@@ -144,7 +144,8 @@ class queries:
                     ON t.course_offering = co.id
                 INNER JOIN marking_methods mm
                     ON mm.id = t.marking_method
-                WHERE u.id = "{id}";
+                WHERE u.id = "{id}"
+                    AND t.visible = "1";
             """.format(id=user_id)
         )
         return res
