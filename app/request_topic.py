@@ -63,6 +63,8 @@ def request_new_topic():
                messages=[
                    'A student has requested a thesis topic on offer by you.',
                    f'The topic is titled "{topic_name}".',
+                   'A message from the student is attached below:',
+                   message.replace('\n', '<br>'),
                    'You can approve or reject the topic request ' +
                    f'<a href="{config.SITE_HOME}">here</a>.'
                ])
