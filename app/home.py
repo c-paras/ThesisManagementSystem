@@ -132,7 +132,12 @@ def get_sub_status(user, task):
 
 def staff_dashboard():
     db.connect()
-    curr_requests = queries.get_curr_topic_requests(session['user'])
+    curr_requests = [{'stu_id': r[0],
+                      'topic_id': r[1],
+                      'stu_name': r[2],
+                      'stu_email': r[3],
+                      'topic_name': r[4]}
+                     for r in queries.get_curr_topic_requests(session['user'])]
 
     # need to implement way of deciding between current and past students, best
     # way would probably be by testing start/end date and current unix
@@ -148,7 +153,9 @@ def staff_dashboard():
     # get students who I am assessing
     assess_students = queries.get_current_assess_students(session['user'])
 
-    db.close()
+    all_supervisors = filter(lambda s: s['id'] != session['id'],
+                             queries.get_users_of_type('supervisor'))
+
     for tup_student in super_students:
         i = list(tup_student)
         i.append('Supervisor')
@@ -165,9 +172,11 @@ def staff_dashboard():
         else:
             past_students.append(i)
 
+    db.close()
     return render_template('home_staff.html',
                            heading='My Dashboard',
                            title='My Dashboard',
                            curr_requests=curr_requests,
                            curr_students=curr_students,
-                           past_students=past_students)
+                           past_students=past_students,
+                           assessors=all_supervisors)

@@ -4,9 +4,9 @@
   <div class="row">
 
     <!-- Show student their current materials for their corses -->
-    <div class="section col s10 offset-s1">
+    <div class="section col s12">
       <h5>Material:</h5>
-      <div class="col s10 offset-s1">
+      <div class="col s12">
         {% if materials|length %}
           <table class="highlight centered responsive-table">
             <tbody>
@@ -25,15 +25,15 @@
             </tbody>
           </table>
         {% else %}
-          <p>There are no course materials at this time.</p>
+          <p>There are no course materials at this time</p>
         {% endif %}
       </div>
     </div>
 
     <!-- Show student their current assessments for their corses -->
-    <div class="section col s10 offset-s1">
+    <div class="section col s12">
       <h5>Assessments:</h5>
-      <div class="col s10 offset-s1">
+      <div class="col s12">
         {% if tasks|length %}
           <table class="highlight centered responsive-table">
 
@@ -48,7 +48,7 @@
               </tr>
             </thead>
 
-            <!-- Table body, should be replaced with a loop when actually connected to database -->
+            <!-- Table body -->
             <tbody>
               {% for task in tasks %}
                 <tr>
@@ -63,7 +63,7 @@
 
           </table>
         {% else %}
-          <p>There are no assessments at this time.</p>
+          <p>There are no assessments at this time</p>
         {% endif %}
       </div>
     </div>
