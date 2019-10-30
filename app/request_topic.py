@@ -92,24 +92,28 @@ def lookup_request():
 @at_least_role(UserRole.STAFF)
 def respond_request():
     data = get_fields(request.form, ['response', 'student-id', 'topic'])
+    db.connect()
 
-    if data[0] == 'accept':
+    req_status = 'approved' if data[0] == 'accept' else 'rejected'
+    if req_status == 'approved':
         if 'assessor' not in request.form:
+            db.close()
             return error("assessor not specified")
-        db.connect()
-        queries.respond_topic(data[1], data[2], 'approved',
-                              datetime.now().timestamp())
         db.insert_single('student_topic',
                          [data[1], data[2], request.form['assessor']],
                          ['student', 'topic', 'assessor'])
-        db.close()
 
-    elif data[0] == 'reject':
-        db.connect()
-        queries.respond_topic(data[1], data[2], 'rejected',
-                              datetime.now().timestamp())
-        db.close()
-    else:
-        return error("response field must be 'accept' or 'reject'")
+    queries.respond_topic(data[1], data[2], req_status,
+                          datetime.now().timestamp())
+    res = db.select_columns('users', ['email', 'name'],
+                            ['id'], [data[1]])[0]
+    student = {
+        'email': res[1],
+        'name': res[0]
+    }
+    topic = db.select_columns('topics', ['name'], ['id'], [data[2]])[0][0]
+    db.close()
 
+    send_email(student['email'], student['name'], 'Topic Reply',
+               f'Your request to do {topic} has been {req_status}')
     return jsonify({'status': 'success'})
