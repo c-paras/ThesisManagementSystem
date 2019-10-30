@@ -148,3 +148,20 @@ class queries:
             """.format(id=user_id)
         )
         return res
+
+    def get_staff_curr_topics(email):
+        res = db.custom_query(
+            """
+                SELECT
+                t.name, ta.name, t.visible
+                FROM users u
+                INNER JOIN topics t
+                    ON u.id = t.supervisor
+                INNER JOIN topic_to_area tta
+                    ON t.id = tta.topic
+                INNER JOIN topic_areas ta
+                    ON tta.topic_area = ta.id
+                WHERE u.email = "{email}"
+            """.format(email=email)
+        )
+        return res
