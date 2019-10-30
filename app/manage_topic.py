@@ -17,20 +17,34 @@ manage_topic = Blueprint('manage_topic', __name__)
 @manage_topic.route('/manage_topic', methods=['GET', 'POST'])
 @at_least_role(UserRole.STAFF)
 def manage():
-    db.connect()
-    curr_topics = queries.get_staff_curr_topics(session['user'])
-
-    curr_topics = clean_topic_tuples(curr_topics)
-    db.close()
     if request.method == 'GET':
+        db.connect()
+        curr_topics = queries.get_staff_curr_topics(session['user'])
+
+        curr_topics = clean_topic_tuples(curr_topics)
+        db.close()
         return render_template('manage_topic.html',
                                heading='Manage Topics',
                                title='Manage Topics',
                                curr_topics=curr_topics)
 
     data = json.loads(request.data)
+    topic = []
+    visible = []
+    for x in data:
+        topic.append(x)
+        visible.append(data[x])
 
-    print(data)
+    db.connect()
+    for i in range(len(topic)):
+        db.update_rows('topics',
+                       [visible[i]],
+                       ['visible'],
+                       ['name'],
+                       [topic[i]])
+
+    db.close()
+
     return jsonify({'status': 'ok'})
 
 
@@ -41,7 +55,7 @@ def clean_topic_tuples(curr_topics):
         # if it's in the dict, append values only
         if topic[0] in topic_dict:
 
-            topic_dict[topic[0]] = topic_dict[topic[0]] + '/' + topic[1]
+            topic_dict[topic[0]] = topic_dict[topic[0]] + ', ' + topic[1]
         #  if it's not in the dict, create the entry
         else:
 
