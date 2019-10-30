@@ -1,14 +1,17 @@
+import json
+
 from flask import Blueprint
+from flask import jsonify
 from flask import render_template
+from flask import jsonify
 from flask import request
 from flask import session
 
 from app.auth import UserRole
 from app.auth import at_least_role
-from app.helpers import error
-from app.helpers import get_fields
 from app.db_manager import sqliteManager as db
-
+from app.helpers import error
+from app.queries import queries
 
 create_topic = Blueprint('create_topic', __name__)
 
@@ -21,18 +24,38 @@ def create():
                                title='Create Topic')
 
     try:
-        fields = ['topic', 'topic-areas', 'details']
-        topic, areas, details = get_fields(request.form, fields)
+        data = json.loads(request.data)
+        topic = data['topic']
+        areas = [area['tag'] for area in data['topic_area']]
+        prereqs = [prereq['tag'] for prereq in data['prereqs']]
+        details = data['details']
     except ValueError as e:
         return e.args
 
-    prereqs = list(dict.fromkeys(request.form.getlist('prerequisites')))
-    prereqs = [x.lower() for x in prereqs]
-
-    areas = areas.split(',')
+    # to make sure that "COMP" are upper case and strip for areas and prereqs
+    prereqs = [x.upper() for x in prereqs]
+    prereqs = [x.strip() for x in prereqs]
+    areas = [x.strip() for x in areas]
 
     db.connect()
     user_id = session['id']
+
+    # test if there are such course in the database
+    course_ids = []
+    for prereq in prereqs:
+
+        course_id = db.select_columns(
+            'courses', ['id', 'prereq'], ['code'], [prereq]
+        )
+        if len(course_id) == 0:
+            db.close()
+            return error('Sorry, you have to enter a valid course code!')
+        if course_id[0][1] == 0:
+            db.close()
+            return error('Sorry, this course can not be a prerequisite!')
+        course_ids.append(course_id[0][0])
+
+    # test if there is such topic in the database
     res = db.select_columns('topics', ['name'], ['name'], [topic])
 
     # only check the name of the topic
@@ -40,19 +63,22 @@ def create():
         db.close()
         return error('A topic with that name already exists!')
 
+    # now start to insert data into db
+    # insert topic and get its id
     db.insert_single('topics', [topic, user_id, details],
                      ['name', 'supervisor', 'description'])
-    topic_id = db.select_columns('topics', ['id'], ['name'], [topic])[0][0]
+    topic_id = db.select_columns('topics',
+                                 ['id'], ['name'], [topic])[0][0]
 
+    # return error('not yet!')
+    # now get topic areas
     for area in areas:
-        area = area.strip()
-
         # get area_id if area in database
         area_id = db.select_columns('topic_areas',
                                     ['id'],
                                     ['name'],
                                     [area])
-        # else add area to database
+        # else add area to database and get the id
         if len(area_id) == 0:
             db.insert_single('topic_areas',
                              [area],
@@ -67,17 +93,34 @@ def create():
                          [topic_id, area_id[0][0]],
                          ['topic', 'topic_area'])
 
-    # for prereq in prereqs:
-    #
-    #     prereq = prereq.strip()
-    #     course_id = db.select_columns(
-    #         'courses', ['id'], ['code'], [prereq]
-    #         )
-    #     db.insert_single(
-    #         'prerequisites',
-    #         [0, course_id, topic_id],
-    #         ['type', 'course', 'topic']
-    #         )
+    # now insert prereqs
+    for i in range(len(course_ids)):
+        db.insert_single(
+            'prerequisites',
+            [0, topic_id, course_ids[i]],
+            ['type', 'topic', 'course']
+        )
 
     db.close()
+
     return jsonify({'status': 'ok'})
+
+
+@create_topic.route('/load_topic_prereqs', methods=['GET'])
+@at_least_role(UserRole.STAFF)
+def get_chips_from_database():
+
+    db.connect()
+    topic_areas = db.select_columns('topic_areas', ['name'])
+    prereqs = db.select_columns('courses', ['code'], ['prereq'], [1])
+
+    chips_topic = {}
+    for topic in topic_areas:
+        chips_topic[topic[0]] = None
+
+    chips_prereqs = {}
+    for prereq in prereqs:
+        chips_prereqs[prereq[0]] = None
+
+    return jsonify({'status': 'ok', 'chipsTopic': chips_topic,
+                    'chipsPrereqs': chips_prereqs})
