@@ -70,6 +70,13 @@ function makeGETRequest(endpoint, callback) {
   .then(callback);
 }
 
+function searchResultsNavBar() {
+  const searchTerms = $("#search-bar").val()
+  console.log("hello")
+  window.location.href = '/search?terms=' + searchTerms;
+  
+}
+
 /*
  * Make a POST request to the backend and call the specified callback
  * function to process the JSON response. Use this function for posting
@@ -145,4 +152,10 @@ $(function () {
   $('.chips input').on('blur', function () {
     $(this).parent().siblings('.prefix').removeClass('active');
   });
+});
+
+$('#search-bar').keydown(function(e){
+  if (e.keyCode === 13) { // If Enter key pressed
+      $(this).trigger('submit');
+  }
 });
