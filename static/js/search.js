@@ -49,18 +49,22 @@ function nextPage(requestedPage) {
   updateCanRequest();
 }
 
-function searchResults() {
+function searchResults(searchTerm) {
   const form = $('#search-form');
   if (!formValid(form)) {
     return;
   }
 
-  const data = {
+  let data = {
     "searchTerm": $("[id='search-input']").val(),
     "checkbox": $("[id='checkbox-vis']").is(':checked'),
     "topicArea": M.Chips.getInstance($('#topics')).chipsData,
     "supervisor": M.Chips.getInstance($('#supervisor')).chipsData
   };
+
+  if (searchTerm !== null && searchTerm !== "") {
+    data.searchTerm = searchTerm;
+  }
 
   makePOSTRequest('/search', data, (res) => {
     if (res.status === 'fail') {
@@ -129,8 +133,8 @@ function loadPage() {
         minLength: 1
       }
     });
-    console.log(window.location.search);
-    searchResults();
+    let searchTerm = window.location.search.split('=');
+    searchResults(searchTerm[1]);
   });
 
   return;
