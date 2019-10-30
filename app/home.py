@@ -20,7 +20,6 @@ home = Blueprint('home', __name__)
 def dashboard():
     user_type = session['acc_type']
 
-    # TODO: public user home page
     if user_type == 'student':
         return student_dashboard()
     elif user_type == 'public':
