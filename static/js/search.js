@@ -1,6 +1,6 @@
 let canRequest;
 
-function makeCard(id, title, description, topics, supervisor, email) {
+function makeCard(id, title, description, topics, supervisor, email, preqs) {
   const card = `<div class="row">\
   <div class="col s10 offset-m1">\
     <div class="card white-grey darken-1">
@@ -12,7 +12,7 @@ function makeCard(id, title, description, topics, supervisor, email) {
         <p>Supervisor: ${supervisor}
         <a href="mailto:${email}" target="_top"> (${email})</a>
         </p>
-        <p>Prerequisites: Not implemented yet waiting for db</p>
+        <p id="preqs">Prerequisites: ${preqs}</p>
         <br>
         <p>${description}</p>
       </div>
@@ -68,9 +68,15 @@ function searchResults() {
     } else {
       let cards = [];
       for (let i = 0; i < res.topics.length; i++) {
+        let preqs = "";
+        if (res.preqs[i].length === 0) {
+          preqs = "None";
+        } else {
+          preqs = res.preqs[i].join(', ');
+        }
         cards.push(makeCard(res.topics[i][0], res.topics[i][1],
           res.topics[i][3], res.topicsArea[i].join(', '),
-          res.topicSupervisor[i][0][0], res.topicSupervisor[i][0][1])
+          res.topicSupervisor[i][0][0], res.topicSupervisor[i][0][1], preqs)
         );
       }
 
