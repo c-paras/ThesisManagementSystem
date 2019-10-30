@@ -5,6 +5,7 @@ from flask import session
 from flask import request
 
 from datetime import datetime
+import calendar
 
 from app.auth import UserRole
 from app.auth import at_least_role
@@ -42,10 +43,37 @@ def student_view():
         print("Can't find "+str(task_id))
         abort(403)
 
+    #
+    # get general page info
+    #
+
+    task_info = queries.get_general_task_info(task_id)[0]
+
+    # get deadline
+    time_format = '%d/%m/%Y at %I:%M:%S %p'
+    due_date = datetime.fromtimestamp(task_info[2])
+    weekday = calendar.day_name[datetime.fromtimestamp(task_info[2]).weekday()]
+
+    deadline_text = weekday + " " + due_date.strftime(time_format)
+
+    #
+    # TODO: Get Criteria
+    #
+
+    res = queries.get_task_criteria(task_id)
+
+    staff_marks = {}
+    staff_marks["Supervisor"] = res
+    staff_marks["Assessor"] = res
+
     db.close()
     return render_template('task_student.html',
-                           heading='COURSE - TASK',
-                           title='PLACEHOLDER')
+                           heading=task_info[0] + " - " + task_info[1],
+                           title=task_info[1],
+                           deadline=deadline_text,
+                           description=task_info[3],
+                           is_text_task=task_info[4] == "text submission",
+                           staff_marks=staff_marks)
 
 
 def staff_view():
