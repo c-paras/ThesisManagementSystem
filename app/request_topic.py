@@ -116,4 +116,4 @@ def respond_request():
 
     send_email(student['email'], student['name'], 'Topic Reply',
                f'Your request to do {topic} has been {req_status}')
-    return jsonify({'status': 'success'})
+    return jsonify({'status': 'ok'})
