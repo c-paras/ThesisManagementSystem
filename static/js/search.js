@@ -129,7 +129,7 @@ function loadPage() {
         minLength: 1
       }
     });
-    console.log(window.location.search['terms'])
+    console.log(window.location.search);
     searchResults();
   });
 

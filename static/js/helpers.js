@@ -71,8 +71,8 @@ function makeGETRequest(endpoint, callback) {
 }
 
 function searchResultsNavBar() {
-  const searchTerms = $("#search-bar").val()
-  console.log("hello")
+  const searchTerms = $("#search-bar").val();
+  console.log("hello");
   window.location.href = '/search?terms=' + searchTerms;
   
 }
