@@ -9,6 +9,9 @@
           <a class="waves-effect waves-light btn" id="checkall-btn">Disable All Topics
             <i class="material-icons right">close</i>
           </a>
+          <a class="waves-effect waves-light btn" id="save-btn" onclick="submitManage()">Save Changes
+            <i class="material-icons right">beenhere</i>
+          </a>
         </div>
         {% if curr_topics|length %}
           <table class="striped centered responsive-table">
@@ -55,11 +58,7 @@
         {% else %}
           <p>You have no topics at this time</p>
         {% endif %}
-        <div class="center">
-          <a class="waves-effect waves-light btn" id="save-btn" onclick="submitManage()">Save Changes
-            <i class="material-icons right">beenhere</i>
-          </a>
-        </div>
+
       </form>
     </div>
   </div>
