@@ -45,11 +45,14 @@ def create():
     for prereq in prereqs:
 
         course_id = db.select_columns(
-            'courses', ['id'], ['code'], [prereq]
+            'courses', ['id', 'prereq'], ['code'], [prereq]
         )
         if len(course_id) == 0:
             db.close()
             return error('Sorry, you have to enter a valid course code!')
+        if course_id[0][1] == 0:
+            db.close()
+            return error('Sorry, this course can not be a prerequisite!')
         course_ids.append(course_id[0][0])
 
     # test if there is such topic in the database
@@ -99,4 +102,25 @@ def create():
         )
 
     db.close()
+
     return jsonify({'status': 'ok'})
+
+
+@create_topic.route('/load_topic_prereqs', methods=['GET'])
+@at_least_role(UserRole.STAFF)
+def get_chips_from_database():
+
+    db.connect()
+    topic_areas = db.select_columns('topic_areas', ['name'])
+    prereqs = db.select_columns('courses', ['code'], ['prereq'], [1])
+
+    chips_topic = {}
+    for topic in topic_areas:
+        chips_topic[topic[0]] = None
+
+    chips_prereqs = {}
+    for prereq in prereqs:
+        chips_prereqs[prereq[0]] = None
+
+    return jsonify({'status': 'ok', 'chipsTopic': chips_topic,
+                    'chipsPrereqs': chips_prereqs})

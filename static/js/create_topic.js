@@ -1,13 +1,3 @@
-$('#prereqs').chips({
-  placeholder: 'Add Prerequisite',
-  limit: 10
-});
-
-$('#areas').chips({
-  placeholder: 'Add Topic Area',
-  limit: 10
-});
-
 function submitCreate() {
   const form = $('#create-topic-form');
   if (!formValid(form)) {
@@ -20,7 +10,7 @@ function submitCreate() {
     "details": $("[id='details']").val()
   };
 
-  makeRequestCustomData('/create_topic', data, (res) =>{
+  makePOSTRequest('/create_topic', data, (res) => {
     if (res.status === 'fail') {
       flash(res.message, error = true);
     } else {
@@ -29,3 +19,28 @@ function submitCreate() {
     }
   });
 }
+
+function loadTopicPrereq() {
+  makeGETRequest('/load_topic_prereqs', (res) => {
+    $('#prereqs').chips({
+      placeholder: 'Add Prerequisite',
+      autocompleteOptions: {
+        data: res.chipsPrereqs,
+        limit: 10,
+        minLength: 1
+      }
+    });
+    $('#areas').chips({
+      placeholder: 'Add Topic Area',
+      autocompleteOptions: {
+        data: res.chipsTopic,
+        limit: 10,
+        minLength: 1
+      }
+    });
+    submitCreate();
+  });
+
+}
+
+loadTopicPrereq();
