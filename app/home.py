@@ -160,7 +160,7 @@ def staff_dashboard():
     for tup_student in super_students:
         i = list(tup_student)
         i.append('Supervisor')
-        if(datetime.now().timestamp() < i.pop(3)):
+        if datetime.now().timestamp() < i.pop(3):
             curr_students.append(i)
         else:
             past_students.append(i)
@@ -168,7 +168,7 @@ def staff_dashboard():
     for tup_student in assess_students:
         i = list(tup_student)
         i.append('Assessor')
-        if(datetime.now().timestamp() < i.pop(3)):
+        if datetime.now().timestamp() < i.pop(3):
             curr_students.append(i)
         else:
             past_students.append(i)
