@@ -183,7 +183,8 @@ class queries:
                     ON t.course_offering = co.id
                 INNER JOIN marking_methods mm
                     ON mm.id = t.marking_method
-                WHERE u.id = "{id}";
+                WHERE u.id = "{id}"
+                    AND t.visible = "1";
             """.format(id=user_id)
         )
         return res
@@ -202,5 +203,35 @@ class queries:
                     ON tta.topic_area = ta.id
                 WHERE u.email = "{email}"
             """.format(email=email)
+        )
+        return res
+
+    def get_general_task_info(task_id):
+        res = db.custom_query(
+            """
+                SELECT c.name, t.name, t.deadline, t.description, sm.name
+                FROM tasks t
+                INNER JOIN course_offerings co
+                    ON t.course_offering = co.id
+                INNER JOIN courses c
+                    ON co.course = c.id
+                INNER JOIN marking_methods mm
+                    ON t.marking_method = mm.id
+                INNER JOIN submission_methods sm
+                    ON t.submission_method = sm.id
+                WHERE t.id = "{id}";
+            """.format(id=task_id)
+        )
+        return res
+
+    def get_task_criteria(task_id):
+        res = db.custom_query(
+            """
+                SELECT tc.name, tc.max_mark
+                FROM tasks t
+                INNER JOIN task_criteria tc
+                    ON tc.task = t.id
+                WHERE t.id = "{id}";
+            """.format(id=task_id)
         )
         return res

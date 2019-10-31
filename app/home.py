@@ -64,7 +64,8 @@ def student_dashboard():
         status = get_sub_status(session['id'], task[0])
         if 'approval' in task[3]:
             tasks.append((
-                task[2], task[1], status, '-', '-'
+                task[2], task[1], status, '-', '-',
+                task[0]
             ))
         else:
             criteria = db.select_columns(
@@ -100,7 +101,8 @@ def student_dashboard():
             if assessor_mark <= 0:
                 assessor_mark = '-'
             tasks.append((
-                task[2], task[1], status, supervisor_mark, assessor_mark
+                task[2], task[1], status, supervisor_mark, assessor_mark,
+                task[0]
             ))
 
     db.close()

@@ -35,7 +35,7 @@
       <h5>Assessments:</h5>
       <div class="col s12">
         {% if tasks|length %}
-          <table class="highlight centered responsive-table">
+          <table class="highlight responsive-table">
 
             <!-- Table header -->
             <thead>
@@ -43,8 +43,9 @@
                 <th>Course</th>
                 <th>Task</th>
                 <th>Status</th>
-                <th>Supervisor Result</th>
-                <th>Assessor Result</th>
+                <th class="center-align">Supervisor Result</th>
+                <th class="center-align">Assessor Result</th>
+                <th class="center-align">View Task</th>
               </tr>
             </thead>
 
@@ -55,8 +56,13 @@
                   <td>{{task[0]}}</td>
                   <td>{{task[1]}}</td>
                   <td>{{task[2]}}</td>
-                  <td>{{task[3]}}</td>
-                  <td>{{task[4]}}</td>
+                  <td class="center-align">{{task[3]}}</td>
+                  <td class="center-align">{{task[4]}}</td>
+                  <td class="center-align">
+                    <a href="{{ url_for('tasks.view_task', task=task[5]) }}">
+                      <i class="Small material-icons teal-text">pageview</i>
+                    </a>
+                  </td>
                 </tr>
               {% endfor %}
             </tbody>
