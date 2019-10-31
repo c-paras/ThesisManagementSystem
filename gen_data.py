@@ -504,12 +504,12 @@ def gen_task_critera():
         queries = []
         queries.append((
             'task_criteria',
-            [task[0], 'Content', 80],
+            [task[0], 'Technical Quality and Completeness of the work', 80],
             ['task', 'name', 'max_mark']
         ))
         queries.append((
             'task_criteria',
-            [task[0], 'Presentation', 20],
+            [task[0], 'Structure and Presentation', 20],
             ['task', 'name', 'max_mark']
         ))
         db.insert_multiple(queries)
