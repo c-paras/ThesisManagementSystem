@@ -83,11 +83,12 @@ def lookup_request():
 
     db.connect()
     topic_req = queries.lookup_topic_request(data.get('student_id', -1),
-                                             data.get('topic_id', -1))
+                                             data.get('topic_id', -1))[0]
     db.close()
-    if len(topic_req) != 1:
-        return error('Lookup failure')
-    return jsonify(topic_req[0])
+
+    # Convert to ms for javascript
+    topic_req['reqDate'] = topic_req['reqDate'] * 1000
+    return jsonify(topic_req)
 
 
 @request_topic.route('/respond_request', methods=['POST'])
