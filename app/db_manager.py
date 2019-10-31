@@ -17,6 +17,7 @@ class sqliteManager:
 
     def close(exception=None):
         if sqliteManager.conn is not None:
+            sqliteManager.conn.commit()
             sqliteManager.conn.close()
             sqliteManager.conn = None
 
@@ -179,6 +180,6 @@ class sqliteManager:
 
     # runs a custom SQLite query
 
-    def custom_query(query):
-        res = sqliteManager.conn.execute(query)
+    def custom_query(query, values=[]):
+        res = sqliteManager.conn.execute(query, values)
         return res.fetchall()

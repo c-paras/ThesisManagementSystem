@@ -11,6 +11,7 @@ from app.auth import at_least_role
 from app.db_manager import sqliteManager as db
 from app.queries import queries
 
+
 manage_topic = Blueprint('manage_topic', __name__)
 
 
@@ -20,7 +21,6 @@ def manage():
     if request.method == 'GET':
         db.connect()
         curr_topics = queries.get_staff_curr_topics(session['user'])
-
         curr_topics = clean_topic_tuples(curr_topics)
         db.close()
         return render_template('manage_topic.html',
@@ -44,7 +44,6 @@ def manage():
                        [topic[i]])
 
     db.close()
-
     return jsonify({'status': 'ok'})
 
 

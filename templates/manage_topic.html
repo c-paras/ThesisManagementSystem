@@ -4,16 +4,16 @@
   <div class="row">
     <div class="section col s12">
       <h5>Current Topics:</h5>
-      <form class="col s12" id="manage-topic-form">
-        <div class="right">
-          <a class="waves-effect waves-light btn" id="checkall-btn">Disable All Topics
-            <i class="material-icons right">close</i>
-          </a>
-          <a class="waves-effect waves-light btn" id="save-btn" onclick="submitManage()">Save Changes
-            <i class="material-icons right">beenhere</i>
-          </a>
-        </div>
-        {% if curr_topics|length %}
+      {% if curr_topics|length %}
+        <form class="col s12" id="manage-topic-form">
+          <div class="right">
+            <a class="waves-effect waves-light btn" id="checkall-btn">Disable All Topics
+              <i class="material-icons right">close</i>
+            </a>
+            <a class="waves-effect waves-light btn" id="save-btn" onclick="submitManage()">Save Changes
+              <i class="material-icons right">beenhere</i>
+            </a>
+          </div>
           <table class="striped centered responsive-table">
 
             <!-- Table header -->
@@ -34,8 +34,10 @@
                   <td>
                     {% if topic[2] == 1 %}
                       <label>
-                        <input type="checkbox" id="{{ topic[0] }}" class="filled-in" name="{{ topic[0] }}"
-                               checked="checked"/>
+                        <input
+                          type="checkbox" id="{{ topic[0] }}" class="filled-in"
+                          name="{{ topic[0] }}" checked="checked"
+                        >
                         <span></span>
                       </label>
                     {% else %}
@@ -46,7 +48,10 @@
                     {% endif %}
                   </td>
                   <td>
-                    <a class="waves-effect waves-light btn-floating btn-small" onclick="" id="{{ topic[0] }}" href="#">
+                    <a
+                      class="waves-effect waves-light btn-floating btn-small"
+                      onclick="" id="{{ topic[0] }}" href="#"
+                    >
                       <i class="large material-icons">assignment</i>
                     </a>
                   </td>
@@ -55,11 +60,10 @@
             </tbody>
 
           </table>
-        {% else %}
-          <p>You have no topics at this time</p>
-        {% endif %}
-
-      </form>
+        </form>
+      {% else %}
+        <p>You have no topics at this time</p>
+      {% endif %}
     </div>
   </div>
 {% endblock %}
