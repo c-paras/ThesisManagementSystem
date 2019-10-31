@@ -4,10 +4,10 @@
   <div class="row">
 
     <!-- Show staff their current topic requests -->
-    <div class="section col s10 offset-s1">
+    <div class="section col s12">
       <h5>Topic Requests:</h5>
-      <div class="col s10 offset-s1">
-        {% if curr_requests|length %}
+      {% if curr_requests|length %}
+        <div class="col s12">
           <table class="highlight centered responsive-table">
 
             <!-- Table header -->
@@ -16,36 +16,37 @@
                 <th>Name</th>
                 <th>zID</th>
                 <th>Topic</th>
-                <th>Approve/Reject</th>
+                <th>Review</th>
               </tr>
             </thead>
 
             <tbody>
-              <!-- if you have requests pending, print out each current request into a table -->
               {% for request in curr_requests %}
                 <tr>
-                  <td>{{ request[0] }}</td>
-                  <td>{{ request[1].split('@')[0] }}</td>
-                  <td>{{ request[2] }}</td>
+                  <td>{{ request['stu_name'] }}</td>
+                  <td>{{ request['stu_email'].split('@')[0] }}</td>
+                  <td>{{ request['topic_name'] }}</td>
                   <td>
-                    <i class="material-icons approval-icon green-text text-lighten-2">check_circle</i>
-                    <i class="material-icons rejection-icon red-text text-accent-1">cancel</i>
+                    <a class="waves-effect waves-light btn-floating btn-small" href="#"
+                       onclick="openRequestModal({{ request['stu_id'] }}, {{ request['topic_id'] }})">
+                      <i class="large material-icons">insert_chart</i>
+                    </a>
                   </td>
                 </tr>
               {% endfor %}
             </tbody>
           </table>
-        {% else %}
-          <p>You have zero topic requests at this time</p>
-        {% endif %}
-      </div>
+        </div>
+      {% else %}
+        <p>You have zero topic requests at this time</p>
+      {% endif %}
     </div>
 
     <!-- Show staff their current students -->
-    <div class="section col s10 offset-s1">
+    <div class="section col s12">
       <h5>Current Students:</h5>
-      <div class="col s10 offset-s1">
-        {% if curr_students|length %}
+      {% if curr_students|length %}
+        <div class="col s12">
           <table class="striped centered responsive-table">
 
             <!-- Table header -->
@@ -58,7 +59,7 @@
               </tr>
             </thead>
 
-            <!-- Table body, should be replaced with a loop when actually connected to database -->
+            <!-- Table body -->
             <tbody>
               {% for student in curr_students %}
                 <tr>
@@ -71,17 +72,17 @@
             </tbody>
 
           </table>
-        {% else %}
-          <p>You have zero students at this time</p>
-        {% endif %}
-      </div>
+        </div>
+      {% else %}
+        <p>You have zero students at this time</p>
+      {% endif %}
     </div>
 
     <!-- Show staff their past students -->
-    <div class="section col s10 offset-s1">
+    <div class="section col s12">
       <h5>Past Students:</h5>
-      <div class="col s10 offset-s1">
-        {% if past_students|length %}
+      {% if past_students|length %}
+        <div class="col s12">
           <table class="striped centered responsive-table">
 
             <!-- Table header -->
@@ -94,7 +95,7 @@
               </tr>
             </thead>
 
-            <!-- Table body, should be replaced with a loop when actually connected to database -->
+            <!-- Table body -->
             <tbody>
               {% for student in past_students %}
                 <tr>
@@ -107,10 +108,16 @@
             </tbody>
 
           </table>
-        {% else %}
-          <p>You have no past students</p>
-        {% endif %}
-      </div>
+        </div>
+      {% else %}
+        You have no past students
+      {% endif %}
     </div>
+
   </div>
+
+  {% if curr_requests|length %}
+    {% include "modals/respond_topic.html" %}
+  {% endif %}
+
 {% endblock %}

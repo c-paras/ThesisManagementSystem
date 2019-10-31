@@ -1,3 +1,5 @@
+import json
+
 from flask import Blueprint
 from flask import jsonify
 from flask import request
@@ -10,6 +12,7 @@ from app.auth import at_least_role
 from app.helpers import error
 from app.helpers import get_fields
 from app.helpers import send_email
+from app.queries import queries
 from app.db_manager import sqliteManager as db
 
 import sqlite3
@@ -60,9 +63,59 @@ def request_new_topic():
                messages=[
                    'A student has requested a thesis topic on offer by you.',
                    f'The topic is titled "{topic_name}".',
+                   'A message from the student is attached below:',
+                   message.replace('\n', '<br>'),
                    'You can approve or reject the topic request ' +
                    f'<a href="{config.SITE_HOME}">here</a>.'
                ])
 
     db.close()
+    return jsonify({'status': 'ok'})
+
+
+@request_topic.route('/lookup_request', methods=['POST'])
+@at_least_role(UserRole.STUDENT)
+def lookup_request():
+    data = json.loads(request.data)
+    if session['acc_type'] == 'student' and\
+       session['id'] != data['student_id']:
+        return error('Lookup failure')
+
+    db.connect()
+    topic_req = queries.lookup_topic_request(data.get('student_id', -1),
+                                             data.get('topic_id', -1))
+    db.close()
+    if len(topic_req) != 1:
+        return error('Lookup failure')
+    return jsonify(topic_req[0])
+
+
+@request_topic.route('/respond_request', methods=['POST'])
+@at_least_role(UserRole.STAFF)
+def respond_request():
+    data = get_fields(request.form, ['response', 'student-id', 'topic'])
+    db.connect()
+
+    req_status = 'approved' if data[0] == 'accept' else 'rejected'
+    if req_status == 'approved':
+        if 'assessor' not in request.form:
+            db.close()
+            return error("assessor not specified")
+        db.insert_single('student_topic',
+                         [data[1], data[2], request.form['assessor']],
+                         ['student', 'topic', 'assessor'])
+
+    queries.respond_topic(data[1], data[2], req_status,
+                          datetime.now().timestamp())
+    res = db.select_columns('users', ['email', 'name'],
+                            ['id'], [data[1]])[0]
+    student = {
+        'email': res[1],
+        'name': res[0]
+    }
+    topic = db.select_columns('topics', ['name'], ['id'], [data[2]])[0][0]
+    db.close()
+
+    send_email(student['email'], student['name'], 'Topic Reply',
+               f'Your request to do {topic} has been {req_status}')
     return jsonify({'status': 'ok'})

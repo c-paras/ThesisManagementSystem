@@ -1,8 +1,10 @@
+/* page footer color */
 nav, .page-footer {
   background-color: #26a69a;
   max-height: 70px;
 }
 
+/* page footer placement */
 footer, .page-footer {
   height: 60px;
 }
@@ -48,4 +50,9 @@ main {
 }
 :-ms-input-placeholder {
   color: grey;
+}
+
+/* prevent placeholder text from being cut off */
+input {
+  min-width: 300px;
 }
