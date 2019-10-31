@@ -38,13 +38,14 @@
       </ul>
 
       <ul id="nav-bar-dropdown-topics" class="dropdown-content">
-        <li><a href="/create_topic">Create Topics</a></li>
-        <li><a href="#!">Manage Topics</a></li>
+        <li><a href="/create_topic">Create Topic</a></li>
+        <li><a href="/manage_topic">Manage Topics</a></li>
       </ul>
 
       <ul id="nav-bar-dropdown-courses" class="dropdown-content">
         <li><a href="#!">Create Course</a></li>
-        <li><a href="#!">Manage Course</a></li>
+        <li><a href="#!">Manage Courses</a></li>
+        <li><a href="#!">Add Staff</a></li>
       </ul>
 
       <!-- Navigation -->
@@ -62,16 +63,7 @@
               </div>
             </a>
             <ul class="right hide-on-med-and-down">
-              <li>
-                <form>
-                  <div class="input-field">
-                    <input id="search-bar" type="search" class="teal lighten-2" onsubmit="searchResultsNavBar()">
-                    <label class="label-icon" for="search"><i class="material-icons">search</i></label>
-                    <i class="material-icons">close</i>
-                  </div>
-                </form>
-              </li>
-              <li><a onclick="searchResultsNavBar()">Advanced Search</a></li>
+              <li><a href="/search"><i class="material-icons">search</i></a></li>
               {% if session['acc_type'] == 'supervisor' or session['acc_type'] == 'course_admin' %}
                 <li>
                   <a class="dropdown-trigger" href="#!" data-target="nav-bar-dropdown-topics">
@@ -84,11 +76,10 @@
               {% if session['acc_type'] == 'course_admin' %}
                 <li>
                   <a class="dropdown-trigger" href="#!" data-target="nav-bar-dropdown-courses">
-                    Courses
+                    Admin
                     <i class="material-icons right">arrow_drop_down</i>
                   </a>
                 </li>
-                <li><a href="#!">Add staff</a></li>
               {% endif %}
               <li>
                 <a class="dropdown-trigger" href="#!" data-target="nav-bar-dropdown">
