@@ -498,20 +498,28 @@ def gen_material_attachments():
 
 
 def gen_task_critera():
-    tasks = db.select_columns('tasks', ['id', 'name'])
+    tasks = db.select_columns('tasks', ['id', 'name', 'marking_method'])
 
     for task in tasks:
         queries = []
-        queries.append((
-            'task_criteria',
-            [task[0], 'Technical Quality and Completeness of the work', 80],
-            ['task', 'name', 'max_mark']
-        ))
-        queries.append((
-            'task_criteria',
-            [task[0], 'Structure and Presentation', 20],
-            ['task', 'name', 'max_mark']
-        ))
+
+        if(tasks[2] == 1):
+            queries.append((
+                'task_criteria',
+                [task[0], 'Approval', 2],
+                ['task', 'name', 'max_mark']
+            ))
+        else:
+            queries.append((
+                'task_criteria',
+                [task[0], 'Technical Quality and Completeness', 80],
+                ['task', 'name', 'max_mark']
+            ))
+            queries.append((
+                'task_criteria',
+                [task[0], 'Structure and Presentation', 20],
+                ['task', 'name', 'max_mark']
+            ))
         db.insert_multiple(queries)
 
 
@@ -530,14 +538,15 @@ def gen_marks():
             continue
         tasks = db_queries.get_user_tasks(student[0])
         for task in tasks:
-            if 'approval' in task[3]:
-                continue
             criteria_ids = db.select_columns(
                 'task_criteria', ['id', 'max_mark'], ['task'], [task[0]]
             )
             queries = []
             for criteria in criteria_ids:
-                mark = random.randrange(criteria[1])
+                if 'approval' in task[3]:
+                    mark = 2
+                else:
+                    mark = random.randrange(criteria[1])
                 feedback = "smile face"
                 path = "img/chicken.jpg"
                 queries.append((
