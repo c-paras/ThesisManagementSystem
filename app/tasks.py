@@ -77,7 +77,7 @@ def student_view():
                             where_val=[session['id'], task_id])
 
     awaiting_submission = not len(res)
-
+    print(staff_marks)
     db.close()
     return render_template('task_student.html',
                            heading=task_info[0] + " - " + task_info[1],
@@ -86,7 +86,8 @@ def student_view():
                            description=task_info[3],
                            is_text_task=task_info[4] == "text submission",
                            staff_marks=staff_marks,
-                           awaiting_submission=awaiting_submission)
+                           awaiting_submission=awaiting_submission,
+                           is_approval=(task_info[5] == 'requires approval'))
 
 
 # get a nicely formatted table containing the marks of a student, or a blank

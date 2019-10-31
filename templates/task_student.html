@@ -50,6 +50,14 @@
       <div class="col s12">
         {% if awaiting_submission %}
           <p>Awaiting Submission.</p>
+        {% elif is_approval %}
+          {% if staff_marks["Supervisor"][0][1] == 0 %}
+            <p>Your submission has been rejected.</p>
+          {% elif staff_marks["Supervisor"][0][1] == 1 %}
+            <p>Your submission has been accepted.</p>
+          {% else %}
+            <p>Your submission is awaiting approval.</p>
+          {% endif %}
         {% else %}
           {% for staff_type in ["Supervisor", "Assessor"] %}
             <div class="col s12">
