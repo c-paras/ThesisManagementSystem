@@ -15,7 +15,7 @@ function submitManage() {
       flash(res.message, error = true);
     } else {
       delayToast('Changes saved!', false);
-      window.location.href = '/home';
+      window.location.href = '/manage_topic';
     }
   });
 }
