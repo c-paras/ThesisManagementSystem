@@ -36,7 +36,7 @@ def gen_users():
         for i in range(100):
             zid = 'z{}'.format(str(1000001 + i))
             students.append(zid)
-            name = names[random.randrange(0, 500)]['name']
+            name = names[i]['name']
             query.append(('users',
                           [name, f'{zid}@unsw.edu.au',
                            password, types['student'], '', timestamp],
@@ -48,7 +48,7 @@ def gen_users():
         for i in range(20):
             zid = 'z{}'.format(str(4000001 + i))
             public.append(zid)
-            name = names[random.randrange(0, 500)]['name']
+            name = names[100+i]['name']
             query.append(('users',
                           [name, f'{zid}@unsw.edu.au',
                            password, types['public'], '', timestamp],
@@ -60,7 +60,7 @@ def gen_users():
         for i in range(10):
             zid = 'z{}'.format(str(8000001 + i))
             supervisors.append(zid)
-            name = names[random.randrange(0, 500)]['name']
+            name = names[200+i]['name']
             query.append(('users',
                           [name, f'{zid}@unsw.edu.au',
                            password, types['supervisor'], '', timestamp],
@@ -72,7 +72,7 @@ def gen_users():
         for i in range(5):
             zid = 'z{}'.format(str(9000001 + i))
             course_admin.append(zid)
-            name = names[random.randrange(0, 500)]['name']
+            name = names[300+i]['name']
             query.append(('users',
                           [name, f'{zid}@unsw.edu.au',
                            password, types['course_admin'], '', timestamp],
