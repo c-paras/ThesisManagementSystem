@@ -503,7 +503,7 @@ def gen_task_critera():
     for task in tasks:
         queries = []
 
-        if(tasks[2] == 1):
+        if(task[2] == 1):
             queries.append((
                 'task_criteria',
                 [task[0], 'Approval', 2],
@@ -544,7 +544,7 @@ def gen_marks():
             queries = []
             for criteria in criteria_ids:
                 if 'approval' in task[3]:
-                    mark = 2
+                    mark = 1
                 else:
                     mark = random.randrange(criteria[1])
                 feedback = "smile face"
@@ -553,7 +553,11 @@ def gen_marks():
                     'marks',
                     [criteria[0], mark, student[0], markers[0], feedback, path]
                 ))
-                mark = random.randrange(criteria[1])
+
+                if 'approval' in task[3]:
+                    mark = 1
+                else:
+                    mark = random.randrange(criteria[1])
                 queries.append((
                     'marks',
                     [criteria[0], mark, student[0], markers[1], feedback, path]
