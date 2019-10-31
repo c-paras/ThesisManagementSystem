@@ -224,11 +224,9 @@ def gen_tasks():
             assert len(res) > 0
             mark_method_id = res[0][0]
 
-            submission_type = db.select_columns(
-                'marking_methods',
-                ['id'], ['name'], ['{} submission'.format(t['submission'])]
-            )
-
+            res = db.select_columns('submission_methods', ['id'],
+                                    ['name'],
+                                    ['{} submission'.format(t['submission'])])
             sub_method_id = res[0][0]
 
             word_limit = t.get('word-limit', random.randrange(400, 8000))
