@@ -29,7 +29,7 @@ def view_task():
 
 def student_view():
     db.connect()
-    task_id = int(request.args.get('tID', None))
+    task_id = int(request.args.get('task', None))
 
     # check that this user is allowed to view this task
     canView = False

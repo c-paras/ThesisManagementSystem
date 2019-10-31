@@ -5,11 +5,21 @@
 
     <!-- Show student their current materials for their corses -->
     <div class="section col s12">
-      <h5>Task Details</h5>
-      <div class="col s10 offset-s1">
-        <b>Deadline:</b> {{ deadline }} <br />
-        <b>Description:</b> {{ description }} <br />
-        <b>Attachments:</b> ??? <br />
+      <h5>Task Details:</h5>
+      <div class="col s12">
+        <div class="col s12">
+          <b>Deadline:</b> {{ deadline }}
+        </div>
+        <div class="col s12">
+          <b>Description:</b> {{ description }}
+        </div>
+        <div class="col s12">
+          <b>Attachments:</b> PLACEHOLDER
+        </div>
+        <div class="col s12">
+          &nbsp; <br />
+          &nbsp;
+        </div>
       </div>
     </div>
 
@@ -17,14 +27,18 @@
     <div class="section col s12">
       <hr/>
       <h5>Your Submission:</h5>
-      <div class="col s10 offset-s1">
-        {% if is_text_task %}
-          <!-- TODO: Text submission section -->
-          Placeholder text task submission section
-        {% else %}
-          <!-- TODO: File submission section -->
-          Placeholder File task submission section
-        {% endif %}
+      <div class="col s12">
+        <div class="col s12">
+          {% if is_text_task %}
+            {% include "task_submit_text.html" %}   
+          {% else %}
+            {% include "task_submit_file.html" %}   
+          {% endif %}
+        </div>
+        <div class="col s12">
+          &nbsp; <br />
+          &nbsp;
+        </div>
       </div>
     </div>
 
@@ -33,38 +47,44 @@
     <div class="section col s12">
       <hr/>
       <h5>Marking:</h5>
-      {% for staff_type in ["Supervisor", "Assessor"] %}
-        <div class="col s12">
+      <div class="col s12">
+        {% for staff_type in ["Supervisor", "Assessor"] %}
+          <div class="col s12">
 
-          <h6>{{ staff_type }}:</h6>
-          
-          <div class="col s10 offset-s1">
-            <table class="striped responsive-table">
+            <h6>{{ staff_type }}:</h6>
+            
+            <div class="col s12">
+              <table class="highlight responsive-table">
 
-              <!-- Table header -->
-              <thead>
-                <tr>
-                  <th>Criteria</th>
-                  <th class="center-align">Mark</th>
-                  <th>Feedback</th>
-                </tr>
-              </thead>
-
-              <!-- Table body, should be replaced with a loop when actually connected to database -->
-              <tbody>
-                {% for item in staff_marks[staff_type] %}
+                <!-- Table header -->
+                <thead>
                   <tr>
-                    <td>{{item[0]}}</td>
-                    <td class="center-align">{{item[1]}}</td>
-                    <td>-</td>
+                    <th>Criteria</th>
+                    <th class="center-align">Mark</th>
+                    <th>Feedback</th>
                   </tr>
-                {% endfor %}
-              </tbody>
+                </thead>
 
-            </table>
+                <!-- Table body, should be replaced with a loop when actually connected to database -->
+                <tbody>
+                  {% for item in staff_marks[staff_type] %}
+                    <tr>
+                      <td>{{item[0]}}</td>
+                      <td class="center-align">{{item[1]}}</td>
+                      <td>-</td>
+                    </tr>
+                  {% endfor %}
+                </tbody>
+
+              </table>
+            </div>
           </div>
-        </div>
-      {% endfor %}
+          <div class="col s12">
+            &nbsp; <br />
+            &nbsp;
+          </div>
+        {% endfor %}
+      </div>
     </div>
   </div>
 {% endblock %}
