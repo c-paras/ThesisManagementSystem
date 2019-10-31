@@ -530,6 +530,8 @@ def gen_marks():
             continue
         tasks = db_queries.get_user_tasks(student[0])
         for task in tasks:
+            if 'approval' in task[3]:
+                continue
             criteria_ids = db.select_columns(
                 'task_criteria', ['id', 'max_mark'], ['task'], [task[0]]
             )
