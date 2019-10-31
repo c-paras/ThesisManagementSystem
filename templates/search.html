@@ -25,7 +25,10 @@
         <div class="input-field s8">
           <p>
             <label>
-              <input type="checkbox" class="filled-in" checked="checked" name="checkbox-vis" id="checkbox-vis"/>
+              <input
+                type="checkbox" class="filled-in" checked="checked"
+                name="checkbox-vis" id="checkbox-vis"
+              >
               <span>Hide topics that are no longer on offer</span>
             </label>
           </p>
@@ -48,6 +51,7 @@
     </ul>
   </div>
 
+  <!-- Request topic modal -->
   {% if session['acc_type'] == 'student' %}
     {% include "modals/request.html" %}
     <script type="text/javascript" src="{{ url_for('static', filename='js/request.js') }}" defer></script>

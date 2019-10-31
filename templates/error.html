@@ -15,19 +15,17 @@
       <p class="col s8 offset-s2">
         {{ error_description }}
       </p>
-      {% if hide_navbar %}
-        <p class="col s12">
+      <p class="col s12">
+        {% if hide_navbar %}
           <a href="/login">
             Click here to log in
           </a>
-        </p>
-      {% else %}
-        <p class="col s12">
+        {% else %}
           <a href="javascript:history.back()">
             Click here to go back
           </a>
-        </p>
-      {% endif %}
+        {% endif %}
+      </p>
     </div>
   </div>
 {% endblock %}
