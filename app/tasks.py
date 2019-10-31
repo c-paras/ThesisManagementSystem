@@ -62,7 +62,8 @@ def student_view():
     mark_details = {}
 
     if is_approval:
-        res = queries.get_submission_approval(session['id'], task_id)
+        res = queries.get_submission_status(session['id'], task_id)
+
         if len(res) and res[0][0] == "pending":
             mark_details["Approval"] = "Your submission is pending approval."
         elif len(res):

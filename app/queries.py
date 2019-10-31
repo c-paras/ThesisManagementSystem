@@ -289,7 +289,7 @@ class queries:
         )
         return res
 
-    def get_submission_approval(student_id, task_id):
+    def get_submission_status(student_id, task_id):
         res = db.custom_query(
             """
                 SELECT rs.name
