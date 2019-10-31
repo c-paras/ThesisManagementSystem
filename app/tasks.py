@@ -62,8 +62,6 @@ def student_view():
 
     staff_marks = {}
 
-    # get supervisor's marks
-
     res = queries.get_students_supervisor(session['id'])
     staff_marks["Supervisor"] = get_marks_table(session['id'],
                                                 res,
@@ -74,7 +72,12 @@ def student_view():
                                               res,
                                               task_id)
 
-    print(staff_marks)
+    # check if the student needs to submit
+    res = db.select_columns('submissions', ['*'],
+                            where_col=['student', 'task'],
+                            where_val=[session['id'], task_id])
+
+    awaiting_submission = not len(res)
 
     db.close()
     return render_template('task_student.html',
@@ -83,7 +86,8 @@ def student_view():
                            deadline=deadline_text,
                            description=task_info[3],
                            is_text_task=task_info[4] == "text submission",
-                           staff_marks=staff_marks)
+                           staff_marks=staff_marks,
+                           awaiting_submission=awaiting_submission)
 
 
 # get a nicely formatted table containing the marks of a student, or a blank
@@ -102,11 +106,10 @@ def get_marks_table(student_id, staff_query, task_id):
     if len(res):
         return res
 
-    # otherwise build a table of the criteria
     default_criteria = queries.get_task_criteria(task_id)
     ret_list = []
     for criteria in default_criteria:
-        ret_list.append([criteria[0], '-', criteria[1], '-'])
+        ret_list.append([criteria[0], '-', criteria[1], 'Awaiting Marking'])
 
     return ret_list
 

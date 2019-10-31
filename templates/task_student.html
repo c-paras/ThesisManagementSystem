@@ -48,50 +48,59 @@
       <hr/>
       <h5>Marking:</h5>
       <div class="col s12">
-        {% for staff_type in ["Supervisor", "Assessor"] %}
-          <div class="col s12">
-
-            <h6>{{ staff_type }}:</h6>
-            
+        {% if awaiting_submission %}
+          <p>Awaiting Submission.</p>
+        {% else %}
+          {% for staff_type in ["Supervisor", "Assessor"] %}
             <div class="col s12">
-              {% if not staff_marks[staff_type]|length %}
-                {% if staff_type|first in 'AEIOU' %}
-                  <p>You have not been assigned an {{ staff_type|lower }} yet.</p>
+
+              <h6>{{ staff_type }}:</h6>
+              
+              <div class="col s12">
+                {% if not staff_marks[staff_type]|length %}
+                  <!-- Student has no staff member assigned -->
+                  {% if staff_type|first in 'AEIOU' %}
+                    <p>You have not been assigned an {{ staff_type|lower }} yet.</p>
+                  {% else %}
+                    <p>You have not been assigned a {{ staff_type|lower }} yet.</p>
+                  {% endif %}
                 {% else %}
-                  <p>You have not been assigned a {{ staff_type|lower }} yet.</p>
-                {% endif %}
-              {% else %}
-                <table class="highlight responsive-table">
+                  <table class="highlight responsive-table">
 
-                  <!-- Table header -->
-                  <thead>
-                    <tr>
-                      <th>Criteria</th>
-                      <th class="center-align">Mark</th>
-                      <th>Feedback</th>
-                    </tr>
-                  </thead>
-
-                  <!-- Table body, should be replaced with a loop when actually connected to database -->
-                  <tbody>
-                    {% for item in staff_marks[staff_type] %}
+                    <!-- Table header -->
+                    <thead>
                       <tr>
-                        <td>{{item[0]}}</td>
-                        <td class="center-align">{{item[1]}} / {{item[2]}}</td>
-                        <td>{{item[3]}}</td>
+                        <th>Criteria</th>
+                        <th class="center-align">Mark</th>
+                        <th>Feedback</th>
                       </tr>
-                    {% endfor %}
-                  </tbody>
+                    </thead>
 
-                </table>
-              {% endif %}
+                    <!-- Table body, should be replaced with a loop when actually connected to database -->
+                    <tbody>
+                      {% for item in staff_marks[staff_type] %}
+                        <tr>
+                          <td>{{item[0]}}</td>
+                          <td class="center-align">{{item[1]}}/{{item[2]}}</td>
+                          {% if item[1] == '-' %}
+                            <td><i>{{item[3]}}</i></td>
+                          {% else %}
+                            <td>{{item[3]}}</td>
+                          {% endif %}
+                        </tr>
+                      {% endfor %}
+                    </tbody>
+
+                  </table>
+                {% endif %}
+              </div>
             </div>
-          </div>
-          <div class="col s12">
-            &nbsp; <br />
-            &nbsp;
-          </div>
-        {% endfor %}
+            <div class="col s12">
+              &nbsp; <br />
+              &nbsp;
+            </div>
+          {% endfor %}
+        {% endif %}
       </div>
     </div>
   </div>
