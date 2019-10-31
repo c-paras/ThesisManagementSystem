@@ -538,26 +538,21 @@ def gen_marks():
             continue
         tasks = db_queries.get_user_tasks(student[0])
         for task in tasks:
+            if 'approval' in task[3]:
+                continue
             criteria_ids = db.select_columns(
                 'task_criteria', ['id', 'max_mark'], ['task'], [task[0]]
             )
             queries = []
             for criteria in criteria_ids:
-                if 'approval' in task[3]:
-                    mark = 1
-                else:
-                    mark = random.randrange(criteria[1])
+                mark = random.randrange(criteria[1])
                 feedback = "smile face"
                 path = "img/chicken.jpg"
                 queries.append((
                     'marks',
                     [criteria[0], mark, student[0], markers[0], feedback, path]
                 ))
-
-                if 'approval' in task[3]:
-                    mark = 1
-                else:
-                    mark = random.randrange(criteria[1])
+                mark = random.randrange(criteria[1])
                 queries.append((
                     'marks',
                     [criteria[0], mark, student[0], markers[1], feedback, path]

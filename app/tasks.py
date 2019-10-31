@@ -58,18 +58,26 @@ def student_view():
     #
     # get criteria & marks
     #
+    is_approval = (task_info[5] == 'requires approval')
+    mark_details = {}
 
-    staff_marks = {}
+    if is_approval:
+        res = queries.get_submission_approval(session['id'], task_id)
+        if len(res) and res[0][0] == "pending":
+            mark_details["Approval"] = "Your submission is pending approval."
+        elif len(res):
+            mark_details["Approval"] = """Your submission has been {status}.
+                                       """.format(status=res[0][0])
+    else:
+        res = queries.get_students_supervisor(session['id'])
+        mark_details["Supervisor"] = get_marks_table(session['id'],
+                                                     res,
+                                                     task_id)
 
-    res = queries.get_students_supervisor(session['id'])
-    staff_marks["Supervisor"] = get_marks_table(session['id'],
-                                                res,
-                                                task_id)
-
-    res = queries.get_students_assessor(session['id'])
-    staff_marks["Assessor"] = get_marks_table(session['id'],
-                                              res,
-                                              task_id)
+        res = queries.get_students_assessor(session['id'])
+        mark_details["Assessor"] = get_marks_table(session['id'],
+                                                   res,
+                                                   task_id)
 
     # check if the student needs to submit
     res = db.select_columns('submissions', ['*'],
@@ -77,7 +85,6 @@ def student_view():
                             where_val=[session['id'], task_id])
 
     awaiting_submission = not len(res)
-    print(staff_marks)
     db.close()
     return render_template('task_student.html',
                            heading=task_info[0] + " - " + task_info[1],
@@ -85,9 +92,9 @@ def student_view():
                            deadline=deadline_text,
                            description=task_info[3],
                            is_text_task=task_info[4] == "text submission",
-                           staff_marks=staff_marks,
+                           mark_details=mark_details,
                            awaiting_submission=awaiting_submission,
-                           is_approval=(task_info[5] == 'requires approval'))
+                           is_approval=is_approval)
 
 
 # get a nicely formatted table containing the marks of a student, or a blank

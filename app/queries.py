@@ -288,3 +288,17 @@ class queries:
                        task_id=task_id)
         )
         return res
+
+    def get_submission_approval(student_id, task_id):
+        res = db.custom_query(
+            """
+                SELECT rs.name
+                FROM submissions
+                INNER JOIN request_statuses rs
+                    ON rs.id = status
+                WHERE student = "{student_id}"
+                    AND task = "{task_id}";
+            """.format(student_id=student_id,
+                       task_id=task_id)
+        )
+        return res
