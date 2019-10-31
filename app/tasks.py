@@ -40,7 +40,6 @@ def student_view():
             break
 
     if not canView:
-        print("Can't find "+str(task_id))
         abort(403)
 
     #
@@ -102,7 +101,6 @@ def get_marks_table(student_id, staff_query, task_id):
     res = queries.get_marks_table(student_id, staff_id, task_id)
 
     # check if any marks were returned, if so return those marks
-    print(res)
     if len(res):
         return res
 
