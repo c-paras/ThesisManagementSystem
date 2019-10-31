@@ -49,7 +49,7 @@ function nextPage(requestedPage) {
   updateCanRequest();
 }
 
-function searchResults(searchTerm) {
+function searchResults() {
   const form = $('#search-form');
   if (!formValid(form)) {
     return;
@@ -61,10 +61,6 @@ function searchResults(searchTerm) {
     "topicArea": M.Chips.getInstance($('#topics')).chipsData,
     "supervisor": M.Chips.getInstance($('#supervisor')).chipsData
   };
-
-  if (searchTerm !== null && searchTerm !== "") {
-    data.searchTerm = searchTerm;
-  }
 
   makePOSTRequest('/search', data, (res) => {
     if (res.status === 'fail') {
@@ -139,8 +135,8 @@ function loadPage() {
         minLength: 1
       }
     });
-    let searchTerm = window.location.search.split('=');
-    searchResults(searchTerm[1]);
+
+    searchResults();
   });
 
   return;
