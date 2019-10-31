@@ -155,13 +155,14 @@ def staff_dashboard():
     # get students who I am assessing
     assess_students = queries.get_current_assess_students(session['user'])
 
-    all_supervisors = filter(lambda s: s['id'] != session['id'],
-                             queries.get_users_of_type('supervisor'))
+    potential_assessors = filter(lambda s: s['id'] != session['id'],
+                                 queries.get_users_of_type('supervisor')
+                                 + queries.get_users_of_type('course_admin'))
 
     for tup_student in super_students:
         i = list(tup_student)
         i.append('Supervisor')
-        if(datetime.now().timestamp() < i.pop(3)):
+        if datetime.now().timestamp() < i.pop(3):
             curr_students.append(i)
         else:
             past_students.append(i)
@@ -169,7 +170,7 @@ def staff_dashboard():
     for tup_student in assess_students:
         i = list(tup_student)
         i.append('Assessor')
-        if(datetime.now().timestamp() < i.pop(3)):
+        if datetime.now().timestamp() < i.pop(3):
             curr_students.append(i)
         else:
             past_students.append(i)
@@ -181,4 +182,4 @@ def staff_dashboard():
                            curr_requests=curr_requests,
                            curr_students=curr_students,
                            past_students=past_students,
-                           assessors=all_supervisors)
+                           assessors=potential_assessors)
