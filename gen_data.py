@@ -36,7 +36,7 @@ def gen_users():
         for i in range(100):
             zid = 'z{}'.format(str(1000001 + i))
             students.append(zid)
-            name = names[random.randrange(0, 500)]['name']
+            name = names[i]['name']
             query.append(('users',
                           [name, f'{zid}@unsw.edu.au',
                            password, types['student'], '', timestamp],
@@ -48,7 +48,7 @@ def gen_users():
         for i in range(20):
             zid = 'z{}'.format(str(4000001 + i))
             public.append(zid)
-            name = names[random.randrange(0, 500)]['name']
+            name = names[100+i]['name']
             query.append(('users',
                           [name, f'{zid}@unsw.edu.au',
                            password, types['public'], '', timestamp],
@@ -60,7 +60,7 @@ def gen_users():
         for i in range(10):
             zid = 'z{}'.format(str(8000001 + i))
             supervisors.append(zid)
-            name = names[random.randrange(0, 500)]['name']
+            name = names[200+i]['name']
             query.append(('users',
                           [name, f'{zid}@unsw.edu.au',
                            password, types['supervisor'], '', timestamp],
@@ -72,7 +72,7 @@ def gen_users():
         for i in range(5):
             zid = 'z{}'.format(str(9000001 + i))
             course_admin.append(zid)
-            name = names[random.randrange(0, 500)]['name']
+            name = names[300+i]['name']
             query.append(('users',
                           [name, f'{zid}@unsw.edu.au',
                            password, types['course_admin'], '', timestamp],
@@ -498,20 +498,28 @@ def gen_material_attachments():
 
 
 def gen_task_critera():
-    tasks = db.select_columns('tasks', ['id', 'name'])
+    tasks = db.select_columns('tasks', ['id', 'name', 'marking_method'])
 
     for task in tasks:
         queries = []
-        queries.append((
-            'task_criteria',
-            [task[0], 'Content', 80],
-            ['task', 'name', 'max_mark']
-        ))
-        queries.append((
-            'task_criteria',
-            [task[0], 'Presentation', 20],
-            ['task', 'name', 'max_mark']
-        ))
+
+        if(task[2] == 1):
+            queries.append((
+                'task_criteria',
+                [task[0], 'Approval', 2],
+                ['task', 'name', 'max_mark']
+            ))
+        else:
+            queries.append((
+                'task_criteria',
+                [task[0], 'Technical Quality and Completeness', 80],
+                ['task', 'name', 'max_mark']
+            ))
+            queries.append((
+                'task_criteria',
+                [task[0], 'Structure and Presentation', 20],
+                ['task', 'name', 'max_mark']
+            ))
         db.insert_multiple(queries)
 
 
@@ -530,6 +538,8 @@ def gen_marks():
             continue
         tasks = db_queries.get_user_tasks(student[0])
         for task in tasks:
+            if 'approval' in task[3]:
+                continue
             criteria_ids = db.select_columns(
                 'task_criteria', ['id', 'max_mark'], ['task'], [task[0]]
             )
