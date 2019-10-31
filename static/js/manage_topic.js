@@ -46,8 +46,8 @@ function submitManage() {
 }
 
 $('#checkall-btn').on('click', function () {
-    const flag = false;
+  const flag = false;
 
-    $('input[type=checkbox]').prop('checked', flag);
-    submitManage();
+  $('input[type=checkbox]').prop('checked', flag);
+  submitManage();
 });
