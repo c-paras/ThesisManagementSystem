@@ -48,6 +48,8 @@ def send_email(to, name, subject, messages):
 
     if not re.match(r'^.+@.+\..+$', to):
         raise ValueError(f'Invalid email: "{to}"')
+    if not type(messages) == list:
+        raise TypeError(f'You must supply a list of one or more messages.')
 
     # Construct the email and headers
     msg = MIMEMultipart()
