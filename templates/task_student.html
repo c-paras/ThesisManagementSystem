@@ -63,7 +63,7 @@
               <h6>{{ staff_type }}:</h6>
               
               <div class="col s12">
-                {% if not staff_marks[staff_type]|length %}
+                {% if not mark_details[staff_type]|length %}
                   <!-- Student has no staff member assigned -->
                   {% if staff_type|first in 'AEIOU' %}
                     <p>You have not been assigned an {{ staff_type|lower }} yet.</p>
@@ -84,7 +84,7 @@
 
                     <!-- Table body, should be replaced with a loop when actually connected to database -->
                     <tbody>
-                      {% for item in staff_marks[staff_type] %}
+                      {% for item in mark_details[staff_type] %}
                         <tr>
                           <td>{{item[0]}}</td>
                           <td class="center-align">{{item[1]}}/{{item[2]}}</td>
