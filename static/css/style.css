@@ -56,3 +56,8 @@ main {
 input {
   min-width: 300px;
 }
+
+/* narrow table column */
+th.narrow {
+  width: 25%;
+}

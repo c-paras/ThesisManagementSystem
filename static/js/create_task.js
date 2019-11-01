@@ -13,3 +13,21 @@ $('[name="submission-type"]').change(function () {
 });
 
 toggleSubmissionType();
+
+function addCriteria() {
+  const lastCriteria = $('#criteria-table').find('[name^="marking-criteria-"]:last');
+  const newCriteria = lastCriteria.clone();
+  newCriteria.find('input').each(function () {
+    $(this).val('');
+    markFieldValid($(this));
+  });
+  newCriteria.insertAfter(lastCriteria);
+}
+
+function removeCriteria(criteria) {
+  const table = $('#criteria-table');
+  if (table.find('tbody').find('tr').length > 2) {
+    const toRemove = table.find(`#marking-criteria-${criteria}`);
+    toRemove.remove();
+  }
+}

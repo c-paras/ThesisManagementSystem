@@ -13,10 +13,14 @@ function flash(msg, error = false) {
 
 /*
  * Mark a field as valid or invalid, by setting the
- * appropriate Materialize class.
+ * appropriate Materialize class. If the valid state is not
+ * specified, both validation classes are removed.
  */
 function markFieldValid(field, valid) {
-  if (valid) {
+  if (valid === undefined) {
+    field.removeClass('invalid');
+    field.removeClass('valid');
+  } else if (valid) {
     field.removeClass('invalid');
     field.addClass('valid');
   } else {

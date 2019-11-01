@@ -126,11 +126,70 @@
 
       <div class="section col s12">
         <h5>Marking Method:</h5>
+
         <div class="row">
-          <div class="center">
-            TODO <!-- TODO: table design -->
+          <div class="input-field">
+            <p>
+              <label>
+                <input class="with-gap" name="marking-method" id="accept-method" type="radio" checked>
+                <span>Supervisor to mark as accepted</span>
+              </label>
+            </p>
+            <p>
+              <label>
+                <input class="with-gap" name="marking-method" id="criteria-method" type="radio">
+                <span>Supervisor and assessor to mark against criteria</span>
+              </label>
+            </p>
           </div>
         </div>
+
+        <!-- Marking criteria table -->
+        <div class="row">
+          <table class="highlight responsive-table" id="criteria-table">
+
+            <!-- Table header -->
+            <thead>
+              <tr>
+                <th>Criteria</th>
+                <th class="narrow">Maximum Mark</th>
+              </tr>
+            </thead>
+
+            <!-- Table body -->
+            <tbody>
+              <tr id="marking-criteria-1" name="marking-criteria-1">
+                <td>
+                  <input
+                    id="criteria-1" name="criteria-1" type="text" class="validate"
+                    required="" aria-required="true" placeholder="Enter Criteria"
+                  >
+                </td>
+                <td>
+                  <input
+                    type="number" id="max-mark-1" name="max-mark-1" min="1" max="100"
+                    placeholder="Enter Mark" class="validate" required="" aria-required="true"
+                  >
+                </td>
+                <td>
+                  <a class="waves-effect waves-light btn-floating btn-small" onclick="removeCriteria(1)">
+                    <i class="material-icons prefix">delete</i>
+                  </a>
+                </td>
+              </tr>
+              <tr id="add-criteria">
+                <td colspan="3">
+                  <a class="waves-effect waves-light btn" id="add-criteria-btn" onclick="addCriteria()">
+                    Add Criteria
+                    <i class="material-icons right">note_add</i>
+                  </a>
+                </td>
+              </tr>
+            </tbody>
+
+          </table>
+        </div>
+
       </div>
 
       <div class="row">
