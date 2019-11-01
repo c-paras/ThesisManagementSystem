@@ -12,7 +12,7 @@ create_task = Blueprint('create_task', __name__)
 
 
 @create_task.route('/create_task', methods=['GET', 'POST'])
-@at_least_role(UserRole.STAFF)
+@at_least_role(UserRole.COURSE_ADMIN)
 def create():
     if request.method == 'GET':
         return render_template('create_task.html', heading='Create Task',
