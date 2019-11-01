@@ -111,8 +111,8 @@ def respond_request():
     res = db.select_columns('users', ['email', 'name'],
                             ['id'], [data[1]])[0]
     student = {
-        'email': res[1],
-        'name': res[0]
+        'email': res[0],
+        'name': res[1]
     }
     topic = db.select_columns('topics', ['name'], ['id'], [data[2]])[0][0]
     db.close()

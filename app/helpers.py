@@ -1,4 +1,6 @@
+import re
 import smtplib
+import sys
 
 from flask import jsonify
 from flask import render_template
@@ -30,7 +32,10 @@ def get_fields(form, fields):
 def error(msg):
     ''' Format error response with message. '''
     if not (msg.endswith('.') or msg.endswith('!')):
-        msg += '!'
+        if '!' in msg:
+            msg += '.'
+        else:
+            msg += '!'
     return jsonify({'status': 'fail', 'message': msg})
 
 
@@ -41,12 +46,15 @@ def send_email(to, name, subject, messages):
     of the HTML email, as well as the person's name and subject.
     '''
 
+    if not re.match(r'^.+@.+\..+$', to):
+        raise ValueError(f'Invalid email: "{to}"')
+
     # Construct the email and headers
     msg = MIMEMultipart()
     msg['From'] = config.SYSTEM_EMAIL
     if config.DEBUG:
         print(f'Debugging mode - sending email to {config.SYSTEM_EMAIL}')
-        print(f'In production - an email would be sent to {to}')
+        print(f'In production - an email would be sent to {to} ({name})')
         to = config.SYSTEM_EMAIL
     msg['To'] = to
     msg['Subject'] = '{} | TMS'.format(subject)
@@ -62,6 +70,11 @@ def do_email_send(to, msg):
     Send an email over SMTP. This function is not meant to be called
     directly. It is invoked by `send_email' in a new thread.
     '''
+    if sys._getframe().f_back.f_code.co_name != 'run':
+        raise ValueError(
+            "Do not call `do_send_email' directly, call `send_email'."
+        )
+
     server = smtplib.SMTP('smtp.gmail.com', 587)
     server.starttls()
     server.login(config.SYSTEM_EMAIL, config.SYSTEM_PASSWORD)
