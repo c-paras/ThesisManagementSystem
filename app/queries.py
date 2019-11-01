@@ -209,7 +209,8 @@ class queries:
     def get_general_task_info(task_id):
         res = db.custom_query(
             """
-                SELECT c.name, t.name, t.deadline, t.description, sm.name
+                SELECT c.name, t.name, t.deadline,
+                       t.description, sm.name, mm.name
                 FROM tasks t
                 INNER JOIN course_offerings co
                     ON t.course_offering = co.id
@@ -233,5 +234,71 @@ class queries:
                     ON tc.task = t.id
                 WHERE t.id = "{id}";
             """.format(id=task_id)
+        )
+        return res
+
+    def get_students_supervisor(student_id):
+        res = db.custom_query(
+            """
+                SELECT staff.id, staff.name
+                FROM users stu
+                JOIN student_topic st
+                    ON stu.id = st.student
+                JOIN topics t
+                    ON st.topic =t.id
+                JOIN users staff
+                    ON t.supervisor = staff.id
+                WHERE stu.id = "{id}";
+            """.format(id=student_id)
+        )
+        return res
+
+    def get_students_assessor(student_id):
+        res = db.custom_query(
+            """
+                SELECT staff.id, staff.name
+                FROM users stu
+                JOIN student_topic topic
+                    ON stu.id = topic.student
+                JOIN users staff
+                    ON topic.assessor = staff.id
+                WHERE stu.id = "{id}";
+            """.format(id=student_id)
+        )
+        return res
+
+    def get_marks_table(student_id, staff_id, task_id):
+        res = db.custom_query(
+            """
+                SELECT tc.name, m.mark, tc.max_mark, m.feedback
+                FROM users stu
+                INNER JOIN marks m
+                    ON stu.id = m.student
+                INNER JOIN users staff
+                    ON m.marker = staff.id
+                INNER JOIN task_criteria tc
+                    ON m.criteria = tc.id
+                INNER JOIN tasks t
+                    ON t.id = tc.task
+                WHERE stu.id = "{student_id}"
+                    AND staff.id = "{staff_id}"
+                    AND tc.task = "{task_id}";
+            """.format(student_id=student_id,
+                       staff_id=staff_id,
+                       task_id=task_id)
+        )
+        return res
+
+    def get_submission_status(student_id, task_id):
+        res = db.custom_query(
+            """
+                SELECT rs.name
+                FROM submissions
+                INNER JOIN request_statuses rs
+                    ON rs.id = status
+                WHERE student = "{student_id}"
+                    AND task = "{task_id}";
+            """.format(student_id=student_id,
+                       task_id=task_id)
         )
         return res

@@ -40,7 +40,6 @@ def student_view():
             break
 
     if not canView:
-        print("Can't find "+str(task_id))
         abort(403)
 
     #
@@ -57,15 +56,36 @@ def student_view():
     deadline_text = weekday + " " + due_date.strftime(time_format)
 
     #
-    # TODO: Get Criteria
+    # get criteria & marks
     #
+    is_approval = (task_info[5] == 'requires approval')
+    mark_details = {}
 
-    res = queries.get_task_criteria(task_id)
+    if is_approval:
+        res = queries.get_submission_status(session['id'], task_id)
 
-    staff_marks = {}
-    staff_marks["Supervisor"] = res
-    staff_marks["Assessor"] = res
+        if len(res) and res[0][0] == "pending":
+            mark_details["Approval"] = "Your submission is pending approval."
+        elif len(res):
+            mark_details["Approval"] = """Your submission has been {status}.
+                                       """.format(status=res[0][0])
+    else:
+        res = queries.get_students_supervisor(session['id'])
+        mark_details["Supervisor"] = get_marks_table(session['id'],
+                                                     res,
+                                                     task_id)
 
+        res = queries.get_students_assessor(session['id'])
+        mark_details["Assessor"] = get_marks_table(session['id'],
+                                                   res,
+                                                   task_id)
+
+    # check if the student needs to submit
+    res = db.select_columns('submissions', ['*'],
+                            where_col=['student', 'task'],
+                            where_val=[session['id'], task_id])
+
+    awaiting_submission = not len(res)
     db.close()
     return render_template('task_student.html',
                            heading=task_info[0] + " - " + task_info[1],
@@ -73,7 +93,32 @@ def student_view():
                            deadline=deadline_text,
                            description=task_info[3],
                            is_text_task=task_info[4] == "text submission",
-                           staff_marks=staff_marks)
+                           mark_details=mark_details,
+                           awaiting_submission=awaiting_submission,
+                           is_approval=is_approval)
+
+
+# get a nicely formatted table containing the marks of a student, or a blank
+# list of the criteria
+def get_marks_table(student_id, staff_query, task_id):
+
+    # check if staffmember is assigned to this student, else return blank list
+    if not len(staff_query):
+        return []
+
+    staff_id = staff_query[0][0]
+    res = queries.get_marks_table(student_id, staff_id, task_id)
+
+    # check if any marks were returned, if so return those marks
+    if len(res):
+        return res
+
+    default_criteria = queries.get_task_criteria(task_id)
+    ret_list = []
+    for criteria in default_criteria:
+        ret_list.append([criteria[0], '-', criteria[1], 'Awaiting Marking'])
+
+    return ret_list
 
 
 def staff_view():
