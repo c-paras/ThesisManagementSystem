@@ -1,8 +1,8 @@
 let canRequest;
 
 function makeCard(id, title, description, topics, supervisor, email, preqs) {
-  const card = `<div class="row">\
-  <div class="col s10 offset-m1">\
+  const card = `<div class="row">
+  <div class="col s12">
     <div class="card white-grey darken-1">
       <div class="card-content black-text">
         <span class="card-title">${title}</span>
