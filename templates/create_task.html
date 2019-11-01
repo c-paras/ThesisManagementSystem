@@ -1,0 +1,146 @@
+{% extends "base.html" %}
+
+{% block body %}
+  <div class="row">
+    <form class="col s12" id="create-task-form" name="create-task-form">
+
+      <div class="section col s12">
+        <h5>Task Information:</h5>
+
+        <div class="row">
+          <div class="input-field">
+            <i class="material-icons prefix">assignment</i>
+            <input
+              id="topic-name" name="topic-name" type="text" class="validate"
+              required="" aria-required="true" placeholder="Name of Task"
+            >
+            <span class="helper-text" data-error="Task name is required"></span>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="input-field">
+            <div class="row">
+              <div class="col s5">
+                <i class="material-icons prefix">date_range</i>
+                <input
+                  id="due-date" name="due-date" type="text" class="datepicker"
+                  placeholder="Due date" required="" aria-required="true"
+                >
+              </div>
+              <div class="col s2">
+              </div>
+              <div class="col s5">
+                <i class="material-icons prefix">access_time</i>
+                <input
+                  id="due-time" name="due-time" type="text" class="timepicker"
+                  placeholder="Due time" required="" aria-required="true"
+                >
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="input-field">
+            <i class="material-icons prefix">event_note</i>
+            <textarea
+              id="topic-description" name="topic-description" class="materialize-textarea validate"
+              placeholder="Task Description" required="" aria-required="true"
+            ></textarea>
+            <span class="helper-text" data-error="Task description is required"></span>
+          </div>
+        </div>
+
+      </div>
+
+      <div class="section col s12">
+        <h5>Submission Type:</h5>
+
+        <div class="row">
+          <div class="input-field">
+            <div class="col s4 offset-s3">
+              <label>
+                <input class="with-gap" name="submission-type" id="text-type" type="radio" checked>
+                <span>Text entry</span>
+              </label>
+            </div>
+            <div class="col s4">
+              <label>
+                <input class="with-gap" name="submission-type" id="file-type" type="radio">
+                <span>File upload</span>
+              </label>
+            </div>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="input-field">
+            <i class="material-icons prefix">spellcheck</i>
+            <input
+              type="number" id="word-limit" name="word-limit" min="1" max="5000" placeholder="Word Limit"
+              class="validate" required="" aria-required="true"
+            >
+            <span class="helper-text" data-error="Word limit is required"></span>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="input-field">
+            <div class="row">
+
+              <div class="col s5">
+                <div class="input-field">
+                  <i class="material-icons prefix">insert_drive_file</i>
+                  <input
+                    type="number" id="file-size-limit" name="file-size-limit" min="1" max="100"
+                    placeholder="File Size Limit" class="validate" required="" aria-required="true"
+                  >
+                  <label for="file-size-limit">In megabytes</label>
+                  <span class="helper-text" data-error="File size limit is required"></span>
+                </div>
+              </div>
+
+              <div class="col s2"></div>
+
+              <div class="col s5">
+                <div class="input-field">
+                  <i class="material-icons prefix">description</i>
+                  <select
+                    id="file-types" name="file-types" class="validate"
+                    required="" aria-required="true"
+                  >
+                    {% for type in ['PDF', 'TXT', 'ZIP', 'TAR'] %}
+                      <!-- TODO: load from backend -->
+                      <option value="{{ loop.index0 }}">{{ type }}</option>
+                    {% endfor %}
+                  </select>
+                  <label>Accepted File Type</label>
+                </div>
+              </div>
+
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="section col s12">
+        <h5>Marking Method:</h5>
+        <div class="row">
+          <div class="center">
+            TODO <!-- TODO: table design -->
+          </div>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="center">
+          <a class="waves-effect waves-light btn" id="create-task-btn" onclick="submitCreate()">Create
+            <i class="material-icons right">send</i>
+          </a>
+        </div>
+      </div>
+
+    </form>
+  </div>
+{% endblock %}

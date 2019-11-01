@@ -153,6 +153,13 @@
 
           /* Initialize modals */
           $('.modal').modal();
+
+          /* Initialize select fields */
+          $('select').formSelect();
+
+          /* Initialize date and time pickers */
+          $('.datepicker').datepicker();
+          $('.timepicker').timepicker();
         })
       </script>
     {% endif %}
