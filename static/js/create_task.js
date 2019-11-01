@@ -8,11 +8,24 @@ function toggleSubmissionType() {
   }
 }
 
+function toggleMarkingMethod() {
+  if ($('#accept-method').prop('checked') === true) {
+    $('#marking-criteria-block').hide();
+  } else {
+    $('#marking-criteria-block').show();
+  }
+}
+
 $('[name="submission-type"]').change(function () {
   toggleSubmissionType();
 });
 
+$('[name="marking-method"]').change(function () {
+  toggleMarkingMethod();
+});
+
 toggleSubmissionType();
+toggleMarkingMethod();
 
 function addCriteria() {
   const lastCriteria = $('#criteria-table').find('[name^="marking-criteria-"]:last');
