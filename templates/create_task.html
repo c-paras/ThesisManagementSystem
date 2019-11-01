@@ -110,9 +110,8 @@
                     id="file-types" name="file-types" class="validate"
                     required="" aria-required="true"
                   >
-                    {% for type in ['PDF', 'TXT', 'ZIP', 'TAR'] %}
-                      <!-- TODO: load from backend -->
-                      <option value="{{ loop.index0 }}">{{ type }}</option>
+                    {% for type in file_types %}
+                      <option value="{{ loop.index0 }}">{{ type|upper|replace('.', '') }}</option>
                     {% endfor %}
                   </select>
                   <label>Accepted File Type</label>
