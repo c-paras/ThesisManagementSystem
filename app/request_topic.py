@@ -101,7 +101,7 @@ def respond_request():
     if req_status == 'approved':
         if 'assessor' not in request.form:
             db.close()
-            return error("assessor not specified")
+            return error('You must specify an assessor')
         db.insert_single('student_topic',
                          [data[1], data[2], request.form['assessor']],
                          ['student', 'topic', 'assessor'])
