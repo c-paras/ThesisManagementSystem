@@ -26,11 +26,11 @@ def create():
 
     try:
         fields = [
-            'task-name', 'due-date', 'task-description', 'submission-type',
+            'task-name', 'deadline', 'task-description', 'submission-type',
             'word-limit', 'maximum-file-size', 'accepted-file-type',
             'marking-method', 'num-criteria'
         ]
-        task_name, due_date, task_description, submission_type, word_limit, \
+        task_name, deadline, task_description, submission_type, word_limit, \
             max_file_size, accecpted_ftype, marking_method, num_criteria = \
             get_fields(request.form, fields, optional=['word-limit'],
                        ints=['maximum-file-size',
@@ -43,7 +43,7 @@ def create():
             return error('Maximum file size must be between 1 and 100!')
     elif submission_type == 'text':
         if not (1 <= word_limit <= 5000):
-            return error('word limit must be between 1 and 5000!')
+            return error('Word limit must be between 1 and 5000!')
     else:
         return error('Unknown submission type!')
 
@@ -67,6 +67,14 @@ def create():
     if len(res):
         db.close()
         return error('A task with that name already exists in this course!')
+
+    db.insert_single(
+        'tasks',
+        [task_name, 0, deadline, task_description,
+         max_file_size, 0, 0, 0, word_limit],
+        ['name', 'course_offering', 'deadline', 'description', 'size_limit',
+         'visible', 'submission_method', 'marking_method', 'word_limit']
+    )
 
     db.close()
     return jsonify({'status': 'ok'})

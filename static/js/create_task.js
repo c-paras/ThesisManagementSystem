@@ -46,6 +46,7 @@ $('[name="marking-method"]').change(function () {
 
 toggleSubmissionType();
 toggleMarkingMethod();
+$('#deadline').datetimepicker();
 
 function relabel(elem, attrs) {
   let id = 0;
