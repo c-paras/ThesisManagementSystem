@@ -33,7 +33,8 @@ def create():
         task_name, due_date, description, submission_type, word_limit, \
             max_file_size, accecpted_ftype, marking_method, num_criteria = \
             get_fields(request.form, fields, optional=['word-limit'],
-                       ints=['maximum-file-size', 'num-criteria'])
+                       ints=['maximum-file-size',
+                             'num-criteria', 'word-limit'])
     except ValueError as e:
         return e.args
     num_criteria = num_criteria
@@ -56,6 +57,9 @@ def create():
     if submission_type == 'file':
         if not (1 <= max_file_size <= 100):
             return error('Maximum file size must be between 1 and 100!')
+    elif submission_type == 'text':
+        if not (1 <= word_limit <= 5000):
+            return error('World limit must be between 1 and 5000!')
 
     db.connect()
     db.close()

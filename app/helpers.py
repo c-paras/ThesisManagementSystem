@@ -16,7 +16,8 @@ def get_fields(form, fields, optional=None, ints=None):
     '''
     Retrieve field data from form, raising an exception in the case
     that at least one field is blank. Fields marked as optional are
-    not checked for being empty.
+    not checked for being empty. Fields marked as being ints, are
+    validate as such and are converted into ints.
     '''
     data = []
     for field in fields:
