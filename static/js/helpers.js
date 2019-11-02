@@ -170,7 +170,7 @@ $(function () {
 });
 
 /*
- * Prevent fields containing only places from being treated as valid.
+ * Prevent fields containing only spaces from being treated as valid.
  * The `pattern' attribute is not supported for textareas yet.
  */
 $(function () {
