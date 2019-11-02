@@ -119,7 +119,7 @@ function loadPage() {
   makeGETRequest('/search_chips', (res) => {
 
     $('#topics').chips({
-      placeholder: 'Enter a topic',
+      placeholder: 'Enter a Topic',
       autocompleteOptions: {
         data: res.chipsTopic,
         limit: 20,
@@ -128,7 +128,7 @@ function loadPage() {
     });
 
     $('#supervisor').chips({
-      placeholder: 'Enter a supervisor',
+      placeholder: 'Enter a Supervisor',
       autocompleteOptions: {
         data: res.chipsSuper,
         limit: 20,
