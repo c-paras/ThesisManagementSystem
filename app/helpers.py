@@ -12,7 +12,7 @@ from threading import Thread
 import config
 
 
-def get_fields(form, fields, optional):
+def get_fields(form, fields, optional=None):
     '''
     Retrieve field data from form, raising an exception in the case
     that at least one field is blank. Fields marked as optional are
@@ -21,7 +21,7 @@ def get_fields(form, fields, optional):
     data = []
     for field in fields:
         value = form.get(field, None)
-        if field not in optional and \
+        if (optional is None or field not in optional) and \
            (value is None or re.match(r'^\s*$', value)):
             field_name = field.capitalize().replace('-', ' ')
             plural = 'are' if field_name.endswith('s') else 'is'

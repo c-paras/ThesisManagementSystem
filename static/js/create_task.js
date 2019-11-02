@@ -4,6 +4,8 @@ function submitCreate() {
     return;
   }
 
+  $('#num-criteria').val($('[name^="marking-criteria-"]').length);
+
   makeRequest('/create_task', form, (res) => {
     if (res.status === 'fail') {
       flash(res.message, error = true);
