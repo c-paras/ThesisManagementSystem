@@ -80,7 +80,7 @@
               <i class="material-icons prefix">spellcheck</i>
               <input
                 type="number" id="word-limit" name="word-limit" min="1" max="5000" placeholder="Word Limit"
-                class="validate" required="" aria-required="true"
+                class="validate" required="" aria-required="true" requiredif="submission-type=text"
               >
               <span id="word-limit-error" class="helper-text" data-error="Word limit is required"></span>
             </div>
@@ -170,12 +170,14 @@
                     <input
                       id="criteria-1" name="criteria-1" type="text" class="validate"
                       required="" aria-required="true" placeholder="Enter Criteria"
+                      requiredif="marking-method=criteria"
                     >
                   </td>
                   <td>
                     <input
                       type="number" id="max-mark-1" name="max-mark-1" min="1" max="100"
                       placeholder="Enter Mark" class="validate" required="" aria-required="true"
+                      requiredif="marking-method=criteria"
                     >
                   </td>
                   <td>

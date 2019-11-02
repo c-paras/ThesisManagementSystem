@@ -1,3 +1,19 @@
+function submitCreate() {
+  const form = $('#create-task-form');
+  if (!formValid(form)) {
+    return;
+  }
+
+  makeRequest('/create_task', form, (res) => {
+    if (res.status === 'fail') {
+      flash(res.message, error = true);
+    } else {
+      delayToast('Task created!', false);
+      window.location.href = '/manage_courses';
+    }
+  });
+}
+
 function toggleSubmissionType() {
   if ($('#text-type').prop('checked') === true) {
     $('#text-entry-block').show();
