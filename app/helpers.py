@@ -32,8 +32,11 @@ def get_fields(form, fields, optional=None, ints=None):
             try:
                 data.append(int(value))
             except ValueError:
-                err = error(f'{field_name} must be an integer!')
-                raise ValueError(err)
+                if field not in optional:
+                    err = error(f'{field_name} must be an integer!')
+                    raise ValueError(err)
+                else:
+                    data.append(value)
         else:
             data.append(value)
     return data

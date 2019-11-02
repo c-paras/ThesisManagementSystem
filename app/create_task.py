@@ -30,7 +30,7 @@ def create():
             'word-limit', 'maximum-file-size', 'accepted-file-type',
             'marking-method', 'num-criteria'
         ]
-        task_name, due_date, description, submission_type, word_limit, \
+        task_name, due_date, task_description, submission_type, word_limit, \
             max_file_size, accecpted_ftype, marking_method, num_criteria = \
             get_fields(request.form, fields, optional=['word-limit'],
                        ints=['maximum-file-size',
@@ -63,8 +63,10 @@ def create():
             return error('Marks must add to 100!')
 
     db.connect()
-    db.close()
-    return error('A task with that name already exists in this course!')
+    res = db.select_columns('tasks', ['name'], ['name'], [task_name])
+    if len(res):
+        db.close()
+        return error('A task with that name already exists in this course!')
 
     db.close()
     return jsonify({'status': 'ok'})
