@@ -23,6 +23,6 @@ def create():
         return render_template('create_task.html', heading='Create Task',
                                title='Create Task', file_types=file_types)
 
-    # TODO: post request
+    # TODO: POST request
     return error('A task with that name already exists!')
     return jsonify({'status': 'ok'})

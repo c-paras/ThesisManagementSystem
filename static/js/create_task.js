@@ -34,7 +34,8 @@ function relabel(elem, attrs) {
   for (const attr of attrs) {
     val = elem.attr(attr);
     id = parseInt(val.match(/\d+$/)[0]);
-    elem.attr(attr, val.replace(/(\d+)$/, function (all, n) {
+    elem.attr(
+      attr, val.replace(/(\d+)$/, function (all, n) {
         return parseInt(n) + 1;
       })
     );
