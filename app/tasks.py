@@ -146,7 +146,7 @@ def submit_file_task():
         return error("Missing task id")
 
     db.connect()
-    res = db.select_columns('tasks', ['deadline', 'submission_method',
+    res = db.select_columns('tasks', ['deadline', 'marking_method',
                                       'visible', 'course_offering'],
                             ['id'], [task_id])
     if not res:
@@ -156,7 +156,9 @@ def submit_file_task():
     task = {
         'id': task_id,
         'deadline': datetime.fromtimestamp(res[0][0]),
-        'sub_method': res[0][1],
+        'sub_method': {
+            'id': res[0][1]
+        },
         'visible': res[0][2],
         'offering': res[0][3]
     }
@@ -172,6 +174,20 @@ def submit_file_task():
         db.close()
         return error("User not enrolled in task's course")
 
+    res = db.select_columns('marking_methods', ['name'],
+                            ['id'], [task['sub_method']['id']])
+    assert res
+    task['sub_method']['name'] = res[0][0]
+
+    mark_method_id = None
+    if task['sub_method']['name'] == 'requires approval':
+        mark_method_id = db.select_columns('request_statuses', ['id'],
+                                           ['name'], ['pending'])[0][0]
+    elif task['sub_method']['name'] == 'requires mark':
+        mark_method_id = db.select_columns('request_statuses', ['id'],
+                                           ['name'], ['pending mark'])[0][0]
+    assert mark_method_id
+
     if not os.path.isdir(config.FILE_UPLOAD_DIR):
         os.mkdir(config.FILE_UPLOAD_DIR)
 
@@ -179,6 +195,11 @@ def submit_file_task():
     sec_filename = secure_filename(sent_file.filename)
     output_filename = f'{file_uuid}-{sec_filename}'
     sent_file.save(os.path.join(config.FILE_UPLOAD_DIR, output_filename))
-    print(output_filename)
+    db.insert_single('submissions', [session['id'], task['id'],
+                                     sec_filename, output_filename,
+                                     datetime.now().timestamp(),
+                                     mark_method_id],
+                     ['student', 'task', 'name', 'path',
+                      'date_modified', 'status'])
     db.close()
     return jsonify({})
