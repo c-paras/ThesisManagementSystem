@@ -1,5 +1,6 @@
 from datetime import datetime
 
+from flask import abort
 from flask import Blueprint
 from flask import jsonify
 from flask import render_template
@@ -18,13 +19,21 @@ create_task = Blueprint('create_task', __name__)
 @create_task.route('/create_task', methods=['GET', 'POST'])
 @at_least_role(UserRole.COURSE_ADMIN)
 def create():
+    course_id = request.args.get('course_id', None, type=int)
     if request.method == 'GET':
+        if course_id is None:
+            abort(400)
         db.connect()
         file_types = db.select_columns('file_types', ['name'])
         file_types = list(map(lambda x: x[0], file_types))
+        res = db.select_columns('courses', ['id'], ['id'], [course_id])
+        if not len(res):
+            db.close()
+            abort(404)
         db.close()
         return render_template('create_task.html', heading='Create Task',
-                               title='Create Task', file_types=file_types)
+                               title='Create Task', file_types=file_types,
+                               course_id=course_id)
 
     try:
         fields = [
