@@ -36,7 +36,7 @@ do
     elif test "$ext" = 'html'
     then
         jinjalint -c .jinjarc "$file" || fail=0
-    elif test "$ext" = 'js'
+    elif test "$ext" = 'js' && ! echo `dirname "$file"` | egrep -q '/vendor$'
     then
         jshint "$file" || fail=0
     fi

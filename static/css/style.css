@@ -63,8 +63,3 @@ input {
 th.narrow {
   width: 25%;
 }
-
-/* prevent left panel re-sizing when moving between 9 and 10 or 12 and 1 */
-.timepicker-digital-display {
-  min-width: 250px;
-}
