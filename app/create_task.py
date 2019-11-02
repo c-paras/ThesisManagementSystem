@@ -78,23 +78,22 @@ def create():
         db.close()
         return error('A task with that name already exists in this course!')
 
-    res = db.select_columns('submission_methods', ['id'],
-                            ['name'],
-                            ['{} submission'.format(submission_type)])
-    submission_method_id = res[0][0]
-
-    marking_method = 'approval' if marking_method == 'accept' else 'mark'
-    res = db.select_columns('marking_methods', ['id'], ['name'],
-                            ['requires {}'.format(marking_method)])
-    mark_method_id = res[0][0]
-
+    # retrieve some foreign keys for insertion
     res = db.select_columns('file_types', ['id'], ['name'], [accepted_ftype])
     if not len(res):
         db.close()
         return error('Invalid or unsupported file type!')
     file_type_id = res[0][0]
+    res = db.select_columns('submission_methods', ['id'],
+                            ['name'],
+                            ['{} submission'.format(submission_type)])
+    submission_method_id = res[0][0]
+    marking_method = 'approval' if marking_method == 'accept' else 'mark'
+    res = db.select_columns('marking_methods', ['id'], ['name'],
+                            ['requires {}'.format(marking_method)])
+    mark_method_id = res[0][0]
 
-    # TODO: insert marking criteria
+    # commit task
     db.insert_single(
         'tasks',
         [task_name, 0, deadline, task_description,  # TODO: course offering
@@ -102,13 +101,28 @@ def create():
         ['name', 'course_offering', 'deadline', 'description', 'size_limit',
          'visible', 'submission_method', 'marking_method', 'word_limit']
     )
+
     res = db.select_columns('tasks', ['id'],
                             ['name', 'course_offering'],
                             [task_name, 0])  # TODO: course offering
     task_id = res[0][0]
 
+    # commit accepted file type
     db.insert_single('submission_types', [file_type_id, task_id],
                      ['file_type', 'task'])
+
+    # commit marking criteria
+    marking_criteria = []
+    if marking_method == 'approval':
+        marking_criteria.append(('task_criteria',
+                                [task_id, 'Approval', 100],
+                                ['task', 'name', 'max_mark']))
+    else:
+        for i in range(len(criteria)):
+            marking_criteria.append(('task_criteria',
+                                    [task_id, criteria[i], marks[i]],
+                                    ['task', 'name', 'max_mark']))
+    db.insert_multiple(marking_criteria)
 
     db.close()
     return jsonify({'status': 'ok'})
