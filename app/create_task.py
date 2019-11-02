@@ -31,7 +31,7 @@ def create():
             'marking-method', 'num-criteria'
         ]
         task_name, deadline, task_description, submission_type, word_limit, \
-            max_file_size, accecpted_ftype, marking_method, num_criteria = \
+            max_file_size, accepted_ftype, marking_method, num_criteria = \
             get_fields(request.form, fields, optional=['word-limit'],
                        ints=['maximum-file-size',
                              'num-criteria', 'word-limit'])
@@ -55,26 +55,54 @@ def create():
             marks = [f'maximum-mark-{i}' for i in range(1, num_criteria + 1)]
             try:
                 criteria = get_fields(request.form, criteria)
-                marks = get_fields(request.form, marks)
+                marks = get_fields(request.form, marks, ints=marks)
             except ValueError as e:
                 return e.args
 
         if sum([mark for mark in marks]) != 100:
             return error('Marks must add to 100!')
+    elif marking_method != 'accept':
+        return error('Unknown marking method!')
 
     db.connect()
     res = db.select_columns('tasks', ['name'], ['name'], [task_name])
+    # TODO: check course
     if len(res):
         db.close()
         return error('A task with that name already exists in this course!')
 
+    res = db.select_columns('submission_methods', ['id'],
+                            ['name'],
+                            ['{} submission'.format(submission_type)])
+    submission_method_id = res[0][0]
+
+    marking_method = 'approval' if marking_method == 'accept' else 'mark'
+    res = db.select_columns('marking_methods', ['id'], ['name'],
+                            ['requires {}'.format(marking_method)])
+    mark_method_id = res[0][0]
+
+    res = db.select_columns('file_types', ['id'], ['name'], [accepted_ftype])
+    if not len(res):
+        db.close()
+        return error('Invalid or unsupported file type!')
+    file_type_id = res[0][0]
+
+    # TODO: deadline
+    # TODO: insert marking criteria
     db.insert_single(
         'tasks',
-        [task_name, 0, deadline, task_description,
-         max_file_size, 0, 0, 0, word_limit],
+        [task_name, 0, deadline, task_description,  # TODO: course offering
+         max_file_size, 0, submission_method_id, mark_method_id, word_limit],
         ['name', 'course_offering', 'deadline', 'description', 'size_limit',
          'visible', 'submission_method', 'marking_method', 'word_limit']
     )
+    res = db.select_columns('tasks', ['id'],
+                            ['name', 'course_offering'],
+                            [task_name, 0])  # TODO: course offering
+    task_id = res[0][0]
+
+    db.insert_single('submission_types', [file_type_id, task_id],
+                     ['file_type', 'task'])
 
     db.close()
     return jsonify({'status': 'ok'})
