@@ -9,6 +9,7 @@ footer, .page-footer {
   height: 60px;
 }
 
+/* button color */
 .waves-effect.active {
   background-color: #26a69a !important;
 }
@@ -23,6 +24,7 @@ main {
   flex: 1 0 auto;
 }
 
+/* fix navbar */
 .navbar-fixed {
   padding-bottom: 20px;
 }
@@ -60,4 +62,9 @@ input {
 /* narrow table column */
 th.narrow {
   width: 25%;
+}
+
+/* prevent left panel re-sizing when moving between 9 and 10 or 12 and 1 */
+.timepicker-digital-display {
+  min-width: 250px;
 }

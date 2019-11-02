@@ -8,47 +8,53 @@
         <h5>Task Information:</h5>
 
         <div class="row">
-          <div class="input-field">
-            <i class="material-icons prefix">assignment</i>
-            <input
-              id="topic-name" name="topic-name" type="text" class="validate"
-              required="" aria-required="true" placeholder="Name of Task"
-            >
-            <span class="helper-text" data-error="Task name is required"></span>
-          </div>
-        </div>
-
-        <div class="row">
-          <div class="input-field">
-            <div class="row">
-              <div class="col s5">
-                <i class="material-icons prefix">date_range</i>
-                <input
-                  id="due-date" name="due-date" type="text" class="datepicker"
-                  placeholder="Due date" required="" aria-required="true"
-                >
-              </div>
-              <div class="col s2">
-              </div>
-              <div class="col s5">
-                <i class="material-icons prefix">access_time</i>
-                <input
-                  id="due-time" name="due-time" type="text" class="timepicker"
-                  placeholder="Due time" required="" aria-required="true"
-                >
-              </div>
+          <div class="col s12">
+            <div class="input-field">
+              <i class="material-icons prefix">assignment</i>
+              <input
+                id="topic-name" name="topic-name" type="text" class="validate"
+                required="" aria-required="true" placeholder="Name of Task"
+              >
+              <span class="helper-text" data-error="Task name is required"></span>
             </div>
           </div>
         </div>
 
         <div class="row">
           <div class="input-field">
-            <i class="material-icons prefix">event_note</i>
-            <textarea
-              id="topic-description" name="topic-description" class="materialize-textarea validate"
-              placeholder="Task Description" required="" aria-required="true"
-            ></textarea>
-            <span class="helper-text" data-error="Task description is required"></span>
+            <div class="col s12">
+              <div class="row">
+                <div class="col s5">
+                  <i class="material-icons prefix">date_range</i>
+                  <input
+                    id="due-date" name="due-date" type="text" class="datepicker"
+                    placeholder="Due date" required="" aria-required="true"
+                  >
+                </div>
+                <div class="col s2">
+                </div>
+                <div class="col s5">
+                  <i class="material-icons prefix">access_time</i>
+                  <input
+                    id="due-time" name="due-time" type="text" class="timepicker"
+                    placeholder="Due time" required="" aria-required="true"
+                  >
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col s12">
+            <div class="input-field">
+              <i class="material-icons prefix">event_note</i>
+              <textarea
+                id="topic-description" name="topic-description" class="materialize-textarea validate"
+                placeholder="Task Description" required="" aria-required="true"
+              ></textarea>
+              <span class="helper-text" data-error="Task description is required"></span>
+            </div>
           </div>
         </div>
 
@@ -58,68 +64,67 @@
         <h5>Submission Type:</h5>
 
         <div class="row">
-          <div class="input-field">
-            <div class="col s4 offset-s3">
-              <label>
-                <input class="with-gap" name="submission-type" id="text-type" type="radio" checked>
-                <span>Text entry</span>
-              </label>
-            </div>
-            <div class="col s4">
-              <label>
-                <input class="with-gap" name="submission-type" id="file-type" type="radio">
-                <span>File upload</span>
-              </label>
-            </div>
-          </div>
-        </div>
-
-        <div class="row" id="text-entry-block">
-          <div class="input-field">
-            <i class="material-icons prefix">spellcheck</i>
-            <input
-              type="number" id="word-limit" name="word-limit" min="1" max="5000" placeholder="Word Limit"
-              class="validate" required="" aria-required="true"
-            >
-            <span class="helper-text" data-error="Word limit is required"></span>
-          </div>
-        </div>
-
-        <div class="row" id="file-upload-block">
-          <div class="input-field">
-            <div class="row">
-
-              <div class="col s5">
-                <div class="input-field">
-                  <i class="material-icons prefix">insert_drive_file</i>
-                  <input
-                    type="number" id="file-size-limit" name="file-size-limit" min="1" max="100"
-                    placeholder="File Size Limit" class="validate" required="" aria-required="true"
-                  >
-                  <label for="file-size-limit">In megabytes</label>
-                  <span class="helper-text" data-error="File size limit is required"></span>
-                </div>
-              </div>
-
-              <div class="col s2"></div>
-
-              <div class="col s5">
-                <div class="input-field">
-                  <i class="material-icons prefix">description</i>
-                  <select
-                    id="file-types" name="file-types" class="validate"
-                    required="" aria-required="true"
-                  >
-                    {% for type in file_types %}
-                      <option value="{{ loop.index0 }}">{{ type|upper|replace('.', '') }}</option>
-                    {% endfor %}
-                  </select>
-                  <label>Accepted File Type</label>
-                </div>
-              </div>
-
+          <div class="col s2">
+            <div class="input-field">
+              <p>
+                <label>
+                  <input class="with-gap" name="submission-type" id="text-type" type="radio" checked>
+                  <span>Text entry</span>
+                </label>
+              </p>
+              <p>
+                <label>
+                  <input class="with-gap" name="submission-type" id="file-type" type="radio">
+                  <span>File upload</span>
+                </label>
+              </p>
             </div>
           </div>
+
+          <div class="col s10" id="text-entry-block" style="padding-top: 5px;">
+            <div class="input-field">
+              <i class="material-icons prefix">spellcheck</i>
+              <input
+                type="number" id="word-limit" name="word-limit" min="1" max="5000" placeholder="Word Limit"
+                class="validate" required="" aria-required="true"
+              >
+              <span id="word-limit-error" class="helper-text" data-error="Word limit is required"></span>
+            </div>
+          </div>
+
+          <div class="col s3" id="file-size-block" style="padding-top: 20px;">
+            <div class="input-field">
+              <i class="material-icons prefix">insert_drive_file</i>
+              <select
+                id="maximum-file-size" name="maximum-file-size" class="validate"
+                required="" aria-required="true"
+              >
+                {% for size in [1, 2, 3, 4, 5, 10, 15, 20, 25, 50, 75, 100] %}
+                  <option value="{{ size }}">{{ size }} MB</option>
+                {% endfor %}
+              </select>
+              <label>Maximum File Size</label>
+            </div>
+          </div>
+
+          <div class="col s1">
+          </div>
+
+          <div class="col s3 offset-s1" id="file-type-block" style="padding-top: 20px;">
+            <div class="input-field">
+              <i class="material-icons prefix">description</i>
+              <select
+                id="file-types" name="file-types" class="validate"
+                required="" aria-required="true"
+              >
+                {% for type in file_types %}
+                  <option value="{{ loop.index0 }}">{{ type|upper|replace('.', '') }}</option>
+                {% endfor %}
+              </select>
+              <label>Accepted File Type</label>
+            </div>
+          </div>
+
         </div>
       </div>
 
@@ -128,68 +133,72 @@
 
         <div class="row">
           <div class="input-field">
-            <p>
-              <label>
-                <input class="with-gap" name="marking-method" id="accept-method" type="radio" checked>
-                <span>Supervisor to mark as accepted</span>
-              </label>
-            </p>
-            <p>
-              <label>
-                <input class="with-gap" name="marking-method" id="criteria-method" type="radio">
-                <span>Supervisor and assessor to mark against criteria</span>
-              </label>
-            </p>
+            <div class="col s12">
+              <p>
+                <label>
+                  <input class="with-gap" name="marking-method" id="accept-method" type="radio" checked>
+                  <span>Supervisor to mark as accepted</span>
+                </label>
+              </p>
+              <p>
+                <label>
+                  <input class="with-gap" name="marking-method" id="criteria-method" type="radio">
+                  <span>Supervisor and assessor to mark against criteria</span>
+                </label>
+              </p>
+            </div>
           </div>
         </div>
 
         <!-- Marking criteria table -->
         <div class="row" id="marking-criteria-block">
-          <table class="highlight responsive-table" id="criteria-table">
+          <div class="col s12">
+            <table class="highlight responsive-table" id="criteria-table">
 
-            <!-- Table header -->
-            <thead>
-              <tr>
-                <th>Criteria</th>
-                <th class="narrow">Maximum Mark</th>
-              </tr>
-            </thead>
+              <!-- Table header -->
+              <thead>
+                <tr>
+                  <th>Criteria</th>
+                  <th class="narrow">Maximum Mark</th>
+                </tr>
+              </thead>
 
-            <!-- Table body -->
-            <tbody>
-              <tr id="marking-criteria-1" name="marking-criteria-1">
-                <td>
-                  <input
-                    id="criteria-1" name="criteria-1" type="text" class="validate"
-                    required="" aria-required="true" placeholder="Enter Criteria"
-                  >
-                </td>
-                <td>
-                  <input
-                    type="number" id="max-mark-1" name="max-mark-1" min="1" max="100"
-                    placeholder="Enter Mark" class="validate" required="" aria-required="true"
-                  >
-                </td>
-                <td>
-                  <a
-                    class="waves-effect waves-light btn-floating btn-small"
-                    name="remove-criteria" onclick="removeCriteria(1)"
-                  >
-                    <i class="material-icons prefix">delete</i>
-                  </a>
-                </td>
-              </tr>
-              <tr id="add-criteria">
-                <td colspan="3">
-                  <a class="waves-effect waves-light btn" id="add-criteria-btn" onclick="addCriteria()">
-                    Add Criteria
-                    <i class="material-icons right">note_add</i>
-                  </a>
-                </td>
-              </tr>
-            </tbody>
+              <!-- Table body -->
+              <tbody>
+                <tr id="marking-criteria-1" name="marking-criteria-1">
+                  <td>
+                    <input
+                      id="criteria-1" name="criteria-1" type="text" class="validate"
+                      required="" aria-required="true" placeholder="Enter Criteria"
+                    >
+                  </td>
+                  <td>
+                    <input
+                      type="number" id="max-mark-1" name="max-mark-1" min="1" max="100"
+                      placeholder="Enter Mark" class="validate" required="" aria-required="true"
+                    >
+                  </td>
+                  <td>
+                    <a
+                      class="waves-effect waves-light btn-floating btn-small"
+                      name="remove-criteria" onclick="removeCriteria(1)"
+                    >
+                      <i class="material-icons prefix">delete</i>
+                    </a>
+                  </td>
+                </tr>
+                <tr id="add-criteria">
+                  <td colspan="3">
+                    <a class="waves-effect waves-light btn" id="add-criteria-btn" onclick="addCriteria()">
+                      Add Criteria
+                      <i class="material-icons right">note_add</i>
+                    </a>
+                  </td>
+                </tr>
+              </tbody>
 
-          </table>
+            </table>
+          </div>
         </div>
 
       </div>

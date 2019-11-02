@@ -1,10 +1,12 @@
 function toggleSubmissionType() {
   if ($('#text-type').prop('checked') === true) {
     $('#text-entry-block').show();
-    $('#file-upload-block').hide();
+    $('#file-size-block').hide();
+    $('#file-type-block').hide();
   } else {
     $('#text-entry-block').hide();
-    $('#file-upload-block').show();
+    $('#file-size-block').show();
+    $('#file-type-block').show();
   }
 }
 
@@ -60,3 +62,15 @@ function removeCriteria(criteria) {
     toRemove.remove();
   }
 }
+
+$('#word-limit').on('input, change, keydown', function () {
+  const val = $(this).val();
+  if ($(this).hasClass('invalid')) {
+    const max = parseInt($(this).attr('max'));
+    if (val.match(/^\d+$/) && parseInt(val) > max) {
+      $('#word-limit-error').attr('data-error', `Maximum word limit is ${max}`);
+    } else if (!val.match(/^\d+$/)) {
+      $('#word-limit-error').attr('data-error', 'Word limit is required');
+    }
+  }
+});
