@@ -73,6 +73,7 @@ function addCriteria() {
   });
   newCriteria.find('[name="remove-criteria"]').attr('onclick', `removeCriteria(${id})`);
   newCriteria.insertAfter(lastCriteria);
+  newCriteria.find('input:first').focus();
 }
 
 function removeCriteria(criteria) {

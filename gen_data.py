@@ -504,7 +504,7 @@ def gen_task_critera():
         if(task[2] == 1):
             queries.append((
                 'task_criteria',
-                [task[0], 'Approval', 2],
+                [task[0], 'Approval', 100],
                 ['task', 'name', 'max_mark']
             ))
         else:
