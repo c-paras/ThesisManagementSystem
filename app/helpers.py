@@ -28,11 +28,11 @@ def get_fields(form, fields, optional=None, ints=None):
             plural = 'are' if field_name.endswith('s') else 'is'
             err = error(f'{field_name} {plural} required!')
             raise ValueError(err)
-        if field in ints:
+        if ints is not None and field in ints:
             try:
                 data.append(int(value))
             except ValueError:
-                if field not in optional:
+                if optional is not None and field not in optional:
                     err = error(f'{field_name} must be an integer!')
                     raise ValueError(err)
                 else:
