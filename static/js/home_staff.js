@@ -42,7 +42,7 @@ function sendResponse() {
   const assessor = form.find('select[name=assessor]');
   const accepted = $('#accept-check').prop('checked');
   if (accepted && assessor.val() === null) {
-    flash('You must select assessor!', true);
+    flash('You must select an assessor!', true);
     return;
   }
 
