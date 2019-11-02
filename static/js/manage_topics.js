@@ -10,20 +10,18 @@ function submitManage() {
     data[id] = status;
   });
 
-  makePOSTRequest('/manage_topic', data, (res) => {
+  makePOSTRequest('/manage_topics', data, (res) => {
     if (res.status === 'fail') {
       flash(res.message, error = true);
     } else {
       delayToast('Changes saved!', false);
-      window.location.href = '/manage_topic';
+      window.location.href = '/manage_topics';
     }
   });
 }
 
 $('#checkall-btn').on('click', function () {
   const flag = false;
-
   $('input[type=checkbox]').prop('checked', flag);
   submitManage();
 });
-

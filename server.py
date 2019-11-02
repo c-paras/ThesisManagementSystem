@@ -8,7 +8,7 @@ from app.search import search
 from app.errors import errors
 from app.create_topic import create_topic
 from app.request_topic import request_topic
-from app.manage_topic import manage_topic
+from app.manage_topics import manage_topics
 from app.tasks import tasks
 from app.create_task import create_task
 
@@ -29,7 +29,7 @@ def close_connection(exception):
 def init_app():
     blueprints = [
         auth, home, errors, create_topic, search, request_topic,
-        tasks, manage_topic, create_task
+        tasks, manage_topics, create_task
     ]
 
     # register blueprints
