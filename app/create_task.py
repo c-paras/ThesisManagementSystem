@@ -39,13 +39,14 @@ def create():
         fields = [
             'task-name', 'deadline', 'task-description', 'submission-type',
             'word-limit', 'maximum-file-size', 'accepted-file-type',
-            'marking-method', 'num-criteria'
+            'marking-method', 'num-criteria', 'course-id'
         ]
-        task_name, deadline, task_description, submission_type, word_limit, \
-            max_file_size, accepted_ftype, marking_method, num_criteria = \
+        task_name, deadline, task_description, submission_type, \
+            word_limit, max_file_size, accepted_ftype, marking_method, \
+            num_criteria, course_id = \
             get_fields(request.form, fields, optional=['word-limit'],
-                       ints=['maximum-file-size',
-                             'num-criteria', 'word-limit'])
+                       ints=['maximum-file-size', 'num-criteria',
+                             'word-limit', 'course-id'])
     except ValueError as e:
         return e.args
 
@@ -81,8 +82,12 @@ def create():
         return error('Unknown marking method!')
 
     db.connect()
-    res = db.select_columns('tasks', ['name'], ['name'], [task_name])
-    # TODO: check course
+    res = db.select_columns('courses', ['id'], ['id'], [course_id])
+    if not len(res):
+        db.close()
+        return error('Cannot create task for unknown course!')
+    res = db.select_columns('tasks', ['name'], ['name', 'course_offering'],
+                            [task_name, course_id])
     if len(res):
         db.close()
         return error('A task with that name already exists in this course!')
@@ -105,7 +110,7 @@ def create():
     # commit task
     db.insert_single(
         'tasks',
-        [task_name, 0, deadline, task_description,  # TODO: course offering
+        [task_name, course_id, deadline, task_description,
          max_file_size, 0, submission_method_id, mark_method_id, word_limit],
         ['name', 'course_offering', 'deadline', 'description', 'size_limit',
          'visible', 'submission_method', 'marking_method', 'word_limit']
@@ -113,7 +118,7 @@ def create():
 
     res = db.select_columns('tasks', ['id'],
                             ['name', 'course_offering'],
-                            [task_name, 0])  # TODO: course offering
+                            [task_name, course_id])
     task_id = res[0][0]
 
     # commit accepted file type
