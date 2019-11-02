@@ -1,1 +1,21 @@
-PLACEHOLDER FILE SUBMISSION
+<div class="row">
+  <form id="file-upload-form" action="/submit_file_task" method="post" enctype="multipart/form-data">
+    <div class="row">
+      <div class="file-field input-field col s6">
+        <div class="waves-effect waves-light btn-small">
+          <span>Choose</span>
+          <input type="file" name="file">
+        </div>
+        <div class="file-path-wrapper">
+          <input readonly class="file-path" type="text">
+        </div>
+      </div>
+    </div>
+    <input type="hidden" name="task" value="{{ task_id }}">
+    <div class="input-field">
+      <a onclick="uploadFile()" class="waves-effect waves-light btn">Submit</a>
+    </div>
+  </form>
+</div>
+
+<progress hidden></progress>

@@ -67,6 +67,31 @@ function makeRequest(endpoint, form, callback) {
   .then(callback);
 }
 
+
+/*
+ * Make a POST request to the backend with a multipart form, only
+ * supports a single file. Call the specified callback function to
+ * process the JSON response.
+ */
+function makeMultiPartRequest(endpoint, form, callback) {
+  const data = new FormData();
+  data.append('file', form.find('input[type=file]')[0].files[0]);
+  form.find('input[type!=file]').each(function(index, value) {
+    if($(value).attr('name')) {
+      data.append($(value).attr('name'), $(value).val());
+    }
+  });
+  fetch(endpoint, {
+    headers: {
+      'Accept': 'application/json'
+    },
+    method: 'POST',
+    body: data
+  })
+  .then(res => res.json())
+  .then(callback);
+}
+
 /*
  * Make a GET request to the backend and call the specified callback
  * function to process the JSON response. Use this function for data

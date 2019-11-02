@@ -1,6 +1,9 @@
 # Database file
 db/thesis.db
 
+# Upload directory
+static/upload
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
