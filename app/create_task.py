@@ -37,7 +37,15 @@ def create():
                              'num-criteria', 'word-limit'])
     except ValueError as e:
         return e.args
-    num_criteria = num_criteria
+
+    if submission_type == 'file':
+        if not (1 <= max_file_size <= 100):
+            return error('Maximum file size must be between 1 and 100!')
+    elif submission_type == 'text':
+        if not (1 <= word_limit <= 5000):
+            return error('word limit must be between 1 and 5000!')
+    else:
+        return error('Unknown submission type!')
 
     if marking_method == 'criteria':
         if num_criteria < 1:
@@ -53,13 +61,6 @@ def create():
 
         if sum([mark for mark in marks]) != 100:
             return error('Marks must add to 100!')
-
-    if submission_type == 'file':
-        if not (1 <= max_file_size <= 100):
-            return error('Maximum file size must be between 1 and 100!')
-    elif submission_type == 'text':
-        if not (1 <= word_limit <= 5000):
-            return error('World limit must be between 1 and 5000!')
 
     db.connect()
     db.close()
