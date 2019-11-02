@@ -6,17 +6,25 @@ function flash(msg, error = false) {
   M.Toast.dismissAll();
   const color = (error) ? 'red' : 'blue';
   if (!(msg.endsWith('.') || msg.endsWith('!'))) {
-    msg += '!';
+    if (msg.includes('!')) {
+      msg += '.';
+    } else {
+      msg += '!';
+    }
   }
   M.toast({html: msg, classes: `${color} darken-1 rounded`});
 }
 
 /*
  * Mark a field as valid or invalid, by setting the
- * appropriate Materialize class.
+ * appropriate Materialize class. If the valid state is not
+ * specified, both validation classes are removed.
  */
 function markFieldValid(field, valid) {
-  if (valid) {
+  if (valid === undefined) {
+    field.removeClass('invalid');
+    field.removeClass('valid');
+  } else if (valid) {
     field.removeClass('invalid');
     field.addClass('valid');
   } else {
@@ -31,7 +39,7 @@ function markFieldValid(field, valid) {
  */
 function formValid(form) {
   let invalid = false;
-  form.find('input,textarea').each(function () {
+  form.find('input, textarea').each(function () {
     if ($(this).val() === '' && $(this).attr('required')) {
       invalid = true;
     }
@@ -71,12 +79,6 @@ function makeGETRequest(endpoint, callback) {
   })
   .then(res => res.json())
   .then(callback);
-}
-
-function searchResultsNavBar() {
-  const searchTerms = $("#search-bar").val();
-  window.location.href = '/search?terms=' + searchTerms;
-  
 }
 
 /*
@@ -126,9 +128,9 @@ $(function () {
     const form = $(this);
     const submit = form.find('a:last');
 
-    /* to prevent form submission in textaea fields */
+    /* prevent form submission in textarea fields */
     form.find('input').each(function () {
-      /* to prevent form submission in chips fields */
+      /* prevent form submission in chips fields */
       if (!$(this).parent().hasClass('enter-no-submit')) {
         $(this).keydown(function (event) {
           if (event.keyCode === 13) {
@@ -156,8 +158,17 @@ $(function () {
   });
 });
 
-$('#search-bar').keydown(function(e){
-  if (e.keyCode === 13) { // If Enter key pressed
-      $(this).trigger('submit');
-  }
+/*
+ * Prevent fields containing only places from being treated as valid.
+ * The `pattern' attribute is not supported for textareas yet.
+ */
+$(function () {
+  $('body').find('input, textarea').each(function () {
+    $(this).on('input', function () {
+      const val = $(this).val();
+      if (val.match(/^\s+$/)) {
+        $(this).val(val.trim());
+      }
+    });
+  });
 });

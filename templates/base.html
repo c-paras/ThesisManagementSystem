@@ -15,14 +15,18 @@
     <link
       type="text/css"
       rel="stylesheet"
-      href="{{ url_for('static', filename='css/materialize.min.css') }}" media="screen,projection"
+      href="{{ url_for('static', filename='css/materialize.min.css') }}"
+      media="screen,projection"
     >
 
     <!-- Custom CSS and Materialize overrides -->
     <link href="{{ url_for('static', filename='css/style.css') }}" rel="stylesheet">
 
+    <!-- Date and time picker library -->
+    <link href="{{ url_for('static', filename='css/jquery.datetimepicker.min.css') }}" rel="stylesheet">
+
     <!-- Let browser know website is optimized for mobile -->
-    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
   </head>
 
   <body id="tms-top">
@@ -37,16 +41,20 @@
         <li><a href="/search">Search Topics</a></li>
       </ul>
 
-      <ul id="nav-bar-dropdown-topics" class="dropdown-content">
-        <li><a href="/create_topic">Create Topic</a></li>
-        <li><a href="/manage_topic">Manage Topics</a></li>
-      </ul>
+      {% if session['acc_type'] == 'supervisor' or session['acc_type'] == 'course_admin' %}
+        <ul id="nav-bar-dropdown-topics" class="dropdown-content">
+          <li><a href="/create_topic">Create Topic</a></li>
+          <li><a href="/manage_topics">Manage Topics</a></li>
+        </ul>
+      {% endif %}
 
-      <ul id="nav-bar-dropdown-courses" class="dropdown-content">
-        <li><a href="#!">Create Course</a></li>
-        <li><a href="#!">Manage Courses</a></li>
-        <li><a href="#!">Add Staff</a></li>
-      </ul>
+      {% if session['acc_type'] == 'course_admin' %}
+        <ul id="nav-bar-dropdown-courses" class="dropdown-content">
+          <li><a href="#!">Create Course</a></li>
+          <li><a href="#!">Manage Courses</a></li>
+          <li><a href="#!">Add Staff</a></li>
+        </ul>
+      {% endif %}
 
       <!-- Navigation -->
       <div class="navbar-fixed">
@@ -84,7 +92,7 @@
               <li>
                 <a class="dropdown-trigger" href="#!" data-target="nav-bar-dropdown">
                   <i class="material-icons left">account_circle</i>
-                  {{session["user"]}}
+                  {{ session["user"] }}
                   <i class="material-icons right">arrow_drop_down</i>
                 </a>
               </li>
@@ -103,7 +111,7 @@
       >
         {% if not hide_navbar and heading %}
           {# There should be a heading on any page with a navbar #}
-          {# If heading is blank, do not show <hr> #}
+          {# If heading is blank, do not show <hr>, e.g. on error page if logged in #}
           <h4>{{ heading }}</h4>
           <hr>
         {% endif %}
@@ -135,14 +143,22 @@
       src="{{ url_for('static', filename='js/vendor/materialize.min.js') }}"
     ></script>
 
+    <!-- Materialize pagination plugin -->
     <script
       type="text/javascript"
       src="{{ url_for('static', filename='js/vendor/materialize-pagination.js') }}"
     ></script>
+
     <!-- Global JavaScript helpers -->
     <script
       type="text/javascript"
       src="{{ url_for('static', filename='js/helpers.js') }}"
+    ></script>
+
+    <!-- Date and time picker library -->
+    <script
+      type="text/javascript"
+      src="{{ url_for('static', filename='js/vendor/jquery.datetimepicker.full.min.js') }}"
     ></script>
 
     {% if not hide_navbar %}
@@ -153,7 +169,13 @@
 
           /* Initialize modals */
           $('.modal').modal();
-        })
+
+          /* Initialize select fields */
+          $('select').formSelect();
+
+          /* Initialize date and time picker */
+          $('#due-date').datetimepicker();
+        });
       </script>
     {% endif %}
 
@@ -162,7 +184,7 @@
       {% with messages = get_flashed_messages(with_categories=true) %}
         {% if messages %}
           {% for type, message in messages %}
-            flash('{{ message|safe }}', '{{ type }}' == 'error')
+            flash('{{ message|safe }}', '{{ type }}' == 'error');
           {% endfor %}
         {% endif %}
       {% endwith %}

@@ -61,7 +61,6 @@ function sendResponse() {
 
 $(function() {
     // Initialise materalize style select statements
-    $('select').formSelect();
     $('#reject-check').change(function() {
         toggleViewAssessor();
     });

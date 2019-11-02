@@ -2,27 +2,27 @@
 
 {% block body %}
   <div class="row">
-    <form class="col s8 offset-m2" id="search-form">
+    <form class="col s12" id="search-form">
       <div class="row">
-        <div class="input-field s8">
+        <div class="input-field">
           <i class="material-icons prefix">search</i>
           <input id="search-input" name="search" type="text" placeholder="Search">
         </div>
       </div>
       <div class="row">
-        <div class="input-field s8">
+        <div class="input-field">
           <i class="material-icons prefix">library_books</i>
           <div class="chips chips-autocomplete chips-placeholder" id="topics"></div>
         </div>
       </div>
       <div class="row">
-        <div class="input-field s8">
+        <div class="input-field">
           <i class="material-icons prefix">person</i>
           <div class="chips chips-autocomplete chips-placeholder" id="supervisor"></div>
         </div>
       </div>
       <div class="row">
-        <div class="input-field s8">
+        <div class="input-field">
           <p>
             <label>
               <input
@@ -35,7 +35,7 @@
         </div>
       </div>
       <div class="center">
-        <a class="waves-effect waves-light btn" id="search-btn" onclick="searchResults(null)">Search
+        <a class="waves-effect waves-light btn" id="search-btn" onclick="searchResults(null)">Search Topics
           <i class="material-icons right">send</i>
         </a>
       </div>
@@ -44,7 +44,7 @@
 
   <!-- Search results -->
   <div class="row" id="results">
-    <h5 class="col s10 offset-m1" id="search-title"></h5>
+    <h5 class="col s12" id="search-title"></h5>
     <ul class="pagination pager" id="myPager">
       <div id="search-results"></div>
       <div id="page"></div>

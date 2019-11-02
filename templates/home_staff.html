@@ -27,8 +27,10 @@
                   <td>{{ request['stu_email'].split('@')[0] }}</td>
                   <td>{{ request['topic_name'] }}</td>
                   <td>
-                    <a class="waves-effect waves-light btn-floating btn-small" href="#"
-                       onclick="openRequestModal({{ request['stu_id'] }}, {{ request['topic_id'] }})">
+                    <a
+                      class="waves-effect waves-light btn-floating btn-small" href="#"
+                      onclick="openRequestModal({{ request['stu_id'] }}, {{ request['topic_id'] }})"
+                    >
                       <i class="large material-icons">insert_chart</i>
                     </a>
                   </td>

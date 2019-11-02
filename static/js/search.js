@@ -1,8 +1,8 @@
 let canRequest;
 
 function makeCard(id, title, description, topics, supervisor, email, preqs) {
-  const card = `<div class="row">\
-  <div class="col s10 offset-m1">\
+  const card = `<div class="row">
+  <div class="col s12">
     <div class="card white-grey darken-1">
       <div class="card-content black-text">
         <span class="card-title">${title}</span>
@@ -119,7 +119,7 @@ function loadPage() {
   makeGETRequest('/search_chips', (res) => {
 
     $('#topics').chips({
-      placeholder: 'Enter a topic',
+      placeholder: 'Enter a Topic',
       autocompleteOptions: {
         data: res.chipsTopic,
         limit: 20,
@@ -128,7 +128,7 @@ function loadPage() {
     });
 
     $('#supervisor').chips({
-      placeholder: 'Enter a supervisor',
+      placeholder: 'Enter a Supervisor',
       autocompleteOptions: {
         data: res.chipsSuper,
         limit: 20,

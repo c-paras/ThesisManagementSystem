@@ -42,7 +42,6 @@
       </div>
     </div>
 
-
     <!-- Show student their current assessments for their corses -->
     <div class="section col s12">
       <hr/>
@@ -59,9 +58,8 @@
         {% else %}
           {% for staff_type in ["Supervisor", "Assessor"] %}
             <div class="col s12">
-
               <h6>{{ staff_type }}:</h6>
-              
+
               <div class="col s12">
                 {% if not mark_details[staff_type]|length %}
                   <!-- Student has no staff member assigned -->

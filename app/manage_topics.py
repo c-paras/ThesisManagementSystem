@@ -12,10 +12,10 @@ from app.db_manager import sqliteManager as db
 from app.queries import queries
 
 
-manage_topic = Blueprint('manage_topic', __name__)
+manage_topics = Blueprint('manage_topics', __name__)
 
 
-@manage_topic.route('/manage_topic', methods=['GET', 'POST'])
+@manage_topics.route('/manage_topics', methods=['GET', 'POST'])
 @at_least_role(UserRole.STAFF)
 def manage():
     if request.method == 'GET':
@@ -23,7 +23,7 @@ def manage():
         curr_topics = queries.get_staff_curr_topics(session['user'])
         curr_topics = clean_topic_tuples(curr_topics)
         db.close()
-        return render_template('manage_topic.html',
+        return render_template('manage_topics.html',
                                heading='Manage Topics',
                                title='Manage Topics',
                                curr_topics=curr_topics)
