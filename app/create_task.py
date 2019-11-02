@@ -32,10 +32,11 @@ def create():
         ]
         task_name, due_date, description, submission_type, word_limit, \
             max_file_size, accecpted_ftype, marking_method, num_criteria = \
-            get_fields(request.form, fields, optional=['word-limit'])
+            get_fields(request.form, fields, optional=['word-limit'],
+                       ints=['maximum-file-size', 'num-criteria'])
     except ValueError as e:
         return e.args
-    num_criteria = int(num_criteria)
+    num_criteria = num_criteria
 
     if marking_method == 'criteria':
         if num_criteria < 1:
@@ -49,10 +50,12 @@ def create():
             except ValueError as e:
                 return e.args
 
-        if sum([int(mark) for mark in marks]) != 100:
+        if sum([mark for mark in marks]) != 100:
             return error('Marks must add to 100!')
 
-    # TODO: validate int types
+    if submission_type == 'file':
+        if not (1 <= max_file_size <= 100):
+            return error('Maximum file size must be between 1 and 100!')
 
     db.connect()
     db.close()
