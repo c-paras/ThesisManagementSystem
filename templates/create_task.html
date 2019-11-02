@@ -112,7 +112,7 @@
                 required="" aria-required="true"
               >
                 {% for type in file_types %}
-                  <option value="{{ loop.index0 }}">{{ type|upper|replace('.', '') }}</option>
+                  <option value="{{ type }}">{{ type|upper|replace('.', '') }}</option>
                 {% endfor %}
               </select>
               <label>Accepted File Type</label>

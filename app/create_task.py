@@ -16,8 +16,8 @@ create_task = Blueprint('create_task', __name__)
 @create_task.route('/create_task', methods=['GET', 'POST'])
 @at_least_role(UserRole.COURSE_ADMIN)
 def create():
-    db.connect()
     if request.method == 'GET':
+        db.connect()
         file_types = db.select_columns('file_types', ['name'])
         file_types = list(map(lambda x: x[0], file_types))
         db.close()
@@ -37,24 +37,26 @@ def create():
         return e.args
     num_criteria = int(num_criteria)
 
-    print(fields)  # TODO: debug
     if marking_method == 'criteria':
         if num_criteria < 1:
-            db.close()
             return error('At least one marking criterion is required!')
         else:
-            f = [f'maximum-mark-{i}' for i in range(1, num_criteria + 1)]
-            f.extend([f'criteria-{i}' for i in range(1, num_criteria + 1)])
+            criteria = [f'criteria-{i}' for i in range(1, num_criteria + 1)]
+            marks = [f'maximum-mark-{i}' for i in range(1, num_criteria + 1)]
             try:
-                criteria = get_fields(request.form, f)
+                criteria = get_fields(request.form, criteria)
+                marks = get_fields(request.form, marks)
             except ValueError as e:
                 return e.args
 
-    # TODO: check that marks all add up to 100
+        if sum([int(mark) for mark in marks]) != 100:
+            return error('Marks must add to 100!')
+
     # TODO: validate int types
 
+    db.connect()
     db.close()
-    return error('A task with that name already exists!')
+    return error('A task with that name already exists in this course!')
 
     db.close()
     return jsonify({'status': 'ok'})
