@@ -1,3 +1,5 @@
+from datetime import datetime
+
 from flask import Blueprint
 from flask import jsonify
 from flask import render_template
@@ -37,6 +39,11 @@ def create():
                              'num-criteria', 'word-limit'])
     except ValueError as e:
         return e.args
+
+    try:
+        deadline = datetime.strptime(deadline, '%Y/%d/%m %H:%M').timestamp()
+    except ValueError:
+        return error('Invalid date format for deadline!')
 
     if submission_type == 'file':
         if not (1 <= max_file_size <= 100):
@@ -87,7 +94,6 @@ def create():
         return error('Invalid or unsupported file type!')
     file_type_id = res[0][0]
 
-    # TODO: deadline
     # TODO: insert marking criteria
     db.insert_single(
         'tasks',
