@@ -5,7 +5,10 @@
 function flash(msg, error = false) {
   M.Toast.dismissAll();
   const color = (error) ? 'red' : 'blue';
-  if (!(msg.endsWith('.') || msg.endsWith('!'))) {
+  if(!msg) {
+    msg = "Undefined message";
+  }
+  if (msg && !(msg.endsWith('.') || msg.endsWith('!'))) {
     if (msg.includes('!')) {
       msg += '.';
     } else {
