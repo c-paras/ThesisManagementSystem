@@ -59,6 +59,11 @@ def create():
         if not (1 <= max_file_size <= 100):
             return error('Maximum file size must be between 1 and 100!')
     elif submission_type == 'text':
+        try:
+            word_limit = get_fields(request.form,
+                                    ['word-limit'], ints=['word-limit'])[0]
+        except ValueError as e:
+            return e.args
         if not (1 <= word_limit <= 5000):
             return error('Word limit must be between 1 and 5000!')
     else:
