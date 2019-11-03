@@ -1,21 +1,32 @@
 <div class="row">
   <form id="file-upload-form" action="/submit_file_task" method="post" enctype="multipart/form-data">
     <div class="row">
-      <div class="file-field input-field col s6">
-        <div class="waves-effect waves-light btn-small">
+      <div class="file-field input-field">
+        <div class="btn">
           <span>Choose</span>
-          <input type="file" name="file">
+          <input type="file">
         </div>
         <div class="file-path-wrapper">
-          <input readonly class="file-path" type="text">
+          <input class="file-path validate" type="text" placeholder="Select file to submit">
         </div>
       </div>
     </div>
-    <input type="hidden" name="task" value="{{ task_id }}">
-    <div class="input-field">
-      <a onclick="uploadFile()" class="waves-effect waves-light btn">Submit</a>
+    <div class="row">
+      <div class="input-field">
+        <div>
+          <label>
+            <input id="all-own-work" type="checkbox" />
+            <span>I certify this is all my own work, except where expressly indicated and correctly attributed</span>
+          </label>
+        </div>
+      </div>
     </div>
+    <div class="row">
+      <div class="input-field">
+        <a onclick="uploadFile()" class="waves-effect waves-light btn">Submit</a>
+      </div>
+    </div>
+    <input type="hidden" name="task" value="{{ task_id }}">
   </form>
 </div>
 
-<progress hidden></progress>
