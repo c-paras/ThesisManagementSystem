@@ -34,9 +34,13 @@ def mark_submission():
             calendar.day_name[datetime.fromtimestamp(task_info[2]).weekday()]
 
         deadline_text = weekday + " " + due_date.strftime(time_format)
+
+        material = queries.get_material_and_attachment(task_id)
+        print(material[0][0])
         return render_template('mark_submission.html',
                                topic_request_text=config.TOPIC_REQUEST_TEXT,
                                heading='Mark Submission',
                                title='Mark Submission',
                                deadline=deadline_text,
-                               description=task_info[3])
+                               description=task_info[3],
+                               criteria=material[0][0])

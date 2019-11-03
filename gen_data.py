@@ -598,6 +598,18 @@ def gen_submissions():
         db.insert_multiple(queries)
 
 
+def gen_task_outline():
+    tasks = db.select_columns('tasks', ['id'], None, None)
+    queries = []
+    for task in tasks:
+        path = "img/chicken.jpg"
+        db.insert_single(
+            'task_attachments',
+            [task[0], path],
+            ['task', 'path']
+        )
+
+
 if __name__ == '__main__':
     db.connect()
 
@@ -655,6 +667,9 @@ if __name__ == '__main__':
 
     print('Generating marks...')
     gen_marks()
+
+    print("Generating task attachments...")
+    gen_task_outline()
 
     db.close()
     print('Done')
