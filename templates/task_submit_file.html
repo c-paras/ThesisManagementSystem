@@ -23,7 +23,20 @@
     </div>
     <div class="row">
       <div class="input-field">
-        <a onclick="uploadFile()" class="waves-effect waves-light btn">Submit</a>
+        <a onclick="uploadFile(this)" class="waves-effect waves-light btn">Submit</a>
+        <div id="upload-spinner" style="display: none;" class="preloader-wrapper small active">
+          <div class="spinner-layer">
+            <div class="circle-clipper left">
+              <div class="circle"></div>
+            </div>
+            <div class="gap-patch">
+              <div class="circle"></div>
+            </div>
+            <div class="circle-clipper right">
+              <div class="circle"></div>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
     <input type="hidden" name="task" value="{{ task_id }}">
