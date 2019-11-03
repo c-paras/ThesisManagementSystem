@@ -6,6 +6,8 @@ from flask import jsonify
 
 import re
 import json
+from datetime import datetime
+import calendar
 
 from app.auth import UserRole
 from app.auth import at_least_role
@@ -19,10 +21,22 @@ mark = Blueprint('mark', __name__)
 
 
 @mark.route('/mark', methods=['GET', 'POST'])
-@at_least_role(UserRole.PUBLIC)
+@at_least_role(UserRole.STAFF)
 def mark_submission():
     if request.method == 'GET':
+        db.connect()
+        task_id = int(request.args.get('task', None))
+        task_info = queries.get_general_task_info(task_id)[0]
+        # get deadline
+        time_format = '%d/%m/%Y at %I:%M:%S %p'
+        due_date = datetime.fromtimestamp(task_info[2])
+        weekday = \
+            calendar.day_name[datetime.fromtimestamp(task_info[2]).weekday()]
+
+        deadline_text = weekday + " " + due_date.strftime(time_format)
         return render_template('mark_submission.html',
                                topic_request_text=config.TOPIC_REQUEST_TEXT,
                                heading='Mark Submission',
-                               title='Mark Submission')
+                               title='Mark Submission',
+                               deadline=deadline_text,
+                               description=task_info[3])
