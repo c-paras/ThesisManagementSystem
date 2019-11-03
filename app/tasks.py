@@ -147,7 +147,8 @@ def submit_file_task():
 
     db.connect()
     res = db.select_columns('tasks', ['deadline', 'marking_method',
-                                      'visible', 'course_offering'],
+                                      'visible', 'course_offering',
+                                      'size_limit'],
                             ['id'], [task_id])
     if not res:
         db.close()
@@ -160,7 +161,8 @@ def submit_file_task():
             'id': res[0][1]
         },
         'visible': res[0][2],
-        'offering': res[0][3]
+        'offering': res[0][3],
+        'max_size': res[0][4]
     }
 
     if task['deadline'] >= datetime.now():
@@ -194,7 +196,13 @@ def submit_file_task():
     file_uuid = str(uuid.uuid4())
     sec_filename = secure_filename(sent_file.filename)
     output_filename = f'{file_uuid}-{sec_filename}'
-    sent_file.save(os.path.join(config.FILE_UPLOAD_DIR, output_filename))
+    full_path = os.path.join(config.FILE_UPLOAD_DIR, output_filename)
+    sent_file.save(full_path)
+    file_size = os.stat(full_path).st_size
+    if file_size > task['max_size']:
+        os.remove(full_path)
+        db.close()
+        return error("File too large")
     db.insert_single('submissions', [session['id'], task['id'],
                                      sec_filename, output_filename,
                                      datetime.now().timestamp(),
