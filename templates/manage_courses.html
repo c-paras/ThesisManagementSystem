@@ -1,0 +1,175 @@
+{% extends "base.html" %}
+
+{% block body %}
+  <div class="row">
+    <div class="section col s3">
+      <h5>Select Course Offering:</h5>
+      <form class="col s12" id="change-co">
+        <div class="input-field">
+          <i class="material-icons prefix">description</i>
+          <select
+            id="courses" name="courses" class="validate"
+            required="" aria-required="true"
+          >
+            {% for course in courses %}
+              <option value="{{ course[0] }}">{{ course[1] }} - {{course[3]}}T{{course[2]}}</option>
+            {% endfor %}
+          </select>
+          <label>Course Offerings</label>
+        </div>
+        <a class="waves-effect waves-light btn" id="change-co-btn" onclick="submitCO()">Go
+          <i class="material-icons right">send</i>
+        </a>
+      </form>
+    </div>
+    <!-- Show materials relevant to the course offering -->
+    <div class="section col s12">
+      <h5>Materials:</h5>
+      {% if materials|length %}
+        <div class="col s12">
+          <table class="highlight centered responsive-table">
+
+            <!-- Table header -->
+            <thead>
+              <tr>
+                <th>Name</th>
+                <th>File</th>
+                <th>Visible</th>
+                <th>Edit</th>
+              </tr>
+            </thead>
+
+            <tbody>
+              {% for material in materials %}
+                <tr>
+                  <td>{{ material[1] }}</td>
+                  <td>
+                    {% for attachment in material[2] %}
+                      <a href="{{ url_for('static', filename=attachment) }}">
+                        <i class="material-icons left">file_download</i>
+                      </a>
+                    {% endfor %}
+                  </td>
+                  {% if material[3] == 1 %}
+                    <td>
+                      <label>
+                        <input
+                          type="checkbox" id="{{ material[0] }}" class="filled-in"
+                          name="{{ material[0] }}" checked="checked"
+                        >
+                        <span></span>
+                      </label>
+                    </td>
+                  {% else %}
+                    <label>
+                      <input type="checkbox" id="{{ material[0] }}" class="filled-in" name="{{ material[0] }}"/>
+                      <span></span>
+                    </label>
+                  {% endif %}
+                  <td>
+                    <!-- add link to edit material here      -->
+                    edit
+                  </td>
+                </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      {% else %}
+        <p>There are currently no materials for this course offering</p>
+      {% endif %}
+      <!-- add material button-->
+    </div>
+
+    <!-- Show related tasks for course offering -->
+    <div class="section col s12">
+      <h5>Tasks:</h5>
+      {% if tasks|length %}
+        <div class="col s12">
+          <table class="striped centered responsive-table">
+
+            <!-- Table header -->
+            <thead>
+              <tr>
+                <th>Task</th>
+                <th>Deadline</th>
+                <th>Attachment</th>
+                <th>Visible</th>
+              </tr>
+            </thead>
+
+            <!-- Table body -->
+            <tbody>
+              {% for task in tasks %}
+                <tr>
+                  <td>
+                    {{ task[1] }}
+                  </td>
+                  <td>{{ task[2] }}</td>
+                  <td>{{ task[3] }}</td>
+                  {% if task[4] == 1 %}
+                    <td>
+                      <label>
+                        <input
+                          type="checkbox" id="{{ task[0] }}" class="filled-in"
+                          name="{{ task[0] }}" checked="checked"
+                        >
+                        <span></span>
+                      </label>
+                    </td>
+                  {% else %}
+                    <label>
+                      <input type="checkbox" id="{{ task[0] }}" class="filled-in" name="{{ task[0] }}"/>
+                      <span></span>
+                    </label>
+                  {% endif %}
+                </tr>
+              {% endfor %}
+            </tbody>
+
+          </table>
+        </div>
+      {% else %}
+        <p>There are currently no tasks for this course offering</p>
+      {% endif %}
+      <!-- add task button-->
+    </div>
+
+    <!-- Show enrollments in course offering -->
+    <div class="section col s12">
+      <h5>Enrollments:</h5>
+      {% if students|length %}
+        <div class="col s12">
+          <table class="striped centered responsive-table">
+
+            <!-- Table header -->
+            <thead>
+              <tr>
+                <th>Name</th>
+                <th>zID</th>
+                <th>Topic</th>
+              </tr>
+            </thead>
+
+            <!-- Table body -->
+            <tbody>
+              {% for student in students %}
+                <tr>
+                  <td>{{ student[1] }}</td>
+                  <td>{{ student[2] }}</td>
+                  <td>{{ student[3] }}</td>
+                </tr>
+              {% endfor %}
+            </tbody>
+
+          </table>
+        </div>
+      {% else %}
+        There are currently no students enrolled in this course
+      {% endif %}
+      <!-- buttons to enroll students and export marks goes here-->
+    </div>
+
+  </div>
+
+{% endblock %}

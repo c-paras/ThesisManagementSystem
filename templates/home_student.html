@@ -13,13 +13,13 @@
               {% for material in materials %}
                 <tr>
                   <td>{{material[0]}}</td>
-                  {% for attachment in material[1] %}
-                    <td>
-                      <a href="{{ url_for('static', filename='img/chicken.jpg') }}">
+                  <td>
+                    {% for attachment in material[1] %}
+                      <a href="{{ url_for('static', filename=attachment) }}">
                         <i class="material-icons left">file_download</i>
                       </a>
-                    </td>
-                  {% endfor %}
+                    {% endfor %}
+                  </td>
                 </tr>
               {% endfor %}
             </tbody>

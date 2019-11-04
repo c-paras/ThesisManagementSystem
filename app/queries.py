@@ -319,3 +319,16 @@ class queries:
             """.format(student_id=student_id)
         )
         return res
+
+    def get_course_offering_details():
+        res = db.custom_query(
+            """
+                SELECT co.id, c.code, s.term, s.year
+                FROM course_offerings co
+                INNER JOIN sessions s
+                    ON s.id = co.session
+                INNER JOIN courses c
+                    on c.id = co.course
+            """
+        )
+        return res
