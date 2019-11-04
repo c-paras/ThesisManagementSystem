@@ -65,10 +65,14 @@
             <tbody>
               {% for student in curr_students %}
                 <tr>
-                  <td>{{ student[0] }}</td>
+                  <td>
+                    <a href="{{ url_for('submissions.view_submission', submissions=student[3]) }}">
+                      {{ student[0] }}
+                    </a>
+                  </td>
                   <td>{{ student[1].split('@')[0] }}</td>
                   <td>{{ student[2] }}</td>
-                  <td>{{ student[3] }}</td>
+                  <td>{{ student[4] }}</td>
                 </tr>
               {% endfor %}
             </tbody>
@@ -101,10 +105,14 @@
             <tbody>
               {% for student in past_students %}
                 <tr>
-                  <td>{{ student[0] }}</td>
+                  <td>
+                    <a href="{{ url_for('submissions.view_submission', submissions=student[3]) }}">
+                      {{ student[0] }}
+                    </a>
+                  </td>
                   <td>{{ student[1].split('@')[0] }}</td>
                   <td>{{ student[2] }}</td>
-                  <td>{{ student[3] }}</td>
+                  <td>{{ student[4] }}</td>
                 </tr>
               {% endfor %}
             </tbody>
