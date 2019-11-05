@@ -44,7 +44,7 @@ function updateCanRequest() {
 
 function nextPage(requestedPage) {
   let cards = $.myTopicCards;
-  $('#search-results').html(cards.slice(requestedPage*10 - 10, requestedPage*10));
+  $('#search-results').html(cards.slice(requestedPage * 10 - 10, requestedPage * 10));
   $(window).scrollTop($('a#search-btn').offset().top);
   updateCanRequest();
 }
@@ -56,10 +56,10 @@ function searchResults() {
   }
 
   let data = {
-    "searchTerm": $("[id='search-input']").val(),
-    "checkbox": $("[id='checkbox-vis']").is(':checked'),
-    "topicArea": M.Chips.getInstance($('#topics')).chipsData,
-    "supervisor": M.Chips.getInstance($('#supervisor')).chipsData
+    'searchTerm': $('#search-input').val(),
+    'checkbox': $('#checkbox-vis').is(':checked'),
+    'topicArea': M.Chips.getInstance($('#topics')).chipsData,
+    'supervisor': M.Chips.getInstance($('#supervisor')).chipsData
   };
 
   makePOSTRequest('/search', data, (res) => {
@@ -68,9 +68,9 @@ function searchResults() {
     } else {
       let cards = [];
       for (let i = 0; i < res.topics.length; i++) {
-        let preqs = "";
+        let preqs = '';
         if (res.preqs[i].length === 0) {
-          preqs = "None";
+          preqs = 'None';
         } else {
           preqs = res.preqs[i].join(', ');
         }
@@ -101,10 +101,10 @@ function searchResults() {
       $('#page').html('');
       $('#page').materializePagination({
         align: 'center',
-        lastPage: Math.ceil(cards.length/10),
+        lastPage: Math.ceil(cards.length / 10),
         firstPage: 1,
         useUrlParameter: false,
-        onClickCallback: function(requestedPage) {
+        onClickCallback: function (requestedPage) {
           nextPage(requestedPage);
         }
       });
@@ -138,8 +138,6 @@ function loadPage() {
 
     searchResults();
   });
-
-  return;
 }
 
 loadPage();
