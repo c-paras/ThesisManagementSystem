@@ -340,14 +340,11 @@ class queries:
                 FROM users u
                 INNER JOIN enrollments e
                     ON e.user = u.id
-                INNER JOIN course_roles cr
-                    ON cr.id = e.course_offering
                 LEFT JOIN student_topic st
                     ON st.student = u.id
                 LEFT JOIN topics t
                     ON t.id = st.topic
-                WHERE e.course_offering = "{co_id}"
-                    AND cr.name = "student";
+                WHERE e.course_offering = "{co_id}";
             """.format(co_id=co_id)
         )
         return res

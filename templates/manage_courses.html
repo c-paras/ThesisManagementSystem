@@ -6,20 +6,25 @@
       <h5>Select Course Offering:</h5>
       <form class="col s12" id="change-co">
         <div class="input-field">
-          <i class="material-icons prefix">description</i>
+          
           <select
             id="courses" name="courses" class="validate"
             required="" aria-required="true"
           >
             {% for course in courses %}
-              <option value="{{ course[0] }}">{{ course[1] }} - {{course[3]}}T{{course[2]}}</option>
+              <option 
+                {% if course[0]|int == default_co|int %}
+                  selected="selected"
+                {% endif %}
+                value="{{ course[0] }}">{{ course[1] }} - {{ course[3] }}T{{ course[2] }}
+              </option>
             {% endfor %}
           </select>
           <label>Course Offerings</label>
+          <a class="waves-effect waves-light btn" id="change-co-btn" onclick="submitCO()">Refresh
+            <i class="material-icons right">autorenew</i>
+          </a>
         </div>
-        <a class="waves-effect waves-light btn" id="change-co-btn" onclick="submitCO()">Go
-          <i class="material-icons right">send</i>
-        </a>
       </form>
     </div>
     <!-- Show materials relevant to the course offering -->
@@ -27,48 +32,56 @@
       <h5>Materials:</h5>
       {% if materials|length %}
         <div class="col s12">
-          <table class="highlight centered responsive-table">
-
-            <!-- Table header -->
+          <table class="striped centered responsive-table">
+            <colgroup>
+              <col span="1" style="width: 50%">
+              <col span="1" style="width: 40%">
+              <col span="1" style="width: 5%">
+              <col span="1" style="width: 5%">
+            </colgroup>
             <thead>
               <tr>
                 <th>Name</th>
-                <th>File</th>
+                <th>Files</th>
                 <th>Visible</th>
                 <th>Edit</th>
               </tr>
             </thead>
-
             <tbody>
               {% for material in materials %}
                 <tr>
                   <td>{{ material[1] }}</td>
                   <td>
                     {% for attachment in material[2] %}
-                      <a href="{{ url_for('static', filename=attachment) }}">
-                        <i class="material-icons left">file_download</i>
+                      <a href="{{ url_for('static', filename=attachment[1]) }}">
+                        {{attachment[0]}}
                       </a>
                     {% endfor %}
                   </td>
-                  {% if material[3] == 1 %}
-                    <td>
+                  <td>
+                    {% if material[3] == 1 %}
                       <label>
                         <input
-                          type="checkbox" id="{{ material[0] }}" class="filled-in"
-                          name="{{ material[0] }}" checked="checked"
+                          type="checkbox" id="m{{material[0]}}" class="filled-in"
+                          name="{{material[0]}}" checked="checked" data-totype="0"
+                          onchange="updateMat({{ material[0] }}, '#m{{ material[0] }}')"
                         >
                         <span></span>
                       </label>
-                    </td>
-                  {% else %}
-                    <label>
-                      <input type="checkbox" id="{{ material[0] }}" class="filled-in" name="{{ material[0] }}"/>
-                      <span></span>
-                    </label>
-                  {% endif %}
-                  <td>
+                    {% else %}
+                      <label>
+                        <input data-totype="1" type="checkbox" id="m{{ material[0] }}" class="filled-in" name="{{ material[0] }}"
+                               onchange="updateMat({{ material[0] }}, '#m{{ material[0] }}')"
+                        >
+                        <span></span>
+                      </label>
+                    {% endif %}
+                  </td>
+                  <td style="padding-right: 20px;">
                     <!-- add link to edit material here      -->
-                    edit
+                    <a href="#!">
+                      <i class="material-icons right">edit</i>
+                    </a>
                   </td>
                 </tr>
               {% endfor %}
@@ -78,7 +91,12 @@
       {% else %}
         <p>There are currently no materials for this course offering</p>
       {% endif %}
-      <!-- add material button-->
+      <p>&nbsp;</p>
+      <tr>
+        <a class="waves-effect waves-light btn" id="change-co-btn" href="#!" style="float: right;">Add Material
+          <i class="material-icons right">add</i>
+        </a>
+      </tr>
     </div>
 
     <!-- Show related tasks for course offering -->
@@ -87,52 +105,63 @@
       {% if tasks|length %}
         <div class="col s12">
           <table class="striped centered responsive-table">
-
-            <!-- Table header -->
+            <colgroup>
+              <col span="1" style="width: 25%">
+              <col span="1" style="width: 25%">
+              <col span="1" style="width: 40%">
+              <col span="1" style="width: 5%">
+              <col span="1" style="width: 5%">
+            </colgroup>
             <thead>
               <tr>
                 <th>Task</th>
                 <th>Deadline</th>
-                <th>Attachment</th>
+                <th>Files</th>
                 <th>Visible</th>
+                <th>Edit</th>
               </tr>
             </thead>
-
-            <!-- Table body -->
             <tbody>
               {% for task in tasks %}
                 <tr>
-                  <td>
-                    {{ task[1] }}
-                  </td>
+                  <td>{{ task[1] }}</td>
                   <td>{{ task[2] }}</td>
                   <td>
                     {% if task[3]|length %}
                       {% for attachment in task[3] %}
-                        <a href="{{ url_for('static', filename=attachment) }}">
-                          <i class="material-icons left">file_download</i>
+                        <a href="{{ url_for('static', filename=attachment[1]) }}">
+                          {{ attachment[0] }}
                         </a>
                       {% endfor %}
                     {% else %}
                       N/A
                     {% endif %}
                   </td>
-                  {% if task[4] == 1 %}
-                    <td>
+                  <td>
+                    {% if task[4] == 1 %}
                       <label>
                         <input
-                          type="checkbox" id="{{ task[0] }}" class="filled-in"
-                          name="{{ task[0] }}" checked="checked"
+                          type="checkbox" id="t{{ task[0] }}" class="filled-in"
+                          name="{{ task[0] }}" checked="checked" data-totype="0"
+                          onchange="updateTask({{ task[0] }}, '#t{{ task[0] }}')"
                         >
                         <span></span>
                       </label>
-                    </td>
-                  {% else %}
-                    <label>
-                      <input type="checkbox" id="{{ task[0] }}" class="filled-in" name="{{ task[0] }}"/>
-                      <span></span>
-                    </label>
-                  {% endif %}
+                    {% else %}
+                      <label>
+                        <input data-totype="1" type="checkbox" id="t{{ task[0] }}" class="filled-in" name="{{ task[0] }}"
+                               onchange="updateTask({{ task[0] }}, '#t{{ task[0] }}')"
+                        >
+                        <span></span>
+                      </label>
+                    {% endif %}
+                  </td>
+                  <td style="padding-right: 20px;">
+                    <!-- add link to edit material here      -->
+                    <a href="#!">
+                      <i class="material-icons right">edit</i>
+                    </a>
+                  </td>
                 </tr>
               {% endfor %}
             </tbody>
@@ -142,42 +171,57 @@
       {% else %}
         <p>There are currently no tasks for this course offering</p>
       {% endif %}
-      <!-- add task button-->
+      <p>&nbsp;</p>
+      <tr>
+        <a class="waves-effect waves-light btn" id="change-co-btn" href="#!" style="float: right;">Add Task
+          <i class="material-icons right">add</i>
+        </a>
+      </tr>
     </div>
 
     <!-- Show enrollments in course offering -->
     <div class="section col s12">
       <h5>Enrollments:</h5>
-      {% if students|length %}
-        <div class="col s12">
-          <table class="striped centered responsive-table">
-
-            <!-- Table header -->
-            <thead>
-              <tr>
-                <th>Name</th>
-                <th>zID</th>
-                <th>Topic</th>
-              </tr>
-            </thead>
-
-            <!-- Table body -->
-            <tbody>
-              {% for student in students %}
+      <div style="max-height: 300px; overflow-y: scroll;">
+        {% if enrollments|length %}
+          <div class="col s12">
+            <table class="striped centered responsive-table">
+              <colgroup>
+                <col span="1" style="width: 25%">
+                <col span="1" style="width: 25%">
+                <col span="1" style="width: 50%">
+              </colgroup>
+              <thead>
                 <tr>
-                  <td>{{ student[1] }}</td>
-                  <td>{{ student[2] }}</td>
-                  <td>{{ student[3] }}</td>
+                  <th>Name</th>
+                  <th>zID</th>
+                  <th>Topic</th>
                 </tr>
-              {% endfor %}
-            </tbody>
-
-          </table>
-        </div>
-      {% else %}
-        There are currently no students enrolled in this course
-      {% endif %}
-      <!-- buttons to enroll students and export marks goes here-->
+              </thead>
+              <tbody>
+                {% for student in enrollments %}
+                  <tr>
+                    <td>{{ student[0] }}</td>
+                    <td>{{ student[1] }}</td>
+                    <td>{{ student[2] }}</td>
+                  </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+          </div>
+        {% else %}
+          There are currently no students enrolled in this course
+        {% endif %}
+      </div>
+      <br />
+      <tr>
+        <a class="waves-effect waves-light btn" id="change-co-btn" href="#!">Enroll Students
+          <i class="material-icons right">group_add</i>
+        </a>
+        <a class="waves-effect waves-light btn" id="change-co-btn" href="#!" style="float: right;">Export Marks
+          <i class="material-icons right">cloud_download</i>
+        </a>
+      </tr>
     </div>
 
   </div>
