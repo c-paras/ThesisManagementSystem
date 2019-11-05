@@ -5,6 +5,7 @@ function openModal(){
                                 dismissible: false
                                });
     modal[0].open();
+    updateWordCount($('#textarea1'));
 }
 
 function closeModal(){
@@ -13,7 +14,14 @@ function closeModal(){
 }
 
 function countWords(str) {
-  return str.trim().split(/\s+/).length;
+    if(str.trim() === ""){
+        return 0;
+    }
+    return str.trim().concat(' ').split(/\s+/).length-1;
+}
+
+function updateWordCount(textarea){
+    $('#word-counter').html(countWords($(textarea).val()));
 }
 
 function uploadText(btn) {

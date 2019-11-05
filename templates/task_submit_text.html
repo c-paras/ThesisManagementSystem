@@ -21,13 +21,13 @@
       <form id="text-upload-form" action="/submit_text_task" method="post" enctype="multipart/form-data">
         <div class="input-field">
           {% if text_info["old_text"]|length %}
-            <textarea name="text-submission" id="textarea1" class="materialize-textarea">{{ text_info["old_text"] }}</textarea>
+            <textarea name="text-submission" id="textarea1" class="materialize-textarea" onkeyup="updateWordCount(this)">{{ text_info["old_text"] }}</textarea>
           {% else %}
-            <textarea name="text-submission" id="textarea1" class="materialize-textarea"></textarea>
+            <textarea name="text-submission" id="textarea1" class="materialize-textarea" onkeyup="updateWordCount(this)"></textarea>
           {% endif %}
           <label for="textarea1">Submission</label>
           <div class="right-align text-grey text-lighten-3">
-              test
+              <span id='word-counter'>test</span>/{{ text_info['limit'] }}
           </div>
         </div>
         &nbsp;
