@@ -12,20 +12,36 @@ from threading import Thread
 import config
 
 
-def get_fields(form, fields):
+def get_fields(form, fields, optional=None, ints=None):
     '''
     Retrieve field data from form, raising an exception in the case
-    that at least one field is blank.
+    that at least one field is blank. Fields marked as optional are
+    not checked for being empty. Fields marked as being ints, are
+    validated as such and are converted into ints.
     '''
     data = []
     for field in fields:
         value = form.get(field, None)
-        if value is None or len(value) is 0:
-            field_name = field.capitalize().replace('-', ' ')
+        field_name = field.capitalize().replace('-', ' ')
+        field_name = re.sub(r'^Id', 'ID', field_name)
+        field_name = re.sub(r'id$', 'ID', field_name)
+        field_name = re.sub(r' id ', ' ID ', field_name)
+        if (optional is None or field not in optional) and \
+           (value is None or re.match(r'^\s*$', value)):
             plural = 'are' if field_name.endswith('s') else 'is'
             err = error(f'{field_name} {plural} required!')
             raise ValueError(err)
-        data.append(value)
+        if ints is not None and field in ints:
+            try:
+                data.append(int(value))
+            except ValueError:
+                if optional is not None and field not in optional:
+                    err = error(f'{field_name} must be an integer!')
+                    raise ValueError(err)
+                else:
+                    data.append(value)
+        else:
+            data.append(value)
     return data
 
 

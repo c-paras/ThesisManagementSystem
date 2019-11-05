@@ -4,7 +4,7 @@ function submitManage() {
     return;
   }
   const data = {};
-  $('input[type=checkbox]').each(function () {
+  $('input[type="checkbox"]').each(function () {
     const status = $(this).is(':checked');
     const id = $(this).attr('id');
     data[id] = status;

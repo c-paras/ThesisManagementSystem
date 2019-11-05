@@ -1,3 +1,21 @@
+function submitCreate() {
+  const form = $('#create-task-form');
+  if (!formValid(form)) {
+    return;
+  }
+
+  $('#num-criteria').val($('[name^="marking-criteria-"]').length);
+
+  makeRequest('/create_task', form, (res) => {
+    if (res.status === 'fail') {
+      flash(res.message, error = true);
+    } else {
+      delayToast('Task created!', false);
+      window.location.href = '/manage_courses';
+    }
+  });
+}
+
 function toggleSubmissionType() {
   if ($('#text-type').prop('checked') === true) {
     $('#text-entry-block').show();
@@ -28,6 +46,7 @@ $('[name="marking-method"]').change(function () {
 
 toggleSubmissionType();
 toggleMarkingMethod();
+$('#deadline').datetimepicker();
 
 function relabel(elem, attrs) {
   let id = 0;
@@ -54,6 +73,7 @@ function addCriteria() {
   });
   newCriteria.find('[name="remove-criteria"]').attr('onclick', `removeCriteria(${id})`);
   newCriteria.insertAfter(lastCriteria);
+  newCriteria.find('input:first').focus();
 }
 
 function removeCriteria(criteria) {

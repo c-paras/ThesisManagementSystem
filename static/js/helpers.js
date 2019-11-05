@@ -40,11 +40,22 @@ function markFieldValid(field, valid) {
 function formValid(form) {
   let invalid = false;
   form.find('input, textarea').each(function () {
-    if ($(this).val() === '' && $(this).attr('required')) {
-      invalid = true;
+    if ($(this).val().match(/^\s*$/) && $(this).attr('required')) {
+      const requiredIf = $(this).attr('requiredif');
+      let notRequired = false;
+      if (requiredIf) {
+        /* handle fields that are optionally required */
+        const req = requiredIf.split('=');
+        if ($(`[name='${req[0]}']:checked`).val() !== req[1]) {
+          notRequired = true;
+        }
+      }
+      if (!notRequired) {
+        invalid = true;
+      }
     }
   });
-  return !(invalid || form.find('.invalid').length);
+  return !invalid;
 }
 
 /*
@@ -159,7 +170,7 @@ $(function () {
 });
 
 /*
- * Prevent fields containing only places from being treated as valid.
+ * Prevent fields containing only spaces from being treated as valid.
  * The `pattern' attribute is not supported for textareas yet.
  */
 $(function () {
