@@ -24,13 +24,13 @@ def create():
         if course_id is None:
             abort(400)
         db.connect()
-        file_types = db.select_columns('file_types', ['name'])
-        file_types = list(map(lambda x: x[0], file_types))
         res = db.select_columns('course_offerings',
                                 ['id'], ['id'], [course_id])
         if not len(res):
             db.close()
             abort(404)
+        file_types = db.select_columns('file_types', ['name'])
+        file_types = list(map(lambda x: x[0], file_types))
         db.close()
         return render_template('create_task.html', heading='Create Task',
                                title='Create Task', file_types=file_types,
