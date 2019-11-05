@@ -1,4 +1,27 @@
 <div class="row">
+  <h6>
+    Previous Submission
+  </h6>
+  {% if prev_submission %}
+    <div class="col s12">
+      <b>File: </b><a href="{{ prev_submission['url'] }}" download="{{ prev_submission['name'] }}">{{ prev_submission['name'] }}</a>
+    </div>
+    <div class="col s12">
+      <b>Submmited: </b>{{ prev_submission['modify_date'].strftime('%A %d/%m/%Y at %I:%M:%S %p') }}
+    </div>
+  {% else %}
+    <div class="col s12">
+      <b>No record of previous submission</b>
+    </div>
+  {% endif %}
+</div>
+
+<div class="row">
+  <h6>
+    New Submission
+  </h6>
+</div>
+<div class="col s12">
   <form id="file-upload-form" action="/submit_file_task" method="post" enctype="multipart/form-data">
     <div class="row">
       <div class="file-field input-field">
@@ -43,4 +66,3 @@
     <input type="hidden" name="task" value="{{ task_id }}">
   </form>
 </div>
-

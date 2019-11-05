@@ -19,7 +19,8 @@ function uploadFile(btn) {
             flash(res.message, true);
             return;
         }
-        flash("Success");
+        delayToast("Success");
+        location.reload();
     });
 }
 

@@ -90,11 +90,21 @@ def student_view():
                                                    task_id)
 
     # check if the student needs to submit
-    res = db.select_columns('submissions', ['*'],
+    res = db.select_columns('submissions', ['name', 'path', 'date_modified'],
                             where_col=['student', 'task'],
                             where_val=[session['id'], task_id])
 
-    awaiting_submission = not len(res)
+    prev_submission = None
+    if res:
+        try:
+            prev_submission = {
+                'name': res[0][0],
+                'url': FileUpload(filename=res[0][1]).get_url(),
+                'modify_date': datetime.fromtimestamp(res[0][2])
+            }
+        except LookupError as e:
+            print(f"Submission for task {task_id} for {session['user']}: {e}")
+
     db.close()
     return render_template('task_student.html',
                            heading=task_info[0] + " - " + task_info[1],
@@ -104,7 +114,7 @@ def student_view():
                            is_text_task=text_submission,
                            accepted_files=accepted_files,
                            mark_details=mark_details,
-                           awaiting_submission=awaiting_submission,
+                           prev_submission=prev_submission,
                            is_approval=is_approval,
                            task_id=task_id,
                            max_size=task_info[6])

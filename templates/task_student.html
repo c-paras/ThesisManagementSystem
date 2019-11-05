@@ -51,7 +51,7 @@
         <h5>Marking:</h5>
       {% endif %}
       <div class="col s12">
-        {% if awaiting_submission %}
+        {% if not prev_submission %}
           <p>Awaiting Submission.</p>
         {% elif is_approval %}
           <p>{{ mark_details["Approval"] }}</p>
