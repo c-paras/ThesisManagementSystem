@@ -171,7 +171,6 @@ def submit_file_task():
         db.close()
         return error("User not enrolled in task's course")
 
-    print(request.form)
     if not request.form.get('certify', 'false') == 'true':
         db.close()
         return error("You must certify it is all your own work")
