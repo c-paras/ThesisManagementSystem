@@ -1,24 +1,24 @@
 from flask import abort
 from flask import Blueprint
 from flask import flash
+from flask import jsonify
 from flask import redirect
 from flask import render_template
 from flask import request
 from flask import session
-from flask import jsonify
 from flask import url_for
 
 from datetime import datetime
 from enum import Enum
 from functools import wraps
 
+from app.db_manager import sqliteManager as db
 from app.helpers import error
 from app.helpers import get_fields
 from app.helpers import send_email
-from app.db_manager import sqliteManager as db
 
-import re
 import bcrypt
+import re
 import uuid
 
 import config

@@ -4,10 +4,10 @@ from flask import session
 
 from datetime import datetime
 
-from app.auth import UserRole
 from app.auth import at_least_role
-from app.queries import queries
+from app.auth import UserRole
 from app.db_manager import sqliteManager as db
+from app.queries import queries
 
 
 home = Blueprint('home', __name__)

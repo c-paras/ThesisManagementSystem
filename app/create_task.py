@@ -4,17 +4,17 @@ from flask import abort
 from flask import Blueprint
 from flask import jsonify
 from flask import render_template
-from flask import jsonify
 from flask import request
 
-from app.auth import UserRole
 from app.auth import at_least_role
+from app.auth import UserRole
+from app.db_manager import sqliteManager as db
 from app.file_upload import FileUpload
 from app.helpers import error
 from app.helpers import get_fields
-from app.db_manager import sqliteManager as db
 
 import config
+
 
 create_task = Blueprint('create_task', __name__)
 

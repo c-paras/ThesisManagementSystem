@@ -1,5 +1,5 @@
-import sqlite3
 import config
+import sqlite3
 
 
 class sqliteManager:
