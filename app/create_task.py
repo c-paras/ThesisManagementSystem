@@ -119,7 +119,12 @@ def create():
         except KeyError:
             return error('Could not find a file to upload')
 
-        # TODO: check file allowed types
+        res = db.select_columns('file_types', ['name'])
+        file_types = list(map(lambda x: x[0], res))
+        if sent_file.get_extention() not in file_types:
+            db.close()
+            accept_files = ', '.join(file_types)
+            return error(f'Accepted file types are: {accept_files}')
         if sent_file.get_size() > config.MAX_FILE_SIZE:
             sent_file.remove_file()
             db.close()
