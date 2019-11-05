@@ -72,7 +72,7 @@ class queries:
     # gets the current requests for a given supervisor's email
     def get_current_super_students(email):
         res = db.custom_query("""
-                                SELECT stu.name, stu.email, t.name,
+                                SELECT stu.name, stu.email, t.name, stu.id,
                                        MAX(sess.end_date)
                                 FROM users stu
                                 INNER JOIN student_topic st
@@ -95,7 +95,7 @@ class queries:
     # gets the current requests for a given supervisor's email
     def get_current_assess_students(email):
         res = db.custom_query("""
-                                SELECT stu.name, stu.email, t.name,
+                                SELECT stu.name, stu.email, t.name, stu.id,
                                        MAX(sess.end_date)
                                 FROM users stu
                                 INNER JOIN student_topic st
@@ -309,5 +309,22 @@ class queries:
                     AND task = "{task_id}";
             """.format(student_id=student_id,
                        task_id=task_id)
+        )
+        return res
+
+    def get_student_submissions(student_id):
+        res = db.custom_query(
+            """
+                SELECT
+                t.id, t.name, mm.name, s.path, s.date_modified
+                FROM users u
+                INNER JOIN submissions s
+                    ON  s.student = u.id
+                INNER JOIN tasks t
+                    ON t.id = s.task
+                INNER JOIN marking_methods mm
+                    ON t.marking_method = mm.id
+                WHERE u.id = "{student_id}";
+            """.format(student_id=student_id)
         )
         return res
