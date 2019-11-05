@@ -20,7 +20,7 @@ class FileUpload:
         If given a request object will treat it as a file which should
         be uploaded, will clean the path and generate an UUID for it
         Will not save the uploaded file till get_size or commit is
-        called. If given a filenmae, treated as a file which has
+        called. If given a filename, treated as a file which has
         already been uploaded will verify that the file exists before
         creating the object.
         '''
