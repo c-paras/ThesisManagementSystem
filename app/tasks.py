@@ -86,6 +86,20 @@ def student_view():
                             where_col=['student', 'task'],
                             where_val=[session['id'], task_id])
 
+    text_info = {}
+    if task_info[4] == "text submission":
+        text_info["limit"] = task_info[6]
+        text_info["button_text"] = "Submit"
+
+        res = db.select_columns('submissions', ['text', 'date_modified'],
+                                where_col=['student', 'task'],
+                                where_val=[session['id'], task_id])
+        if res:
+            edited_time = datetime.fromtimestamp(int(res[0][1]))
+            text_info["old_text"] = res[0][0]
+            text_info["edited_time"] = edited_time.strftime(time_format)
+            text_info["button_text"] = "Edit"
+
     awaiting_submission = not len(res)
     db.close()
     return render_template('task_student.html',
@@ -93,8 +107,7 @@ def student_view():
                            title=task_info[1],
                            deadline=deadline_text,
                            description=task_info[3],
-                           is_text_task=task_info[4] == "text submission",
-                           word_limit=task_info[6],
+                           text_info=text_info,
                            mark_details=mark_details,
                            awaiting_submission=awaiting_submission,
                            is_approval=is_approval,
