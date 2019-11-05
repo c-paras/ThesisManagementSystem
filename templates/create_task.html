@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 
-{% from "macros.html" import upload_spinner %}
+{% from "macros.html" import upload_spinner, file_upload %}
 
 {% block body %}
   <div class="row">
@@ -50,19 +50,10 @@
 
         <div class="row">
           <div class="col s12">
-            <div class="file-field input-field">
-              <div class="btn file-upload-btn">
-                <span>Choose</span>
-                <input type="file" accept="{{ accepted_file_types }}">
-              </div>
-              <div class="file-path-wrapper">
-                <input
-                  id="file-name" name="file-name" class="file-path validate" type="text"
-                  placeholder="Upload attachment, e.g. marking criteria"
-                >
-                <label for="file-name">Size limit: {{ max_file_size }} MB</label>
-              </div>
-            </div>
+            {{
+               file_upload("file-name", accepted_file_types,
+               "Upload attachment, e.g. marking criteria", max_file_size)
+            }}
           </div>
         </div>
 

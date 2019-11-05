@@ -2,16 +2,7 @@
   <form id="file-upload-form" action="/submit_file_task" method="POST" enctype="multipart/form-data">
 
     <div class="row">
-      <div class="file-field input-field">
-        <div class="btn file-upload-btn">
-          <span>Choose</span>
-          <input type="file" accept="{{ accepted_files }}">
-        </div>
-        <div class="file-path-wrapper">
-          <input id="file-name" class="file-path validate" type="text" placeholder="Select file to submit">
-          <label for="file-name">Size limit: {{ max_size }} MB</label>
-        </div>
-      </div>
+      {{ file_upload("file-name", accepted_files, "Select file to submit", max_size) }}
     </div>
 
     <div class="row">
