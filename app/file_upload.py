@@ -1,5 +1,6 @@
 import uuid
 
+from flask import url_for
 from pathlib import Path
 from werkzeug import secure_filename
 
@@ -25,7 +26,7 @@ class FileUpload:
         '''
         if req:
             sent_file = req.files['file']
-            upload_dir = Path(config.FILE_UPLOAD_DIR)
+            upload_dir = Path('static') / Path(config.FILE_UPLOAD_DIR)
             upload_dir.mkdir(exist_ok=True)
             file_id = str(uuid.uuid4())
             sec_name = secure_filename(sent_file.filename)
@@ -62,6 +63,13 @@ class FileUpload:
         includes the config.FILE_UPLOAD_DIR
         '''
         return self.path
+
+    def get_url(self):
+        '''
+        Returns the public url for this file
+        '''
+        p = Path(config.FILE_UPLOAD_DIR) / Path(self.path.name)
+        return url_for(str('static'), filename=p)
 
     def get_size(self):
         '''
