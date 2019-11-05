@@ -526,6 +526,7 @@ def gen_marks():
     students = db.select_columns(
         'users', ['id'], ['account_type'], [acc_types['student']]
     )
+    request_types = get_all_request_types()
 
     for student in students:
         markers = db_queries.get_user_ass_sup(student[0])
@@ -542,6 +543,8 @@ def gen_marks():
                 'task_criteria', ['id', 'max_mark'], ['task'], [task[0]]
             )
             queries = []
+
+            # create the marks
             for criteria in criteria_ids:
                 mark = random.randrange(criteria[1])
                 feedback = "smile face"
@@ -556,6 +559,11 @@ def gen_marks():
                     [criteria[0], mark, student[0], markers[1], feedback, path]
                 ))
             db.insert_multiple(queries)
+
+            # update status to marked
+            db.update_rows('submissions',
+                           [request_types['marked']], ['status'],
+                           ['student', 'task'], [student[0], task[0]])
 
 
 def gen_submissions():
@@ -584,7 +592,8 @@ def gen_submissions():
                 queries.append((
                     'submissions',
                     [student[0], task[0], 'smiley',
-                        'img/chicken.jpg', 'ez', now, request_types['marked']]
+                        'img/chicken.jpg', 'ez', now,
+                        request_types['pending mark']]
                 ))
         db.insert_multiple(queries)
 
@@ -641,11 +650,11 @@ if __name__ == '__main__':
     print('Generating task critera...')
     gen_task_critera()
 
-    print('Generating marks...')
-    gen_marks()
-
     print("Generating submissions...")
     gen_submissions()
+
+    print('Generating marks...')
+    gen_marks()
 
     db.close()
     print('Done')
