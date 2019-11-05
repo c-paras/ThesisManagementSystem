@@ -25,4 +25,4 @@ SYSTEM_PASSWORD = 'Thesis000'
 
 ACCOUNT_EXPIRY = 86400  # in seconds
 
-FILE_UPLOAD_DIR = 'upload'
+FILE_UPLOAD_DIR = 'uploads'

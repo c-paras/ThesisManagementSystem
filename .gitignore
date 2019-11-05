@@ -2,7 +2,7 @@
 db/thesis.db
 
 # Upload directory
-static/upload
+static/uploads
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
