@@ -173,7 +173,8 @@
       {% endif %}
       <p>&nbsp;</p>
       <tr>
-        <a class="waves-effect waves-light btn" id="change-co-btn" href="/create_task" style="float: right;">Add Task
+        <a class="waves-effect waves-light btn" id="change-co-btn" 
+           href="{{ url_for('create_task.create', CO_id=default_co) }}" style="float: right;">Add Task
           <i class="material-icons right">add</i>
         </a>
       </tr>
