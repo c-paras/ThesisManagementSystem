@@ -251,7 +251,6 @@ def submit_text_task():
     task_id = request.form.get('task', -1)
     text = request.form.get('text-submission', -1)
 
-
     db.connect()
     res = db.select_columns('tasks', ['deadline', 'marking_method',
                                       'visible', 'course_offering',
@@ -273,16 +272,20 @@ def submit_text_task():
         'name': res[0][5]
     }
 
-    if task['deadline'] >= datetime.now():
-        db.close()
-        return error("Submissions closed")
-
     res = db.select_columns('enrollments', ['user'],
                             ['user', 'course_offering'],
                             [session['id'], task['offering']])
     if not res:
         db.close()
         return error("User not enrolled in task's course")
+
+    if not request.form.get('certify', 'false') == 'true':
+        db.close()
+        return error("You must certify it is all your own work")
+
+    if datetime.now() >= task['deadline']:
+        db.close()
+        return error("Submissions closed")
 
     res = db.select_columns('marking_methods', ['name'],
                             ['id'], [task['sub_method']['id']])
@@ -301,7 +304,7 @@ def submit_text_task():
         db.close()
         return error("Your submission is above the word limit")
 
-    res = db.select_columns('submissions', ['path'], ['student', 'task'],
+    res = db.select_columns('submissions', ['*'], ['student', 'task'],
                             [session['id'], task['id']])
     if res:
         # if there's already a submission, delete it

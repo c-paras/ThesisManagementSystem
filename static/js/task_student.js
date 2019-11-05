@@ -72,9 +72,9 @@ function uploadText(btn) {
             flash(res.message, true);
             return;
         }
-        flash("Success");
+        delayToast("Success", false);
+        location.reload();
     });
-    location.reload();
 }
 
 function openModal(){
