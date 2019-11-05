@@ -1,19 +1,19 @@
-from os import path
-
 from flask import Flask
 
-from app.auth import auth
-from app.home import home
-from app.search import search
-from app.errors import errors
-from app.create_topic import create_topic
-from app.request_topic import request_topic
-from app.manage_topics import manage_topics
-from app.tasks import tasks
-from app.create_task import create_task
-from app.submission import submissions
+from os import path
 
+from app.auth import auth
+from app.create_task import create_task
+from app.create_topic import create_topic
 from app.db_manager import sqliteManager as db
+from app.errors import errors
+from app.home import home
+from app.manage_topics import manage_topics
+from app.request_topic import request_topic
+from app.search import search
+from app.submission import submissions
+from app.tasks import tasks
+
 
 import config
 
