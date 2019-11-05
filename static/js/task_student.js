@@ -1,4 +1,4 @@
-function uploadFile(btn) {
+function uploadFile() {
   const form = $('#file-upload-form');
   if ($('#file-name').val() === '') {
     flash('Please specify a file', true);
@@ -8,13 +8,11 @@ function uploadFile(btn) {
     flash('You must certify this is all your own work', true);
     return;
   }
-  $(btn).parent().children().each(function (index, value) {
-    $(value).toggle();
-  });
+  $('#upload-spinner').toggle();
+  $('#submit-btn').toggle();
   makeMultiPartRequest('/submit_file_task', form, (res) => {
-    $(btn).parent().children().each(function (index, value) {
-      $(value).toggle();
-    });
+    $('#upload-spinner').toggle();
+    $('#submit-btn').toggle();
     if (res.status === 'fail') {
       flash(res.message, true);
       return;
