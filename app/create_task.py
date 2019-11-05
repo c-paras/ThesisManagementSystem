@@ -6,7 +6,6 @@ from flask import jsonify
 from flask import render_template
 from flask import jsonify
 from flask import request
-from flask import session
 
 from app.auth import UserRole
 from app.auth import at_least_role
@@ -20,9 +19,7 @@ create_task = Blueprint('create_task', __name__)
 @create_task.route('/create_task', methods=['GET', 'POST'])
 @at_least_role(UserRole.COURSE_ADMIN)
 def create():
-    if 'current_co' not in session:
-        abort(400)
-    course_id = session['current_co']
+    course_id = request.args.get('course_id', None, type=int)
     if request.method == 'GET':
         if course_id is None:
             abort(400)
@@ -38,6 +35,7 @@ def create():
         return render_template('create_task.html', heading='Create Task',
                                title='Create Task', file_types=file_types,
                                course_id=course_id)
+
     try:
         fields = [
             'task-name', 'deadline', 'task-description', 'submission-type',
