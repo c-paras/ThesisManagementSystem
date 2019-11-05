@@ -1,18 +1,3 @@
-
-
-function openModal(){
-    const modal = M.Modal.init($('#text_modal'), {
-                                dismissible: false
-                               });
-    modal[0].open();
-    updateWordCount($('#textarea1'));
-}
-
-function closeModal(){
-    const modal = M.Modal.getInstance($('#text_modal'));
-    modal.close();
-}
-
 function countWords(str) {
     if(str.trim() === ""){
         return 0;
@@ -55,4 +40,17 @@ function uploadText(btn) {
         flash("Success");
     });
     location.reload();
+}
+
+function openModal(){
+    const modal = M.Modal.init($('#text_modal'), {
+                                dismissible: false
+                               });
+    modal[0].open();
+    updateWordCount($('#textarea1'));
+}
+
+function closeModal(){
+    const modal = M.Modal.getInstance($('#text_modal'));
+    modal.close();
 }
