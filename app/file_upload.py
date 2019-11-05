@@ -9,9 +9,10 @@ import config
 
 class FileUpload:
     '''
-    Represents a to be uploaded or an already uploaded file, provides
-    various helper functions to deal with them. Note this object is
-    not thread safe so each file should only ever have a single object
+    Represents a file to be uploaded or an already uploaded file,
+    provides various helper functions to deal with them. Note this
+    object is not thread safe so each file should only ever have a
+    single object
     '''
     UUID_LEN = len(str(uuid.uuid4()))
 
