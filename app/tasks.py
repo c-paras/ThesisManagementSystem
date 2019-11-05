@@ -55,6 +55,10 @@ def student_view():
 
     task_info = queries.get_general_task_info(task_id)[0]
 
+    text_submission = task_info[4] == "text submission"
+    accepted_files = None
+    if not text_submission:
+        accepted_files = ','.join(queries.get_tasks_accepted_files(task_id))
     # get deadline
     time_format = '%d/%m/%Y at %I:%M:%S %p'
     due_date = datetime.fromtimestamp(task_info[2])
@@ -99,7 +103,8 @@ def student_view():
                            title=task_info[1],
                            deadline=deadline_text,
                            description=task_info[3],
-                           is_text_task=task_info[4] == "text submission",
+                           is_text_task=text_submission,
+                           accepted_files=accepted_files,
                            mark_details=mark_details,
                            awaiting_submission=awaiting_submission,
                            is_approval=is_approval,
