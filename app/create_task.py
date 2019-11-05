@@ -33,11 +33,13 @@ def create():
             abort(404)
         file_types = db.select_columns('file_types', ['name'])
         file_types = list(map(lambda x: x[0], file_types))
+        allowed_file_types = ','.join(file_types)
         db.close()
         return render_template('create_task.html', heading='Create Task',
                                title='Create Task', file_types=file_types,
                                course_id=course_id,
-                               max_file_size=config.MAX_FILE_SIZE)
+                               max_file_size=config.MAX_FILE_SIZE,
+                               accepted_file_types=allowed_file_types)
 
     try:
         fields = [
