@@ -13,7 +13,7 @@
     <div>
       <b>Attachment:</b> Marking Criteria 
       <a href="{{ url_for('static', filename='%s'%criteria) }}"> 
-      <i class="material-icons right">file_download</i>
+      <i class="material-icons">file_download</i>
       </a>
     </div>
     <br>
@@ -36,7 +36,32 @@
       <b>Assessment:</b> PLACEHOLDER
     </div>
     <div>
-
+      <table class="highlight responsive-table">
+        <thead>
+          <tr>
+            <th>Criteria</th>
+            <th>Max Mark</th>
+            <th>Assigned Mark</th>
+            <th>Feedback</th>
+            <!-- <th class="right-align">Edit</th> -->
+          </tr>
+        </thead>
+        <tbody>
+          {% for item in taskCriteria %}
+            <tr>
+              <td>{{ item[2] }}</td>
+              <td>{{ item[4] }}</td>
+              <td>Enter Mark</td>
+              <td>
+                <div>
+                  <textarea id="textarea1" class="materialize-textarea markTextArea" rows="5" style="overflow:auto;" placeholder="Enter Feedback"></textarea>
+                </div>
+              </td>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
     </div>
   </div>
+  <script type="text/javascript" src="{{ url_for('static', filename='js/mark.js') }}" defer></script>
 {% endblock %}

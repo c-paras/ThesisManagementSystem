@@ -36,11 +36,15 @@ def mark_submission():
         deadline_text = weekday + " " + due_date.strftime(time_format)
 
         material = queries.get_material_and_attachment(task_id)
+        task_criteria = db.select_columns('task_criteria',
+                                          ['*'], ['task'], [task_id])
         print(material[0][0])
+        print(task_criteria)
         return render_template('mark_submission.html',
                                topic_request_text=config.TOPIC_REQUEST_TEXT,
                                heading='Mark Submission',
                                title='Mark Submission',
                                deadline=deadline_text,
                                description=task_info[3],
-                               criteria=material[0][0])
+                               criteria=material[0][0],
+                               taskCriteria=task_criteria)
