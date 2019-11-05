@@ -332,3 +332,22 @@ class queries:
             """
         )
         return res
+
+    def get_student_enrollments(co_id):
+        res = db.custom_query(
+            """
+                SELECT u.id, u.name, u.email, t.name
+                FROM users u
+                INNER JOIN enrollments e
+                    ON e.user = u.id
+                INNER JOIN course_roles cr
+                    ON cr.id = e.course_offering
+                LEFT JOIN student_topic st
+                    ON st.student = u.id
+                LEFT JOIN topics t
+                    ON t.id = st.topic
+                WHERE e.course_offering = "{co_id}"
+                    AND cr.name = "student";
+            """.format(co_id=co_id)
+        )
+        return res

@@ -106,7 +106,17 @@
                     {{ task[1] }}
                   </td>
                   <td>{{ task[2] }}</td>
-                  <td>{{ task[3] }}</td>
+                  <td>
+                    {% if task[3]|length %}
+                      {% for attachment in task[3] %}
+                        <a href="{{ url_for('static', filename=attachment) }}">
+                          <i class="material-icons left">file_download</i>
+                        </a>
+                      {% endfor %}
+                    {% else %}
+                      N/A
+                    {% endif %}
+                  </td>
                   {% if task[4] == 1 %}
                     <td>
                       <label>

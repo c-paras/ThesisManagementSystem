@@ -44,10 +44,32 @@ def manage_course_offerings():
         )
         attachments = [x[0] for x in attachmentsQuery]
         materials.append((material[0], material[1], attachments, material[2]))
+    tasks = []
+    taskQuery = db.select_columns(
+        'tasks', ['id', 'name', 'deadline', 'visible'],
+        ['course_offering'], [co]
+    )
+    for task in taskQuery:
+        attachments = []
+        attachmentsQuery = db.select_columns(
+            'task_attachments', ['path'], ['task'], [task[0]]
+        )
+        attachments = [x[0] for x in attachmentsQuery]
+        # maybe add a tuple of its name and path for each
+        # same for above
+        tasks.append((task[0], task[1], task[2], attachments, task[3]))
+    enrollments = []
+    enrollmentsQuery = queries.get_student_enrollments(co)
+    for student in enrollments:
+        zid = student[2].split('@')[0]
+        if len(student[2] > 0):
+            enrollments.append((student[1], zid, student[3]))
+        else:
+            enrollments.append((student[1], zid, 'No topic'))
     db.close()
     return render_template(
         'manage_courses.html',
         materials=materials,
-        tasks=[],
-        enrollments=[],
+        tasks=tasks,
+        enrollments=enrollments,
         courses=courses)
