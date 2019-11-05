@@ -100,7 +100,7 @@ def student_view():
     text_info = {}
     if task_info[4] == "text submission":
         text_info["limit"] = task_info[7]
-        text_info["button_text"] = "Submit"
+        text_info["button_text"] = "Start Submission"
 
         res = db.select_columns('submissions', ['text', 'date_modified'],
                                 where_col=['student', 'task'],
@@ -109,7 +109,7 @@ def student_view():
             edited_time = datetime.fromtimestamp(int(res[0][1]))
             text_info["old_text"] = res[0][0]
             text_info["edited_time"] = edited_time.strftime(time_format)
-            text_info["button_text"] = "Edit"
+            text_info["button_text"] = "Edit Submission"
 
     awaiting_submission = not len(res)
     db.close()
@@ -242,7 +242,7 @@ def submit_file_task():
                      ['student', 'task', 'name', 'path',
                       'date_modified', 'status'])
     db.close()
-    return jsonify({})
+    return jsonify({'status': 'ok'})
 
 
 @tasks.route('/submit_text_task', methods=['POST'])
@@ -319,4 +319,4 @@ def submit_text_task():
                      ['student', 'task', 'name', 'text',
                       'date_modified', 'status'])
     db.close()
-    return jsonify({})
+    return jsonify({'status': 'ok'})
