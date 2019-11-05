@@ -154,7 +154,8 @@ def submit_file_task():
         },
         'visible': res[0][2],
         'offering': res[0][3],
-        'max_size': res[0][4]
+        'max_size': res[0][4],
+        'accepted_files': queries.get_tasks_accepted_files(task_id)
     }
 
     if task['deadline'] >= datetime.now():
@@ -185,11 +186,16 @@ def submit_file_task():
     except KeyError:
         return error("Must give a file for submission")
 
+    if sent_file.get_extention() not in task['accepted_files']:
+        db.close()
+        accept_files = ', '.join([f[1:] for f in task['accepted_files']])
+        return error(f"File must be formatted as {accept_files}")
     if sent_file.get_size() > task['max_size']:
         sent_file.remove_file()
         db.close()
         return error("File too large")
 
+    sent_file.commit()
     res = db.select_columns('submissions', ['path'], ['student', 'task'],
                             [session['id'], task['id']])
     if res:
