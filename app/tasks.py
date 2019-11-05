@@ -9,14 +9,13 @@ from werkzeug import secure_filename
 from datetime import datetime
 import os
 import calendar
-import uuid
 
 from app.auth import UserRole
 from app.auth import at_least_role
 from app.queries import queries
 from app.db_manager import sqliteManager as db
 from app.helpers import error
-from app.helpers import get_fields
+from app.file_upload import FileUpload
 
 import config
 
@@ -137,14 +136,7 @@ def staff_view():
 @tasks.route('/submit_file_task', methods=['POST'])
 @at_least_role(UserRole.STUDENT)
 def submit_file_task():
-    sent_file = request.files.get('file', None)
-    if not sent_file:
-        return error("Please select file for submissi!on")
-
-    task_id = request.form.get('task', None)
-    if not task_id:
-        return error("Missing task id")
-
+    task_id = request.form.get('task', -1)
     db.connect()
     res = db.select_columns('tasks', ['deadline', 'marking_method',
                                       'visible', 'course_offering',
@@ -178,7 +170,6 @@ def submit_file_task():
 
     res = db.select_columns('marking_methods', ['name'],
                             ['id'], [task['sub_method']['id']])
-    assert res
     task['sub_method']['name'] = res[0][0]
 
     mark_method_id = None
@@ -188,23 +179,33 @@ def submit_file_task():
     elif task['sub_method']['name'] == 'requires mark':
         mark_method_id = db.select_columns('request_statuses', ['id'],
                                            ['name'], ['pending mark'])[0][0]
-    assert mark_method_id
 
-    if not os.path.isdir(config.FILE_UPLOAD_DIR):
-        os.mkdir(config.FILE_UPLOAD_DIR)
+    try:
+        sent_file = FileUpload(req=request)
+    except KeyError:
+        return error("Must give a file for submission")
 
-    file_uuid = str(uuid.uuid4())
-    sec_filename = secure_filename(sent_file.filename)
-    output_filename = f'{file_uuid}-{sec_filename}'
-    full_path = os.path.join(config.FILE_UPLOAD_DIR, output_filename)
-    sent_file.save(full_path)
-    file_size = os.stat(full_path).st_size
-    if file_size > task['max_size']:
-        os.remove(full_path)
+    if sent_file.get_size() > task['max_size']:
+        sent_file.remove_file()
         db.close()
         return error("File too large")
+
+    res = db.select_columns('submissions', ['path'], ['student', 'task'],
+                            [session['id'], task['id']])
+    if res:
+        db.delete_rows('submissions', ['student', 'task'],
+                       [session['id'], task['id']])
+        # If the file doesn't exists don't worry as we are deleting
+        # the submission anyway
+        try:
+            prev_submission = FileUpload(filename=res[0][0])
+            prev_submission.remove_file()
+        except LookupError:
+            pass
+
     db.insert_single('submissions', [session['id'], task['id'],
-                                     sec_filename, output_filename,
+                                     sent_file.get_original_name(),
+                                     str(sent_file.get_path()),
                                      datetime.now().timestamp(),
                                      mark_method_id],
                      ['student', 'task', 'name', 'path',
