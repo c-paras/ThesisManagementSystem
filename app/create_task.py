@@ -13,6 +13,8 @@ from app.helpers import error
 from app.helpers import get_fields
 from app.db_manager import sqliteManager as db
 
+import config
+
 create_task = Blueprint('create_task', __name__)
 
 
@@ -34,7 +36,8 @@ def create():
         db.close()
         return render_template('create_task.html', heading='Create Task',
                                title='Create Task', file_types=file_types,
-                               course_id=course_id)
+                               course_id=course_id,
+                               max_file_size=config.MAX_FILE_SIZE)
 
     try:
         fields = [
