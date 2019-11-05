@@ -39,14 +39,14 @@ def student_view():
     task_id = int(request.args.get('task', None))
 
     # check that this user is allowed to view this task
-    canView = False
+    can_view = False
     my_tasks = queries.get_user_tasks(session['id'])
     for task in my_tasks:
         if task[0] == int(task_id):
-            canView = True
+            can_view = True
             break
 
-    if not canView:
+    if not can_view:
         abort(403)
 
     #
@@ -60,11 +60,9 @@ def student_view():
     if not text_submission:
         accepted_files = ','.join(queries.get_tasks_accepted_files(task_id))
     # get deadline
-    time_format = '%d/%m/%Y at %I:%M:%S %p'
+    time_format = '%A %d/%m/%Y at %I:%M:%S %p'
     due_date = datetime.fromtimestamp(task_info[2])
-    weekday = calendar.day_name[datetime.fromtimestamp(task_info[2]).weekday()]
-
-    deadline_text = weekday + " " + due_date.strftime(time_format)
+    deadline_text = due_date.strftime(time_format)
 
     #
     # get criteria & marks
