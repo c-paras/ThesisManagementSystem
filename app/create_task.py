@@ -9,6 +9,7 @@ from flask import request
 
 from app.auth import UserRole
 from app.auth import at_least_role
+from app.file_upload import FileUpload
 from app.helpers import error
 from app.helpers import get_fields
 from app.db_manager import sqliteManager as db
@@ -45,12 +46,13 @@ def create():
         fields = [
             'task-name', 'deadline', 'task-description', 'submission-type',
             'word-limit', 'maximum-file-size', 'accepted-file-type',
-            'marking-method', 'num-criteria', 'course-id'
+            'marking-method', 'num-criteria', 'course-id', 'file-name'
         ]
         task_name, deadline, task_description, submission_type, \
             word_limit, max_file_size, accepted_ftype, marking_method, \
-            num_criteria, course_id = \
-            get_fields(request.form, fields, optional=['word-limit'],
+            num_criteria, course_id, file_name = \
+            get_fields(request.form, fields,
+                       optional=['word-limit', 'file-name'],
                        ints=['maximum-file-size', 'num-criteria',
                              'word-limit', 'course-id'])
     except ValueError as e:
@@ -109,6 +111,23 @@ def create():
         db.close()
         return error('Invalid or unsupported file type!')
     file_type_id = res[0][0]
+
+    # upload file if present
+    if len(file_name):
+        try:
+            sent_file = FileUpload(req=request)
+        except KeyError:
+            return error('Could not find a file to upload')
+
+        # TODO: check file allowed types
+        if sent_file.get_size() > config.MAX_FILE_SIZE:
+            sent_file.remove_file()
+            db.close()
+            return error(
+                f'File exceeds the maximum size of {config.MAX_FILE_SIZE} MB'
+            )
+        sent_file.commit()
+
     res = db.select_columns('submission_methods', ['id'],
                             ['name'],
                             ['{} submission'.format(submission_type)])
