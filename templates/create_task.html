@@ -1,5 +1,7 @@
 {% extends "base.html" %}
 
+{% from "macros.html" import upload_spinner %}
+
 {% block body %}
   <div class="row">
     <form class="col s12" id="create-task-form" name="create-task-form">
@@ -227,6 +229,7 @@
           <a class="waves-effect waves-light btn" id="create-task-btn" onclick="submitCreate()">Create Task
             <i class="material-icons right">send</i>
           </a>
+          {{ upload_spinner(id='upload-spinner') }}
         </div>
       </div>
 

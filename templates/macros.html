@@ -1,0 +1,15 @@
+{% macro upload_spinner(id) %}
+<div id="{{ id }}" style="display: none;" class="preloader-wrapper small active">
+  <div class="spinner-layer">
+    <div class="circle-clipper left">
+      <div class="circle"></div>
+    </div>
+    <div class="gap-patch">
+      <div class="circle"></div>
+    </div>
+    <div class="circle-clipper right">
+      <div class="circle"></div>
+    </div>
+  </div>
+</div>
+{% endmacro %}

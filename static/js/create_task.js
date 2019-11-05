@@ -6,7 +6,11 @@ function submitCreate() {
 
   $('#num-criteria').val($('[name^="marking-criteria-"]').length);
 
+  $('#upload-spinner').toggle();
+  $('#create-task-btn').toggle();
   makeMultiPartRequest('/create_task', form, (res) => {
+    $('#upload-spinner').toggle();
+    $('#create-task-btn').toggle();
     if (res.status === 'fail') {
       flash(res.message, error = true);
     } else {

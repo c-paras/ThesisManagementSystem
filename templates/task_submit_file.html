@@ -30,19 +30,7 @@
     <div class="row">
       <div class="input-field">
         <a id="submit-btn" onclick="uploadFile()" class="waves-effect waves-light btn">Submit</a>
-        <div id="upload-spinner" style="display: none;" class="preloader-wrapper small active">
-          <div class="spinner-layer">
-            <div class="circle-clipper left">
-              <div class="circle"></div>
-            </div>
-            <div class="gap-patch">
-              <div class="circle"></div>
-            </div>
-            <div class="circle-clipper right">
-              <div class="circle"></div>
-            </div>
-          </div>
-        </div>
+        {{ upload_spinner(id='upload-spinner') }}
       </div>
     </div>
 
