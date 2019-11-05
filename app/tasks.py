@@ -163,7 +163,7 @@ def submit_file_task():
         'accepted_files': queries.get_tasks_accepted_files(task_id)
     }
 
-    if task['deadline'] >= datetime.now():
+    if datetime.now() >= task['deadline']:
         db.close()
         return error("Submissions closed")
 
