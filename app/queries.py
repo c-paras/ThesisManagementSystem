@@ -218,8 +218,8 @@ class queries:
     def get_general_task_info(task_id):
         res = db.custom_query(
             """
-                SELECT c.name, t.name, t.deadline,
-                       t.description, sm.name, mm.name
+                SELECT c.name, t.name, t.deadline, t.description,
+                       sm.name, mm.name, t.size_limit
                 FROM tasks t
                 INNER JOIN course_offerings co
                     ON t.course_offering = co.id

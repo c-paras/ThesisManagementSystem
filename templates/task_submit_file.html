@@ -7,7 +7,8 @@
           <input type="file" accept="{{accepted_files}}">
         </div>
         <div class="file-path-wrapper">
-          <input class="file-path validate" type="text" placeholder="Select file to submit">
+          <input id="file-name" class="file-path validate" type="text" placeholder="Select file to submit">
+          <label for="file-name">Size limit {{ max_size }} MB</label>
         </div>
       </div>
     </div>
@@ -15,7 +16,7 @@
       <div class="input-field">
         <div>
           <label>
-            <input id="all-own-work" type="checkbox" />
+            <input id="all-own-work" name="certify" value="false" type="checkbox" />
             <span>I certify this is all my own work, except where expressly indicated and correctly attributed</span>
           </label>
         </div>

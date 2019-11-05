@@ -108,7 +108,8 @@ def student_view():
                            mark_details=mark_details,
                            awaiting_submission=awaiting_submission,
                            is_approval=is_approval,
-                           task_id=task_id)
+                           task_id=task_id,
+                           max_size=task_info[6])
 
 
 # get a nicely formatted table containing the marks of a student, or a blank
@@ -163,16 +164,21 @@ def submit_file_task():
         'accepted_files': queries.get_tasks_accepted_files(task_id)
     }
 
-    if datetime.now() >= task['deadline']:
-        db.close()
-        return error("Submissions closed")
-
     res = db.select_columns('enrollments', ['user'],
                             ['user', 'course_offering'],
                             [session['id'], task['offering']])
     if not res:
         db.close()
         return error("User not enrolled in task's course")
+
+    print(request.form)
+    if not request.form.get('certify', 'false') == 'true':
+        db.close()
+        return error("You must certify it is all your own work")
+
+    if datetime.now() >= task['deadline']:
+        db.close()
+        return error("Submissions closed")
 
     res = db.select_columns('marking_methods', ['name'],
                             ['id'], [task['sub_method']['id']])
@@ -198,7 +204,7 @@ def submit_file_task():
     if sent_file.get_size() > task['max_size']:
         sent_file.remove_file()
         db.close()
-        return error("File too large")
+        return error(f"File larger than {task['max_size']}MB")
 
     sent_file.commit()
     res = db.select_columns('submissions', ['path'], ['student', 'task'],
