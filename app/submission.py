@@ -11,6 +11,7 @@ from app.auth import UserRole
 from app.auth import at_least_role
 from app.queries import queries
 from app.db_manager import sqliteManager as db
+from app.file_upload import FileUpload
 
 
 submissions = Blueprint('submissions', __name__)
@@ -70,7 +71,7 @@ def staff_view():
             tasks.append((
                 task[1], submit_date_text,
                 str(staff_mark) + '/' + str(total_max_mark),
-                task[3]
+                FileUpload(task[3]).get_url()
             ))
 
     db.close()

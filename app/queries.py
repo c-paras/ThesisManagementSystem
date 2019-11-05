@@ -2,6 +2,15 @@ from app.db_manager import sqliteManager as db
 
 
 class queries:
+    def get_tasks_accepted_files(topic_id):
+        res = db.custom_query("""
+                                 SELECT file_types.name FROM file_types
+                                 INNER JOIN submission_types st
+                                     ON st.file_type = file_types.id
+                                 WHERE st.task = ?
+                                 """, [topic_id])
+        return [r[0] for r in res]
+
     def respond_topic(student_id, topic_id, status, timestamp):
         db.custom_query("""UPDATE topic_requests
                            SET status = (SELECT id
@@ -209,8 +218,8 @@ class queries:
     def get_general_task_info(task_id):
         res = db.custom_query(
             """
-                SELECT c.name, t.name, t.deadline,
-                       t.description, sm.name, mm.name
+                SELECT c.name, t.name, t.deadline, t.description,
+                       sm.name, mm.name, t.size_limit
                 FROM tasks t
                 INNER JOIN course_offerings co
                     ON t.course_offering = co.id
