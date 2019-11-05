@@ -59,13 +59,14 @@ def request_new_topic():
         return error('You have already requested this topic!')
 
     res = db.select_columns('users', ['name', 'email'], ['id'], [supervisor])
+    hr_tag = '<hr style="border: 1px dashed;">'
     send_email(to=res[0][1], name=res[0][0], subject='New Topic Request',
                messages=[
                    'A student has requested a thesis topic on offer by you.',
                    f'The topic is titled "{topic_name}".',
-                   'A message from the student is attached below:',
+                   f'A message from the student is attached below:{hr_tag}',
                    message.replace('\n', '<br>'),
-                   'You can approve or reject the topic request ' +
+                   f'{hr_tag}You can approve or reject the topic request ' +
                    f'<a href="{config.SITE_HOME}">here</a>.'
                ])
 
@@ -101,7 +102,7 @@ def respond_request():
     if req_status == 'approved':
         if 'assessor' not in request.form:
             db.close()
-            return error("assessor not specified")
+            return error('You must specify an assessor')
         db.insert_single('student_topic',
                          [data[1], data[2], request.form['assessor']],
                          ['student', 'topic', 'assessor'])

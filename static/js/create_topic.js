@@ -4,10 +4,10 @@ function submitCreate() {
     return;
   }
   const data = {
-    "topic": $("[id='topic']").val(),
-    "topic_area": M.Chips.getInstance($('#areas')).chipsData,
-    "prereqs": M.Chips.getInstance($('#prereqs')).chipsData,
-    "details": $("[id='details']").val()
+    'topic': $('#topic').val(),
+    'topic_area': M.Chips.getInstance($('#areas')).chipsData,
+    'prereqs': M.Chips.getInstance($('#prereqs')).chipsData,
+    'details': $('#details').val()
   };
 
   makePOSTRequest('/create_topic', data, (res) => {
@@ -40,7 +40,6 @@ function loadTopicPrereq() {
     });
     submitCreate();
   });
-
 }
 
 loadTopicPrereq();
