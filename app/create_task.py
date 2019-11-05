@@ -26,7 +26,8 @@ def create():
         db.connect()
         file_types = db.select_columns('file_types', ['name'])
         file_types = list(map(lambda x: x[0], file_types))
-        res = db.select_columns('courses', ['id'], ['id'], [course_id])
+        res = db.select_columns('course_offerings',
+                                ['id'], ['id'], [course_id])
         if not len(res):
             db.close()
             abort(404)
@@ -87,7 +88,7 @@ def create():
         return error('Unknown marking method!')
 
     db.connect()
-    res = db.select_columns('courses', ['id'], ['id'], [course_id])
+    res = db.select_columns('course_offerings', ['id'], ['id'], [course_id])
     if not len(res):
         db.close()
         return error('Cannot create task for unknown course!')
