@@ -210,7 +210,8 @@ class queries:
         res = db.custom_query(
             """
                 SELECT c.name, t.name, t.deadline,
-                       t.description, sm.name, mm.name
+                       t.description, sm.name, mm.name,
+                       t.word_limit
                 FROM tasks t
                 INNER JOIN course_offerings co
                     ON t.course_offering = co.id

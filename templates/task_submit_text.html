@@ -1,1 +1,27 @@
-PLACEHOLDER TEXT SUBMISSION
+<div class="row">
+  <form id="text-upload-form" action="/submit_text_task" method="post" enctype="multipart/form-data">
+    <div class="row">
+      <div class="input-field col s12">
+        <textarea name="text-submission" id="textarea1" class="materialize-textarea"></textarea>
+        <label for="textarea1">Submission</label>
+      </div>
+    </div>
+    <div class="row">
+      <div class="input-field">
+        <div>
+          <label>
+            <input id="all-own-work" type="checkbox" />
+            <span>I certify this is all my own work, except where expressly indicated and correctly attributed</span>
+          </label>
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="input-field">
+        <a onclick="uploadText(this)" class="waves-effect waves-light btn">Submit</a>
+      </div>
+    </div>
+    <input type="hidden" name="task" value="{{ task_id }}">
+    <input type="hidden" id="word_limit" value="{{ word_limit }}">
+  </form>
+</div>

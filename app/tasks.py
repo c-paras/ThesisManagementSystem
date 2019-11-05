@@ -3,6 +3,7 @@ from flask import Blueprint
 from flask import render_template
 from flask import session
 from flask import request
+from flask import jsonify
 
 from datetime import datetime
 import calendar
@@ -93,9 +94,11 @@ def student_view():
                            deadline=deadline_text,
                            description=task_info[3],
                            is_text_task=task_info[4] == "text submission",
+                           word_limit=task_info[6],
                            mark_details=mark_details,
                            awaiting_submission=awaiting_submission,
-                           is_approval=is_approval)
+                           is_approval=is_approval,
+                           task_id=task_id)
 
 
 # get a nicely formatted table containing the marks of a student, or a blank
@@ -123,3 +126,77 @@ def get_marks_table(student_id, staff_query, task_id):
 
 def staff_view():
     abort(404)  # TODO: add staff version of task page
+
+
+@tasks.route('/submit_text_task', methods=['POST'])
+@at_least_role(UserRole.STUDENT)
+def submit_text_task():
+    task_id = request.form.get('task', -1)
+    text = request.form.get('text-submission', -1)
+
+
+    db.connect()
+    res = db.select_columns('tasks', ['deadline', 'marking_method',
+                                      'visible', 'course_offering',
+                                      'word_limit', 'name'],
+                            ['id'], [task_id])
+    if not res:
+        db.close()
+        return error("Task not found")
+
+    task = {
+        'id': task_id,
+        'deadline': datetime.fromtimestamp(res[0][0]),
+        'sub_method': {
+            'id': res[0][1]
+        },
+        'visible': res[0][2],
+        'offering': res[0][3],
+        'word_limit': res[0][4],
+        'name': res[0][5]
+    }
+
+    if task['deadline'] >= datetime.now():
+        db.close()
+        return error("Submissions closed")
+
+    res = db.select_columns('enrollments', ['user'],
+                            ['user', 'course_offering'],
+                            [session['id'], task['offering']])
+    if not res:
+        db.close()
+        return error("User not enrolled in task's course")
+
+    res = db.select_columns('marking_methods', ['name'],
+                            ['id'], [task['sub_method']['id']])
+    task['sub_method']['name'] = res[0][0]
+
+    mark_method_id = None
+    if task['sub_method']['name'] == 'requires approval':
+        mark_method_id = db.select_columns('request_statuses', ['id'],
+                                           ['name'], ['pending'])[0][0]
+    elif task['sub_method']['name'] == 'requires mark':
+        mark_method_id = db.select_columns('request_statuses', ['id'],
+                                           ['name'], ['pending mark'])[0][0]
+
+    # check if text is too long
+    if(len(text.strip().split(' ')) > task["word_limit"]):
+        db.close()
+        return error("Your submission is above the word limit")
+
+    res = db.select_columns('submissions', ['path'], ['student', 'task'],
+                            [session['id'], task['id']])
+    if res:
+        # if there's already a submission, delete it
+        db.delete_rows('submissions', ['student', 'task'],
+                       [session['id'], task['id']])
+
+    db.insert_single('submissions', [session['id'], task['id'],
+                                     task['name'],
+                                     text,
+                                     datetime.now().timestamp(),
+                                     mark_method_id],
+                     ['student', 'task', 'name', 'text',
+                      'date_modified', 'status'])
+    db.close()
+    return jsonify({})
