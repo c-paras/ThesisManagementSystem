@@ -229,7 +229,7 @@ def gen_tasks():
                                     ['{} submission'.format(t['submission'])])
             sub_method_id = res[0][0]
 
-            word_limit = t.get('word-limit', random.randrange(400, 8000))
+            word_limit = t.get('word-limit', random.randrange(400, 5000))
 
             offerings = db.select_columns('course_offerings',
                                           ['id', 'session'],
@@ -504,7 +504,7 @@ def gen_task_critera():
         if(task[2] == 1):
             queries.append((
                 'task_criteria',
-                [task[0], 'Approval', 2],
+                [task[0], 'Approval', 100],
                 ['task', 'name', 'max_mark']
             ))
         else:

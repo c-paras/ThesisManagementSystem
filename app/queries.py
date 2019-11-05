@@ -2,6 +2,15 @@ from app.db_manager import sqliteManager as db
 
 
 class queries:
+    def get_tasks_accepted_files(topic_id):
+        res = db.custom_query("""
+                                 SELECT file_types.name FROM file_types
+                                 INNER JOIN submission_types st
+                                     ON st.file_type = file_types.id
+                                 WHERE st.task = ?
+                                 """, [topic_id])
+        return [r[0] for r in res]
+
     def respond_topic(student_id, topic_id, status, timestamp):
         db.custom_query("""UPDATE topic_requests
                            SET status = (SELECT id
@@ -63,7 +72,7 @@ class queries:
     # gets the current requests for a given supervisor's email
     def get_current_super_students(email):
         res = db.custom_query("""
-                                SELECT stu.name, stu.email, t.name,
+                                SELECT stu.name, stu.email, t.name, stu.id,
                                        MAX(sess.end_date)
                                 FROM users stu
                                 INNER JOIN student_topic st
@@ -86,7 +95,7 @@ class queries:
     # gets the current requests for a given supervisor's email
     def get_current_assess_students(email):
         res = db.custom_query("""
-                                SELECT stu.name, stu.email, t.name,
+                                SELECT stu.name, stu.email, t.name, stu.id,
                                        MAX(sess.end_date)
                                 FROM users stu
                                 INNER JOIN student_topic st
@@ -209,9 +218,8 @@ class queries:
     def get_general_task_info(task_id):
         res = db.custom_query(
             """
-                SELECT c.name, t.name, t.deadline,
-                       t.description, sm.name, mm.name,
-                       t.course_offering
+                SELECT c.name, t.name, t.deadline, t.description,
+                       sm.name, mm.name, t.size_limit
                 FROM tasks t
                 INNER JOIN course_offerings co
                     ON t.course_offering = co.id
@@ -312,6 +320,22 @@ class queries:
                 INNER JOIN task_attachments ta
                     ON ta.task = t.id
                 WHERE t.id = "{task_id}";
-            """.format(task_id=task_id)
+            """.format(task_id=task_id))
+        return res
+
+    def get_student_submissions(student_id):
+        res = db.custom_query(
+            """
+                SELECT
+                t.id, t.name, mm.name, s.path, s.date_modified
+                FROM users u
+                INNER JOIN submissions s
+                    ON  s.student = u.id
+                INNER JOIN tasks t
+                    ON t.id = s.task
+                INNER JOIN marking_methods mm
+                    ON t.marking_method = mm.id
+                WHERE u.id = "{student_id}";
+            """.format(student_id=student_id)
         )
         return res

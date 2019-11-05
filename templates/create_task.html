@@ -12,7 +12,7 @@
             <div class="input-field">
               <i class="material-icons prefix">assignment</i>
               <input
-                id="topic-name" name="topic-name" type="text" class="validate"
+                id="task-name" name="task-name" type="text" class="validate"
                 required="" aria-required="true" placeholder="Name of Task"
               >
               <span class="helper-text" data-error="Task name is required"></span>
@@ -25,9 +25,10 @@
             <div class="input-field">
               <i class="material-icons prefix">date_range</i>
               <input
-                id="due-date" name="due-date" type="text"
-                placeholder="Due Date" required="" aria-required="true"
+                id="deadline" name="deadline" type="text" class="validate"
+                placeholder="Deadline" required="" aria-required="true"
               >
+              <span class="helper-text" data-error="Deadline is required"></span>
             </div>
           </div>
         </div>
@@ -37,7 +38,7 @@
             <div class="input-field">
               <i class="material-icons prefix">event_note</i>
               <textarea
-                id="topic-description" name="topic-description" class="materialize-textarea validate"
+                id="task-description" name="task-description" class="materialize-textarea validate"
                 placeholder="Task Description" required="" aria-required="true"
               ></textarea>
               <span class="helper-text" data-error="Task description is required"></span>
@@ -55,13 +56,19 @@
             <div class="input-field">
               <p>
                 <label>
-                  <input class="with-gap" name="submission-type" id="text-type" type="radio" checked>
+                  <input
+                    class="with-gap" name="submission-type" id="text-type"
+                    type="radio" value="text" checked
+                  >
                   <span>Text Entry</span>
                 </label>
               </p>
               <p>
                 <label>
-                  <input class="with-gap" name="submission-type" id="file-type" type="radio">
+                  <input
+                    class="with-gap" name="submission-type" id="file-type"
+                    type="radio" value="file"
+                  >
                   <span>File Upload</span>
                 </label>
               </p>
@@ -73,7 +80,7 @@
               <i class="material-icons prefix">spellcheck</i>
               <input
                 type="number" id="word-limit" name="word-limit" min="1" max="5000" placeholder="Word Limit"
-                class="validate" required="" aria-required="true"
+                class="validate" required="" aria-required="true" requiredif="submission-type=text"
               >
               <span id="word-limit-error" class="helper-text" data-error="Word limit is required"></span>
             </div>
@@ -94,18 +101,15 @@
             </div>
           </div>
 
-          <div class="col s1">
-          </div>
-
-          <div class="col s3 offset-s1" id="file-type-block" style="padding-top: 20px;">
+          <div class="col s3 offset-s2" id="file-type-block" style="padding-top: 20px;">
             <div class="input-field">
               <i class="material-icons prefix">description</i>
               <select
-                id="file-types" name="file-types" class="validate"
+                id="accepted-file-type" name="accepted-file-type" class="validate"
                 required="" aria-required="true"
               >
                 {% for type in file_types %}
-                  <option value="{{ loop.index0 }}">{{ type|upper|replace('.', '') }}</option>
+                  <option value="{{ type }}">{{ type|upper|replace('.', '') }}</option>
                 {% endfor %}
               </select>
               <label>Accepted File Type</label>
@@ -123,13 +127,19 @@
             <div class="col s12">
               <p>
                 <label>
-                  <input class="with-gap" name="marking-method" id="accept-method" type="radio" checked>
+                  <input
+                    class="with-gap" name="marking-method" id="accept-method"
+                    type="radio" value="accept" checked
+                  >
                   <span>Supervisor to mark as accepted</span>
                 </label>
               </p>
               <p>
                 <label>
-                  <input class="with-gap" name="marking-method" id="criteria-method" type="radio">
+                  <input
+                    class="with-gap" name="marking-method" id="criteria-method"
+                    type="radio" value="criteria"
+                  >
                   <span>Supervisor and assessor to mark against criteria</span>
                 </label>
               </p>
@@ -157,12 +167,14 @@
                     <input
                       id="criteria-1" name="criteria-1" type="text" class="validate"
                       required="" aria-required="true" placeholder="Enter Criteria"
+                      requiredif="marking-method=criteria"
                     >
                   </td>
                   <td>
                     <input
-                      type="number" id="max-mark-1" name="max-mark-1" min="1" max="100"
+                      type="number" id="maximum-mark-1" name="maximum-mark-1" min="1" max="100"
                       placeholder="Enter Mark" class="validate" required="" aria-required="true"
+                      requiredif="marking-method=criteria"
                     >
                   </td>
                   <td>
@@ -188,6 +200,8 @@
           </div>
         </div>
 
+        <input type="hidden" id="num-criteria" name="num-criteria" value="">
+        <input type="hidden" id="course-id" name="course-id" value="{{ course_id }}">
       </div>
 
       <div class="row">

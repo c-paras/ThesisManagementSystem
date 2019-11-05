@@ -12,6 +12,7 @@ from app.manage_topics import manage_topics
 from app.tasks import tasks
 from app.create_task import create_task
 from app.mark import mark
+from app.submission import submissions
 
 from app.db_manager import sqliteManager as db
 
@@ -30,7 +31,7 @@ def close_connection(exception):
 def init_app():
     blueprints = [
         auth, home, errors, create_topic, search, request_topic,
-        tasks, manage_topics, create_task, mark
+        tasks, manage_topics, create_task, submissions
     ]
 
     # register blueprints

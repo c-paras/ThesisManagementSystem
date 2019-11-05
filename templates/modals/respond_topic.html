@@ -47,7 +47,9 @@
             <select id="assessor-select" name="assessor" class="contacts-collection">
               <option value="-1" disabled selected>Assessor</option>
               {% for assessor in assessors %}
-                <option value="{{ assessor['id'] }}">{{ assessor['name'] }} ({{ assessor['email'].split('@')[0] }})</option>
+                <option value="{{ assessor['id'] }}">
+                  {{ assessor['name'] }} ({{ assessor['email'].split('@')[0] }})
+                </option>
               {% endfor %}
             </select>
             <label>Choose an Assessor</label>

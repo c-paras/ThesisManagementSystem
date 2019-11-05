@@ -5,7 +5,10 @@
 function flash(msg, error = false) {
   M.Toast.dismissAll();
   const color = (error) ? 'red' : 'blue';
-  if (!(msg.endsWith('.') || msg.endsWith('!'))) {
+  if(!msg) {
+    msg = "Undefined message";
+  }
+  if (msg && !(msg.endsWith('.') || msg.endsWith('!'))) {
     if (msg.includes('!')) {
       msg += '.';
     } else {
@@ -40,11 +43,22 @@ function markFieldValid(field, valid) {
 function formValid(form) {
   let invalid = false;
   form.find('input, textarea').each(function () {
-    if ($(this).val() === '' && $(this).attr('required')) {
-      invalid = true;
+    if ($(this).val().match(/^\s*$/) && $(this).attr('required')) {
+      const requiredIf = $(this).attr('requiredif');
+      let notRequired = false;
+      if (requiredIf) {
+        /* handle fields that are optionally required */
+        const req = requiredIf.split('=');
+        if ($(`[name='${req[0]}']:checked`).val() !== req[1]) {
+          notRequired = true;
+        }
+      }
+      if (!notRequired) {
+        invalid = true;
+      }
     }
   });
-  return !(invalid || form.find('.invalid').length);
+  return !invalid;
 }
 
 /*
@@ -59,6 +73,31 @@ function makeRequest(endpoint, form, callback) {
     },
     method: 'POST',
     body: form.serialize()
+  })
+  .then(res => res.json())
+  .then(callback);
+}
+
+
+/*
+ * Make a POST request to the backend with a multipart form, only
+ * supports a single file. Call the specified callback function to
+ * process the JSON response.
+ */
+function makeMultiPartRequest(endpoint, form, callback) {
+  const data = new FormData();
+  data.append('file', form.find('input[type=file]')[0].files[0]);
+  form.find('input[type!=file]').each(function(index, value) {
+    if($(value).attr('name')) {
+      data.append($(value).attr('name'), $(value).val());
+    }
+  });
+  fetch(endpoint, {
+    headers: {
+      'Accept': 'application/json'
+    },
+    method: 'POST',
+    body: data
   })
   .then(res => res.json())
   .then(callback);
@@ -159,7 +198,7 @@ $(function () {
 });
 
 /*
- * Prevent fields containing only places from being treated as valid.
+ * Prevent fields containing only spaces from being treated as valid.
  * The `pattern' attribute is not supported for textareas yet.
  */
 $(function () {

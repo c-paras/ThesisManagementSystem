@@ -1,3 +1,3 @@
-function changedValue() {
+function updateMarks() {
     console.log("hello");
 }
