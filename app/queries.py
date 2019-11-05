@@ -157,7 +157,8 @@ class queries:
                     ON s.id = co.session
                 INNER JOIN materials m
                     on m.course_offering = co.id
-                WHERE u.id = "{id}";
+                WHERE u.id = "{id}" AND
+                    m.visible = 1;
             """.format(id=user_id)
         )
         return res
