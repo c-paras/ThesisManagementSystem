@@ -32,7 +32,7 @@ def create():
     except ValueError as e:
         return e.args
 
-    # to make sure that "COMP" are upper case and strip for areas and prereqs
+    # make sure the course codes are uppercase and strip for areas and prereqs
     prereqs = [x.upper() for x in prereqs]
     prereqs = [x.strip() for x in prereqs]
     areas = [x.strip() for x in areas]
@@ -49,10 +49,10 @@ def create():
         )
         if len(course_id) == 0:
             db.close()
-            return error('Sorry, you have to enter a valid course code!')
+            return error('Sorry, you must enter a valid course code!')
         if course_id[0][1] == 0:
             db.close()
-            return error('Sorry, this course can not be a prerequisite!')
+            return error('Sorry, this course cannot be a prerequisite!')
         course_ids.append(course_id[0][0])
 
     # test if there is such topic in the database
@@ -70,7 +70,6 @@ def create():
     topic_id = db.select_columns('topics',
                                  ['id'], ['name'], [topic])[0][0]
 
-    # return error('not yet!')
     # now get topic areas
     for area in areas:
         # get area_id if area in database
@@ -102,14 +101,12 @@ def create():
         )
 
     db.close()
-
     return jsonify({'status': 'ok'})
 
 
 @create_topic.route('/load_topic_prereqs', methods=['GET'])
 @at_least_role(UserRole.STAFF)
 def get_chips_from_database():
-
     db.connect()
     topic_areas = db.select_columns('topic_areas', ['name'])
     prereqs = db.select_columns('courses', ['code'], ['prereq'], [1])

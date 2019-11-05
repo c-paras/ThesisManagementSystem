@@ -1,17 +1,24 @@
 from flask import abort
 from flask import Blueprint
 from flask import render_template
+from flask import jsonify
 from flask import session
 from flask import request
 from flask import jsonify
 
+from werkzeug import secure_filename
 from datetime import datetime
+import os
 import calendar
 
 from app.auth import UserRole
 from app.auth import at_least_role
 from app.queries import queries
 from app.db_manager import sqliteManager as db
+from app.helpers import error
+from app.file_upload import FileUpload
+
+import config
 
 
 tasks = Blueprint('tasks', __name__)
@@ -49,6 +56,10 @@ def student_view():
 
     task_info = queries.get_general_task_info(task_id)[0]
 
+    text_submission = task_info[4] == "text submission"
+    accepted_files = None
+    if not text_submission:
+        accepted_files = ','.join(queries.get_tasks_accepted_files(task_id))
     # get deadline
     time_format = '%d/%m/%Y at %I:%M:%S %p'
     due_date = datetime.fromtimestamp(task_info[2])
@@ -88,7 +99,7 @@ def student_view():
 
     text_info = {}
     if task_info[4] == "text submission":
-        text_info["limit"] = task_info[6]
+        text_info["limit"] = task_info[7]
         text_info["button_text"] = "Submit"
 
         res = db.select_columns('submissions', ['text', 'date_modified'],
@@ -108,10 +119,12 @@ def student_view():
                            deadline=deadline_text,
                            description=task_info[3],
                            text_info=text_info,
+                           accepted_files=accepted_files,
                            mark_details=mark_details,
                            awaiting_submission=awaiting_submission,
                            is_approval=is_approval,
-                           task_id=task_id)
+                           task_id=task_id,
+                           max_size=task_info[6])
 
 
 # get a nicely formatted table containing the marks of a student, or a blank
@@ -139,6 +152,97 @@ def get_marks_table(student_id, staff_query, task_id):
 
 def staff_view():
     abort(404)  # TODO: add staff version of task page
+
+
+@tasks.route('/submit_file_task', methods=['POST'])
+@at_least_role(UserRole.STUDENT)
+def submit_file_task():
+    task_id = request.form.get('task', -1)
+    db.connect()
+    res = db.select_columns('tasks', ['deadline', 'marking_method',
+                                      'visible', 'course_offering',
+                                      'size_limit'],
+                            ['id'], [task_id])
+    if not res:
+        db.close()
+        return error("Task not found")
+
+    task = {
+        'id': task_id,
+        'deadline': datetime.fromtimestamp(res[0][0]),
+        'sub_method': {
+            'id': res[0][1]
+        },
+        'visible': res[0][2],
+        'offering': res[0][3],
+        'max_size': res[0][4],
+        'accepted_files': queries.get_tasks_accepted_files(task_id)
+    }
+
+    res = db.select_columns('enrollments', ['user'],
+                            ['user', 'course_offering'],
+                            [session['id'], task['offering']])
+    if not res:
+        db.close()
+        return error("User not enrolled in task's course")
+
+    if not request.form.get('certify', 'false') == 'true':
+        db.close()
+        return error("You must certify it is all your own work")
+
+    if datetime.now() >= task['deadline']:
+        db.close()
+        return error("Submissions closed")
+
+    res = db.select_columns('marking_methods', ['name'],
+                            ['id'], [task['sub_method']['id']])
+    task['sub_method']['name'] = res[0][0]
+
+    mark_method_id = None
+    if task['sub_method']['name'] == 'requires approval':
+        mark_method_id = db.select_columns('request_statuses', ['id'],
+                                           ['name'], ['pending'])[0][0]
+    elif task['sub_method']['name'] == 'requires mark':
+        mark_method_id = db.select_columns('request_statuses', ['id'],
+                                           ['name'], ['pending mark'])[0][0]
+
+    try:
+        sent_file = FileUpload(req=request)
+    except KeyError:
+        return error("Must give a file for submission")
+
+    if sent_file.get_extention() not in task['accepted_files']:
+        db.close()
+        accept_files = ', '.join([f[1:] for f in task['accepted_files']])
+        return error(f"File must be formatted as {accept_files}")
+    if sent_file.get_size() > task['max_size']:
+        sent_file.remove_file()
+        db.close()
+        return error(f"File larger than {task['max_size']}MB")
+
+    sent_file.commit()
+    res = db.select_columns('submissions', ['path'], ['student', 'task'],
+                            [session['id'], task['id']])
+    if res:
+        db.delete_rows('submissions', ['student', 'task'],
+                       [session['id'], task['id']])
+        # If the file doesn't exists don't worry as we are deleting
+        # the submission anyway
+        try:
+            prev_submission = FileUpload(filename=res[0][0])
+            prev_submission.remove_file()
+        except LookupError:
+            pass
+
+    db.insert_single('submissions', [session['id'], task['id'],
+                                     sent_file.get_original_name(),
+                                     str(sent_file.get_path()),
+                                     datetime.now().timestamp(),
+                                     mark_method_id],
+                     ['student', 'task', 'name', 'path',
+                      'date_modified', 'status'])
+    db.close()
+    return jsonify({})
 
 
 @tasks.route('/submit_text_task', methods=['POST'])
