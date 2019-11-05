@@ -90,8 +90,9 @@
             <div class="input-field">
               <i class="material-icons prefix">spellcheck</i>
               <input
-                type="number" id="word-limit" name="word-limit" min="1" max="5000" placeholder="Word Limit"
-                class="validate" required="" aria-required="true" requiredif="submission-type=text"
+                type="number" id="word-limit" name="word-limit" min="1" max="{{ max_word_limit }}"
+                placeholder="Word Limit" class="validate"
+                required="" aria-required="true" requiredif="submission-type=text"
               >
               <span id="word-limit-error" class="helper-text" data-error="Word limit is required"></span>
             </div>

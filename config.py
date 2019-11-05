@@ -27,4 +27,5 @@ ACCOUNT_EXPIRY = 86400  # in seconds
 
 FILE_UPLOAD_DIR = 'uploads'
 
+MAX_WORD_LIMIT = 5000
 MAX_FILE_SIZE = 100  # in megabytes

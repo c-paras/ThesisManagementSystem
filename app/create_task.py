@@ -40,6 +40,7 @@ def create():
                                title='Create Task', file_types=file_types,
                                course_id=course_id,
                                max_file_size=config.MAX_FILE_SIZE,
+                               max_word_limit=config.MAX_WORD_LIMIT,
                                accepted_file_types=allowed_file_types)
 
     try:
@@ -64,16 +65,22 @@ def create():
         return error('Invalid date format for deadline!')
 
     if submission_type == 'file':
-        if not (1 <= max_file_size <= 100):
-            return error('Maximum file size must be between 1 and 100!')
+        max_size = config.MAX_FILE_SIZE
+        if not (1 <= max_file_size <= max_size):
+            return error(
+                f'Maximum file size must be between 1 and {max_size}!'
+            )
     elif submission_type == 'text':
         try:
             word_limit = get_fields(request.form,
                                     ['word-limit'], ints=['word-limit'])[0]
         except ValueError as e:
             return e.args
-        if not (1 <= word_limit <= 5000):
-            return error('Word limit must be between 1 and 5000!')
+        max_word_limit = config.MAX_WORD_LIMIT
+        if not (1 <= word_limit <= max_word_limit):
+            return error(
+                f'Word limit must be between 1 and {max_word_limit}!'
+            )
     else:
         return error('Unknown submission type!')
 
@@ -117,6 +124,7 @@ def create():
         try:
             sent_file = FileUpload(req=request)
         except KeyError:
+            db.close()
             return error('Could not find a file to upload')
 
         res = db.select_columns('file_types', ['name'])
