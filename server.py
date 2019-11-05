@@ -31,7 +31,7 @@ def close_connection(exception):
 def init_app():
     blueprints = [
         auth, home, errors, create_topic, search, request_topic,
-        tasks, manage_topics, create_task, submissions
+        tasks, manage_topics, create_task, submissions, mark
     ]
 
     # register blueprints

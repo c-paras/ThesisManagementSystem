@@ -26,6 +26,7 @@ def mark_submission():
     if request.method == 'GET':
         db.connect()
         task_id = int(request.args.get('task', None))
+        student_id = int(request.args.get('student', None))
         task_info = queries.get_general_task_info(task_id)[0]
         # get deadline
         time_format = '%d/%m/%Y at %I:%M:%S %p'
@@ -38,8 +39,17 @@ def mark_submission():
         material = queries.get_material_and_attachment(task_id)
         task_criteria = db.select_columns('task_criteria',
                                           ['*'], ['task'], [task_id])
+        student_details = db.select_columns('users', ['name', 'email'],
+                                            ['id'], [student_id])
+        student_email = student_details[0][1].split('@')[0]
+        submission = db.select_columns('submissions', ['name', 'path'],
+                                       ['student', 'task'],
+                                       [student_id, task_id])
         print(material[0][0])
         print(task_criteria)
+        print(student_details)
+        print(student_email)
+        print(submission)
         return render_template('mark_submission.html',
                                topic_request_text=config.TOPIC_REQUEST_TEXT,
                                heading='Mark Submission',
@@ -47,4 +57,7 @@ def mark_submission():
                                deadline=deadline_text,
                                description=task_info[3],
                                criteria=material[0][0],
-                               taskCriteria=task_criteria)
+                               taskCriteria=task_criteria,
+                               studentName=student_details[0][0],
+                               studentEmail=student_email,
+                               submission=submission[0])

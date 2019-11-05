@@ -18,11 +18,14 @@
     </div>
     <br>
     <div>
-      <b>Submission:</b> PLACEHOLDER
+      <b>Submission:</b> {{submission[0]}}
+      <a href="{{ url_for('static', filename='%s'%submission[1]) }}"> 
+      <i class="material-icons">file_download</i>
+     </a>
     </div>
     <br>
     <div>
-      <b>Student:</b> PLACEHOLDER
+      <b>Student:</b> {{studentName}} ({{studentEmail}})
     </div>
     <div>
       &nbsp; <br />
@@ -33,7 +36,7 @@
   <div class="row col s12">
     <br>
     <div>
-      <b>Assessment:</b> PLACEHOLDER
+      <b>Assessment:</b>
     </div>
     <div>
       <table class="highlight responsive-table">
