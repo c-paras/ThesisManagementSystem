@@ -585,14 +585,14 @@ def gen_submissions():
                 queries.append((
                     'submissions',
                     [student[0], task[0], 'smiley',
-                        'img/chicken.jpg', 'ez', now,
+                        'static/img/chicken.jpg', 'ez', now,
                         request_types['approved']]
                 ))
             else:
                 queries.append((
                     'submissions',
                     [student[0], task[0], 'smiley',
-                        'img/chicken.jpg', 'ez', now,
+                        'static/img/chicken.jpg', 'ez', now,
                         request_types['pending mark']]
                 ))
         db.insert_multiple(queries)
@@ -602,7 +602,7 @@ def gen_task_outline():
     tasks = db.select_columns('tasks', ['id'], None, None)
     queries = []
     for task in tasks:
-        path = "img/chicken.jpg"
+        path = "static/img/chicken.jpg"
         db.insert_single(
             'task_attachments',
             [task[0], path],

@@ -36,14 +36,14 @@ def student_view():
     task_id = int(request.args.get('task', None))
 
     # check that this user is allowed to view this task
-    canView = False
+    can_view = False
     my_tasks = queries.get_user_tasks(session['id'])
     for task in my_tasks:
         if task[0] == int(task_id):
-            canView = True
+            can_view = True
             break
 
-    if not canView:
+    if not can_view:
         abort(403)
 
     #
@@ -52,16 +52,15 @@ def student_view():
 
     task_info = queries.get_general_task_info(task_id)[0]
 
+    can_submit = datetime.now().timestamp() <= task_info[2]
     text_submission = task_info[4] == "text submission"
     accepted_files = None
     if not text_submission:
         accepted_files = ','.join(queries.get_tasks_accepted_files(task_id))
     # get deadline
-    time_format = '%d/%m/%Y at %I:%M:%S %p'
+    time_format = '%A %d/%m/%Y at %I:%M:%S %p'
     due_date = datetime.fromtimestamp(task_info[2])
-    weekday = calendar.day_name[datetime.fromtimestamp(task_info[2]).weekday()]
-
-    deadline_text = weekday + " " + due_date.strftime(time_format)
+    deadline_text = due_date.strftime(time_format)
 
     #
     # get criteria & marks
@@ -88,12 +87,26 @@ def student_view():
                                                    res,
                                                    task_id)
 
+    res = db.select_columns('task_attachments', ['path'], ['task'], [task_id])
+    attachments = [FileUpload(filename=r[0]) for r in res]
+    prev_submission = None
     # check if the student needs to submit
-    res = db.select_columns('submissions', ['*'],
+    res = db.select_columns('submissions',
+                            ['name', 'path', 'date_modified'],
                             where_col=['student', 'task'],
                             where_val=[session['id'], task_id])
 
-    awaiting_submission = not len(res)
+    if res:
+        try:
+            prev_submission = {
+                'name': res[0][0],
+                'modify_date': datetime.fromtimestamp(res[0][2])
+            }
+        except LookupError as e:
+            print(f"Submission {task_id} {session['user']}: {e}")
+
+    if task_info[4] == "file submission":
+        prev_submission['url'] = FileUpload(filename=res[0][1]).get_url()
 
     text_info = {}
     if task_info[4] == "text submission":
@@ -114,15 +127,16 @@ def student_view():
                            heading=task_info[0] + " - " + task_info[1],
                            title=task_info[1],
                            deadline_text=deadline_text,
-                           deadline_closed=datetime.now() >= due_date,
                            description=task_info[3],
                            text_info=text_info,
                            accepted_files=accepted_files,
                            mark_details=mark_details,
-                           awaiting_submission=awaiting_submission,
+                           prev_submission=prev_submission,
                            is_approval=is_approval,
                            task_id=task_id,
-                           max_size=task_info[6])
+                           max_size=task_info[6],
+                           attachments=attachments,
+                           can_submit=can_submit)
 
 
 # get a nicely formatted table containing the marks of a student, or a blank

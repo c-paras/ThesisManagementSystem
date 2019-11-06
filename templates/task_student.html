@@ -16,7 +16,16 @@
           <b>Description:</b> {{ description }}
         </div>
         <div class="col s12">
-          <b>Attachments:</b> PLACEHOLDER
+          <b>Attachments:</b>
+          {% if not attachments|length %}
+            No attachments
+          {% else %}
+            {% for a in attachments %}
+              <div class="col s12">
+                <a href="{{ a.get_url() }}" download="{{ a.get_original_name() }}">{{ a.get_original_name() }}</a>
+              </div>
+            {% endfor %}
+          {% endif %}
         </div>
         <div class="col s12">
           &nbsp; <br />
@@ -29,6 +38,25 @@
     <div class="section col s12">
       <hr/>
       <h5>Your Submission:</h5>
+      {% if not can_submit %}
+        <div class="row" >
+          <div class="col s12">
+            <h6>Submissions Closed</h6>
+          </div>
+        </div>
+      {% endif %}
+
+      <div class="row" >
+        <div class="col s12">
+          <b>Last Submission: </b>
+          {% if prev_submission %}
+            {{ prev_submission['modify_date'].strftime('%A %d/%m/%Y at %I:%M:%S %p') }}
+          {% else %}
+            <b>No recoreded submission</b>
+          {% endif %}
+        </div>
+      </div>
+
       <div class="col s12">
         <div class="col s12">
           {% if text_info|length %}
@@ -53,7 +81,7 @@
         <h5>Marking:</h5>
       {% endif %}
       <div class="col s12">
-        {% if awaiting_submission %}
+        {% if not prev_submission %}
           <p>Awaiting Submission.</p>
         {% elif is_approval %}
           <p>{{ mark_details["Approval"] }}</p>
