@@ -25,11 +25,12 @@ function makeChange(data, type, checkbox_id){
         $(checkbox_id).prop('checked', false);
       }
     } else {
-      flash('Visibility changed', false);
       if( type === '1' ){
+        flash('Item is now visible to students', false);
         $(checkbox_id).attr("data-totype", "0");
         $(checkbox_id).prop('checked', true);
       }else{
+        flash('Students can no longer view the item', false);
         $(checkbox_id).attr("data-totype", "1");
         $(checkbox_id).prop('checked', false);
       }

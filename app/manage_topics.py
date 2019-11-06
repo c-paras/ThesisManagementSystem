@@ -37,6 +37,7 @@ def manage():
 
     db.connect()
     for i in range(len(topic)):
+        print(topic[i])
         db.update_rows('topics',
                        [visible[i]],
                        ['visible'],

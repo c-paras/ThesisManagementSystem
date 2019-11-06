@@ -32,7 +32,6 @@ def manage_course_offerings():
                 ['id'], [data['id']]
             )
             db.close()
-            return jsonify({'status': 'ok'})
 
         if 'table' in data and data['table'] == 'tasks':
             db.connect()
@@ -42,12 +41,11 @@ def manage_course_offerings():
                 ['id'], [data['id']]
             )
             db.close()
-            return jsonify({'status': 'ok'})
 
-    if request.method == 'POST':
-        data = json.loads(request.data)
         if 'name' in data and data['name'] == 'courses':
             session['current_co'] = data['value']
+        return jsonify({'status': 'ok'})
+
     co = 1
     if 'current_co' in session:
         co = session['current_co']
@@ -94,13 +92,12 @@ def manage_course_offerings():
         else:
             enrollments.append((student[1], zid, 'No topic'))
     db.close()
-    if request.method == 'GET':
-        return render_template(
-            'manage_courses.html',
-            materials=materials,
-            tasks=tasks,
-            enrollments=enrollments,
-            courses=courses,
-            default_co=co)
-    else:
-        return jsonify({'status': 'ok'})
+    return render_template(
+        'manage_courses.html',
+        title='Manage courses',
+        heading='Manage courses',
+        materials=materials,
+        tasks=tasks,
+        enrollments=enrollments,
+        courses=courses,
+        default_co=co)

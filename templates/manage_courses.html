@@ -2,7 +2,7 @@
 
 {% block body %}
   <div class="row">
-    <div class="section col s3">
+    <div class="section col s4">
       <h5>Select Course Offering:</h5>
       <form class="col s12" id="change-co">
         <div class="input-field">
@@ -20,7 +20,6 @@
               </option>
             {% endfor %}
           </select>
-          <label>Course Offerings</label>
           <a class="waves-effect waves-light btn" id="change-co-btn" onclick="submitCO()">Refresh
             <i class="material-icons right">autorenew</i>
           </a>
@@ -174,7 +173,7 @@
       <p>&nbsp;</p>
       <tr>
         <a class="waves-effect waves-light btn" id="change-co-btn" 
-           href="{{ url_for('create_task.create', CO_id=default_co) }}" style="float: right;">Add Task
+           href="{{ url_for('create_task.create', course_offering_id=default_co) }}" style="float: right;">Add Task
           <i class="material-icons right">add</i>
         </a>
       </tr>

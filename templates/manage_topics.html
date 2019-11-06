@@ -15,14 +15,19 @@
             </a>
           </div>
           <table class="striped centered responsive-table">
-
+            <colgroup>
+              <col span="1" style="width: 30%">
+              <col span="1" style="width: 60%">
+              <col span="1" style="width: 5%">
+              <col span="1" style="width: 5%">
+            </colgroup>
             <!-- Table header -->
             <thead>
               <tr>
                 <th>Title</th>
                 <th>Topic Areas</th>
-                <th>Available</th>
-                <th>Edit Topic</th>
+                <th>Visible</th>
+                <th>Edit</th>
               </tr>
             </thead>
 
@@ -47,12 +52,9 @@
                       </label>
                     {% endif %}
                   </td>
-                  <td>
-                    <a
-                      class="waves-effect waves-light btn-floating btn-small"
-                      onclick="" id="{{ topic[0] }}" href="#"
-                    >
-                      <i class="large material-icons">assignment</i>
+                  <td style="padding-right: 20px;">
+                    <a id="{{ topic[0] }}" href="#">
+                      <i class="material-icons right">edit</i>
                     </a>
                   </td>
                 </tr>
