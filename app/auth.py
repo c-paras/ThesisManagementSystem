@@ -16,6 +16,7 @@ from app.db_manager import sqliteManager as db
 from app.helpers import error
 from app.helpers import get_fields
 from app.helpers import send_email
+from app.queries import queries
 
 import bcrypt
 import re
@@ -64,6 +65,35 @@ def at_least_role(role):
             return f(*args, **kwargs)
         return wrapped
     return wrapper
+
+
+def allowed_file_access(filename):
+    ''' Check if a file access should be permitted '''
+
+    if 'user' not in session:
+        raise KeyError('Not logged in')
+    if not is_at_least_role(UserRole.STUDENT):
+        # public users shouldn't have access to any file uploads
+        return False
+    if is_at_least_role(UserRole.STAFF):
+        # allow staff to have access to anything
+        return True
+
+    # students should only have access to files they have submitted
+    # or files in tasks within courses they are part of
+    # TODO: handle materials in courses they are part of (next sprint)
+    db.connect()
+    full_path = f'{config.STATIC_PATH}/{filename}'
+    submitted_file = db.select_columns('submissions', ['path'],
+                                       ['student', 'path'],
+                                       [session['id'], full_path])
+    task_files = queries.get_allowed_task_attachments(session['id'])
+    task_files = list(map(lambda x: x[0], task_files))
+    db.close()
+    if len(submitted_file) or (len(task_files) and filename in task_files):
+        return True
+    else:
+        return False
 
 
 @auth.route('/register', methods=['GET', 'POST'])
