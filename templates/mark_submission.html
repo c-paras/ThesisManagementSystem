@@ -1,0 +1,87 @@
+{% extends "base.html" %}
+
+{% block body %}
+  <div clas="row col s12"> 
+    <div>
+      <b>Deadline:</b> {{ deadline }}
+    </div>
+    <br>
+    <div>
+      <b>Description:</b> {{ description }}
+    </div>
+    <br>
+    <div>
+      <b>Attachment:</b>
+      <a href="{{ url_for('static', filename='%s'%criteria) }}"> Marking Criteria </a>
+    </div>
+    <br>
+    <div>
+      <b>Submission:</b>
+      <a href="{{ url_for('static', filename='%s'%submission[1]) }}"> {{submission[0]}} </a>
+    </div>
+    <br>
+    <div>
+      <b>Student:</b> {{studentName}} ({{studentEmail}})
+    </div>
+    <div>
+      &nbsp; <br />
+      &nbsp;
+    </div>
+  </div> 
+
+  <div class="row col s12">
+    <br>
+    <div>
+      <b>Assessment:</b>
+    </div>
+    <div>
+      <table class="highlight responsive-table">
+        <thead>
+          <tr>
+            <th style='width: 25%;'>Criteria</th>
+            <th style='width: 10%;'>Max Mark</th>
+            <th style='width: 10%;'>Assigned Mark</th>
+            <th style='width: 55%;'>Feedback</th>
+            <!-- <th class="right-align">Edit</th> -->
+          </tr>
+        </thead>
+        <tbody>
+          {% for i in range(0, taskCriteria|length) %}
+            <tr>
+              <td>{{ taskCriteria[i][2] }}</td>
+              <td>{{ taskCriteria[i][3] }}</td>
+              {% if markedFeedback[i] == [] %}
+                <td>
+                  <textarea id="enteredMark" class="materialize-textarea" placeholder="Enter Mark"></textarea>
+                </td>
+                <td>
+                  <div>
+                    <textarea id="enteredFeedback" class="materialize-textarea"
+                              rows="5" style="overflow:auto;" placeholder="Enter Feedback"></textarea>
+                  </div>
+                </td>
+              {% else %}
+                <td>
+                  <textarea id="enteredMark" class="materialize-textarea">{{markedFeedback[i][0][0]}}</textarea>
+                </td>
+                <td>
+                  <div>
+                    <textarea id="enteredFeedback" class="materialize-textarea"
+                              rows="5" style="overflow:auto; max-height: 5em;">{{markedFeedback[i][0][1]}}</textarea>
+                  </div>
+                </td>
+              {% endif %}
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+  <div class="row col s12 right">
+    <a class="waves-effect waves-light btn" id="search-btn" 
+       onclick="updateMarks({{taskCriteria[0][1]}}, {{studentId}}, {{taskCriteriaId}}, {{taskMax}})">Commit Marks
+      <i class="material-icons right">send</i>
+    </a>
+  </div>
+  <script type="text/javascript" src="{{ url_for('static', filename='js/mark.js') }}" defer></script>
+{% endblock %}

@@ -5,21 +5,31 @@
 
     <!-- Show student their current materials for their corses -->
     <div class="section col s12">
-      <h5>Material:</h5>
+      <h5>Materials:</h5>
       <div class="col s12">
         {% if materials|length %}
           <table class="highlight centered responsive-table">
+            <colgroup>
+              <col span="1" style="width: 60%">
+              <col span="1" style="width: 40%">
+            </colgroup>
+            <thead>
+              <tr>
+                <th>Name</th>
+                <th>Files</th>
+              </tr>
+            </thead>
             <tbody>
               {% for material in materials %}
                 <tr>
                   <td>{{material[0]}}</td>
-                  {% for attachment in material[1] %}
-                    <td>
-                      <a href="{{ url_for('static', filename='img/chicken.jpg') }}">
-                        <i class="material-icons left">file_download</i>
+                  <td>
+                    {% for attachment in material[1] %}
+                      <a href="{{ url_for('static', filename=attachment[1]) }}">
+                        {{attachment[0]}}
                       </a>
-                    </td>
-                  {% endfor %}
+                    {% endfor %}
+                  </td>
                 </tr>
               {% endfor %}
             </tbody>

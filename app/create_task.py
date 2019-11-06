@@ -19,13 +19,13 @@ create_task = Blueprint('create_task', __name__)
 @create_task.route('/create_task', methods=['GET', 'POST'])
 @at_least_role(UserRole.COURSE_ADMIN)
 def create():
-    course_id = request.args.get('course_id', None, type=int)
+    CO_id = request.args.get('course_offering_id', None, type=int)
     if request.method == 'GET':
-        if course_id is None:
+        if CO_id is None:
             abort(400)
         db.connect()
         res = db.select_columns('course_offerings',
-                                ['id'], ['id'], [course_id])
+                                ['id'], ['id'], [CO_id])
         if not len(res):
             db.close()
             abort(404)
@@ -34,7 +34,7 @@ def create():
         db.close()
         return render_template('create_task.html', heading='Create Task',
                                title='Create Task', file_types=file_types,
-                               course_id=course_id)
+                               course_id=CO_id)
 
     try:
         fields = [
@@ -44,7 +44,7 @@ def create():
         ]
         task_name, deadline, task_description, submission_type, \
             word_limit, max_file_size, accepted_ftype, marking_method, \
-            num_criteria, course_id = \
+            num_criteria, CO_id = \
             get_fields(request.form, fields, optional=['word-limit'],
                        ints=['maximum-file-size', 'num-criteria',
                              'word-limit', 'course-id'])
@@ -88,12 +88,12 @@ def create():
         return error('Unknown marking method!')
 
     db.connect()
-    res = db.select_columns('course_offerings', ['id'], ['id'], [course_id])
+    res = db.select_columns('course_offerings', ['id'], ['id'], [CO_id])
     if not len(res):
         db.close()
         return error('Cannot create task for unknown course!')
     res = db.select_columns('tasks', ['name'], ['name', 'course_offering'],
-                            [task_name, course_id])
+                            [task_name, CO_id])
     if len(res):
         db.close()
         return error('A task with that name already exists in this course!')
@@ -116,7 +116,7 @@ def create():
     # commit task
     db.insert_single(
         'tasks',
-        [task_name, course_id, deadline, task_description,
+        [task_name, CO_id, deadline, task_description,
          max_file_size, 0, submission_method_id, mark_method_id, word_limit],
         ['name', 'course_offering', 'deadline', 'description', 'size_limit',
          'visible', 'submission_method', 'marking_method', 'word_limit']
@@ -124,7 +124,7 @@ def create():
 
     res = db.select_columns('tasks', ['id'],
                             ['name', 'course_offering'],
-                            [task_name, course_id])
+                            [task_name, CO_id])
     task_id = res[0][0]
 
     # commit accepted file type
