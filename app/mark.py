@@ -102,7 +102,7 @@ def mark_submission():
                 return jsonify({'status': 'fail',
                                 'message':
                                 'Marks exceeds max mark'})
-        except TypeError:
+        except ValueError:
             return jsonify({'status': 'fail',
                             'message':
                             'Please enter a integer value for marks'})
