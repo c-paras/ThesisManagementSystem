@@ -72,12 +72,13 @@ function uploadText(btn) {
             flash(res.message, true);
             return;
         }
-        delayToast("Success", false);
+        delayToast("Submission accepted!", false);
         location.reload();
     });
 }
 
 function openTextEditor(){
+    updateWordCount($('#textarea1'));
     $("#view_text_section").hide();
     $("#edit_text_section").show();
 }
