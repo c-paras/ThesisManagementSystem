@@ -21,10 +21,10 @@ function uploadFile(btn) {
         $(value).toggle();
     });
     makeMultiPartRequest('/submit_file_task', form, (res) => {
-        $(btn).parent().children().each(function(index, value) {
-            $(value).toggle();
-        });
         if (res.status === 'fail') {
+            $(btn).parent().children().each(function(index, value) {
+                $(value).toggle();
+            });
             flash(res.message, true);
             return;
         }
