@@ -45,7 +45,6 @@ def student_dashboard():
             'material_attachments', ['path'], ['material'], [material[0]]
         )
         for x in attachmentsQuery:
-            print(x)
             name = x[0].split('/')[-1]
             attachments.append((name, x[0]))
         cur_materials.append((material[1], attachments))
