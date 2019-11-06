@@ -75,7 +75,6 @@ def staff_view():
             ))
 
     db.close()
-    print(tasks)
     return render_template('submission_staff.html',
                            heading='View Submissions',
                            title='View Submissions',

@@ -36,20 +36,18 @@ def student_dashboard():
 
     cur_materials = []
     for material in all_materials:
-        now = datetime.now().timestamp()
+        # now = datetime.now().timestamp()
         # if now < material[2] or now > material[3]:
         # if we wanted to split current, previous or
         # future we would do the above line
-        attachments = db.select_columns(
-            'material_attachments',
-            ['path'],
-            ['id'],
-            [material[0]]
+        attachments = []
+        attachmentsQuery = db.select_columns(
+            'material_attachments', ['path'], ['material'], [material[0]]
         )
-        cur_attachments = []
-        for attachment in attachments:
-            cur_attachments.append(attachment[0])
-        cur_materials.append((material[1], cur_attachments))
+        for x in attachmentsQuery:
+            name = x[0].split('/')[-1]
+            attachments.append((name, x[0]))
+        cur_materials.append((material[1], attachments))
 
     assessor = -1
     supervisor = -1
