@@ -69,7 +69,9 @@ class FileUpload:
         '''
         Returns the public url for this file
         '''
-        p = Path(config.FILE_UPLOAD_DIR) / Path(self.path.name)
+        p = Path('.')
+        for part in self.path.parts[1:]:
+            p = p / part
         return url_for(str('static'), filename=p)
 
     def get_size(self):

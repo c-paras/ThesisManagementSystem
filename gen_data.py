@@ -585,14 +585,14 @@ def gen_submissions():
                 queries.append((
                     'submissions',
                     [student[0], task[0], 'smiley',
-                        'img/chicken.jpg', 'ez', now,
+                        'static/img/chicken.jpg', 'ez', now,
                         request_types['approved']]
                 ))
             else:
                 queries.append((
                     'submissions',
                     [student[0], task[0], 'smiley',
-                        'img/chicken.jpg', 'ez', now,
+                        'static/img/chicken.jpg', 'ez', now,
                         request_types['pending mark']]
                 ))
         db.insert_multiple(queries)
