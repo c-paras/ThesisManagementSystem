@@ -10,7 +10,7 @@
       <h5>Task Details:</h5>
       <div class="col s12">
         <div class="col s12">
-          <b>Deadline:</b> {{ deadline }}
+          <b>Deadline:</b> {{ deadline_text }}
         </div>
         <div class="col s12">
           <b>Description:</b> {{ description }}
@@ -31,7 +31,7 @@
       <h5>Your Submission:</h5>
       <div class="col s12">
         <div class="col s12">
-          {% if is_text_task %}
+          {% if text_info|length %}
             {% include "task_submit_text.html" %}
           {% else %}
             {% include "task_submit_file.html" %}
