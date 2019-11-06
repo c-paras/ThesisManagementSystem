@@ -1,23 +1,20 @@
 from flask import abort
 from flask import Blueprint
-from flask import render_template
 from flask import jsonify
-from flask import session
+from flask import render_template
 from flask import request
+from flask import session
 
-from werkzeug import secure_filename
 from datetime import datetime
-import os
-import calendar
 
-from app.auth import UserRole
 from app.auth import at_least_role
-from app.queries import queries
+from app.auth import UserRole
 from app.db_manager import sqliteManager as db
-from app.helpers import error
 from app.file_upload import FileUpload
+from app.helpers import error
+from app.queries import queries
 
-import config
+import calendar
 
 
 tasks = Blueprint('tasks', __name__)
@@ -92,30 +89,45 @@ def student_view():
 
     res = db.select_columns('task_attachments', ['path'], ['task'], [task_id])
     attachments = [FileUpload(filename=r[0]) for r in res]
-
-    # check if the student needs to submit
-    res = db.select_columns('submissions', ['name', 'path', 'date_modified'],
-                            where_col=['student', 'task'],
-                            where_val=[session['id'], task_id])
-
     prev_submission = None
-    if res:
-        try:
-            prev_submission = {
-                'name': res[0][0],
-                'url': FileUpload(filename=res[0][1]).get_url(),
-                'modify_date': datetime.fromtimestamp(res[0][2])
-            }
-        except LookupError as e:
-            print(f"Submission for task {task_id} for {session['user']}: {e}")
+    if task_info[4] == "file submission":
+        # check if the student needs to submit
+        res = db.select_columns('submissions',
+                                ['name', 'path', 'date_modified'],
+                                where_col=['student', 'task'],
+                                where_val=[session['id'], task_id])
+
+        if res:
+            try:
+                prev_submission = {
+                    'name': res[0][0],
+                    'url': FileUpload(filename=res[0][1]).get_url(),
+                    'modify_date': datetime.fromtimestamp(res[0][2])
+                }
+            except LookupError as e:
+                print(f"Submission {task_id} {session['user']}: {e}")
+
+    text_info = {}
+    if task_info[4] == "text submission":
+        text_info["limit"] = task_info[7]
+        text_info["button_text"] = "Start Submission"
+
+        res = db.select_columns('submissions', ['text', 'date_modified'],
+                                where_col=['student', 'task'],
+                                where_val=[session['id'], task_id])
+        if res:
+            edited_time = datetime.fromtimestamp(int(res[0][1]))
+            text_info["old_text"] = res[0][0]
+            text_info["edited_time"] = edited_time.strftime(time_format)
+            text_info["button_text"] = "Edit Submission"
 
     db.close()
     return render_template('task_student.html',
                            heading=task_info[0] + " - " + task_info[1],
                            title=task_info[1],
-                           deadline=deadline_text,
+                           deadline_text=deadline_text,
                            description=task_info[3],
-                           is_text_task=text_submission,
+                           text_info=text_info,
                            accepted_files=accepted_files,
                            mark_details=mark_details,
                            prev_submission=prev_submission,
@@ -241,4 +253,81 @@ def submit_file_task():
                      ['student', 'task', 'name', 'path',
                       'date_modified', 'status'])
     db.close()
-    return jsonify({})
+    return jsonify({'status': 'ok'})
+
+
+@tasks.route('/submit_text_task', methods=['POST'])
+@at_least_role(UserRole.STUDENT)
+def submit_text_task():
+    task_id = request.form.get('task', -1)
+    text = request.form.get('text-submission', -1)
+
+    db.connect()
+    res = db.select_columns('tasks', ['deadline', 'marking_method',
+                                      'visible', 'course_offering',
+                                      'word_limit', 'name'],
+                            ['id'], [task_id])
+    if not res:
+        db.close()
+        return error("Task not found")
+
+    task = {
+        'id': task_id,
+        'deadline': datetime.fromtimestamp(res[0][0]),
+        'sub_method': {
+            'id': res[0][1]
+        },
+        'visible': res[0][2],
+        'offering': res[0][3],
+        'word_limit': res[0][4],
+        'name': res[0][5]
+    }
+
+    res = db.select_columns('enrollments', ['user'],
+                            ['user', 'course_offering'],
+                            [session['id'], task['offering']])
+    if not res:
+        db.close()
+        return error("User not enrolled in task's course")
+
+    if not request.form.get('certify', 'false') == 'true':
+        db.close()
+        return error("You must certify it is all your own work")
+
+    if datetime.now() >= task['deadline']:
+        db.close()
+        return error("Submissions closed")
+
+    res = db.select_columns('marking_methods', ['name'],
+                            ['id'], [task['sub_method']['id']])
+    task['sub_method']['name'] = res[0][0]
+
+    mark_method_id = None
+    if task['sub_method']['name'] == 'requires approval':
+        mark_method_id = db.select_columns('request_statuses', ['id'],
+                                           ['name'], ['pending'])[0][0]
+    elif task['sub_method']['name'] == 'requires mark':
+        mark_method_id = db.select_columns('request_statuses', ['id'],
+                                           ['name'], ['pending mark'])[0][0]
+
+    # check if text is too long
+    if(len(text.strip().split(' ')) > task["word_limit"]):
+        db.close()
+        return error("Your submission is above the word limit")
+
+    res = db.select_columns('submissions', ['*'], ['student', 'task'],
+                            [session['id'], task['id']])
+    if res:
+        # if there's already a submission, delete it
+        db.delete_rows('submissions', ['student', 'task'],
+                       [session['id'], task['id']])
+
+    db.insert_single('submissions', [session['id'], task['id'],
+                                     task['name'],
+                                     text,
+                                     datetime.now().timestamp(),
+                                     mark_method_id],
+                     ['student', 'task', 'name', 'text',
+                      'date_modified', 'status'])
+    db.close()
+    return jsonify({'status': 'ok'})

@@ -63,3 +63,10 @@ input {
 th.narrow {
   width: 25%;
 }
+
+/* make file upload buttons smaller */
+.file-upload-btn {
+  height: 2.25rem !important;
+  line-height: 2.25rem !important;
+  margin-top: 10px !important;
+}

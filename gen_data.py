@@ -602,7 +602,7 @@ def gen_task_outline():
     tasks = db.select_columns('tasks', ['id'], None, None)
     queries = []
     for task in tasks:
-        path = "img/chicken.jpg"
+        path = "static/img/chicken.jpg"
         db.insert_single(
             'task_attachments',
             [task[0], path],

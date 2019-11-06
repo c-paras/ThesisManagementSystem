@@ -1,5 +1,7 @@
 {% extends "base.html" %}
 
+{% from "macros.html" import upload_spinner, file_upload %}
+
 {% block body %}
   <div class="row">
 
@@ -8,7 +10,7 @@
       <h5>Task Details:</h5>
       <div class="col s12">
         <div class="col s12">
-          <b>Deadline:</b> {{ deadline }}
+          <b>Deadline:</b> {{ deadline_text }}
         </div>
         <div class="col s12">
           <b>Description:</b> {{ description }}
@@ -36,9 +38,28 @@
     <div class="section col s12">
       <hr/>
       <h5>Your Submission:</h5>
+      {% if not can_submit %}
+        <div class="row" >
+          <div class="col s12">
+            <h6>Submissions Closed</h6>
+          </div>
+        </div>
+      {% endif %}
+
+      <div class="row" >
+        <div class="col s12">
+          <b>Last Submission: </b>
+          {% if prev_submission %}
+            {{ prev_submission['modify_date'].strftime('%A %d/%m/%Y at %I:%M:%S %p') }}
+          {% else %}
+            <b>No recoreded submission</b>
+          {% endif %}
+        </div>
+      </div>
+
       <div class="col s12">
         <div class="col s12">
-          {% if is_text_task %}
+          {% if text_info|length %}
             {% include "task_submit_text.html" %}
           {% else %}
             {% include "task_submit_file.html" %}

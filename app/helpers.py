@@ -1,13 +1,13 @@
-import re
-import smtplib
-import sys
-
 from flask import jsonify
 from flask import render_template
 
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
 from threading import Thread
+
+import re
+import smtplib
+import sys
 
 import config
 

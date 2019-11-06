@@ -6,41 +6,91 @@ function updateAllOwnWork() {
     }
 }
 
-function uploadFile(btn) {
-    const form = $('#file-upload-form');
-    if($('#file-name').val() === '') {
-        flash('Please specify a file', true);
-        return;
+function uploadFile() {
+  const form = $('#file-upload-form');
+  if ($('#file-name').val() === '') {
+    flash('Please specify a file', true);
+    return;
+  }
+  updateAllOwnWork();
+  if ($('#all-own-work').prop('checked') !== true) {
+    flash('You must certify this is all your own work', true);
+    return;
+  }
+  $('#upload-spinner').toggle();
+  $('#submit-btn').toggle();
+  $('#cancel-btn').toggle();
+  makeMultiPartRequest('/submit_file_task', form, (res) => {
+    if (res.status === 'fail') {
+      $('#upload-spinner').toggle();
+      $('#submit-btn').toggle();
+      $('#cancel-btn').toggle();
+      flash(res.message, true);
+      return;
     }
-    updateAllOwnWork();
-    if($('#all-own-work').prop('checked') !== true) {
-        flash('You must certify it is all your own work', true);
-        return;
+    delayToast("Success");
+    location.reload();
+  });
+}
+
+$(function () {
+  $('#all-own-work').change(updateAllOwnWork());
+  $("#edit_text_section").hide();
+});
+
+function countWords(str) {
+    if(str.trim() === ""){
+        return 0;
     }
-    $(btn).parent().children().each(function(index, value) {
+    return str.trim().concat(' ').split(/\s+/).length-1;
+}
+
+function updateWordCount(textarea){
+    $('#word-counter').html(countWords($(textarea).val()));
+}
+
+function uploadText(btn) {
+  if($('#textarea1').val().trim().length === 0) {
+    flash('Your must enter some text to submit', true);
+    return;
+  }
+
+  if(countWords($('#textarea1').val()) > parseInt($('#word_limit').val())) {
+    flash('Your submission is above the word limit', true);
+    return;
+  }
+
+  const form = $('#text-upload-form');
+
+  $(btn).parent().children().each(function(index, value) {
+    $(value).toggle();
+  });
+
+  makeRequest('/submit_text_task', form, (res) => {
+    if (res.status === 'fail') {
+      $(btn).parent().children().each(function(index, value) {
         $(value).toggle();
-    });
-    makeMultiPartRequest('/submit_file_task', form, (res) => {
-        if (res.status === 'fail') {
-            $(btn).parent().children().each(function(index, value) {
-                $(value).toggle();
-            });
-            flash(res.message, true);
-            return;
-        }
-        delayToast("Success");
-        location.reload();
-    });
+      });
+      flash(res.message, true);
+      return;
+    }
+    $('#all-own-work').prop('checked', false);
+    delayToast("Submission accepted!", false);
+    location.reload();
+  });
 }
 
 function editFileSubmission() {
-    $('#file-upload-form').closest('div.row').show();
+  $('#file-upload-form').show();
 }
 
 function cancelFileSubmission() {
-    $('#file-upload-form').closest('div.row').hide();
+  $('#file-upload-form').hide();
 }
 
-$(function() {
-    $('#all-own-work').change(updateAllOwnWork());
-});
+function openTextEditor(){
+  updateWordCount($('#textarea1'));
+  $('#all-own-work').prop('checked', false);
+  $("#view_text_section").hide();
+  $("#edit_text_section").show();
+}

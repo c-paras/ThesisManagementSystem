@@ -1,0 +1,28 @@
+{% macro upload_spinner(id) %}
+<div id="{{ id }}" style="display: none;" class="preloader-wrapper small active">
+  <div class="spinner-layer">
+    <div class="circle-clipper left">
+      <div class="circle"></div>
+    </div>
+    <div class="gap-patch">
+      <div class="circle"></div>
+    </div>
+    <div class="circle-clipper right">
+      <div class="circle"></div>
+    </div>
+  </div>
+</div>
+{% endmacro %}
+
+{% macro file_upload(id, accepted_file_types, text, max_file_size) %}
+<div class="file-field input-field">
+  <div class="btn file-upload-btn">
+    <span>Choose</span>
+    <input type="file" accept="{{ accepted_file_types }}">
+  </div>
+  <div class="file-path-wrapper">
+    <input id="{{ id }}" name="{{ id }}" class="file-path validate" type="text" placeholder="{{ text }}">
+    <label for="file-name">Size limit: {{ max_file_size }} MB</label>
+  </div>
+</div>
+{% endmacro %}

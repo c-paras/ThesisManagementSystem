@@ -5,13 +5,14 @@ from flask import session
 from flask import request
 
 from datetime import datetime
-import calendar
 
-from app.auth import UserRole
 from app.auth import at_least_role
-from app.queries import queries
+from app.auth import UserRole
 from app.db_manager import sqliteManager as db
 from app.file_upload import FileUpload
+from app.queries import queries
+
+import calendar
 
 
 submissions = Blueprint('submissions', __name__)

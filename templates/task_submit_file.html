@@ -1,26 +1,7 @@
-{% if not can_submit %}
-  <div class="row" >
-    <div class="col s12">
-      <h6>Submissions Closed</h6>
-    </div>
-  </div>
-{% endif %}
-
-<div class="row" >
-  <div class="col s12">
-    <b>Last Submission: </b>
-    {% if prev_submission %}
-      {{ prev_submission['modify_date'].strftime('%A %d/%m/%Y at %I:%M:%S %p') }}
-    {% else %}
-      <b>No recored submission</b>
-    {% endif %}
-  </div>
-</div>
-
 {% if prev_submission %}
   <div class="row">
     <div class="col s12">
-      <a class="waves-effect waves-light btn" onclick="editFileSubmission()">
+      <a class="waves-effect waves-light btn {% if not can_submit %} disabled {% endif %}" onclick="editFileSubmission()">
         Edit
         <i class="material-icons right">edit</i>
       </a>
@@ -33,60 +14,43 @@
 {% endif %}
 
 {% if can_submit %}
-  <div class="row" {% if prev_submission %} style="display: none;" {% endif %}>
-    <div class="col s12">
-      <form id="file-upload-form" action="/submit_file_task" method="post" enctype="multipart/form-data">
-        <div class="row">
-          <div class="file-field input-field col s12">
-            <div class="btn">
-              <span>Choose</span>
-              <input type="file" accept="{{accepted_files}}">
-            </div>
-            <div class="file-path-wrapper">
-              <input id="file-name" class="file-path validate" type="text" placeholder="Select file to submit">
-              <label for="file-name">Size limit {{ max_size }} MB</label>
-            </div>
-          </div>
-        </div>
-        <div class="row">
-          <div class="input-field col s12">
-            <div>
-              <label>
-                <input id="all-own-work" name="certify" value="false" type="checkbox" />
-                <span>I certify this is all my own work, except where expressly indicated and correctly attributed</span>
-              </label>
-            </div>
-          </div>
-        </div>
-        <div class="row">
-          <div class="input-field col s12">
-            {% if prev_submission %}
-              <a onclick="cancelFileSubmission()" class="waves-effect waves-light btn red">Cancel</a>
-            {% endif %}
-            <a onclick="uploadFile(this)" class="waves-effect waves-light btn">
-              {% if prev_submission %}
-                Save
-              {% else %}
-                Submit
-              {% endif %}
-            </a>
-            <div id="upload-spinner" style="display: none;" class="preloader-wrapper small active">
-              <div class="spinner-layer">
-                <div class="circle-clipper left">
-                  <div class="circle"></div>
-                </div>
-                <div class="gap-patch">
-                  <div class="circle"></div>
-                </div>
-                <div class="circle-clipper right">
-                  <div class="circle"></div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-        <input type="hidden" name="task" value="{{ task_id }}">
-      </form>
+  <form id="file-upload-form" style="display: none;" action="/submit_file_task" method="POST" enctype="multipart/form-data">
+
+    <div class="row">
+      <div class="col s12">
+        {{ file_upload("file-name", accepted_files, "Select file to submit", max_size) }}
+      </div>
     </div>
-  </div>
+
+    <div class="row">
+      <div class="input-field col s12">
+        <div>
+          <label>
+            <input id="all-own-work" name="certify" value="false" type="checkbox">
+            <span>
+              I certify this is all my own work, except where expressly indicated and correctly attributed
+            </span>
+          </label>
+        </div>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col s12">
+        {% if prev_submission %}
+          <a id="cancel-btn" onclick="cancelFileSubmission()" class="waves-effect waves-light btn red">Cancel</a>
+        {% endif %}
+        <a id="submit-btn" onclick="uploadFile(this)" class="waves-effect waves-light btn">
+          {% if prev_submission %}
+            Save
+          {% else %}
+            Submit
+          {% endif %}
+        </a>
+        {{ upload_spinner(id='upload-spinner') }}
+      </div>
+    </div>
+
+    <input type="hidden" name="task" value="{{ task_id }}">
+  </form>
 {% endif %}

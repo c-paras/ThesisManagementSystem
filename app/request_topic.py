@@ -1,5 +1,3 @@
-import json
-
 from flask import Blueprint
 from flask import jsonify
 from flask import request
@@ -7,14 +5,15 @@ from flask import session
 
 from datetime import datetime
 
-from app.auth import UserRole
 from app.auth import at_least_role
+from app.auth import UserRole
+from app.db_manager import sqliteManager as db
 from app.helpers import error
 from app.helpers import get_fields
-from app.helpers import send_email
 from app.queries import queries
-from app.db_manager import sqliteManager as db
+from app.helpers import send_email
 
+import json
 import sqlite3
 
 import config

@@ -1,8 +1,8 @@
-import uuid
-
 from flask import url_for
 from pathlib import Path
 from werkzeug import secure_filename
+
+import uuid
 
 import config
 
