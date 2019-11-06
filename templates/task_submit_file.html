@@ -1,4 +1,10 @@
-
+{% if not can_submit %}
+  <div class="row" >
+    <div class="col s12">
+      <h6>Submissions Closed</h6>
+    </div>
+  </div>
+{% endif %}
 
 <div class="row" >
   <div class="col s12">
@@ -14,7 +20,7 @@
 {% if prev_submission %}
   <div class="row">
     <div class="col s12">
-      <a class="waves-effect waves-light btn {% if not can_submit %} disabled {% endif %}" onclick="editFileSubmission()">
+      <a class="waves-effect waves-light btn" onclick="editFileSubmission()">
         Edit
         <i class="material-icons right">edit</i>
       </a>
