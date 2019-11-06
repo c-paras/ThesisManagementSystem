@@ -24,11 +24,10 @@
       <form id="text-upload-form" action="/submit_text_task" method="post" enctype="multipart/form-data">
         <div class="input-field">
           {% if text_info["old_text"]|length %}
-            <textarea name="text-submission" id="textarea1" class="materialize-textarea" onkeyup="updateWordCount(this)">{{ text_info["old_text"] }}</textarea>
+            <textarea name="text-submission" id="textarea1" class="materialize-textarea" onkeyup="updateWordCount(this)" placeholder="Type text here">{{ text_info["old_text"] }}</textarea>
           {% else %}
             <textarea name="text-submission" id="textarea1" class="materialize-textarea" onkeyup="updateWordCount(this)"></textarea>
           {% endif %}
-          <label for="textarea1">Submission</label>
           <div class="right-align text-grey text-lighten-3">
             <span id='word-counter'>test</span>/{{ text_info['limit'] }}
           </div>
@@ -44,7 +43,7 @@
         </div>
         <div class="input-field row">
           <a onclick="closeTextEditor()" class="waves-effect waves-light btn red">Cancel</a>
-          <a onclick="uploadText(this)" class="waves-effect waves-light btn">Confirm</a>
+          <a onclick="uploadText(this)" class="waves-effect waves-light btn">Submit</a>
         </div>
         <input type="hidden" name="task" value="{{ task_id }}">
         <input type="hidden" id="word_limit" value="{{ text_info['limit'] }}">

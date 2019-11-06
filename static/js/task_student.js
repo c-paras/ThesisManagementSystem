@@ -72,6 +72,7 @@ function uploadText(btn) {
             flash(res.message, true);
             return;
         }
+        $('#all-own-work').prop('checked', false);
         delayToast("Submission accepted!", false);
         location.reload();
     });
@@ -79,6 +80,7 @@ function uploadText(btn) {
 
 function openTextEditor(){
     updateWordCount($('#textarea1'));
+    $('#all-own-work').prop('checked', false);
     $("#view_text_section").hide();
     $("#edit_text_section").show();
 }
