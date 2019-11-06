@@ -65,7 +65,7 @@ def manage_course_offerings():
         )
         for x in attachmentsQuery:
             name = x[0].split('/')[-1]
-            attachments.append((name, x))
+            attachments.append((name, x[0]))
         materials.append((material[0], material[1], attachments, material[2]))
     tasks = []
     taskQuery = db.select_columns(
@@ -79,7 +79,7 @@ def manage_course_offerings():
         )
         for x in attachmentsQuery:
             name = x[0].split('/')[-1]
-            attachments.append((name, x))
+            attachments.append((name, x[0]))
         date = datetime.fromtimestamp(task[2])
         printDate = date.strftime("%b %d %Y at %H:%M")
         tasks.append((task[0], task[1], printDate, attachments, task[3]))
