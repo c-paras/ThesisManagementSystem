@@ -50,18 +50,31 @@
           </tr>
         </thead>
         <tbody>
-          {% for item in taskCriteria %}
+          {% for i in range(0, taskCriteria|length) %}
             <tr>
-              <td>{{ item[2] }}</td>
-              <td>{{ item[3] }}</td>
-              <td>
-                <textarea id="enteredMark" class="materialize-textarea" placeholder="Enter Mark"></textarea>
-              </td>
-              <td>
-                <div>
-                  <textarea id="enteredFeedback" class="materialize-textarea" rows="5" style="overflow:auto;" placeholder="Enter Feedback"></textarea>
-                </div>
-              </td>
+              <td>{{ taskCriteria[i][2] }}</td>
+              <td>{{ taskCriteria[i][3] }}</td>
+              {% if markedFeedback[i] == [] %}
+                <td>
+                  <textarea id="enteredMark" class="materialize-textarea" placeholder="Enter Mark"></textarea>
+                </td>
+                <td>
+                  <div>
+                    <textarea id="enteredFeedback" class="materialize-textarea"
+                              rows="5" style="overflow:auto;" placeholder="Enter Feedback"></textarea>
+                  </div>
+                </td>
+              {% else %}
+                <td>
+                  <textarea id="enteredMark" class="materialize-textarea">{{markedFeedback[i][0][0]}}</textarea>
+                </td>
+                <td>
+                  <div>
+                    <textarea id="enteredFeedback" class="materialize-textarea"
+                              rows="5" style="overflow:auto;">{{markedFeedback[i][0][1]}}</textarea>
+                  </div>
+                </td>
+              {% endif %}
             </tr>
           {% endfor %}
         </tbody>
@@ -70,7 +83,7 @@
   </div>
   <div class="row col s12 right">
     <a class="waves-effect waves-light btn" id="search-btn" 
-       onclick="updateMarks({{taskCriteria[0][1]}}, {{studentId}}, {{taskCriteriaId}})">Commit Marks
+       onclick="updateMarks({{taskCriteria[0][1]}}, {{studentId}}, {{taskCriteriaId}}, {{taskMax}})">Commit Marks
       <i class="material-icons right">send</i>
     </a>
   </div>

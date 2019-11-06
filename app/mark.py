@@ -8,11 +8,13 @@ import re
 import json
 from datetime import datetime
 import calendar
+import sqlite3
 
 from app.auth import UserRole
 from app.auth import at_least_role
 from app.db_manager import sqliteManager as db
 from app.queries import queries
+from app.helpers import send_email
 
 import config
 
@@ -48,9 +50,21 @@ def mark_submission():
                                        ['student', 'task'],
                                        [student_id, task_id])
 
+        marked_feedback = []
+        for criteria in task_criteria:
+            marked_feedback.append(
+                db.select_columns('marks',
+                                  ['mark', 'feedback'],
+                                  ['criteria', 'student', 'marker'],
+                                  [criteria[0], student_id, session['id']]))
+
         task_criteria_id = []
         for criteria in task_criteria:
             task_criteria_id.append(criteria[0])
+
+        task_max = []
+        for criteria in task_criteria:
+            task_max.append(criteria[3])
 
         return render_template('mark_submission.html',
                                topic_request_text=config.TOPIC_REQUEST_TEXT,
@@ -64,7 +78,9 @@ def mark_submission():
                                studentEmail=student_email,
                                submission=submission[0],
                                studentId=student_id,
-                               taskCriteriaId=task_criteria_id)
+                               taskCriteriaId=task_criteria_id,
+                               taskMax=task_max,
+                               markedFeedback=marked_feedback)
 
     data = json.loads(request.data)
     marks = data['marks']
@@ -72,11 +88,21 @@ def mark_submission():
     task_id = data['taskId']
     studentId = data['studentId']
     task_criteria = data['taskCriteria']
+    task_max = data['taskMax']
 
-    for m in marks:
+    for i in range(len(marks)):
         try:
-            val = int(m)
-        except except expression as identifier:
+            val = int(marks[i])
+            if val < 0 or val > 100:
+                return jsonify({'status': 'fail',
+                                'message':
+                                'Marks must be between 0-100'})
+
+            if val > task_max[i]:
+                return jsonify({'status': 'fail',
+                                'message':
+                                'Marks exceeds max mark'})
+        except TypeError:
             return jsonify({'status': 'fail',
                             'message':
                             'Please enter a integer value for marks'})
@@ -95,10 +121,15 @@ def mark_submission():
                  session['id'], marks[i], feedback[i]],
                 ['criteria', 'student', 'marker', 'mark', 'feedback']
             )
-        except expression as identifier:
+        except sqlite3.IntegrityError:
             db.update_rows('marks', [marks[i], feedback[i]],
                            ['mark', 'feedback'],
                            ['criteria', 'student', 'marker'],
                            [task_criteria[i], studentId, session['id']])
+
+    res = db.select_columns('users', ['name', 'email'], ['id'], [studentId])
+
+    send_email(to=res[0][1], name=res[0][0], subject="Marks Released",
+               messages=['Your submission has been marked'])
 
     return jsonify({'status': 'ok'})

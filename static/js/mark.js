@@ -1,4 +1,4 @@
-function updateMarks(taskId, studentid, taskCriteriaId) {
+function updateMarks(taskId, studentid, taskCriteriaId, taskMax) {
     let marks = [];
 
     $("[id='enteredMark']").each((function() {
@@ -15,7 +15,8 @@ function updateMarks(taskId, studentid, taskCriteriaId) {
     'feedback': feedback,
     'taskId': taskId,
     "studentId": studentid,
-    "taskCriteria": taskCriteriaId
+    "taskCriteria": taskCriteriaId,
+    "taskMax": taskMax
     };
 
     makePOSTRequest('/mark', data, (res) => {
