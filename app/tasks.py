@@ -90,22 +90,23 @@ def student_view():
     res = db.select_columns('task_attachments', ['path'], ['task'], [task_id])
     attachments = [FileUpload(filename=r[0]) for r in res]
     prev_submission = None
-    if task_info[4] == "file submission":
-        # check if the student needs to submit
-        res = db.select_columns('submissions',
-                                ['name', 'path', 'date_modified'],
-                                where_col=['student', 'task'],
-                                where_val=[session['id'], task_id])
+    # check if the student needs to submit
+    res = db.select_columns('submissions',
+                            ['name', 'path', 'date_modified'],
+                            where_col=['student', 'task'],
+                            where_val=[session['id'], task_id])
 
-        if res:
-            try:
-                prev_submission = {
-                    'name': res[0][0],
-                    'url': FileUpload(filename=res[0][1]).get_url(),
-                    'modify_date': datetime.fromtimestamp(res[0][2])
-                }
-            except LookupError as e:
-                print(f"Submission {task_id} {session['user']}: {e}")
+    if res:
+        try:
+            prev_submission = {
+                'name': res[0][0],
+                'modify_date': datetime.fromtimestamp(res[0][2])
+            }
+        except LookupError as e:
+            print(f"Submission {task_id} {session['user']}: {e}")
+
+    if task_info[4] == "file submission":
+        prev_submission['url'] = FileUpload(filename=res[0][1]).get_url()
 
     text_info = {}
     if task_info[4] == "text submission":
