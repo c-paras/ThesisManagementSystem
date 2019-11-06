@@ -33,6 +33,8 @@ def create():
         return e.args
 
     # make sure the course codes are uppercase and strip for areas and prereqs
+    if len(areas) == 0:
+        return error("You should enter at least one topic area")
     prereqs = [x.upper() for x in prereqs]
     prereqs = [x.strip() for x in prereqs]
     areas = [x.strip() for x in areas]
