@@ -23,7 +23,7 @@ function updateMarks(taskId, studentid, taskCriteriaId, taskMax) {
       if (res.status === 'fail') {
           flash(res.message, error = true);
       } else {
-          console.log(res.status);
+          flash('Marks Saved');
       }
     });
 }
