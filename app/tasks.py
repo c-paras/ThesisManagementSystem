@@ -55,6 +55,7 @@ def student_view():
 
     task_info = queries.get_general_task_info(task_id)[0]
 
+    can_submit = datetime.now().timestamp() <= task_info[2]
     text_submission = task_info[4] == "text submission"
     accepted_files = None
     if not text_submission:
@@ -121,7 +122,8 @@ def student_view():
                            is_approval=is_approval,
                            task_id=task_id,
                            max_size=task_info[6],
-                           attachments=attachments)
+                           attachments=attachments,
+                           can_submit=can_submit)
 
 
 # get a nicely formatted table containing the marks of a student, or a blank
