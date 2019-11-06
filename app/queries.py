@@ -312,6 +312,17 @@ class queries:
         )
         return res
 
+    def get_material_and_attachment(task_id):
+        res = db.custom_query(
+            """
+                SELECT ta.path
+                FROM tasks t
+                INNER JOIN task_attachments ta
+                    ON ta.task = t.id
+                WHERE t.id = "{task_id}";
+            """.format(task_id=task_id))
+        return res
+
     def get_student_submissions(student_id):
         res = db.custom_query(
             """
