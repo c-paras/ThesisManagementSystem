@@ -71,7 +71,7 @@ def staff_view():
             tasks.append((
                 task[1], submit_date_text,
                 str(staff_mark) + '/' + str(total_max_mark),
-                FileUpload(task[3]).get_url()
+                FileUpload(filename=task[3]).get_url()
             ))
 
     db.close()
