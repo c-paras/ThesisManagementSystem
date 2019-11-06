@@ -89,7 +89,13 @@ function makeMultiPartRequest(endpoint, form, callback) {
   data.append('file', form.find('input[type="file"]')[0].files[0]);
   form.find('input[type!="file"], textarea, select').each(function (index, value) {
     if ($(value).attr('name')) {
-      data.append($(value).attr('name'), $(value).val());
+      if ($(value).attr('type') && $(value).attr('type') === 'radio') {
+        if ($(value).is(':checked')) {
+          data.append($(value).attr('name'), $(value).val());
+        }
+      } else {
+        data.append($(value).attr('name'), $(value).val());
+      }
     }
   });
   fetch(endpoint, {
