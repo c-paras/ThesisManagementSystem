@@ -66,6 +66,7 @@ def mark_submission():
         for criteria in task_criteria:
             task_max.append(criteria[3])
 
+        db.close()
         return render_template('mark_submission.html',
                                topic_request_text=config.TOPIC_REQUEST_TEXT,
                                heading='Mark Submission',
@@ -132,4 +133,5 @@ def mark_submission():
     send_email(to=res[0][1], name=res[0][0], subject="Marks Released",
                messages=['Your submission has been marked'])
 
+    db.close()
     return jsonify({'status': 'ok'})
