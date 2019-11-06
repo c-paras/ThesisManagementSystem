@@ -89,6 +89,9 @@ def student_view():
                                                    res,
                                                    task_id)
 
+    res = db.select_columns('task_attachments', ['path'], ['task'], [task_id])
+    attachments = [FileUpload(filename=r[0]) for r in res]
+
     # check if the student needs to submit
     res = db.select_columns('submissions', ['name', 'path', 'date_modified'],
                             where_col=['student', 'task'],
@@ -117,7 +120,8 @@ def student_view():
                            prev_submission=prev_submission,
                            is_approval=is_approval,
                            task_id=task_id,
-                           max_size=task_info[6])
+                           max_size=task_info[6],
+                           attachments=attachments)
 
 
 # get a nicely formatted table containing the marks of a student, or a blank
