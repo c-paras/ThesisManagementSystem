@@ -24,6 +24,14 @@ function uploadFile(btn) {
     });
 }
 
+function editFileSubmission() {
+    $('#file-upload-form').closest('div.row').show();
+}
+
+function cancelFileSubmission() {
+    $('#file-upload-form').closest('div.row').hide();
+}
+
 $(function() {
     $('#all-own-work').change(function() {
         if($('#all-own-work').prop('checked')) {
