@@ -12,7 +12,11 @@
       {% endif %}
     </div>
     <div class="col s12 right-align">
-      <a class="waves-effect waves-light btn" onclick="openTextEditor();">{{ text_info["button_text"] }}</a>
+      {% if not deadline_closed %}
+        <a class="waves-effect waves-light btn" onclick="openTextEditor();">{{ text_info["button_text"] }}</a>
+      {% else %}
+        Submissions have closed
+      {% endif %}
     </div>
   </div>
   <div id="edit_text_section">

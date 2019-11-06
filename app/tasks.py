@@ -97,6 +97,8 @@ def student_view():
                             where_col=['student', 'task'],
                             where_val=[session['id'], task_id])
 
+    awaiting_submission = not len(res)
+
     text_info = {}
     if task_info[4] == "text submission":
         text_info["limit"] = task_info[7]
@@ -111,12 +113,12 @@ def student_view():
             text_info["edited_time"] = edited_time.strftime(time_format)
             text_info["button_text"] = "Edit Submission"
 
-    awaiting_submission = not len(res)
     db.close()
     return render_template('task_student.html',
                            heading=task_info[0] + " - " + task_info[1],
                            title=task_info[1],
-                           deadline=deadline_text,
+                           deadline_text=deadline_text,
+                           deadline_closed=datetime.now() >= due_date,
                            description=task_info[3],
                            text_info=text_info,
                            accepted_files=accepted_files,
