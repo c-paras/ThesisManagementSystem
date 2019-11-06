@@ -1,24 +1,20 @@
 from flask import abort
 from flask import Blueprint
+from flask import jsonify
 from flask import render_template
-from flask import jsonify
-from flask import session
 from flask import request
-from flask import jsonify
+from flask import session
 
-from werkzeug import secure_filename
 from datetime import datetime
-import os
-import calendar
 
-from app.auth import UserRole
 from app.auth import at_least_role
-from app.queries import queries
+from app.auth import UserRole
 from app.db_manager import sqliteManager as db
-from app.helpers import error
 from app.file_upload import FileUpload
+from app.helpers import error
+from app.queries import queries
 
-import config
+import calendar
 
 
 tasks = Blueprint('tasks', __name__)

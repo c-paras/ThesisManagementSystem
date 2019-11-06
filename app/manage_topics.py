@@ -1,15 +1,15 @@
-import json
-
 from flask import Blueprint
 from flask import jsonify
 from flask import render_template
 from flask import request
 from flask import session
 
-from app.auth import UserRole
 from app.auth import at_least_role
+from app.auth import UserRole
 from app.db_manager import sqliteManager as db
 from app.queries import queries
+
+import json
 
 
 manage_topics = Blueprint('manage_topics', __name__)

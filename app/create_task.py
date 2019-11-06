@@ -4,14 +4,17 @@ from flask import abort
 from flask import Blueprint
 from flask import jsonify
 from flask import render_template
-from flask import jsonify
 from flask import request
 
-from app.auth import UserRole
 from app.auth import at_least_role
+from app.auth import UserRole
+from app.db_manager import sqliteManager as db
+from app.file_upload import FileUpload
 from app.helpers import error
 from app.helpers import get_fields
-from app.db_manager import sqliteManager as db
+
+import config
+
 
 create_task = Blueprint('create_task', __name__)
 
@@ -19,33 +22,38 @@ create_task = Blueprint('create_task', __name__)
 @create_task.route('/create_task', methods=['GET', 'POST'])
 @at_least_role(UserRole.COURSE_ADMIN)
 def create():
-    CO_id = request.args.get('course_offering_id', None, type=int)
+    course_id = request.args.get('course_offering_id', None, type=int)
     if request.method == 'GET':
-        if CO_id is None:
+        if course_id is None:
             abort(400)
         db.connect()
         res = db.select_columns('course_offerings',
-                                ['id'], ['id'], [CO_id])
+                                ['id'], ['id'], [course_id])
         if not len(res):
             db.close()
             abort(404)
         file_types = db.select_columns('file_types', ['name'])
         file_types = list(map(lambda x: x[0], file_types))
+        allowed_file_types = ','.join(file_types)
         db.close()
         return render_template('create_task.html', heading='Create Task',
                                title='Create Task', file_types=file_types,
-                               course_id=CO_id)
+                               course_id=course_id,
+                               max_file_size=config.MAX_FILE_SIZE,
+                               max_word_limit=config.MAX_WORD_LIMIT,
+                               accepted_file_types=allowed_file_types)
 
     try:
         fields = [
             'task-name', 'deadline', 'task-description', 'submission-type',
             'word-limit', 'maximum-file-size', 'accepted-file-type',
-            'marking-method', 'num-criteria', 'course-id'
+            'marking-method', 'num-criteria', 'course-id', 'file-name'
         ]
         task_name, deadline, task_description, submission_type, \
             word_limit, max_file_size, accepted_ftype, marking_method, \
-            num_criteria, CO_id = \
-            get_fields(request.form, fields, optional=['word-limit'],
+            num_criteria, course_id, file_name = \
+            get_fields(request.form, fields,
+                       optional=['word-limit', 'file-name'],
                        ints=['maximum-file-size', 'num-criteria',
                              'word-limit', 'course-id'])
     except ValueError as e:
@@ -57,16 +65,22 @@ def create():
         return error('Invalid date format for deadline!')
 
     if submission_type == 'file':
-        if not (1 <= max_file_size <= 100):
-            return error('Maximum file size must be between 1 and 100!')
+        max_size = config.MAX_FILE_SIZE
+        if not (1 <= max_file_size <= max_size):
+            return error(
+                f'Maximum file size must be between 1 and {max_size}!'
+            )
     elif submission_type == 'text':
         try:
             word_limit = get_fields(request.form,
                                     ['word-limit'], ints=['word-limit'])[0]
         except ValueError as e:
             return e.args
-        if not (1 <= word_limit <= 5000):
-            return error('Word limit must be between 1 and 5000!')
+        max_word_limit = config.MAX_WORD_LIMIT
+        if not (1 <= word_limit <= max_word_limit):
+            return error(
+                f'Word limit must be between 1 and {max_word_limit}!'
+            )
     else:
         return error('Unknown submission type!')
 
@@ -88,12 +102,12 @@ def create():
         return error('Unknown marking method!')
 
     db.connect()
-    res = db.select_columns('course_offerings', ['id'], ['id'], [CO_id])
+    res = db.select_columns('course_offerings', ['id'], ['id'], [course_id])
     if not len(res):
         db.close()
         return error('Cannot create task for unknown course!')
     res = db.select_columns('tasks', ['name'], ['name', 'course_offering'],
-                            [task_name, CO_id])
+                            [task_name, course_id])
     if len(res):
         db.close()
         return error('A task with that name already exists in this course!')
@@ -104,6 +118,29 @@ def create():
         db.close()
         return error('Invalid or unsupported file type!')
     file_type_id = res[0][0]
+
+    # upload file if present
+    if len(file_name):
+        try:
+            sent_file = FileUpload(req=request)
+        except KeyError:
+            db.close()
+            return error('Could not find a file to upload')
+
+        res = db.select_columns('file_types', ['name'])
+        file_types = list(map(lambda x: x[0], res))
+        if sent_file.get_extention() not in file_types:
+            db.close()
+            accept_files = ', '.join(file_types)
+            return error(f'Accepted file types are: {accept_files}')
+        if sent_file.get_size() > config.MAX_FILE_SIZE:
+            sent_file.remove_file()
+            db.close()
+            return error(
+                f'File exceeds the maximum size of {config.MAX_FILE_SIZE} MB'
+            )
+        sent_file.commit()
+
     res = db.select_columns('submission_methods', ['id'],
                             ['name'],
                             ['{} submission'.format(submission_type)])
@@ -116,7 +153,7 @@ def create():
     # commit task
     db.insert_single(
         'tasks',
-        [task_name, CO_id, deadline, task_description,
+        [task_name, course_id, deadline, task_description,
          max_file_size, 0, submission_method_id, mark_method_id, word_limit],
         ['name', 'course_offering', 'deadline', 'description', 'size_limit',
          'visible', 'submission_method', 'marking_method', 'word_limit']
@@ -124,7 +161,7 @@ def create():
 
     res = db.select_columns('tasks', ['id'],
                             ['name', 'course_offering'],
-                            [task_name, CO_id])
+                            [task_name, course_id])
     task_id = res[0][0]
 
     # commit accepted file type
