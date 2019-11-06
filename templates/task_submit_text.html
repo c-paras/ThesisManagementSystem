@@ -1,53 +1,49 @@
+<div id="view_text_section">
+  <div class="col s12">
+    {% if text_info["old_text"]|length %}
+      <div class="col s10 offset-s2">
+        {{ text_info["old_text"] }}
+      </div>
+    {% else %}
+      You haven't submitted anything yet.
+    {% endif %}
+  </div>
+  <div class="col s12 right-align">
+    <a class="waves-effect waves-light btn {% if not can_submit %} disabled {% endif %}" onclick="openTextEditor();">{{ text_info["button_text"] }}</a>
+  </div>
+</div>
 
-<div class="row">
-  <div id="view_text_section">
-    <div class="col s12">
-      {% if text_info["old_text"]|length %}
-        <h6>Your last submission ({{ text_info["edited_time"] }}):</h6>
-        <div class="col s10 offset-s2">
-          {{ text_info["old_text"] }}
+<div id="edit_text_section">
+  <form id="text-upload-form" action="/submit_text_task" method="post" enctype="multipart/form-data">
+    <div class="row">
+      <div class="input-field col s12">
+        {% if text_info["old_text"]|length %}
+          <textarea name="text-submission" id="textarea1" class="materialize-textarea" onkeyup="updateWordCount(this)" placeholder="Type text here">{{ text_info["old_text"] }}</textarea>
+        {% else %}
+          <textarea name="text-submission" id="textarea1" class="materialize-textarea" onkeyup="updateWordCount(this)"></textarea>
+        {% endif %}
+        <div class="right-align text-grey text-lighten-3">
+          <span id='word-counter'>test</span>/{{ text_info['limit'] }}
         </div>
-      {% else %}
-        You haven't submitted anything yet.
-      {% endif %}
+      </div>
     </div>
-    <div class="col s12 right-align">
-      {% if not deadline_closed %}
-        <a class="waves-effect waves-light btn" onclick="openTextEditor();">{{ text_info["button_text"] }}</a>
-      {% else %}
-        Submissions have closed
-      {% endif %}
+    <div class="row">
+      <div class="input-field col s12">
+        <div>
+          <label>
+            <input name="certify" id="all-own-work" value="false" type="checkbox" />
+            <span>I certify this is all my own work, except where expressly indicated and correctly attributed</span>
+          </label>
+        </div>
+      </div>
     </div>
-  </div>
-  <div id="edit_text_section">
-    <div class="col s12">
-      <form id="text-upload-form" action="/submit_text_task" method="post" enctype="multipart/form-data">
-        <div class="input-field">
-          {% if text_info["old_text"]|length %}
-            <textarea name="text-submission" id="textarea1" class="materialize-textarea" onkeyup="updateWordCount(this)" placeholder="Type text here">{{ text_info["old_text"] }}</textarea>
-          {% else %}
-            <textarea name="text-submission" id="textarea1" class="materialize-textarea" onkeyup="updateWordCount(this)"></textarea>
-          {% endif %}
-          <div class="right-align text-grey text-lighten-3">
-            <span id='word-counter'>test</span>/{{ text_info['limit'] }}
-          </div>
-        </div>
-        &nbsp;
-        <div class="input-field">
-          <div>
-            <label>
-              <input name="certify" id="all-own-work" value="false" type="checkbox" />
-              <span>I certify this is all my own work, except where expressly indicated and correctly attributed</span>
-            </label>
-          </div>
-        </div>
-        <div class="input-field row">
-          <a onclick="closeTextEditor()" class="waves-effect waves-light btn red">Cancel</a>
-          <a onclick="uploadText(this)" class="waves-effect waves-light btn">Submit</a>
-        </div>
-        <input type="hidden" name="task" value="{{ task_id }}">
-        <input type="hidden" id="word_limit" value="{{ text_info['limit'] }}">
-      </form>
+    <div class="row">
+      <div class="input-field col s12">
+        <a onclick="closeTextEditor()" class="waves-effect waves-light btn red">Cancel</a>
+        <a onclick="uploadText(this)" class="waves-effect waves-light btn">Submit</a>
+      </div>
     </div>
-  </div>
+    <input type="hidden" name="task" value="{{ task_id }}">
+    <input type="hidden" id="word_limit" value="{{ text_info['limit'] }}">
+  </form>
 </div>

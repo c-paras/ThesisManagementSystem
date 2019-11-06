@@ -1,34 +1,41 @@
+function updateAllOwnWork() {
+    if($('#all-own-work').prop('checked')) {
+        $('#all-own-work').val('true');
+    } else {
+        $('#all-own-work').val('true');
+    }
+}
+
 function uploadFile() {
   const form = $('#file-upload-form');
   if ($('#file-name').val() === '') {
     flash('Please specify a file', true);
     return;
   }
+  updateAllOwnWork();
   if ($('#all-own-work').prop('checked') !== true) {
     flash('You must certify this is all your own work', true);
     return;
   }
   $('#upload-spinner').toggle();
   $('#submit-btn').toggle();
+  $('#cancel-btn').toggle();
   makeMultiPartRequest('/submit_file_task', form, (res) => {
-    $('#upload-spinner').toggle();
-    $('#submit-btn').toggle();
     if (res.status === 'fail') {
+      $('#upload-spinner').toggle();
+      $('#submit-btn').toggle();
+      $('#cancel-btn').toggle();
       flash(res.message, true);
       return;
     }
-    flash("Success");
+    delayToast("Success");
+    location.reload();
   });
 }
 
 $(function () {
-  $('#all-own-work').change(function () {
-    if ($('#all-own-work').prop('checked')) {
-      $('#all-own-work').val('true');
-    } else {
-      $('#all-own-work').val('true');
-    }
-  });
+  $('#all-own-work').change(updateAllOwnWork());
+  $("#edit_text_section").hide();
 });
 
 function countWords(str) {
@@ -43,50 +50,47 @@ function updateWordCount(textarea){
 }
 
 function uploadText(btn) {
-    if($('#textarea1').val().trim().length === 0) {
-        flash('Your must enter some text to submit', true);
-        return;
-    }
+  if($('#textarea1').val().trim().length === 0) {
+    flash('Your must enter some text to submit', true);
+    return;
+  }
 
-    if(countWords($('#textarea1').val()) > parseInt($('#word_limit').val())) {
-        flash('Your submission is above the word limit', true);
-        return;
-    }
+  if(countWords($('#textarea1').val()) > parseInt($('#word_limit').val())) {
+    flash('Your submission is above the word limit', true);
+    return;
+  }
 
-    const form = $('#text-upload-form');
-    if($('#all-own-work').prop('checked') !== true) {
-        flash('You must certify it is all your own work', true);
-        return;
-    }
+  const form = $('#text-upload-form');
 
-    $(btn).parent().children().each(function(index, value) {
+  $(btn).parent().children().each(function(index, value) {
+    $(value).toggle();
+  });
+
+  makeRequest('/submit_text_task', form, (res) => {
+    if (res.status === 'fail') {
+      $(btn).parent().children().each(function(index, value) {
         $(value).toggle();
-    });
-    makeRequest('/submit_text_task', form, (res) => {
-        $(btn).parent().children().each(function(index, value) {
-            $(value).toggle();
-        });
-        if (res.status === 'fail') {
-            flash(res.message, true);
-            return;
-        }
-        $('#all-own-work').prop('checked', false);
-        delayToast("Submission accepted!", false);
-        location.reload();
-    });
+      });
+      flash(res.message, true);
+      return;
+    }
+    $('#all-own-work').prop('checked', false);
+    delayToast("Submission accepted!", false);
+    location.reload();
+  });
+}
+
+function editFileSubmission() {
+  $('#file-upload-form').show();
+}
+
+function cancelFileSubmission() {
+  $('#file-upload-form').hide();
 }
 
 function openTextEditor(){
-    updateWordCount($('#textarea1'));
-    $('#all-own-work').prop('checked', false);
-    $("#view_text_section").hide();
-    $("#edit_text_section").show();
+  updateWordCount($('#textarea1'));
+  $('#all-own-work').prop('checked', false);
+  $("#view_text_section").hide();
+  $("#edit_text_section").show();
 }
-
-function closeTextEditor(){
-    location.reload();
-}
-
-$(document).ready(function() {
-    $("#edit_text_section").hide();
-});
