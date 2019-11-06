@@ -370,3 +370,19 @@ class queries:
             """.format(co_id=co_id)
         )
         return res
+
+    def get_allowed_task_attachments(user_id):
+        res = db.custom_query('''
+            SELECT path
+            FROM task_attachments
+            WHERE task IN (
+                SELECT id
+                FROM tasks
+                WHERE course_offering IN (
+                    SELECT course_offering
+                    FROM enrollments
+                    WHERE user = {user_id}
+                )
+            );'''.format(user_id=user_id)
+        )
+        return res

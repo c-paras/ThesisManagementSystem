@@ -25,6 +25,7 @@ SYSTEM_PASSWORD = 'Thesis000'
 
 ACCOUNT_EXPIRY = 86400  # in seconds
 
+STATIC_PATH = 'static'
 FILE_UPLOAD_DIR = 'uploads'
 
 MAX_WORD_LIMIT = 5000
