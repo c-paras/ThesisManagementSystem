@@ -8,6 +8,8 @@ from app.create_topic import create_topic
 from app.db_manager import sqliteManager as db
 from app.errors import errors
 from app.home import home
+from app.manage_courses import manage_courses
+from app.mark import mark
 from app.manage_topics import manage_topics
 from app.request_topic import request_topic
 from app.search import search
@@ -30,7 +32,7 @@ def close_connection(exception):
 def init_app():
     blueprints = [
         auth, home, errors, create_topic, search, request_topic,
-        tasks, manage_topics, create_task, submissions
+        tasks, manage_topics, create_task, submissions, mark, manage_courses
     ]
 
     # register blueprints

@@ -22,7 +22,7 @@ create_task = Blueprint('create_task', __name__)
 @create_task.route('/create_task', methods=['GET', 'POST'])
 @at_least_role(UserRole.COURSE_ADMIN)
 def create():
-    course_id = request.args.get('course_id', None, type=int)
+    course_id = request.args.get('course_offering_id', None, type=int)
     if request.method == 'GET':
         if course_id is None:
             abort(400)
