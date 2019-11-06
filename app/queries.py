@@ -157,7 +157,8 @@ class queries:
                     ON s.id = co.session
                 INNER JOIN materials m
                     on m.course_offering = co.id
-                WHERE u.id = "{id}";
+                WHERE u.id = "{id}" AND
+                    m.visible = 1;
             """.format(id=user_id)
         )
         return res
@@ -337,5 +338,34 @@ class queries:
                     ON t.marking_method = mm.id
                 WHERE u.id = "{student_id}";
             """.format(student_id=student_id)
+        )
+        return res
+
+    def get_course_offering_details():
+        res = db.custom_query(
+            """
+                SELECT co.id, c.code, s.term, s.year
+                FROM course_offerings co
+                INNER JOIN sessions s
+                    ON s.id = co.session
+                INNER JOIN courses c
+                    on c.id = co.course
+            """
+        )
+        return res
+
+    def get_student_enrollments(co_id):
+        res = db.custom_query(
+            """
+                SELECT u.id, u.name, u.email, t.name
+                FROM users u
+                INNER JOIN enrollments e
+                    ON e.user = u.id
+                LEFT JOIN student_topic st
+                    ON st.student = u.id
+                LEFT JOIN topics t
+                    ON t.id = st.topic
+                WHERE e.course_offering = "{co_id}";
+            """.format(co_id=co_id)
         )
         return res
