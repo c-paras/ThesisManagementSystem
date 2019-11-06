@@ -53,13 +53,13 @@
           {% for item in taskCriteria %}
             <tr>
               <td>{{ item[2] }}</td>
-              <td>{{ item[4] }}</td>
+              <td>{{ item[3] }}</td>
               <td>
-                <textarea id="textarea1" class="materialize-textarea" placeholder="Enter Mark"></textarea>
+                <textarea id="enteredMark" class="materialize-textarea" placeholder="Enter Mark"></textarea>
               </td>
               <td>
                 <div>
-                  <textarea id="textarea1" class="materialize-textarea" rows="5" style="overflow:auto;" placeholder="Enter Feedback"></textarea>
+                  <textarea id="enteredFeedback" class="materialize-textarea" rows="5" style="overflow:auto;" placeholder="Enter Feedback"></textarea>
                 </div>
               </td>
             </tr>
@@ -69,7 +69,8 @@
     </div>
   </div>
   <div class="row col s12 right">
-    <a class="waves-effect waves-light btn" id="search-btn" onclick="updateMarks()">Commit Marks
+    <a class="waves-effect waves-light btn" id="search-btn" 
+       onclick="updateMarks({{taskCriteria[0][1]}}, {{studentId}}, {{taskCriteriaId}})">Commit Marks
       <i class="material-icons right">send</i>
     </a>
   </div>

@@ -38,18 +38,20 @@ def mark_submission():
 
         material = queries.get_material_and_attachment(task_id)
         task_criteria = db.select_columns('task_criteria',
-                                          ['*'], ['task'], [task_id])
+                                          ['id', 'task', 'name', 'max_mark'],
+                                          ['task'], [task_id])
         student_details = db.select_columns('users', ['name', 'email'],
                                             ['id'], [student_id])
+
         student_email = student_details[0][1].split('@')[0]
         submission = db.select_columns('submissions', ['name', 'path'],
                                        ['student', 'task'],
                                        [student_id, task_id])
-        print(material[0][0])
-        print(task_criteria)
-        print(student_details)
-        print(student_email)
-        print(submission)
+
+        task_criteria_id = []
+        for criteria in task_criteria:
+            task_criteria_id.append(criteria[0])
+
         return render_template('mark_submission.html',
                                topic_request_text=config.TOPIC_REQUEST_TEXT,
                                heading='Mark Submission',
@@ -60,4 +62,43 @@ def mark_submission():
                                taskCriteria=task_criteria,
                                studentName=student_details[0][0],
                                studentEmail=student_email,
-                               submission=submission[0])
+                               submission=submission[0],
+                               studentId=student_id,
+                               taskCriteriaId=task_criteria_id)
+
+    data = json.loads(request.data)
+    marks = data['marks']
+    feedback = data['feedback']
+    task_id = data['taskId']
+    studentId = data['studentId']
+    task_criteria = data['taskCriteria']
+
+    for m in marks:
+        try:
+            val = int(m)
+        except except expression as identifier:
+            return jsonify({'status': 'fail',
+                            'message':
+                            'Please enter a integer value for marks'})
+
+    for f in feedback:
+        if f == '':
+            return jsonify({'status': 'fail',
+                            'message': 'Please enter some feedback'})
+
+    db.connect()
+    for i in range(len(marks)):
+        try:
+            db.insert_single(
+                'marks',
+                [task_criteria[i], studentId,
+                 session['id'], marks[i], feedback[i]],
+                ['criteria', 'student', 'marker', 'mark', 'feedback']
+            )
+        except expression as identifier:
+            db.update_rows('marks', [marks[i], feedback[i]],
+                           ['mark', 'feedback'],
+                           ['criteria', 'student', 'marker'],
+                           [task_criteria[i], studentId, session['id']])
+
+    return jsonify({'status': 'ok'})
