@@ -77,15 +77,15 @@ function uploadText(btn) {
     });
 }
 
-function openModal(){
-    const modal = M.Modal.init($('#text_modal'), {
-                                dismissible: false
-                               });
-    modal[0].open();
-    updateWordCount($('#textarea1'));
+function openTextEditor(){
+    $("#view_text_section").hide();
+    $("#edit_text_section").show();
 }
 
-function closeModal(){
-    const modal = M.Modal.getInstance($('#text_modal'));
-    modal.close();
+function closeTextEditor(){
+    location.reload();
 }
+
+$(document).ready(function() {
+    $("#edit_text_section").hide();
+});

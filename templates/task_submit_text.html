@@ -1,23 +1,22 @@
 
 <div class="row">
-  <div class="col s12">
-    {% if text_info["old_text"]|length %}
-      <h6>Your last submission ({{ text_info["edited_time"] }}):</h6>
-      <div class="col s10 offset-s2">
-        {{ text_info["old_text"] }}
-      </div>
-    {% else %}
-      You haven't submitted anything yet.
-    {% endif %}
+  <div id="view_text_section">
+    <div class="col s12">
+      {% if text_info["old_text"]|length %}
+        <h6>Your last submission ({{ text_info["edited_time"] }}):</h6>
+        <div class="col s10 offset-s2">
+          {{ text_info["old_text"] }}
+        </div>
+      {% else %}
+        You haven't submitted anything yet.
+      {% endif %}
+    </div>
+    <div class="col s12 right-align">
+      <a class="waves-effect waves-light btn" onclick="openTextEditor();">{{ text_info["button_text"] }}</a>
+    </div>
   </div>
-  &nbsp;
-  <div class="col s12 right-align">
-    <!-- Modal Trigger -->
-    <a class="waves-effect waves-light btn" onclick="openModal();">{{ text_info["button_text"] }}</a>
-  </div>
-  <!-- Modal Structure -->
-  <div id="text_modal" class="modal">
-    <div class="modal-content">
+  <div id="edit_text_section">
+    <div class="col s12">
       <form id="text-upload-form" action="/submit_text_task" method="post" enctype="multipart/form-data">
         <div class="input-field">
           {% if text_info["old_text"]|length %}
@@ -40,8 +39,8 @@
           </div>
         </div>
         <div class="input-field row">
+          <a onclick="closeTextEditor()" class="waves-effect waves-light btn red">Cancel</a>
           <a onclick="uploadText(this)" class="waves-effect waves-light btn">Confirm</a>
-          <a onclick="closeModal()" class="waves-effect waves-light btn red">Cancel</a>
         </div>
         <input type="hidden" name="task" value="{{ task_id }}">
         <input type="hidden" id="word_limit" value="{{ text_info['limit'] }}">
