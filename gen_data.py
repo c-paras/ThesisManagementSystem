@@ -1,8 +1,9 @@
 import random
 import datetime
 import json
-import bcrypt
+import math
 import uuid
+import bcrypt
 
 from shutil import copyfile
 from shutil import rmtree
@@ -91,7 +92,8 @@ def gen_users():
 
 def gen_sessions():
     ret = []
-    for year in range(2000, 2019):
+
+    for year in range(2018, 2019):
         ret.append([year, 1,
                     datetime.datetime(year, 1, 1, 0, 0, 0).timestamp(),
                     datetime.datetime(year, 6, 30, 23, 59, 59).timestamp()
@@ -205,15 +207,27 @@ def gen_topics():
                                         ['account_type'],
                                         [supervisor_type])
 
-        topic_id = 1
-        for t in topics:
-            supervisor = supervisors[random.randrange(0, len(supervisors))][0]
-            query.append((
-                'topics', [topic_id, t['name'], supervisor, t['description']],
-                ['id', 'name', 'supervisor', 'description']
-            ))
-            gen_topic_areas(topic_id, t['areas'])
-            topic_id += 1
+        # remove any topics with empty areas or descriptions
+        for i in range(len(topics)-1, -1, -1):
+            if len(topics[i]['areas']) == 0:
+                topics.pop(i)
+            elif len(topics[i]['description']) == 0:
+                topics.pop(i)
+
+        topics_per_sup = math.floor(len(topics)/len(supervisors))
+        topics_per_sup = min(topics_per_sup, 10)
+
+        base_topic_id = 1
+        for sup in supervisors:
+            for i in range(0, topics_per_sup):
+                t = topics[i+base_topic_id]
+                query.append((
+                    'topics', [i+base_topic_id, t['name'], sup[0],
+                               t['description'], random.randrange(0, 2)],
+                    ['id', 'name', 'supervisor', 'description', 'visible']
+                ))
+                gen_topic_areas(i+base_topic_id, t['areas'])
+            base_topic_id += topics_per_sup
         db.insert_multiple(query)
 
 
@@ -323,12 +337,13 @@ def gen_enrollments():
     for i, (student, ) in enumerate(students):
 
         # decide what year current student is enrolled in
-        if i < int(len(students)/3):
+        if i < int(len(students)/2):
             sessions = all_years[1]  # 2019
             courses = courses_tri
-        elif i < int(len(students)/2):
-            sessions = all_years[2]  # 2020
-            courses = courses_tri
+        # uncomment to generate 2020 students
+        # elif i < 3*int(len(students)/4):
+        #     sessions = all_years[2]  # 2020
+        #     courses = courses_tri
         else:
             sessions = all_years[0]  # 2018
             courses = courses_sem
