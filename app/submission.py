@@ -46,9 +46,10 @@ def staff_view():
         submit_date_text = weekday + " " + submit_date.strftime(time_format)
 
         status = get_sub_status(student_id, task[0])
+        file_url = FileUpload(filename=task[3]).get_url()
         if 'approval' in task[2]:
             tasks.append((
-                task[1], submit_date_text, status, task[3]))
+                task[1], submit_date_text, status, file_url))
         else:
             criteria = db.select_columns(
                 'task_criteria', ['id', 'max_mark'], ['task'], [task[0]]
@@ -72,7 +73,7 @@ def staff_view():
             tasks.append((
                 task[1], submit_date_text,
                 str(staff_mark) + '/' + str(total_max_mark),
-                FileUpload(filename=task[3]).get_url()
+                file_url
             ))
 
     db.close()
