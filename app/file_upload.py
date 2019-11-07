@@ -15,6 +15,7 @@ class FileUpload:
     single object
     '''
     UUID_LEN = len(str(uuid.uuid4()))
+    UPLOAD_DIR = Path(config.STATIC_PATH) / Path(config.FILE_UPLOAD_DIR)
 
     def __init__(self, req=None, filename=None):
         '''
@@ -26,20 +27,19 @@ class FileUpload:
         creating the object.
         '''
         if req:
+            FileUpload.UPLOAD_DIR.mkdir(exist_ok=True)
             sent_file = req.files['file']
-            upload_dir = Path('static') / Path(config.FILE_UPLOAD_DIR)
-            upload_dir.mkdir(exist_ok=True)
             file_id = str(uuid.uuid4())
             sec_name = secure_filename(sent_file.filename)
-            full_name = f'{file_id}{sec_name}'
-            self.path = upload_dir / Path(full_name)
+            name = f'{file_id}{sec_name}'
+            self.path = FileUpload.UPLOAD_DIR / Path(name)
             self.commited = False
             self.sent_file = req.files['file']
         if filename:
-            p = Path(filename)
-            if not p.exists():
+            name = Path(filename).name
+            self.path = FileUpload.UPLOAD_DIR / Path(name)
+            if not self.path.exists():
                 raise LookupError(f"Path {filename} doesn't exist!")
-            self.path = p
             self.commited = True
 
     def commit(self):
@@ -72,7 +72,7 @@ class FileUpload:
         p = Path('.')
         for part in self.path.parts[1:]:
             p = p / part
-        return url_for(str('static'), filename=p)
+        return url_for(config.STATIC_PATH, filename=p)
 
     def get_size(self):
         '''
