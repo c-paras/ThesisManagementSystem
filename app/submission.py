@@ -45,8 +45,11 @@ def staff_view():
         weekday = calendar.day_name[datetime.fromtimestamp(task[4]).weekday()]
         submit_date_text = weekday + " " + submit_date.strftime(time_format)
 
+        file_url = None
+        if task[3]:
+            file_url = FileUpload(filename=task[3]).get_url()
+
         status = get_sub_status(student_id, task[0])
-        file_url = FileUpload(filename=task[3]).get_url()
         if 'approval' in task[2]:
             tasks.append((
                 task[1], submit_date_text, status, file_url))
