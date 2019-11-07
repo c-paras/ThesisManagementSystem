@@ -5,6 +5,7 @@ import bcrypt
 import uuid
 
 from shutil import copyfile
+from shutil import rmtree
 from pathlib import Path
 
 from app.db_manager import sqliteManager as db
@@ -632,6 +633,8 @@ def gen_task_outline():
 
 
 if __name__ == '__main__':
+    upload_dir = Path(config.STATIC_PATH) / Path(config.FILE_UPLOAD_DIR)
+    rmtree(upload_dir)
     db.connect()
 
     print('Dropping all existing tables...')
