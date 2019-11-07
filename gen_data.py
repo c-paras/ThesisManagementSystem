@@ -198,15 +198,19 @@ def gen_topics():
                                         ['account_type'],
                                         [supervisor_type])
 
-        topic_id = 1
-        for t in topics:
-            supervisor = supervisors[random.randrange(0, len(supervisors))][0]
-            query.append((
-                'topics', [topic_id, t['name'], supervisor, t['description']],
-                ['id', 'name', 'supervisor', 'description']
-            ))
-            gen_topic_areas(topic_id, t['areas'])
-            topic_id += 1
+        topics_per_sup = 10
+
+        base_topic_id = 1
+        for sup in supervisors:
+            for i in range(0, topics_per_sup):
+                t = topics[i+base_topic_id]
+                query.append((
+                    'topics', [i+base_topic_id, t['name'], sup[0],
+                               t['description']],
+                    ['id', 'name', 'supervisor', 'description']
+                ))
+                gen_topic_areas(i+base_topic_id, t['areas'])
+            base_topic_id += topics_per_sup
         db.insert_multiple(query)
 
 
