@@ -48,7 +48,7 @@ def staff_view():
         status = get_sub_status(student_id, task[0])
         if 'approval' in task[2]:
             tasks.append((
-                task[1], submit_date_text, status, task[3]))
+                task[0], task[1], submit_date_text, status, task[3], "True"))
         else:
             criteria = db.select_columns(
                 'task_criteria', ['id', 'max_mark'], ['task'], [task[0]]
@@ -70,9 +70,10 @@ def staff_view():
             if staff_mark <= 0:
                 staff_mark = '?'
             tasks.append((
-                task[1], submit_date_text,
+                task[0], task[1], submit_date_text,
                 str(staff_mark) + '/' + str(total_max_mark),
-                FileUpload(filename=task[3]).get_url()
+                FileUpload(filename=task[3]).get_url(),
+                "False"
             ))
 
     db.close()
@@ -80,6 +81,7 @@ def staff_view():
                            heading='View Submissions',
                            title='View Submissions',
                            student=student_info,
+                           student_id=student_id,
                            submissions=tasks)
 
 

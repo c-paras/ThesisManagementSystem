@@ -25,11 +25,12 @@
             <tbody>
               {% for submission in submissions %}
                 <tr>
-                  <td class="center-align">{{submission[0]}}</td>
                   <td class="center-align">{{submission[1]}}</td>
                   <td class="center-align">{{submission[2]}}</td>
+                  <td class="center-align">{{submission[3]}}</td>
                   <td class="center-align">
-                    <a href="{{ submission[3] }}">
+                    <a href="{{ url_for('mark.mark_submission', task=submission[0],
+                      student=student_id, approval=submission[5]) }}">
                       <i class="Small material-icons teal-text">pageview</i>
                     </a>
                   </td>
