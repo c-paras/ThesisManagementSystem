@@ -1,8 +1,9 @@
-function submitManage() {
+function updateTopicVisibility() {
   const form = $('#manage-topic-form');
   if (!formValid(form)) {
     return;
   }
+
   const data = {};
   $('input[type="checkbox"]').each(function () {
     const status = $(this).is(':checked');
@@ -14,14 +15,12 @@ function submitManage() {
     if (res.status === 'fail') {
       flash(res.message, error = true);
     } else {
-      delayToast('Changes saved!', false);
-      window.location.href = '/manage_topics';
+      flash('Visibility updated', false);
     }
   });
 }
 
 $('#checkall-btn').on('click', function () {
-  const flag = false;
-  $('input[type=checkbox]').prop('checked', flag);
-  submitManage();
+  $('input[type="checkbox"]').prop('checked', false);
+  updateTopicVisibility();
 });

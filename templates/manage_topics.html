@@ -6,14 +6,13 @@
       <h5>Current Topics:</h5>
       {% if curr_topics|length %}
         <form id="manage-topic-form">
+
           <div class="right">
             <a class="waves-effect waves-light btn" id="checkall-btn">Disable All Topics
               <i class="material-icons right">close</i>
             </a>
-            <a class="waves-effect waves-light btn" id="save-btn" onclick="submitManage()">Save Changes
-              <i class="material-icons right">beenhere</i>
-            </a>
           </div>
+
           <table class="striped centered responsive-table">
             <colgroup>
               <col span="1" style="width: 40%">
@@ -43,14 +42,17 @@
                       <label>
                         <input
                           type="checkbox" id="{{ topic[0] }}" class="filled-in"
-                          name="{{ topic[0] }}" checked="checked"
+                          name="{{ topic[0] }}" checked="checked" onchange="updateTopicVisibility()"
                         >
                         <span style="padding-left: 20px;">
                         </span>
                       </label>
                     {% else %}
                       <label>
-                        <input type="checkbox" id="{{ topic[0] }}" class="filled-in" name="{{ topic[0] }}">
+                        <input
+                          type="checkbox" id="{{ topic[0] }}" class="filled-in" name="{{ topic[0] }}"
+                          onchange="updateTopicVisibility()"
+                        >
                         <span style="padding-left: 20px;">
                         </span>
                       </label>
