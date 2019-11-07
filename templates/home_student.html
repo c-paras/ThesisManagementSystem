@@ -3,85 +3,93 @@
 {% block body %}
   <div class="row">
 
-    <!-- Show student their current materials for their corses -->
+    <!-- Show student the current materials for their courses -->
     <div class="section col s12">
       <h5>Materials:</h5>
-      <div class="col s12">
-        {% if materials|length %}
-          <table class="highlight centered responsive-table">
-            <colgroup>
-              <col span="1" style="width: 60%">
-              <col span="1" style="width: 40%">
-            </colgroup>
-            <thead>
+      {% if materials|length %}
+        <table class="striped centered responsive-table">
+          <colgroup>
+            <col span="1" style="width: 50%;">
+            <col span="1" style="width: 50%;">
+          </colgroup>
+
+          <!-- Table header -->
+          <thead>
+            <tr>
+              <th>Name</th>
+              <th>File</th>
+            </tr>
+          </thead>
+
+          <!-- Table body -->
+          <tbody>
+            {% for material in materials %}
               <tr>
-                <th>Name</th>
-                <th>Files</th>
+                <td>{{ material[0] }}</td>
+                <td>
+                  {% for attachment in material[1] %}
+                    <a href="{{ attachment.get_url() }}">
+                      {{ attachment.get_original_name() }}
+                    </a>
+                  {% endfor %}
+                </td>
               </tr>
-            </thead>
-            <tbody>
-              {% for material in materials %}
-                <tr>
-                  <td>{{material[0]}}</td>
-                  <td>
-                    {% for attachment in material[1] %}
-                      <a href="{{ attachment.get_url() }}">
-                        {{ attachment.get_original_name() }}
-                      </a>
-                    {% endfor %}
-                  </td>
-                </tr>
-              {% endfor %}
-            </tbody>
-          </table>
-        {% else %}
-          <p>There are no course materials at this time</p>
-        {% endif %}
-      </div>
+            {% endfor %}
+          </tbody>
+        </table>
+      {% else %}
+        <p>There are no course materials at this time</p>
+      {% endif %}
     </div>
 
-    <!-- Show student their current assessments for their corses -->
+    <!-- Show student the current assessments for their courses -->
     <div class="section col s12">
       <h5>Assessments:</h5>
-      <div class="col s12">
-        {% if tasks|length %}
-          <table class="highlight responsive-table">
+      {% if tasks|length %}
+        <table class="striped centered responsive-table">
+          <colgroup>
+            <col span="1" style="width: 15%;">
+            <col span="1" style="width: 25%;">
+            <col span="1" style="width: 15%;">
+            <col span="1" style="width: 15%;">
+            <col span="1" style="width: 15%;">
+            <col span="1" style="width: 15%;">
+          </colgroup>
 
-            <!-- Table header -->
-            <thead>
+          <!-- Table header -->
+          <thead>
+            <tr>
+              <th>Course</th>
+              <th>Task</th>
+              <th>Status</th>
+              <th>Supervisor Result</th>
+              <th>Assessor Result</th>
+              <th>View Task</th>
+            </tr>
+          </thead>
+
+          <!-- Table body -->
+          <tbody>
+            {% for task in tasks %}
               <tr>
-                <th>Course</th>
-                <th>Task</th>
-                <th>Status</th>
-                <th class="center-align">Supervisor Result</th>
-                <th class="center-align">Assessor Result</th>
-                <th class="center-align">View Task</th>
+                <td>{{ task[0] }}</td>
+                <td>{{ task[1] }}</td>
+                <td>{{ task[2] }}</td>
+                <td>{{ task[3] }}</td>
+                <td>{{ task[4] }}</td>
+                <td>
+                  <a href="{{ url_for('tasks.view_task', task=task[5]) }}">
+                    <i class="Small material-icons teal-text">pageview</i>
+                  </a>
+                </td>
               </tr>
-            </thead>
-
-            <!-- Table body -->
-            <tbody>
-              {% for task in tasks %}
-                <tr>
-                  <td>{{task[0]}}</td>
-                  <td>{{task[1]}}</td>
-                  <td>{{task[2]}}</td>
-                  <td class="center-align">{{task[3]}}</td>
-                  <td class="center-align">{{task[4]}}</td>
-                  <td class="center-align">
-                    <a href="{{ url_for('tasks.view_task', task=task[5]) }}">
-                      <i class="Small material-icons teal-text">pageview</i>
-                    </a>
-                  </td>
-                </tr>
-              {% endfor %}
-            </tbody>
-
-          </table>
-        {% else %}
-          <p>There are no assessments at this time</p>
-        {% endif %}
-      </div>
+            {% endfor %}
+          </tbody>
+        </table>
+      {% else %}
+        <p>There are no assessments at this time</p>
+      {% endif %}
     </div>
+
   </div>
 {% endblock %}
