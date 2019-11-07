@@ -202,9 +202,11 @@ def gen_topics():
                                         ['account_type'],
                                         [supervisor_type])
 
-        # remove any topics with empty areas
-        for i in range(len(topics)-1, -1):
+        # remove any topics with empty areas or descriptions
+        for i in range(len(topics)-1, -1, -1):
             if len(topics[i]['areas']) == 0:
+                topics.pop(i)
+            elif len(topics[i]['description']) == 0:
                 topics.pop(i)
 
         topics_per_sup = math.floor(len(topics)/len(supervisors))
