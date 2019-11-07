@@ -84,15 +84,18 @@ def gen_users():
 
 def gen_sessions():
     ret = []
-    for year in range(2000, 2019):
-        ret.append([year, 1,
-                    datetime.datetime(year, 1, 1, 0, 0, 0).timestamp(),
-                    datetime.datetime(year, 6, 30, 23, 59, 59).timestamp()
-                    ])
-        ret.append([year, 2,
-                    datetime.datetime(year, 7, 1, 0, 0, 0).timestamp(),
-                    datetime.datetime(year, 11, 30, 23, 59, 59).timestamp()
-                    ])
+
+    # old years have been removed - Troy (07/11/2019)
+    #
+    # for year in range(2000, 2019):
+    #     ret.append([year, 1,
+    #                 datetime.datetime(year, 1, 1, 0, 0, 0).timestamp(),
+    #                 datetime.datetime(year, 6, 30, 23, 59, 59).timestamp()
+    #                 ])
+    #     ret.append([year, 2,
+    #                 datetime.datetime(year, 7, 1, 0, 0, 0).timestamp(),
+    #                 datetime.datetime(year, 11, 30, 23, 59, 59).timestamp()
+    #                 ])
 
     for year in range(2019, 2021):
         ret.append([year, 1,
@@ -287,7 +290,7 @@ def gen_enrollments():
     # get all sessions in the years (2018, 2019, 2020) and put each year into
     # a list
     all_years = []
-    for year in range(2018, 2021):
+    for year in range(2019, 2021):
         res = db.select_columns('sessions',
                                 ['id'],
                                 ['year'],
@@ -320,15 +323,12 @@ def gen_enrollments():
     for i, (student, ) in enumerate(students):
 
         # decide what year current student is enrolled in
-        if i < int(len(students)/3):
-            sessions = all_years[1]  # 2019
-            courses = courses_tri
-        elif i < int(len(students)/2):
-            sessions = all_years[2]  # 2020
+        if i < int(len(students)/2):
+            sessions = all_years[0]  # 2019
             courses = courses_tri
         else:
-            sessions = all_years[0]  # 2018
-            courses = courses_sem
+            sessions = all_years[1]  # 2020
+            courses = courses_tri
 
         # enroll the student
         for i, (course, ) in enumerate(courses):
