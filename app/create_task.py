@@ -164,6 +164,11 @@ def create():
                             [task_name, course_id])
     task_id = res[0][0]
 
+    if sent_file:
+        db.insert_single('task_attachments',
+                         [task_id, sent_file.get_name()],
+                         ['task', 'path'])
+
     # commit accepted file type
     db.insert_single('submission_types', [file_type_id, task_id],
                      ['file_type', 'task'])
