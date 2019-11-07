@@ -33,11 +33,6 @@ function uploadFile() {
   });
 }
 
-$(function () {
-  $('#all-own-work').change(updateAllOwnWork());
-  $("#edit_text_section").hide();
-});
-
 function countWords(str) {
     if(str.trim() === ""){
         return 0;
@@ -60,21 +55,19 @@ function uploadText(btn) {
     return;
   }
 
-  const form = $('#text-upload-form');
+  updateAllOwnWork();
+  if ($('#all-own-work').prop('checked') !== true) {
+    flash('You must certify this is all your own work', true);
+    return;
+  }
 
-  $(btn).parent().children().each(function(index, value) {
-    $(value).toggle();
-  });
+  const form = $('#text-upload-form');
 
   makeRequest('/submit_text_task', form, (res) => {
     if (res.status === 'fail') {
-      $(btn).parent().children().each(function(index, value) {
-        $(value).toggle();
-      });
       flash(res.message, true);
       return;
     }
-    $('#all-own-work').prop('checked', false);
     delayToast("Submission accepted!", false);
     location.reload();
   });
