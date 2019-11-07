@@ -8,6 +8,7 @@ from flask import session
 from app.auth import at_least_role
 from app.auth import UserRole
 from app.db_manager import sqliteManager as db
+from app.file_upload import FileUpload
 from app.queries import queries
 
 import json
@@ -21,7 +22,6 @@ manage_courses = Blueprint('manage_courses', __name__)
 @manage_courses.route('/manage_courses', methods=['GET', 'POST'])
 @at_least_role(UserRole.COURSE_ADMIN)
 def manage_course_offerings():
-
     data = {}
     if request.method == 'POST':
         data = json.loads(request.data)
@@ -65,8 +65,7 @@ def manage_course_offerings():
             'material_attachments', ['path'], ['material'], [material[0]]
         )
         for x in attachments_query:
-            name = x[0].split('/')[-1]
-            attachments.append((name, x[0]))
+            attachments.append(FileUpload(filename=x[0]))
         materials.append((material[0], material[1], attachments, material[2]))
     tasks = []
     task_query = db.select_columns(
@@ -79,8 +78,7 @@ def manage_course_offerings():
             'task_attachments', ['path'], ['task'], [task[0]]
         )
         for x in attachments_query:
-            name = x[0].split('/')[-1]
-            attachments.append((name, x[0]))
+            attachments.append(FileUpload(filename=x[0]))
         date = datetime.fromtimestamp(task[2])
         print_date = date.strftime("%b %d %Y at %H:%M")
         tasks.append((task[0], task[1], print_date, attachments, task[3]))

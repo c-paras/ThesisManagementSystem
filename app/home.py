@@ -6,6 +6,7 @@ from datetime import datetime
 
 from app.auth import at_least_role
 from app.auth import UserRole
+from app.file_upload import FileUpload
 from app.db_manager import sqliteManager as db
 from app.queries import queries
 
@@ -45,8 +46,7 @@ def student_dashboard():
             'material_attachments', ['path'], ['material'], [material[0]]
         )
         for x in attachmentsQuery:
-            name = x[0].split('/')[-1]
-            attachments.append((name, x[0]))
+            attachments.append(FileUpload(filename=x[0]))
         cur_materials.append((material[1], attachments))
 
     assessor = -1

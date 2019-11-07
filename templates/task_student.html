@@ -16,14 +16,12 @@
           <b>Description:</b> {{ description }}
         </div>
         <div class="col s12">
-          <b>Attachments:</b>
+          <b>Attachment:</b>
           {% if not attachments|length %}
-            No attachments
+            No attachment
           {% else %}
             {% for a in attachments %}
-              <div class="col s12">
-                <a href="{{ a.get_url() }}" download="{{ a.get_original_name() }}">{{ a.get_original_name() }}</a>
-              </div>
+              <a href="{{ a.get_url() }}" download="{{ a.get_original_name() }}">{{ a.get_original_name() }}</a>
             {% endfor %}
           {% endif %}
         </div>

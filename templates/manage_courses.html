@@ -58,8 +58,8 @@
                 <td>{{ material[1] }}</td>
                 <td>
                   {% for attachment in material[2] %}
-                    <a href="{{ url_for('static', filename=attachment[1]) }}">
-                      {{ attachment[0] }}
+                    <a href="{{ attachment.get_url() }}">
+                      {{ attachment.get_original_name() }}
                     </a>
                   {% endfor %}
                 </td>
@@ -130,8 +130,8 @@
                 <td>
                   {% if task[3]|length %}
                     {% for attachment in task[3] %}
-                      <a href="{{ url_for('static', filename=attachment[1]) }}">
-                        {{ attachment[0] }}
+                      <a href="{{ attachment.get_url() }}">
+                        {{ attachment.get_original_name() }}
                       </a>
                     {% endfor %}
                   {% else %}
