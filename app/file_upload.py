@@ -56,7 +56,13 @@ class FileUpload:
         Return the original name of the file, ie strip the uuid at the
         front
         '''
-        return self.path.name[FileUpload.UUID_LEN:]
+        return self.get_name()[FileUpload.UUID_LEN:]
+
+    def get_name(self):
+        '''
+        Returns the name of the file as stored, so including the UUID
+        '''
+        return self.path.name
 
     def get_path(self):
         '''

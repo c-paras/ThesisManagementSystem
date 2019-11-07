@@ -85,7 +85,7 @@ def allowed_file_access(filename):
     # TODO: handle materials in courses they are part of (next sprint)
 
     try:
-        name = FileUpload(filename=filename).get_path().name
+        name = FileUpload(filename=filename).get_name()
     except LookupError as e:
         print(f"Request file: {e}")
         abort(404)

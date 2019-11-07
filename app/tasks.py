@@ -248,7 +248,7 @@ def submit_file_task():
 
     db.insert_single('submissions', [session['id'], task['id'],
                                      sent_file.get_original_name(),
-                                     str(sent_file.get_path()),
+                                     str(sent_file.get_name()),
                                      datetime.now().timestamp(),
                                      mark_method_id],
                      ['student', 'task', 'name', 'path',
