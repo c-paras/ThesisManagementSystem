@@ -206,8 +206,8 @@ def gen_topics():
                 t = topics[i+base_topic_id]
                 query.append((
                     'topics', [i+base_topic_id, t['name'], sup[0],
-                               t['description']],
-                    ['id', 'name', 'supervisor', 'description']
+                               t['description'], random.randrange(0, 2)],
+                    ['id', 'name', 'supervisor', 'description', 'visible']
                 ))
                 gen_topic_areas(i+base_topic_id, t['areas'])
             base_topic_id += topics_per_sup
