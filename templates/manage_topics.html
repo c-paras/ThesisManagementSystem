@@ -3,11 +3,10 @@
 {% block body %}
   <div class="row">
     <div class="section col s12">
-      <h5>Current Topics:</h5>
       {% if curr_topics|length %}
         <form id="manage-topic-form">
 
-          <div class="right">
+          <div class="right" style="padding-top: 15px; padding-bottom: 15px;">
             <a class="waves-effect waves-light btn" id="checkall-btn">Disable All Topics
               <i class="material-icons right">close</i>
             </a>
