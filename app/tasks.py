@@ -122,6 +122,7 @@ def student_view():
             text_info["edited_time"] = edited_time.strftime(time_format)
             text_info["button_text"] = "Edit Submission"
 
+    print(can_submit)
     db.close()
     return render_template('task_student.html',
                            heading=task_info[0] + " - " + task_info[1],
