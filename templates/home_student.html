@@ -25,8 +25,8 @@
                   <td>{{material[0]}}</td>
                   <td>
                     {% for attachment in material[1] %}
-                      <a href="{{ url_for('static', filename=attachment[1]) }}">
-                        {{attachment[0]}}
+                      <a href="{{ attachment.get_url() }}">
+                        {{ attachment.get_original_name() }}
                       </a>
                     {% endfor %}
                   </td>

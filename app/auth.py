@@ -13,6 +13,7 @@ from enum import Enum
 from functools import wraps
 
 from app.db_manager import sqliteManager as db
+from app.file_upload import FileUpload
 from app.helpers import error
 from app.helpers import get_fields
 from app.helpers import send_email
@@ -82,15 +83,20 @@ def allowed_file_access(filename):
     # students should only have access to files they have submitted
     # or files in tasks within courses they are part of
     # TODO: handle materials in courses they are part of (next sprint)
+
+    try:
+        name = FileUpload(filename=filename).get_name()
+    except LookupError as e:
+        print(f"Request file: {e}")
+        abort(404)
     db.connect()
-    full_path = f'{config.STATIC_PATH}/{filename}'
     submitted_file = db.select_columns('submissions', ['path'],
                                        ['student', 'path'],
-                                       [session['id'], full_path])
+                                       [session['id'], name])
     task_files = queries.get_allowed_task_attachments(session['id'])
     task_files = list(map(lambda x: x[0], task_files))
     db.close()
-    if len(submitted_file) or (len(task_files) and filename in task_files):
+    if submitted_file or (task_files and name in task_files):
         return True
     else:
         return False
