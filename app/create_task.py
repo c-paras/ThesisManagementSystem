@@ -120,6 +120,7 @@ def create():
     file_type_id = res[0][0]
 
     # upload file if present
+    sent_file = None
     if len(file_name):
         try:
             sent_file = FileUpload(req=request)
