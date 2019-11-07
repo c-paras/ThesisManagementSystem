@@ -2,6 +2,7 @@ import random
 import datetime
 import json
 import bcrypt
+import math
 
 from app.db_manager import sqliteManager as db
 from app.queries import queries as db_queries
@@ -201,7 +202,13 @@ def gen_topics():
                                         ['account_type'],
                                         [supervisor_type])
 
-        topics_per_sup = 10
+        # remove any topics with empty areas
+        for i in range(len(topics)-1, -1):
+            if len(topics[i]['areas']) == 0:
+                topics.pop(i)
+
+        topics_per_sup = math.floor(len(topics)/len(supervisors))
+        topics_per_sup = min(topics_per_sup, 10)
 
         base_topic_id = 1
         for sup in supervisors:
