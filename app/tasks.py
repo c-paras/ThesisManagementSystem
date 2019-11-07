@@ -66,6 +66,7 @@ def student_view():
     # get criteria & marks
     #
     is_approval = (task_info[5] == 'requires approval')
+    awaiting_marks = False
     mark_details = {}
 
     if is_approval:
@@ -86,6 +87,9 @@ def student_view():
         mark_details["Assessor"] = get_marks_table(session['id'],
                                                    res,
                                                    task_id)
+        if not (type(mark_details["Supervisor"]) == () and
+                type(mark_details["Assessor"]) == ()):
+            awaiting_marks = True
 
     res = db.select_columns('task_attachments', ['path'], ['task'], [task_id])
     attachments = [FileUpload(filename=r[0]) for r in res]
@@ -122,7 +126,6 @@ def student_view():
             text_info["edited_time"] = edited_time.strftime(time_format)
             text_info["button_text"] = "Edit Submission"
 
-    print(can_submit)
     db.close()
     return render_template('task_student.html',
                            heading=task_info[0] + " - " + task_info[1],
@@ -137,7 +140,8 @@ def student_view():
                            task_id=task_id,
                            max_size=task_info[6],
                            attachments=attachments,
-                           can_submit=can_submit)
+                           can_submit=can_submit,
+                           awaiting_marks=awaiting_marks)
 
 
 # get a nicely formatted table containing the marks of a student, or a blank
