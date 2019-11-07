@@ -5,7 +5,7 @@
     <div class="section col s12">
       <h5>Current Topics:</h5>
       {% if curr_topics|length %}
-        <form class="col s12" id="manage-topic-form">
+        <form id="manage-topic-form">
           <div class="right">
             <a class="waves-effect waves-light btn" id="checkall-btn">Disable All Topics
               <i class="material-icons right">close</i>
@@ -16,11 +16,12 @@
           </div>
           <table class="striped centered responsive-table">
             <colgroup>
-              <col span="1" style="width: 50%">
               <col span="1" style="width: 40%">
-              <col span="1" style="width: 5%">
-              <col span="1" style="width: 5%">
+              <col span="1" style="width: 40%">
+              <col span="1" style="width: 10%">
+              <col span="1" style="width: 10%">
             </colgroup>
+
             <!-- Table header -->
             <thead>
               <tr>
@@ -31,6 +32,7 @@
               </tr>
             </thead>
 
+            <!-- Table body -->
             <tbody>
               {% for topic in curr_topics %}
                 <tr>
@@ -43,18 +45,20 @@
                           type="checkbox" id="{{ topic[0] }}" class="filled-in"
                           name="{{ topic[0] }}" checked="checked"
                         >
-                        <span></span>
+                        <span style="padding-left: 20px;">
+                        </span>
                       </label>
                     {% else %}
                       <label>
-                        <input type="checkbox" id="{{ topic[0] }}" class="filled-in" name="{{ topic[0] }}"/>
-                        <span></span>
+                        <input type="checkbox" id="{{ topic[0] }}" class="filled-in" name="{{ topic[0] }}">
+                        <span style="padding-left: 20px;">
+                        </span>
                       </label>
                     {% endif %}
                   </td>
-                  <td style="padding-right: 20px;">
+                  <td>
                     <a id="{{ topic[0] }}" href="#">
-                      <i class="material-icons right">edit</i>
+                      <i class="material-icons">edit</i>
                     </a>
                   </td>
                 </tr>
