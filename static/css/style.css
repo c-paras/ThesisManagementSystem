@@ -59,11 +59,6 @@ input {
   min-width: 300px;
 }
 
-/* narrow table column */
-th.narrow {
-  width: 25%;
-}
-
 /* make file upload buttons smaller */
 .file-upload-btn {
   height: 2.25rem !important;

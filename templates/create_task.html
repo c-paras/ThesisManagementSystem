@@ -162,13 +162,17 @@
         <!-- Marking criteria table -->
         <div class="row" id="marking-criteria-block">
           <div class="col s12">
-            <table class="highlight responsive-table" id="criteria-table">
+            <table class="striped responsive-table" id="criteria-table">
+              <colgroup>
+                <col span="1" style="width: 90%;">
+                <col span="1" style="width: 10%;">
+              </colgroup>
 
               <!-- Table header -->
               <thead>
                 <tr>
                   <th>Criteria</th>
-                  <th class="narrow">Maximum Mark</th>
+                  <th>Maximum Mark</th>
                 </tr>
               </thead>
 
@@ -218,7 +222,8 @@
 
       <div class="row">
         <div class="center">
-          <a class="waves-effect waves-light btn" id="create-task-btn" onclick="submitCreate()">Create Task
+          <a class="waves-effect waves-light btn" id="create-task-btn" onclick="submitCreate()">
+            Create Task
             <i class="material-icons right">send</i>
           </a>
           {{ upload_spinner(id='upload-spinner') }}
