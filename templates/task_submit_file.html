@@ -2,22 +2,22 @@
 <div class="row"  id="view-file-section">
   <div class="col s12">
     {% if prev_submission %}
-    <div>
-      File submitted: 
-      <a class="waves-effect waves-light" href="{{ prev_submission['url'] }}" download="{{ prev_submission['name'] }}">
-        {{ prev_submission['name'] }}
-        <i class="material-icons right">file_download</i>
-      </a>
-    </div>
-    <br/>
+      <div>
+        <b>File submitted: </b>
+        <a class="waves-effect waves-light" href="{{ prev_submission['url'] }}" download="{{ prev_submission['name'] }}">
+          {{ prev_submission['name'] }}
+          <i class="material-icons right">file_download</i>
+        </a>
+      </div>
+      <br/>
     {% endif %}
     <div>
       {% if can_submit %}
         <a class="waves-effect waves-light btn" onclick="editFileSubmission()">
           {% if prev_submission %}
-          Resubmit
+            Resubmit
           {% else %}
-          Submit
+            Submit
           {% endif %}
           <i class="material-icons right">edit</i>
         </a>
@@ -51,9 +51,7 @@
         {% if prev_submission %}
           <a id="cancel-btn" onclick="cancelFileSubmission()" class="waves-effect waves-light btn red">Cancel</a>
         {% endif %}
-        <a id="submit-btn" onclick="uploadFile(this)" class="waves-effect waves-light btn">
-          Submit
-        </a>
+        <a id="submit-btn" onclick="uploadFile(this)" class="waves-effect waves-light btn">Submit</a>
         {{ upload_spinner(id='upload-spinner') }}
       </div>
     </div>

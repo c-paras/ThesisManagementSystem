@@ -52,7 +52,7 @@
               <td>{{ taskCriteria[i][3] }}</td>
               {% if markedFeedback[i] == [] %}
                 <td>
-                  <input id="enteredMark" type="number" min="0" max="{{ taskCriteria[i][3] }}"></textarea>
+                  <input id="enteredMark" type="number" min="0" max="{{ taskCriteria[i][3] }}">
                 </td>
                 <td>
                   <div>
@@ -62,7 +62,7 @@
                 </td>
               {% else %}
                 <td>
-                  <input id="enteredMark" type="number" min="0" max="{{ taskCriteria[i][3] }}" value="{{markedFeedback[i][0][0]}}"></textarea>
+                  <input id="enteredMark" type="number" min="0" max="{{ taskCriteria[i][3] }}" value="{{markedFeedback[i][0][0]}}">
                 </td>
                 <td>
                   <div>

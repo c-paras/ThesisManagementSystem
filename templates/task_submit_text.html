@@ -3,12 +3,10 @@
     <div>
       {% if text_info["old_text"]|length %}
         <div class="row">
-          <div class="col s10 offset-s1" style="border:1px solid #000000;">
+          <div class="col s12" style="border:1px solid #000000;">
             {{ text_info["old_text"] }}
           </div>
         </div>
-      {% else %}
-        You haven't submitted anything yet.
       {% endif %}
     </div>
     {% if can_submit %}
