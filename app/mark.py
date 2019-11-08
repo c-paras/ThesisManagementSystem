@@ -69,8 +69,8 @@ def mark_submission():
         db.close()
         return render_template('mark_submission.html',
                                topic_request_text=config.TOPIC_REQUEST_TEXT,
-                               heading='Mark Submission',
-                               title='Mark Submission',
+                               heading=task_info[0] + " - " + task_info[1],
+                               title=task_info[1],
                                deadline=deadline_text,
                                description=task_info[3],
                                criteria=material[0][0],
