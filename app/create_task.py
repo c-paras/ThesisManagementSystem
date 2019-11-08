@@ -120,6 +120,7 @@ def create():
     file_type_id = res[0][0]
 
     # upload file if present
+    sent_file = None
     if len(file_name):
         try:
             sent_file = FileUpload(req=request)
@@ -163,6 +164,11 @@ def create():
                             ['name', 'course_offering'],
                             [task_name, course_id])
     task_id = res[0][0]
+
+    if sent_file:
+        db.insert_single('task_attachments',
+                         [task_id, sent_file.get_name()],
+                         ['task', 'path'])
 
     # commit accepted file type
     db.insert_single('submission_types', [file_type_id, task_id],

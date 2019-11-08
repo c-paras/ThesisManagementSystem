@@ -109,7 +109,7 @@ def student_view():
         except LookupError as e:
             print(f"Submission {task_id} {session['user']}: {e}")
 
-    if task_info[4] == "file submission" and res:
+    if prev_submission and task_info[4] == "file submission":
         prev_submission['url'] = FileUpload(filename=res[0][1]).get_url()
 
     text_info = {}
@@ -253,7 +253,7 @@ def submit_file_task():
 
     db.insert_single('submissions', [session['id'], task['id'],
                                      sent_file.get_original_name(),
-                                     str(sent_file.get_path()),
+                                     str(sent_file.get_name()),
                                      datetime.now().timestamp(),
                                      mark_method_id],
                      ['student', 'task', 'name', 'path',

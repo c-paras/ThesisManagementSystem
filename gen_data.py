@@ -1,11 +1,18 @@
 import random
 import datetime
 import json
-import bcrypt
 import math
+import uuid
+import bcrypt
+
+from shutil import copyfile
+from shutil import rmtree
+from pathlib import Path
 
 from app.db_manager import sqliteManager as db
 from app.queries import queries as db_queries
+
+import config
 
 
 def get_all_account_types():
@@ -500,12 +507,17 @@ def gen_materials():
 
 def gen_material_attachments():
     materials = db.select_columns('materials', ['id'])
-
+    upload_dir = Path(config.STATIC_PATH) / Path(config.FILE_UPLOAD_DIR)
+    upload_dir.mkdir(exist_ok=True)
+    sample_material = Path('db/sample_material.pdf')
     for material in materials:
-        path = "img/chicken.jpg"
+        stem = Path(str(uuid.uuid4()) + 'sample_material.pdf')
+        path = upload_dir / stem
+        copyfile(sample_material, path)
+
         db.insert_single(
             'material_attachments',
-            [material[0], path],
+            [material[0], str(stem)],
             ['material', 'path']
         )
 
@@ -563,15 +575,15 @@ def gen_marks():
             for criteria in criteria_ids:
                 mark = random.randrange(criteria[1])
                 feedback = "smile face"
-                path = "img/chicken.jpg"
                 queries.append((
                     'marks',
-                    [criteria[0], mark, student[0], markers[0], feedback, path]
+                    [criteria[0], mark, student[0],
+                     markers[0], feedback, None]
                 ))
-                mark = random.randrange(criteria[1])
                 queries.append((
                     'marks',
-                    [criteria[0], mark, student[0], markers[1], feedback, path]
+                    [criteria[0], mark, student[0],
+                     markers[1], feedback, None]
                 ))
             db.insert_multiple(queries)
 
@@ -588,6 +600,9 @@ def gen_submissions():
         'users', ['id'], ['account_type'], [acc_types['student']]
     )
 
+    upload_dir = Path(config.STATIC_PATH) / Path(config.FILE_UPLOAD_DIR)
+    upload_dir.mkdir(exist_ok=True)
+    sample_submission = Path('db/sample_submission.pdf')
     for student in students:
         tasks = db_queries.get_user_tasks(student[0])
         now = datetime.datetime.now().timestamp()
@@ -596,36 +611,45 @@ def gen_submissions():
             # if task is in the future, don't create a submission
             if task[4] > now:
                 continue
+            stem = Path(str(uuid.uuid4()) + 'sample_submission.pdf')
+            path = upload_dir / stem
+            copyfile(sample_submission, path)
             if 'approval' in task[3]:
                 queries.append((
                     'submissions',
                     [student[0], task[0], 'smiley',
-                        'static/img/chicken.jpg', 'ez', now,
-                        request_types['approved']]
+                     str(stem), 'ez', now,
+                     request_types['approved']]
                 ))
             else:
                 queries.append((
                     'submissions',
                     [student[0], task[0], 'smiley',
-                        'static/img/chicken.jpg', 'ez', now,
-                        request_types['pending mark']]
+                     str(stem), 'ez', now,
+                     request_types['pending mark']]
                 ))
         db.insert_multiple(queries)
 
 
 def gen_task_outline():
     tasks = db.select_columns('tasks', ['id'], None, None)
-    queries = []
+    upload_dir = Path(config.STATIC_PATH) / Path(config.FILE_UPLOAD_DIR)
+    upload_dir.mkdir(exist_ok=True)
+    sample_attachment = Path('db/sample_attachment.pdf')
     for task in tasks:
-        path = "static/img/chicken.jpg"
+        stem = Path(str(uuid.uuid4()) + 'sample_attachment.pdf')
+        path = upload_dir / stem
+        copyfile(sample_attachment, path)
         db.insert_single(
             'task_attachments',
-            [task[0], path],
+            [task[0], str(stem)],
             ['task', 'path']
         )
 
 
 if __name__ == '__main__':
+    upload_dir = Path(config.STATIC_PATH) / Path(config.FILE_UPLOAD_DIR)
+    rmtree(upload_dir)
     db.connect()
 
     print('Dropping all existing tables...')
