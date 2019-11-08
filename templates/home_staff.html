@@ -1,5 +1,7 @@
 {% extends "base.html" %}
 
+{% from "macros.html" import current_past_students_summary %}
+
 {% block body %}
   <div class="row">
 
@@ -48,90 +50,12 @@
     </div>
 
     <!-- Show staff their current students -->
-    <div class="section col s12">
-      <h5>Current Students:</h5>
-      {% if curr_students|length %}
-        <table class="striped centered responsive-table" style="margin-bottom: 10px;">
-
-          <!-- Table header -->
-          <thead>
-            <tr>
-              <th>Name</th>
-              <th>zID</th>
-              <th>Topic</th>
-              <th>Role</th>
-              <th>Submissions</th>
-            </tr>
-          </thead>
-
-          <!-- Table body -->
-          <tbody>
-            {% for student in curr_students %}
-              <tr>
-                <td>{{ student[0] }}</td>
-                <td>
-                  <a href="mailto:{{ student[1] }}">
-                    {{ student[1].split('@')[0] }}
-                  </a>
-                </td>
-                <td>{{ student[2] }}</td>
-                <td>{{ student[4] }}</td>
-                <td>
-                  <a href="{{ url_for('submissions.view_submission', submissions=student[3]) }}">
-                    <i class="small material-icons teal-text">pageview</i>
-                  </a>
-                </td>
-              </tr>
-            {% endfor %}
-          </tbody>
-        </table>
-      {% else %}
-        <p>You have no students at this time</p>
-      {% endif %}
-    </div>
+    {{
+       current_past_students_summary("Current Students:", curr_students, "You have no students at this time")
+    }}
 
     <!-- Show staff their past students -->
-    <div class="section col s12">
-      <h5>Past Students:</h5>
-      {% if past_students|length %}
-        <table class="striped centered responsive-table">
-
-          <!-- Table header -->
-          <thead>
-            <tr>
-              <th>Name</th>
-              <th>zID</th>
-              <th>Topic</th>
-              <th>Role</th>
-              <th>Submissions</th>
-            </tr>
-          </thead>
-
-          <!-- Table body -->
-          <tbody>
-            {% for student in past_students %}
-              <tr>
-                <td>{{ student[0] }}</td>
-                <td>
-                  <a href="mailto:{{ student[1] }}">
-                    {{ student[1].split('@')[0] }}
-                  </a>
-                </td>
-                <td>{{ student[2] }}</td>
-                <td>{{ student[4] }}</td>
-                <td>
-                  <a href="{{ url_for('submissions.view_submission', submissions=student[3]) }}">
-                    <i class="small material-icons teal-text">pageview</i>
-                  </a>
-                </td>
-              </tr>
-            {% endfor %}
-          </tbody>
-        </table>
-      {% else %}
-        You have no past students
-      {% endif %}
-    </div>
+    {{ current_past_students_summary("Past Students:", past_students, "You have no past students") }}
 
     {% if curr_requests|length %}
       {% include "modals/respond_topic.html" %}
