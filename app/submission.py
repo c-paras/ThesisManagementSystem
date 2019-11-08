@@ -80,10 +80,11 @@ def staff_view():
             ))
 
     db.close()
+    zid = student_info[0][1].split('@')[0]
+    heading = f'Submissions - {student_info[0][0]} ({zid})'
     return render_template('submission_staff.html',
-                           heading='View Submissions',
-                           title='View Submissions',
-                           student=student_info,
+                           heading=heading,
+                           title=heading,
                            submissions=tasks)
 
 

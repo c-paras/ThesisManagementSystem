@@ -5,46 +5,42 @@
 
     <!-- Show staff the tasks and submission info of the student -->
     <div class="section col s12">
-      <h5>Submissions - {{ student[0][0] }}({{ student[0][1].split('@')[0] }})</h5>
-      <div class="col s12">
-        {% if submissions|length %}
-          <table class="highlight responsive-table">
+      {% if submissions|length %}
+        <table class="striped centered responsive-table">
 
-            <!-- Table header -->
-            <thead>
+          <!-- Table header -->
+          <thead>
+            <tr>
+              <th>Task</th>
+              <th>Submitted Time</th>
+              <th>Mark</th>
+              <th>View</th>
+            </tr>
+          </thead>
+
+          <!-- Table body -->
+          <tbody>
+            {% for submission in submissions %}
               <tr>
-                <th>Task</th>
-                <th class="center-align">Submitted Time</th>
-                <th>Mark</th>
-                <th>View</th>
-
+                <td class="center-align">{{ submission[0] }}</td>
+                <td class="center-align">{{ submission[1] }}</td>
+                <td class="center-align">{{ submission[2] }}</td>
+                <td class="center-align">
+                  {% if submission[3] %}
+                    <a href="{{ submission[3] }}">
+                      <i class="Small material-icons teal-text">pageview</i>
+                    </a>
+                  {% else %}
+                    Text submission
+                  {% endif %}
+                </td>
               </tr>
-            </thead>
-
-            <!-- Table body -->
-            <tbody>
-              {% for submission in submissions %}
-                <tr>
-                  <td class="center-align">{{submission[0]}}</td>
-                  <td class="center-align">{{submission[1]}}</td>
-                  <td class="center-align">{{submission[2]}}</td>
-                  <td class="center-align">
-                    {% if submission[3] %}
-                      <a href="{{ submission[3] }}">
-                        <i class="Small material-icons teal-text">pageview</i>
-                      </a>
-                    {% else %}
-                      Text submission
-                    {% endif %}
-                  </td>
-                </tr>
-              {% endfor %}
-            </tbody>
-          </table>
-        {% else %}
-          <p>There are no submissions at this time for this student</p>
-        {% endif %}
-      </div>
+            {% endfor %}
+          </tbody>
+        </table>
+      {% else %}
+        <p>There are no submissions at this time for this student</p>
+      {% endif %}
     </div>
 
   </div>
