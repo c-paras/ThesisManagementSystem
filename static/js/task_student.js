@@ -87,3 +87,10 @@ function openTextEditor(){
   $("#view_text_section").hide();
   $("#edit_text_section").show();
 }
+
+function closeTextEditor(){
+  $('#textarea1').val("");
+  $('#all-own-work').prop('checked', false);
+  $("#view_text_section").show();
+  $("#edit_text_section").hide();
+}
