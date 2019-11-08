@@ -41,8 +41,9 @@
                     {% if topic[2] == 1 %}
                       <label>
                         <input
-                          type="checkbox" id="{{ topic[0] }}" class="filled-in"
-                          name="{{ topic[0] }}" checked="checked" onchange="updateTopicVisibility()"
+                          type="checkbox" id="topic-{{ loop.index0 }}" class="filled-in"
+                          name="topic-{{ loop.index0 }}" checked="checked"
+                          onchange="updateTopicVisibility('topic-{{ loop.index0 }}')"
                         >
                         <span style="padding-left: 20px;">
                         </span>
@@ -50,8 +51,9 @@
                     {% else %}
                       <label>
                         <input
-                          type="checkbox" id="{{ topic[0] }}" class="filled-in" name="{{ topic[0] }}"
-                          onchange="updateTopicVisibility()"
+                          type="checkbox" id="topic-{{ loop.index0 }}" class="filled-in"
+                          name="topic-{{ loop.index0 }}"
+                          onchange="updateTopicVisibility('topic-{{ loop.index0 }}')"
                         >
                         <span style="padding-left: 20px;">
                         </span>

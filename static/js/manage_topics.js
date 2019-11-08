@@ -1,4 +1,4 @@
-function updateTopicVisibility() {
+function updateTopicVisibility(id) {
   const form = $('#manage-topic-form');
   if (!formValid(form)) {
     return;
@@ -15,7 +15,15 @@ function updateTopicVisibility() {
     if (res.status === 'fail') {
       flash(res.message, error = true);
     } else {
-      flash('Visibility updated', false);
+      if (id === undefined) {
+        flash('All topics are now unavailable students', false);
+      } else {
+        if ($(`#${id}`).is(':checked')) {
+          flash('Topic is now visible to students', false);
+        } else {
+          flash('Students can no longer view the topic', false);
+        }
+      }
     }
   });
 }
