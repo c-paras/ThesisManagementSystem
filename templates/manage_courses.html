@@ -68,14 +68,15 @@
                     {% set value = 0 %}
                     {% set checked = "checked" %}
                   {% else %}
-                    {% set value = 0 %}
-                    {% set checked = "checked" %}
+                    {% set value = 1 %}
+                    {% set checked = "" %}
                   {% endif %}
                   <label>
                     <input
                       type="checkbox" id="m{{ material[0] }}" class="filled-in"
-                      name="{{ material[0] }}" data-totype="{{ value }}"
+                      name="{{ material[0] }}"
                       {{ checked }}
+                      data-totype="{{ value }}"
                       onchange="updateMat({{ material[0] }}, '#m{{ material[0] }}')"
                     >
                     <span style="padding-left: 20px;">
@@ -144,13 +145,14 @@
                     {% set checked = "checked" %}
                   {% else %}
                     {% set value = 1 %}
-                    {% set checked = 'checked="checked"' %}
+                    {% set checked = "" %}
                   {% endif %}
                   <label>
                     <input
                       type="checkbox" id="t{{ task[0] }}" class="filled-in"
-                      name="{{ task[0] }}" data-totype="{{ value }}"
+                      name="{{ task[0] }}"
                       {{ checked }}
+                      data-totype="{{ value }}"
                       onchange="updateTask({{ task[0] }}, '#t{{ task[0] }}')"
                     >
                     <span style="padding-left: 20px;">
