@@ -1,19 +1,27 @@
-<div id="view_text_section">
+<div id="view_text_section" class="row">
   <div class="col s12">
-    {% if text_info["old_text"]|length %}
-      <div class="col s10 offset-s2">
-        {{ text_info["old_text"] }}
+    <div>
+      {% if text_info["old_text"]|length %}
+        <div class="row">
+          <div class="col s12" style="border:1px solid #000000;">
+            {{ text_info["old_text"] }}
+          </div>
+        </div>
+      {% endif %}
+    </div>
+    {% if can_submit %}
+      <br/>
+      <div>
+        <a class="waves-effect waves-light btn" onclick="openTextEditor();">
+          {{ text_info["button_text"] }}
+          <i class="material-icons right">edit</i>
+        </a>
       </div>
-    {% else %}
-      You haven't submitted anything yet.
     {% endif %}
-  </div>
-  <div class="col s12 right-align">
-    <a class="waves-effect waves-light btn {% if not can_submit %} disabled {% endif %}" onclick="openTextEditor();">{{ text_info["button_text"] }}</a>
   </div>
 </div>
 
-<div id="edit_text_section">
+<div id="edit_text_section" style="display:none">
   <form id="text-upload-form" action="/submit_text_task" method="post" enctype="multipart/form-data">
     <div class="row">
       <div class="input-field col s12">
