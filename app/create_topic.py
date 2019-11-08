@@ -4,8 +4,8 @@ from flask import render_template
 from flask import request
 from flask import session
 
-from app.auth import UserRole
 from app.auth import at_least_role
+from app.auth import UserRole
 from app.db_manager import sqliteManager as db
 from app.helpers import error
 from app.queries import queries
@@ -34,7 +34,7 @@ def create():
 
     # make sure the course codes are uppercase and strip for areas and prereqs
     if len(areas) == 0:
-        return error("You should enter at least one topic area")
+        return error('You should enter at least one topic area')
     prereqs = [x.upper() for x in prereqs]
     prereqs = [x.strip() for x in prereqs]
     areas = [x.strip() for x in areas]
@@ -106,9 +106,9 @@ def create():
     return jsonify({'status': 'ok'})
 
 
-@create_topic.route('/load_topic_prereqs', methods=['GET'])
+@create_topic.route('/get_topic_prereqs', methods=['GET'])
 @at_least_role(UserRole.STAFF)
-def get_chips_from_database():
+def get_chips():
     db.connect()
     topic_areas = db.select_columns('topic_areas', ['name'])
     prereqs = db.select_columns('courses', ['code'], ['prereq'], [1])

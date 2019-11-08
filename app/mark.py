@@ -4,17 +4,17 @@ from flask import request
 from flask import session
 from flask import jsonify
 
-import re
-import json
 from datetime import datetime
-import calendar
-import sqlite3
 
-from app.auth import UserRole
 from app.auth import at_least_role
+from app.auth import UserRole
 from app.db_manager import sqliteManager as db
 from app.queries import queries
 from app.helpers import send_email
+
+import calendar
+import json
+import sqlite3
 
 import config
 

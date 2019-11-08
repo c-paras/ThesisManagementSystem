@@ -1,7 +1,6 @@
 from flask import abort
 from flask import Flask
 from flask import redirect
-from flask import send_from_directory
 from flask import url_for
 
 from app.auth import allowed_file_access
