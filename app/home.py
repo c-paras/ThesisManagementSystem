@@ -42,10 +42,10 @@ def student_dashboard():
         # if we wanted to split current, previous or
         # future we would do the above line
         attachments = []
-        attachmentsQuery = db.select_columns(
+        attachments_query = db.select_columns(
             'material_attachments', ['path'], ['material'], [material[0]]
         )
-        for x in attachmentsQuery:
+        for x in attachments_query:
             attachments.append(FileUpload(filename=x[0]))
         cur_materials.append((material[1], attachments))
 
@@ -139,10 +139,8 @@ def staff_dashboard():
                       'topic_name': r[4]}
                      for r in queries.get_curr_topic_requests(session['user'])]
 
-    # need to implement way of deciding between current and past students, best
-    # way would probably be by testing start/end date and current unix
-    # timestamp. Need to wait until 'user_session' table is filled before
-    # this is possible.
+    # the way of deciding between current and past students
+    # is by testing start/end date and current unix timestamp
 
     curr_students = []
     past_students = []
@@ -153,10 +151,7 @@ def staff_dashboard():
     # get students who I am assessing
     assess_students = queries.get_current_assess_students(session['user'])
 
-    potential_assessors = filter(lambda s: s['id'] != session['id'],
-                                 queries.get_users_of_type('supervisor') +
-                                 queries.get_users_of_type('course_admin'))
-
+    # now group up the students & role types
     for tup_student in super_students:
         i = list(tup_student)
         i.append('Supervisor')
@@ -172,6 +167,11 @@ def staff_dashboard():
             curr_students.append(i)
         else:
             past_students.append(i)
+
+    # for the approve/reject topic dropdown
+    potential_assessors = filter(lambda s: s['id'] != session['id'],
+                                 queries.get_users_of_type('supervisor') +
+                                 queries.get_users_of_type('course_admin'))
 
     db.close()
     return render_template('home_staff.html',

@@ -51,13 +51,13 @@ def clean_topic_tuples(curr_topics):
     topic_dict = dict()
     visible = []
     for topic in curr_topics:
+
         # if it's in the dict, append values only
         if topic[0] in topic_dict:
-
             topic_dict[topic[0]] = topic_dict[topic[0]] + ', ' + topic[1]
-        #  if it's not in the dict, create the entry
-        else:
 
+        # if it's not in the dict, create the entry
+        else:
             topic_dict[topic[0]] = topic[1]
             visible.append(topic[2])
 

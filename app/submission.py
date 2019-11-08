@@ -19,17 +19,8 @@ submissions = Blueprint('submissions', __name__)
 
 
 @submissions.route('/view_submission', methods=['GET'])
-@at_least_role(UserRole.STUDENT)
+@at_least_role(UserRole.STAFF)
 def view_submission():
-    user_type = session['acc_type']
-
-    if user_type == 'student':
-        return student_view()
-    else:
-        return staff_view()
-
-
-def staff_view():
     db.connect()
     student_id = int(request.args.get('submissions', None))
     student_info = db.select_columns('users', ['name', 'email'],
@@ -80,10 +71,11 @@ def staff_view():
             ))
 
     db.close()
+    zid = student_info[0][1].split('@')[0]
+    heading = f'Submissions - {student_info[0][0]} ({zid})'
     return render_template('submission_staff.html',
-                           heading='View Submissions',
-                           title='View Submissions',
-                           student=student_info,
+                           heading=heading,
+                           title=heading,
                            submissions=tasks)
 
 
@@ -104,10 +96,6 @@ def get_sub_status(user, task):
         )
         status = status_name[0][0]
     return status
-
-
-def student_view():
-    abort(404)  # TODO: we may have a student version of submission page?
 
 
 # get a nicely formatted table containing the marks of a student, or a blank

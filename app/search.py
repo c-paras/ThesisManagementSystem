@@ -168,7 +168,7 @@ def search_topic():
 
 @search.route('/search_chips', methods=['GET'])
 @at_least_role(UserRole.PUBLIC)
-def get_topic_chips():
+def get_chips():
     db.connect()
     topic_area = db.select_columns('topic_areas', ['name'])
     supervisors = db.select_columns('users', ['name'], ['account_type'], [2])

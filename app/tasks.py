@@ -14,8 +14,6 @@ from app.file_upload import FileUpload
 from app.helpers import error
 from app.queries import queries
 
-import calendar
-
 
 tasks = Blueprint('tasks', __name__)
 

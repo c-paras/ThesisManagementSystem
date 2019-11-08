@@ -50,7 +50,10 @@ $('[name="marking-method"]').change(function () {
 
 toggleSubmissionType();
 toggleMarkingMethod();
-$('#deadline').datetimepicker();
+$('#deadline').datetimepicker({
+  'format': 'd/m/Y H:i',
+  'lang': 'en'
+});
 
 function relabel(elem, attrs) {
   let id = 0;

@@ -1,8 +1,9 @@
-function submitManage() {
+function updateTopicVisibility(id) {
   const form = $('#manage-topic-form');
   if (!formValid(form)) {
     return;
   }
+
   const data = {};
   $('input[type="checkbox"]').each(function () {
     const status = $(this).is(':checked');
@@ -14,14 +15,20 @@ function submitManage() {
     if (res.status === 'fail') {
       flash(res.message, error = true);
     } else {
-      delayToast('Changes saved!', false);
-      window.location.href = '/manage_topics';
+      if (id === undefined) {
+        flash('All topics are now unavailable students', false);
+      } else {
+        if ($(`#${id}`).is(':checked')) {
+          flash('Topic is now visible to students', false);
+        } else {
+          flash('Students can no longer view the topic', false);
+        }
+      }
     }
   });
 }
 
 $('#checkall-btn').on('click', function () {
-  const flag = false;
-  $('input[type=checkbox]').prop('checked', flag);
-  submitManage();
+  $('input[type="checkbox"]').prop('checked', false);
+  updateTopicVisibility();
 });

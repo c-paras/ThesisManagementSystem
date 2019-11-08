@@ -20,8 +20,9 @@ function submitCreate() {
   });
 }
 
-function loadTopicPrereq() {
-  makeGETRequest('/load_topic_prereqs', (res) => {
+function loadChips() {
+  makeGETRequest('/get_topic_prereqs', (res) => {
+
     $('#prereqs').chips({
       placeholder: 'Add Prerequisite',
       autocompleteOptions: {
@@ -30,6 +31,7 @@ function loadTopicPrereq() {
         minLength: 1
       }
     });
+
     $('#areas').chips({
       placeholder: 'Add Topic Area',
       autocompleteOptions: {
@@ -38,8 +40,8 @@ function loadTopicPrereq() {
         minLength: 1
       }
     });
-    submitCreate();
+
   });
 }
 
-loadTopicPrereq();
+loadChips();

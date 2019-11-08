@@ -22,11 +22,13 @@ function openRequestModal(studentId, topicId) {
       return;
     }
     const form = $('#respond-form');
-    form.children('input[name=topic]').val(topicId);
-    form.children('input[name=student-id]').val(studentId);
+    form.children('input[name="topic"]').val(topicId);
+    form.children('input[name="student-id"]').val(studentId);
     $('#accept-check').prop('checked', true);
     $('#reject-check').prop('checked', false);
-    $('#student-name').text(res.userName);
+    $('#student-name').html(`
+      ${res.userName} <a href="mailto:${res.email}">(${res.email.split('@')[0]})</a>
+    `);
     $('#topic-name').text(res.topicName);
 
     const d = new Date(res.reqDate);
@@ -39,7 +41,7 @@ function openRequestModal(studentId, topicId) {
 
 function sendResponse() {
   const form = $('#respond-form');
-  const assessor = form.find('select[name=assessor]');
+  const assessor = form.find('select[name="assessor"]');
   const accepted = $('#accept-check').prop('checked');
   if (accepted && assessor.val() === null) {
     flash('You must select an assessor!', true);
@@ -61,7 +63,7 @@ function sendResponse() {
 }
 
 $(function () {
-  // Initialise materalize style select statements
+  /* initialise materalize style select statements */
   $('#reject-check').change(function () {
     toggleViewAssessor();
   });
@@ -69,7 +71,7 @@ $(function () {
     toggleViewAssessor();
   });
 
-  // Fix the select assessor box in the modal
-  // https://github.com/Dogfalo/materialize/issues/1385
+  /* fix the select assessor box in the modal */
+  /* https://github.com/Dogfalo/materialize/issues/1385 */
   M.FormSelect.init($('#assessor-select'), {dropdownOptions: { container: document.body }});
 });
