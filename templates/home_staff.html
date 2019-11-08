@@ -24,7 +24,11 @@
             {% for request in curr_requests %}
               <tr>
                 <td>{{ request['stu_name'] }}</td>
-                <td>{{ request['stu_email'].split('@')[0] }}</td>
+                <td>
+                  <a href="mailto:{{ request['stu_email'] }}">
+                    {{ request['stu_email'].split('@')[0] }}
+                  </a>
+                </td>
                 <td>{{ request['topic_name'] }}</td>
                 <td>
                   <a
@@ -65,7 +69,11 @@
             {% for student in curr_students %}
               <tr>
                 <td>{{ student[0] }}</td>
-                <td>{{ student[1].split('@')[0] }}</td>
+                <td>
+                  <a href="mailto:{{ student[1] }}">
+                    {{ student[1].split('@')[0] }}
+                  </a>
+                </td>
                 <td>{{ student[2] }}</td>
                 <td>{{ student[4] }}</td>
                 <td>
@@ -104,7 +112,11 @@
             {% for student in past_students %}
               <tr>
                 <td>{{ student[0] }}</td>
-                <td>{{ student[1].split('@')[0] }}</td>
+                <td>
+                  <a href="mailto:{{ student[1] }}">
+                    {{ student[1].split('@')[0] }}
+                  </a>
+                </td>
                 <td>{{ student[2] }}</td>
                 <td>{{ student[4] }}</td>
                 <td>
