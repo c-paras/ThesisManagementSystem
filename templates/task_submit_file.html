@@ -1,31 +1,33 @@
-{% if prev_submission %}
-  <div class="row">
-    <div class="col s12">
-      <div>
-        <a class="waves-effect waves-light" href="{{ prev_submission['url'] }}" download="{{ prev_submission['name'] }}">
-          {{ prev_submission['name'] }}
-          <i class="material-icons left">file_download</i>
+
+<div class="row"  id="view-file-section">
+  <div class="col s12">
+    {% if prev_submission %}
+    <div>
+      File submitted: 
+      <a class="waves-effect waves-light" href="{{ prev_submission['url'] }}" download="{{ prev_submission['name'] }}">
+        {{ prev_submission['name'] }}
+        <i class="material-icons right">file_download</i>
+      </a>
+    </div>
+    <br/>
+    {% endif %}
+    <div>
+      {% if can_submit %}
+        <a class="waves-effect waves-light btn" onclick="editFileSubmission()">
+          {% if prev_submission %}
+          Resubmit
+          {% else %}
+          Submit
+          {% endif %}
+          <i class="material-icons right">edit</i>
         </a>
-      </div>
-      <br/>
-      <div>
-        {% if can_submit %}
-          <a class="waves-effect waves-light btn" onclick="editFileSubmission()">
-            Resubmit
-            <i class="material-icons right">edit</i>
-          </a>
-        {% endif %}
-      </div>
+      {% endif %}
     </div>
   </div>
-{% endif %}
+</div>
 
 {% if can_submit %}
-  {% if not prev_submission %}
-    <form id="file-upload-form"  action="/submit_file_task" method="POST" enctype="multipart/form-data">
-  {% else %}
-    <form id="file-upload-form"  style="display: none;"  action="/submit_file_task" method="POST" enctype="multipart/form-data">
-  {% endif %}
+  <form id="file-upload-form"  style="display:none" action="/submit_file_task" method="POST" enctype="multipart/form-data">
     <div class="row">
       <div class="col s12">
         {{ file_upload("file-name", accepted_files, "Select file to submit", max_size) }}
@@ -50,11 +52,7 @@
           <a id="cancel-btn" onclick="cancelFileSubmission()" class="waves-effect waves-light btn red">Cancel</a>
         {% endif %}
         <a id="submit-btn" onclick="uploadFile(this)" class="waves-effect waves-light btn">
-          {% if prev_submission %}
-            Save
-          {% else %}
-            Submit
-          {% endif %}
+          Submit
         </a>
         {{ upload_spinner(id='upload-spinner') }}
       </div>

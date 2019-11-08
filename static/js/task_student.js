@@ -75,10 +75,12 @@ function uploadText(btn) {
 
 function editFileSubmission() {
   $('#file-upload-form').show();
+  $('#view-file-section').hide();
 }
 
 function cancelFileSubmission() {
   $('#file-upload-form').hide();
+  $('#view-file-section').show();
 }
 
 function openTextEditor(){
