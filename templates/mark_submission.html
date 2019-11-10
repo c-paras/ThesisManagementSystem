@@ -12,12 +12,24 @@
     <br>
     <div>
       <b>Attachment:</b>
-      <a href="{{ url_for('static', filename='%s'%criteria) }}"> Marking Criteria </a>
+      {% if attachment %}
+        <a href="{{ attachment.get_url() }}">{{ attachment.get_original_name() }}</a>
+      {% else %}
+        No attachment
+      {% endif %}
     </div>
     <br>
     <div>
       <b>Submission:</b>
-      <a href="{{ url_for('static', filename='%s'%submission[1]) }}"> {{submission[0]}} </a>
+      {% if submission %}
+        {% if submission['file'] %}
+          <a href="{{ submission['file'].get_url() }}"> {{submission['name']}} </a>
+        {% else %}
+          Text Submission
+        {% endif %}
+      {% else %}
+        No recorded submission
+      {% endif %}
     </div>
     <br>
     <div>
