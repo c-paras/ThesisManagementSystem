@@ -649,7 +649,8 @@ def gen_task_outline():
 
 if __name__ == '__main__':
     upload_dir = Path(config.STATIC_PATH) / Path(config.FILE_UPLOAD_DIR)
-    rmtree(upload_dir)
+    if upload_dir.exists():
+        rmtree(upload_dir)
     db.connect()
 
     print('Dropping all existing tables...')
