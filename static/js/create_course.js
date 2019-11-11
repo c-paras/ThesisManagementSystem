@@ -27,6 +27,7 @@ function createCourse() {
       return;
     }
     flash('Created course');
+    const modal = M.Modal.getInstance($('#create-topic-modal'));
     modal.close();
   });
 }
