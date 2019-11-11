@@ -60,7 +60,7 @@ def create():
         return e.args
 
     try:
-        deadline = datetime.strptime(deadline, '%Y/%m/%d %H:%M').timestamp()
+        deadline = datetime.strptime(deadline, '%d/%m/%Y %H:%M').timestamp()
     except ValueError:
         return error('Invalid date format for deadline!')
 
