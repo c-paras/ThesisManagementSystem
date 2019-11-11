@@ -40,6 +40,8 @@ class UserRole(Enum):
 
 def is_at_least_role(role):
     ''' Check if user's role type is sufficient for access '''
+    if 'acc_type' not in session:
+        return False
     actual_role = session['acc_type']
     r = role.value
     if role == UserRole.PUBLIC or actual_role == 'super_admin':
