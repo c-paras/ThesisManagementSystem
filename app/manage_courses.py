@@ -9,6 +9,8 @@ from app.auth import at_least_role
 from app.auth import UserRole
 from app.db_manager import sqliteManager as db
 from app.file_upload import FileUpload
+from app.helpers import get_fields
+from app.helpers import error
 from app.queries import queries
 
 import json
@@ -100,3 +102,78 @@ def manage_course_offerings():
         enrollments=enrollments,
         courses=courses,
         default_co=co)
+
+
+@manage_courses.route('/create_course', methods=['POST'])
+@at_least_role(UserRole.COURSE_ADMIN)
+def create_course():
+    print(request.form)
+    db.connect()
+    curr_year = datetime.now().year
+    num_terms = queries.get_terms_per_year(curr_year)
+    course = {
+        'offerings': [False for _ in range(num_terms)]
+    }
+    try:
+        res = get_fields(request.form,
+                         ['title', 'code', 'description', 'year'],
+                         ['year'])
+        for i in range(num_terms):
+            if str(i + 1) in request.form:
+                course['offerings'][i] = True
+        if True not in course['offerings']:
+            err = error('You must select at least one term offering')
+            raise ValueError(err)
+    except ValueError as e:
+        db.close()
+        return e.args[0]
+
+    course['title'] = res[0]
+    course['code'] = res[1]
+    course['description'] = res[2]
+
+    _, db_end_year = queries.get_year_range()
+    course['start_year'] = int(res[3])
+    if curr_year > course['start_year']:
+        return jsonify({
+            'status': 'fail',
+            'message': f'Year must be start on or after {db_end_year}'
+        })
+
+    res = db.select_columns('courses', ['name'], ['name'], [course['title']])
+    if res:
+        db.close()
+        return jsonify({
+            'status': 'fail',
+            'message': f"Course with name {course['title']} already exists"
+        })
+
+    res = db.select_columns('courses', ['code'], ['code'], [course['code']])
+    if res:
+        db.close()
+        return jsonify({
+            'status': 'fail',
+            'message': f"Course with code {course['code']} already exists"
+        })
+
+    db.insert_single('courses',
+                     [course['code'], course['title'], course['description']],
+                     ['code', 'name', 'description'])
+    res = db.select_columns('courses', ['id'], ['code'], [course['code']])
+    course['id'] = res[0][0]
+
+    query = []
+    for year in range(course['start_year'], db_end_year + 1):
+        for i in range(len(course['offerings'])):
+            if not course['offerings'][i]:
+                continue
+            res = db.select_columns('sessions', ['id'],
+                                    ['year', 'term'],
+                                    [year, i + 1])
+            session_id = res[0][0]
+            query.append(('course_offerings',
+                          [course['id'], session_id],
+                          ['course', 'session']))
+    db.insert_multiple(query)
+    db.close()
+    return jsonify({'status': 'ok'})

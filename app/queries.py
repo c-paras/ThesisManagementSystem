@@ -2,6 +2,18 @@ from app.db_manager import sqliteManager as db
 
 
 class queries:
+    def get_terms_per_year(year):
+        res = db.custom_query("""
+                                 SELECT DISTINCT(term)
+                                 FROM sessions
+                                 WHERE year = ?""", [year])
+        return len(res)
+
+    def get_year_range():
+        res = db.custom_query("SELECT DISTINCT(year) FROM sessions")
+        years = [r[0] for r in res]
+        return (min(years), max(years))
+
     def get_tasks_accepted_files(topic_id):
         res = db.custom_query("""
                                  SELECT file_types.name FROM file_types
