@@ -57,7 +57,6 @@ def mark_submission():
         submission = {}
         # Account for no submission and a text based submission (no path)
         if res:
-            print(res)
             submission['name'] = res[0][0]
             if res[0][1] is not None:
                 submission['file'] = FileUpload(filename=res[0][1])
@@ -69,7 +68,11 @@ def mark_submission():
                 submission['status'] = db.select_columns('request_statuses',
                                                          ['name'], ['id'],
                                                          [status])[0][0]
-                print(submission['status'])
+
+        if 'approval' in task_info[5]:
+            submission['markingMethod'] = 'approval'
+        else:
+            submission['markingMethod'] = 'mark'
 
         marked_feedback = []
         for criteria in task_criteria:
@@ -116,10 +119,8 @@ def mark_submission():
     try:
         check = data['approveCheck']
         if (not check):
-            print('not checked')
             res = db.select_columns('request_statuses',
                                     ['id'], ['name'], ['pending'])
-            print(res)
             db.update_rows('submissions', [res[0][0]],
                            ['status'],
                            ['student', 'task'],
@@ -132,8 +133,6 @@ def mark_submission():
                            ['student', 'task'],
                            [studentId, task_id])
 
-        print(check)
-        print(marks)
         marks = [100]
 
         if feedback[0] == '':

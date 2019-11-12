@@ -72,7 +72,7 @@
             <tr>
               <td>{{ taskCriteria[i][2] }}</td>
               {% if markedFeedback[i] == [] %}
-                {% if submission['text'] %}
+                {% if submission['markingMethod'] == 'approval' %}
                   <td>
                     <label>
                       {% if submission['status'] == 'approved' %}
@@ -96,7 +96,7 @@
                   </div>
                 </td>
               {% else %}
-                {% if submission['text'] %}
+                {% if submission['markingMethod'] == 'approval' %}
                   <td>
                     <label>
                       {% if submission['status'] == 'approved' %}
