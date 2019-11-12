@@ -2,6 +2,16 @@ from app.db_manager import sqliteManager as db
 
 
 class queries:
+    def get_course_sessions(course_code):
+        res = db.custom_query("""SELECT sessions.year, sessions.term
+        FROM courses
+        INNER JOIN course_offerings AS co
+            ON co.course = courses.id
+        INNER JOIN sessions
+            ON sessions.id = co.session
+        WHERE courses.code = ?""", [course_code])
+        return [(r[0], r[1]) for r in res]
+
     def get_session_ids_in_range(start, end):
         res = db.custom_query("""SELECT id
                                  FROM sessions

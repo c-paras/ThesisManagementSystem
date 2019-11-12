@@ -142,26 +142,12 @@ def create_course():
         db.close()
         return error(f"Year must start on or after {curr_year}")
 
-    res = db.select_columns('courses', ['id'], ['code'], [course['code']])
-    course_ids = [r[0] for r in res]
-
-    sessions = []
-    for i in range(len(course['offerings'])):
-        if course['offerings'][i]:
-            res = db.select_columns('sessions', ['id', 'term'],
-                                    ['year', 'term'], [course['year'], i + 1])
-            sessions.extend([{'id': r[0], 'term': r[1]} for r in res])
-
-    for course_id in course_ids:
-        for s in sessions:
-            res = db.select_columns('course_offerings', ['id'],
-                                    ['course', 'session'],
-                                    [course_id, s['id']])
-            if res:
-                db.close()
-                y = course['year']
-                err = f"{course['code']} already offered in {y} T{s['term']}"
-            return error(err)
+    sessions = queries.get_course_sessions(course['code'])
+    sessions = filter(lambda s: s[0] == course['year'], sessions)
+    for year, term in sessions:
+        if course['offerings'][term - 1]:
+            db.close()
+            return error(f"{course['code']} already offered in {year} T{term}")
 
     db.insert_single('courses',
                      [course['code'], course['title'], course['description']],
