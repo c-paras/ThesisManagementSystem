@@ -122,7 +122,7 @@ def upload_material():
         file_label, file_name, course_offering = get_fields(
             request.form, fields, ints=['course-offering'])
     except ValueError as e:
-        return e.args
+        return e.args[0]
     db.connect()
 
     # check if course offering is valid

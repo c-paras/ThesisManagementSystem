@@ -3,14 +3,14 @@
 
     <!-- Modal heading -->
     <div class="row">
-      <div class="col s12">
+      <div class="col s10 offset-s1">
         <h4 class="teal-text center">Add Material</h4>
       </div>
     </div>
 
     <!-- Modal body -->
     <div class="row">
-      <form class="col s12 modal-form" id="add-material-form" name="add-material-form">
+      <form class="col s10 offset-s1 modal-form" id="add-material-form" name="add-material-form">
         <div class="row">
           <div class="col s12">
             {{ file_upload("file-name", accepted_files, "Select file to upload", max_file_size) }}
