@@ -103,9 +103,6 @@
     {% endif %}
 
     <main>
-      {% if not hide_navbar and session['acc_type'] == 'course_admin' %}
-        {% include "modals/create_course.html" %}
-      {% endif %}
       <div
         class="container"
         {% if not hide_navbar and not heading %}
@@ -179,7 +176,8 @@
       </script>
 
       {% if session['acc_type'] == 'course_admin' %}
-        <script type="text/javascript" src={{ url_for('static', filename='js/create_course.js') }}></script>
+        {% include "modals/create_course.html" %}
+        <script defer type="text/javascript" src={{ url_for('static', filename='js/create_course.js') }}></script>
       {% endif %}
     {% endif %}
 
