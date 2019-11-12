@@ -8,6 +8,8 @@ EMAIL_FORMAT = '^z[0-9]{7}@unsw.edu.au$'
 EMAIL_FORMAT_ERROR = \
     'Expected z5555555@unsw.edu.au<br>where z5555555 is your zID.'
 
+COURSE_CODE_FORMAT = '^[A-Z]{4}[0-9]{4}$'
+
 TOPIC_REQUEST_TEXT = 'Dear HEADER\n\n' + \
     'I am a student about to start final year Thesis next semester.\n' + \
     'I would like to express my interest in conducting my thesis ' + \

@@ -14,7 +14,9 @@ from app.helpers import error
 from app.queries import queries
 
 import json
+import re
 
+import config
 
 manage_courses = Blueprint('manage_courses', __name__)
 
@@ -131,6 +133,10 @@ def create_course():
     course['title'] = res[0]
     course['code'] = res[1]
     course['description'] = res[2]
+
+    if not re.match(config.COURSE_CODE_FORMAT, course['code']):
+        db.close()
+        return error("Invalid course code")
 
     _, db_end_year = queries.get_year_range()
     course['start_year'] = int(res[3])
