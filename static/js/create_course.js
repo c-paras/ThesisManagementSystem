@@ -27,17 +27,16 @@ function createCourse() {
       return;
     }
     flash('Created course');
-    const modal = M.Modal.getInstance($('#create-topic-modal'));
-    modal.close();
+    $('#create-topic-modal').modal('close');
   });
 }
 
 function openCreateCourseModal() {
-  const modal = M.Modal.getInstance($('#create-topic-modal'));
   const form = $('#create-topic-form');
   // Materialize makes a select have a text area, ignore it
   form.find('input[type=text], textarea').not('[readonly]').each(function() {
     $(this).val('');
   });
-  modal.open();
+
+  $('#create-topic-modal').modal('open');
 }
