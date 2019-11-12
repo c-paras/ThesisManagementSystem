@@ -25,7 +25,7 @@
                 <td class="center-align">{{ submission[1] }}</td>
                 <td class="center-align">{{ submission[2] }}</td>
                 <td class="center-align">
-                  <a href="{{ url_for('mark.mark_submission', task=submission[4], student=submission[5]) }}">
+                  <a href="{{ url_for('tasks.view_task', task=submission[4], student=submission[5]) }}">
                     <i class="Small material-icons teal-text">pageview</i>
                   </a>
                 </td>

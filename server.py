@@ -14,7 +14,6 @@ from app.errors import errors
 from app.auth import is_at_least_role
 from app.auth import UserRole
 from app.home import home
-from app.mark import mark
 from app.manage_courses import manage_courses
 from app.manage_topics import manage_topics
 from app.queries import queries
@@ -68,7 +67,7 @@ def fill_create_course():
 def init_app():
     blueprints = [
         auth, home, errors, create_topic, search, request_topic,
-        tasks, manage_topics, create_task, submissions, mark, manage_courses
+        tasks, manage_topics, create_task, submissions, manage_courses
     ]
 
     # register blueprints
