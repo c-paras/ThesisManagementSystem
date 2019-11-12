@@ -40,34 +40,34 @@
     {% if staffUser %}
       <h5>Submission:</h5>
       <div class="col s12">
-          <div class="row" >
-            <div class="col s12">
-              <b>Last Submission: </b>
-              {% if submission %}
-                {{ submission['date_modified'].strftime('%A %d/%m/%Y at %I:%M:%S %p') }}
-              {% else %}
-                No recorded submission
-              {% endif %}
-            </div>
-          </div>
-          <div>
+        <div class="row" >
+          <div class="col s12">
+            <b>Last Submission: </b>
             {% if submission %}
-              {% if submission['file'] %}
-                <a class="waves-effect waves-light" href="{{ submission['file'].get_url() }}">
-                  {{submission['name']}} 
-                  <i class="material-icons right">file_download</i>
-                </a>
-              {% else %}
-                <div class="row">
-                  <div class="col s12" style="border:1px solid #000000;">
-                    {{ submission['text'] }}
-                  </div>
-                </div>
-              {% endif %}
+              {{ submission['date_modified'].strftime('%A %d/%m/%Y at %I:%M:%S %p') }}
             {% else %}
               No recorded submission
             {% endif %}
           </div>
+        </div>
+        <div>
+          {% if submission %}
+            {% if submission['file'] %}
+              <a class="waves-effect waves-light" href="{{ submission['file'].get_url() }}">
+                {{submission['name']}} 
+                <i class="material-icons right">file_download</i>
+              </a>
+            {% else %}
+              <div class="row">
+                <div class="col s12" style="border:1px solid #000000;">
+                  {{ submission['text'] }}
+                </div>
+              </div>
+            {% endif %}
+          {% else %}
+            No recorded submission
+          {% endif %}
+        </div>
       </div>
     {% else %}
       <h5>Your Submission:</h5>

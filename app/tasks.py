@@ -25,7 +25,7 @@ import config
 tasks = Blueprint('tasks', __name__)
 
 
-@tasks.route('/view_task', methods=['GET'])
+@tasks.route('/view_task', methods=['GET', 'POST'])
 @at_least_role(UserRole.STUDENT)
 def view_task():
     user_type = session['acc_type']
@@ -239,7 +239,6 @@ def staff_view():
         for criteria in task_criteria:
             task_max.append(criteria[3])
 
-        print(submission)
         db.close()
         return render_template('task_base.html',
                                topic_request_text=config.TOPIC_REQUEST_TEXT,
