@@ -13,9 +13,9 @@
     <div>
       <b>Attachment:</b>
       {% if attachment %}
-        <a href="{{ attachment.get_url() }}">
-          {{ attachment.get_original_name() }} 
-          <!-- <i class="material-icons">file_download</i> if someone knows how to align it nicely-->
+        <a class="waves-effect waves-light" href="{{ attachment.get_url() }}">
+          {{attachment.get_original_name()}} 
+          <i class="material-icons right">file_download</i>
         </a>
       {% else %}
         No attachment
@@ -57,7 +57,7 @@
         <thead>
           <tr>
             <th style='width: 25%;'>Criteria</th>
-            {% if submission['text'] %}
+            {% if submission['markingMethod'] == 'approval' %}
               <th style='width: 10%;'>Approved</th>
             {% else %}
               <th style='width: 10%;'>Max Mark</th>
