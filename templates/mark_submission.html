@@ -113,10 +113,17 @@
                   </td>
                 {% endif %}
                 <td>
-                  <div>
-                    <textarea id="enteredFeedback" class="materialize-textarea"
-                              rows="5" style="overflow:auto; max-height: 5em;">{{markedFeedback[i][0][1]}}</textarea>
-                  </div>
+                  {% if markedFeedback[i][0][1] == None %}
+                    <div>
+                      <textarea id="enteredFeedback" class="materialize-textarea"
+                                rows="5" style="overflow:auto; max-height: 5em;" placeholder="Enter Feedback"></textarea>
+                    </div>
+                  {% else %}
+                    <div>
+                      <textarea id="enteredFeedback" class="materialize-textarea"
+                                rows="5" style="overflow:auto; max-height: 5em;">{{markedFeedback[i][0][1]}}</textarea>
+                    </div>
+                  {% endif %}
                 </td>
               {% endif %}
             </tr>
