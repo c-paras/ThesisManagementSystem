@@ -2,6 +2,35 @@ from app.db_manager import sqliteManager as db
 
 
 class queries:
+    def get_course_sessions(course_code):
+        res = db.custom_query("""SELECT sessions.year, sessions.term
+        FROM courses
+        INNER JOIN course_offerings AS co
+            ON co.course = courses.id
+        INNER JOIN sessions
+            ON sessions.id = co.session
+        WHERE courses.code = ?""", [course_code])
+        return [(r[0], r[1]) for r in res]
+
+    def get_session_ids_in_range(start, end):
+        res = db.custom_query("""SELECT id
+                                 FROM sessions
+                                 WHERE year >= ? AND year < ?""",
+                              [start, end])
+        return res
+
+    def get_terms_per_year(year):
+        res = db.custom_query("""
+                                 SELECT DISTINCT(term)
+                                 FROM sessions
+                                 WHERE year = ?""", [year])
+        return len(res)
+
+    def get_year_range():
+        res = db.custom_query("SELECT DISTINCT(year) FROM sessions")
+        years = [r[0] for r in res]
+        return (min(years), max(years))
+
     def get_tasks_accepted_files(topic_id):
         res = db.custom_query("""
                                  SELECT file_types.name FROM file_types
