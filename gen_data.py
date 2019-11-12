@@ -103,7 +103,7 @@ def gen_sessions():
                     datetime.datetime(year, 11, 30, 23, 59, 59).timestamp()
                     ])
 
-    for year in range(2019, 2021):
+    for year in range(2019, 2025):
         ret.append([year, 1,
                     datetime.datetime(year, 1, 1, 0, 0, 0).timestamp(),
                     datetime.datetime(year, 4, 30, 23, 59, 59).timestamp()
