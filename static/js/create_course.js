@@ -7,7 +7,7 @@ function createCourse() {
   const selectBox = M.FormSelect.getInstance(form.find('select[name=year]')[0]);
   // Can't use getSelectedValues() due to bug https://github.com/Dogfalo/materialize/issues/6123
   if(selectBox.el.selectedIndex === 0) {
-    flash('You need to select the year that the course is first offered', true);
+    flash('You need to select a year for the course offering', true);
     return;
   }
 

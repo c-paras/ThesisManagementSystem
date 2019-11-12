@@ -109,7 +109,6 @@ def manage_course_offerings():
 @manage_courses.route('/create_course', methods=['POST'])
 @at_least_role(UserRole.COURSE_ADMIN)
 def create_course():
-    print(request.form)
     db.connect()
     curr_year = datetime.now().year
     num_terms = queries.get_terms_per_year(curr_year)
@@ -138,11 +137,10 @@ def create_course():
         db.close()
         return error("Invalid course code")
 
-    _, db_end_year = queries.get_year_range()
-    course['start_year'] = int(res[3])
-    if curr_year > course['start_year']:
+    course['year'] = int(res[3])
+    if curr_year > course['year']:
         db.close()
-        return error(f"Year must be start on or after {db_end_year}")
+        return error(f"Year must start on or after {curr_year}")
 
     res = db.select_columns('courses', ['name'], ['name'], [course['title']])
     if res:
@@ -161,17 +159,16 @@ def create_course():
     course['id'] = res[0][0]
 
     query = []
-    for year in range(course['start_year'], db_end_year + 1):
-        for i in range(len(course['offerings'])):
-            if not course['offerings'][i]:
-                continue
-            res = db.select_columns('sessions', ['id'],
-                                    ['year', 'term'],
-                                    [year, i + 1])
-            session_id = res[0][0]
-            query.append(('course_offerings',
-                          [course['id'], session_id],
-                          ['course', 'session']))
+    for i in range(len(course['offerings'])):
+        if not course['offerings'][i]:
+            continue
+        res = db.select_columns('sessions', ['id'],
+                                ['year', 'term'],
+                                [course['year'], i + 1])
+        session_id = res[0][0]
+        query.append(('course_offerings',
+                      [course['id'], session_id],
+                      ['course', 'session']))
     db.insert_multiple(query)
     db.close()
     return jsonify({'status': 'ok'})
