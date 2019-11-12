@@ -1,5 +1,5 @@
 function createCourse() {
-  const form = $('#create-topic-form');
+  const form = $('#create-course-form');
   if(!formValid(form)) {
     return;
   }
@@ -27,7 +27,7 @@ function createCourse() {
       return;
     }
     flash('Created course');
-    $('#create-topic-modal').modal('close');
+    $('#create-course-modal').modal('close');
   });
 }
 
@@ -38,5 +38,5 @@ function openCreateCourseModal() {
     $(this).val('');
   });
 
-  $('#create-topic-modal').modal('open');
+  $('#create-course-modal').modal('open');
 }
