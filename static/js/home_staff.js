@@ -32,7 +32,44 @@ function openRequestModal(studentId, topicId) {
     $('#topic-name').text(res.topicName);
 
     const d = new Date(res.reqDate);
-    $('#date-requested').text(d.toLocaleDateString() + ' at ' + d.toLocaleTimeString());
+    var dif = new Date(new Date() - d)/1000;
+    var timeframe =" Seconds Ago";
+
+    if (dif > 60){
+      dif /= 60;
+      timeframe = " Minutes Ago";
+    }
+
+    if(dif > 60){
+      dif = dif/60;
+      timeframe = " Hours Ago";
+    }
+
+    if(dif > 24 && timeframe === " Hours Ago"){
+      dif /= 24;
+      timeframe = " Days Ago";
+    }
+    dif = Math.floor(dif);
+    const date = d.getDate();
+    const year = d.getFullYear();
+    var month = [];
+    month[0] = "Jan";
+    month[1] = "Feb";
+    month[2] = "Mar";
+    month[3] = "Apr";
+    month[4] = "May";
+    month[5] = "Jun";
+    month[6] = "Jul";
+    month[7] = "Aug";
+    month[8] = "Sep";
+    month[9] = "Oct";
+    month[10] = "Nov";
+    month[11] = "Dec";
+    month_code = month[d.getMonth()];
+    const date_string = (date + ' ' + month_code + ' ' + year);
+    $('#date-requested').attr('data-tooltip', date_string);
+    $('#date-requested').text(dif + timeframe);
+    $('.tooltipped').tooltip();
     toggleViewAssessor();
     const modal = M.Modal.getInstance($('#request-modal'));
     modal.open();

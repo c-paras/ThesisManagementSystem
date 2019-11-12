@@ -278,6 +278,16 @@ CREATE TABLE topic_requests(
 );
 
 
+DROP TABLE IF EXISTS update_account_types;
+CREATE TABLE update_account_types(
+    id           INTEGER NOT NULL PRIMARY KEY,
+    new_name     TEXT NOT NULL,
+    old_name     TEXT NOT NULL,
+    account_type INTEGER NOT NULL,
+    FOREIGN KEY(account_type) REFERENCES account_types(id)
+);
+
+
 DROP TABLE IF EXISTS users;
 CREATE TABLE users(
     id           INTEGER NOT NULL PRIMARY KEY,

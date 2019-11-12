@@ -14,9 +14,7 @@ from functools import wraps
 
 from app.db_manager import sqliteManager as db
 from app.file_upload import FileUpload
-from app.helpers import error
-from app.helpers import get_fields
-from app.helpers import send_email
+from app.helpers import error, get_fields, send_email
 from app.queries import queries
 
 import bcrypt
@@ -181,7 +179,7 @@ def confirm():
     db.connect()
 
     # get the user's confirm code & creation date
-    res = db.select_columns('users', ['confirm_code', 'date_created'],
+    res = db.select_columns('users', ['confirm_code', 'date_created', 'email'],
                             ['name'], [user])
 
     expired = False
@@ -193,7 +191,20 @@ def confirm():
               'You must register your account again.', 'error')
     if not expired and len(res) and confirm_code == res[0][0]:
         # clear confirm code to "mark" account as activated
-        db.update_rows('users', [''], ['confirm_code'], ['name'], [user])
+        res = db.select_columns(
+            'update_account_types',
+            ['id', 'new_name', 'account_type'],
+            ['email'], [res[0][2]]
+        )
+        if len(res) > 0:
+            db.update_rows(
+                'users', ['', res[0][1], res[0][2]],
+                ['confirm_code', 'name', 'account_type'],
+                ['name'], [user]
+            )
+            db.delete_rows('update_account_types', ['id'], [res[0][0]])
+        else:
+            db.update_rows('users', [''], ['confirm_code'], ['name'], [user])
         flash('Account activated! You can now log in.', 'success')
     db.close()
     return redirect(url_for('.login'))

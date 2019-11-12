@@ -12,6 +12,8 @@ from app.file_upload import FileUpload
 from app.helpers import error
 from app.helpers import get_fields
 from app.queries import queries
+from app.helpers import timestamp_to_string
+from app.update_accounts import update_from_file, update_account_type
 
 import json
 import re
@@ -29,23 +31,32 @@ def manage_course_offerings():
     data = {}
     if request.method == 'POST':
         data = json.loads(request.data)
-        if 'table' in data and data['table'] == 'materials':
-            db.connect()
-            db.update_rows(
-                'materials',
-                [data['type']], ['visible'],
-                ['id'], [data['id']]
-            )
-            db.close()
+        if 'file_url' in data:
+            update_from_file(data['file_url'])
 
-        if 'table' in data and data['table'] == 'tasks':
-            db.connect()
-            db.update_rows(
-                'tasks',
-                [data['type']], ['visible'],
-                ['id'], [data['id']]
-            )
-            db.close()
+        if 'table' in data:
+            if data['table'] == 'update_account_types':
+                update_account_type(
+                    data['email'], data['name'], data['account_type']
+                )
+
+            if data['table'] == 'materials':
+                db.connect()
+                db.update_rows(
+                    'materials',
+                    [data['type']], ['visible'],
+                    ['id'], [data['id']]
+                )
+                db.close()
+
+            if data['table'] == 'tasks':
+                db.connect()
+                db.update_rows(
+                    'tasks',
+                    [data['type']], ['visible'],
+                    ['id'], [data['id']]
+                )
+                db.close()
 
         if 'name' in data and data['name'] == 'courses':
             session['current_co'] = data['value']
@@ -83,8 +94,8 @@ def manage_course_offerings():
         )
         for x in attachments_query:
             attachments.append(FileUpload(filename=x[0]))
-        date = datetime.fromtimestamp(task[2])
-        print_date = date.strftime("%b %d %Y at %H:%M")
+
+        print_date = timestamp_to_string(task[2])
         tasks.append((task[0], task[1], print_date, attachments, task[3]))
     enrollments = []
     enrollments_query = queries.get_student_enrollments(co)

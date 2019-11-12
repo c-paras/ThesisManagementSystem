@@ -4,6 +4,7 @@ from flask import render_template
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
 from threading import Thread
+from datetime import datetime
 
 import re
 import smtplib
@@ -98,3 +99,13 @@ def do_email_send(to, msg):
     server.login(config.SYSTEM_EMAIL, config.SYSTEM_PASSWORD)
     server.sendmail(config.SYSTEM_EMAIL, to, msg.as_string())
     server.quit()
+
+
+def timestamp_to_string(timestamp, add_day=False):
+
+    date = datetime.fromtimestamp(timestamp)
+    if (add_day):
+        print_date = date.strftime("%A %d %b %Y at %H:%M")
+    else:
+        print_date = date.strftime("%d %b %Y at %H:%M")
+    return print_date
