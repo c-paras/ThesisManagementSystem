@@ -180,8 +180,10 @@ def confirm():
     db.connect()
 
     # get the user's confirm code & creation date
-    res = db.select_columns('users', ['confirm_code', 'date_created', 'email'],
-                            ['name'], [user])
+    res = db.select_columns(
+        'users', ['confirm_code', 'date_created', 'email', 'id'],
+        ['name'], [user]
+    )
 
     expired = False
     now = datetime.now().timestamp()
@@ -192,6 +194,7 @@ def confirm():
               'You must register your account again.', 'error')
     if not expired and len(res) and confirm_code == res[0][0]:
         # clear confirm code to "mark" account as activated
+        user_id = res[0][3]
         res = db.select_columns(
             'update_account_types',
             ['id', 'new_name', 'account_type', 'course_offering'],
@@ -206,12 +209,12 @@ def confirm():
             if res[0][3] is not None:
                 account_types = get_all_account_types()
                 course_role = 'staff'
-                if account_types['student'] == account_type:
+                if account_types['student'] == res[0][2]:
                     course_role = 'student'
                 course_role_id = db.select_columns(
                     'course_roles', ['id'], ['name'], [course_role]
                 )
-                enroll_user(res[0][0], res[0][3], course_role_id[0][0])
+                enroll_user(user_id, res[0][3], course_role_id[0][0])
             db.delete_rows('update_account_types', ['id'], [res[0][0]])
         else:
             db.update_rows('users', [''], ['confirm_code'], ['name'], [user])
