@@ -27,7 +27,11 @@ function createCourse() {
       return;
     }
     flash('Created course');
-    $('#create-course-modal').modal('close');
+    if(location.href.includes('manage_courses')) {
+      location.reload();
+    } else {
+      $('#create-course-modal').modal('close');
+    }
   });
 }
 
