@@ -9,8 +9,8 @@ from app.auth import at_least_role
 from app.auth import UserRole
 from app.db_manager import sqliteManager as db
 from app.file_upload import FileUpload
-from app.helpers import get_fields
 from app.helpers import error
+from app.helpers import get_fields
 from app.queries import queries
 
 import json
@@ -94,6 +94,12 @@ def manage_course_offerings():
             enrollments.append((student[1], zid, student[2], student[3]))
         else:
             enrollments.append((student[1], zid, student[2], 'No topic'))
+
+    # for material file upload
+    file_types = db.select_columns('file_types', ['name'])
+    file_types = list(map(lambda x: x[0], file_types))
+    allowed_file_types = ','.join(file_types)
+
     db.close()
     return render_template(
         'manage_courses.html',
@@ -103,7 +109,69 @@ def manage_course_offerings():
         tasks=tasks,
         enrollments=enrollments,
         courses=courses,
-        default_co=co)
+        default_co=co,
+        max_file_size=config.MAX_FILE_SIZE,
+        accepted_files=allowed_file_types)
+
+
+@manage_courses.route('/upload_material', methods=['POST'])
+@at_least_role(UserRole.COURSE_ADMIN)
+def upload_material():
+    try:
+        fields = ['file-label', 'file-name', 'course-offering']
+        file_label, file_name, course_offering = get_fields(
+            request.form, fields, ints=['course-offering'])
+    except ValueError as e:
+        return e.args[0]
+    db.connect()
+
+    # check if course offering is valid
+    res = db.select_columns('course_offerings', ['id'],
+                            ['id'], [course_offering])
+    if not len(res):
+        db.close()
+        return error('Cannot attach material to unknown course offering')
+
+    # check if material with same label exists in course
+    res = db.select_columns('materials', ['id'],
+                            ['name', 'course_offering'],
+                            [file_label, course_offering])
+    if len(res):
+        db.close()
+        return error('An item with that label already exists in this course')
+
+    # otherwise, we can insert the material into the course
+    try:
+        sent_file = FileUpload(req=request)
+    except KeyError:
+        db.close()
+        return error('Could not find a file to upload')
+    res = db.select_columns('file_types', ['name'])
+    file_types = list(map(lambda x: x[0], res))
+    if sent_file.get_extention() not in file_types:
+        db.close()
+        accept_files = ', '.join(file_types)
+        return error(f'Accepted file types are: {accept_files}')
+    if sent_file.get_size() > config.MAX_FILE_SIZE:
+        sent_file.remove_file()
+        db.close()
+        return error(
+            f'File exceeds the maximum size of {config.MAX_FILE_SIZE} MB'
+        )
+    sent_file.commit()
+
+    # add material and file path to db
+    db.insert_single('materials',
+                     [course_offering, file_label, 0],
+                     ['course_offering', 'name', 'visible'])
+    res = db.select_columns('materials', ['id'],
+                            ['name', 'course_offering'],
+                            [file_label, course_offering])
+    db.insert_single('material_attachments',
+                     [res[0][0], sent_file.get_name()],
+                     ['material', 'path'])
+    db.close()
+    return jsonify({'status': 'ok'})
 
 
 @manage_courses.route('/create_course', methods=['POST'])
