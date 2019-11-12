@@ -83,6 +83,7 @@ def allowed_file_access(filename):
     # students should only have access to files they have submitted
     # or files in tasks within courses they are part of
     # or material files within courses they are part of
+    # as long as the task and/or material is marked as visible
 
     try:
         name = FileUpload(filename=filename).get_name()

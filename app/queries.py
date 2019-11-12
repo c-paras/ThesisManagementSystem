@@ -378,7 +378,8 @@ class queries:
             WHERE task IN (
                 SELECT id
                 FROM tasks
-                WHERE course_offering IN (
+                WHERE visible = 1
+                AND course_offering IN (
                     SELECT course_offering
                     FROM enrollments
                     WHERE user = {user_id}
@@ -394,7 +395,8 @@ class queries:
             WHERE material IN (
                 SELECT id
                 FROM materials
-                WHERE course_offering IN (
+                WHERE visible = 1
+                AND course_offering IN (
                     SELECT course_offering
                     FROM enrollments
                     WHERE user = {user_id}
