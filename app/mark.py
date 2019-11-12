@@ -51,15 +51,19 @@ def mark_submission():
                                             ['id'], [student_id])
 
         student_email = student_details[0][1].split('@')[0]
-        res = db.select_columns('submissions', ['name', 'path'],
+        res = db.select_columns('submissions', ['name', 'path', 'text'],
                                 ['student', 'task'],
                                 [student_id, task_id])
         submission = {}
         # Account for no submission and a text based submission (no path)
         if res:
+            print(res)
             submission['name'] = res[0][0]
-            if res[0][1]:
+            if res[0][1] is not None:
                 submission['file'] = FileUpload(filename=res[0][1])
+            else:
+                submission['text'] = res[0][2]
+                submission['status'] = get_sub_status(student_id, task_id)
 
         marked_feedback = []
         for criteria in task_criteria:
@@ -101,6 +105,17 @@ def mark_submission():
     studentId = data['studentId']
     task_criteria = data['taskCriteria']
     task_max = data['taskMax']
+
+    try:
+        check = data['approveCheck']
+        print(check)
+        print(marks)
+        marks = [100]
+
+        if feedback[0] == '':
+            feedback = [None]
+    except KeyError:
+        pass
 
     for i in range(len(marks)):
         try:
@@ -146,3 +161,22 @@ def mark_submission():
 
     db.close()
     return jsonify({'status': 'ok'})
+
+
+def get_sub_status(user, task):
+    status = 'not submitted'
+    submission = db.select_columns(
+        'submissions',
+        ['status'],
+        ['student', 'task'],
+        [user, task]
+    )
+    if len(submission) > 0:
+        status_name = db.select_columns(
+            'request_statuses',
+            ['name'],
+            ['id'],
+            [submission[0][0]]
+        )
+        status = status_name[0][0]
+    return status

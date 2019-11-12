@@ -618,7 +618,7 @@ def gen_submissions():
                 queries.append((
                     'submissions',
                     [student[0], task[0], 'smiley',
-                     str(stem), 'ez', now,
+                     None, 'ez', now,
                      request_types['approved']]
                 ))
             else:
