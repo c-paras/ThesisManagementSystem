@@ -141,26 +141,18 @@ def create_course():
     _, db_end_year = queries.get_year_range()
     course['start_year'] = int(res[3])
     if curr_year > course['start_year']:
-        return jsonify({
-            'status': 'fail',
-            'message': f'Year must be start on or after {db_end_year}'
-        })
+        db.close()
+        return error(f"Year must be start on or after {db_end_year}")
 
     res = db.select_columns('courses', ['name'], ['name'], [course['title']])
     if res:
         db.close()
-        return jsonify({
-            'status': 'fail',
-            'message': f"Course with name {course['title']} already exists"
-        })
+        return error(f"Course with name {course['title']} already exists")
 
     res = db.select_columns('courses', ['code'], ['code'], [course['code']])
     if res:
         db.close()
-        return jsonify({
-            'status': 'fail',
-            'message': f"Course with code {course['code']} already exists"
-        })
+        return error(f"Course with code {course['code']} already exists")
 
     db.insert_single('courses',
                      [course['code'], course['title'], course['description']],
