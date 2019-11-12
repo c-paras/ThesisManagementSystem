@@ -142,15 +142,20 @@ def create_course():
         db.close()
         return error(f"Year must start on or after {curr_year}")
 
-    res = db.select_columns('courses', ['name'], ['name'], [course['title']])
-    if res:
-        db.close()
-        return error(f"Course with name {course['title']} already exists")
+    res = db.select_columns('courses', ['id'], ['code'], [course['code']])
+    course_ids = [r[0] for r in res]
 
-    res = db.select_columns('courses', ['code'], ['code'], [course['code']])
-    if res:
-        db.close()
-        return error(f"Course with code {course['code']} already exists")
+    res = db.select_columns('sessions', ['id'], ['year'], [course['year']])
+    session_ids = [r[0] for r in res]
+    for course_id in course_ids:
+        for session_id in session_ids:
+            res = db.select_columns('course_offerings', ['id'],
+                                    ['course', 'session'],
+                                    [course_id, session_id])
+            if res:
+                db.close()
+                err = f"{course['code']} already offered in {course['year']}"
+                return error(err)
 
     db.insert_single('courses',
                      [course['code'], course['title'], course['description']],
