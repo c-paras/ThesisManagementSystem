@@ -17,7 +17,6 @@
               <th>View</th>
             </tr>
           </thead>
-
           <!-- Table body -->
           <tbody>
             {% for submission in submissions %}
@@ -26,13 +25,9 @@
                 <td class="center-align">{{ submission[1] }}</td>
                 <td class="center-align">{{ submission[2] }}</td>
                 <td class="center-align">
-                  {% if submission[3] %}
-                    <a href="{{ submission[3] }}">
-                      <i class="Small material-icons teal-text">pageview</i>
-                    </a>
-                  {% else %}
-                    Text submission
-                  {% endif %}
+                  <a href="{{ url_for('mark.mark_submission', task=submission[4], student=submission[5]) }}">
+                    <i class="Small material-icons teal-text">pageview</i>
+                  </a>
                 </td>
               </tr>
             {% endfor %}
