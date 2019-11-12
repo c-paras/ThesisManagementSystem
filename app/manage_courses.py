@@ -208,7 +208,7 @@ def create_course():
     course['year'] = int(res[3])
     if curr_year > course['year']:
         db.close()
-        return error(f"Year must start on or after {curr_year}")
+        return error(f"Year must be at least {curr_year}")
 
     sessions = queries.get_course_sessions(course['code'])
     sessions = filter(lambda s: s[0] == course['year'], sessions)
