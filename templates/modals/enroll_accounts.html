@@ -1,0 +1,60 @@
+<div id="enroll-account-modal" class="modal">
+  <div class="modal-content">
+
+    <!-- Modal heading -->
+    <div class="row">
+      <div class="col s10 offset-s1">
+        <h4 class="teal-text center">Enroll a user</h4>
+      </div>
+    </div>
+
+    <!-- Modal body -->
+    <div class="row">
+      <form class="col s8 offset-s2 modal-form" id="enroll-account-form" name="enroll-account-form">
+        <div class="input-field">
+          Select enrollment type:
+          <select
+            id="account_type" name="account_type" class="validate"
+            required="" aria-required="true"
+          >
+            {% for type in account_types %}
+              <option value="{{ type[1] }}">{{ type[0] }}</option>
+            {% endfor %}
+          </select>
+          <span class="helper-text" data-error="type is required"></span>
+          <input
+            type="text" name="email" id="email" placeholder="Enter a users email"
+            class="validate" required="" aria-required="true"
+          >
+          <span class="helper-text" data-error="Email is required"></span>
+          <input
+            type="text" name="name" id="name" placeholder="Enter a name"
+            class="validate" required="" aria-required="true"
+          >
+          <span class="helper-text" data-error="Name is required"></span>
+          <input
+            type="hidden" name="table" id="table" value="update_account_types"
+            class="validate" required="" aria-required="true"
+          >
+        </div>
+      </form>
+    </div>
+
+    <!-- Cancel and confirm buttons -->
+    <div class="row">
+      <div class="center">
+        <a href="#!" id="btn-cancel" class="modal-action modal-close waves-effect waves-red red btn">
+          Cancel
+        </a>
+        <a
+          href="#!" id="btn-request" onclick="enrollUser()"
+          class="modal-action waves-effect waves-teal teal btn"
+        >
+          Enroll
+        </a>
+        {{ upload_spinner(id='upload-spinner') }}
+      </div>
+    </div>
+
+  </div>
+</div>

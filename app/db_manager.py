@@ -65,6 +65,7 @@ class sqliteManager:
     # table = string, all others are lists
 
     def insert_single(table, values, columns):
+        print(table, values, columns)
         placeholder = ','.join('?' * len(values))
         if columns is None:
             res = sqliteManager.conn.execute(

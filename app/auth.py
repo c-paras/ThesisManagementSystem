@@ -16,6 +16,7 @@ from app.db_manager import sqliteManager as db
 from app.file_upload import FileUpload
 from app.helpers import error, get_fields, send_email
 from app.queries import queries
+from app.update_accounts import enroll_user, get_all_account_types
 
 import bcrypt
 import re
@@ -193,7 +194,7 @@ def confirm():
         # clear confirm code to "mark" account as activated
         res = db.select_columns(
             'update_account_types',
-            ['id', 'new_name', 'account_type'],
+            ['id', 'new_name', 'account_type', 'course_offering'],
             ['email'], [res[0][2]]
         )
         if len(res) > 0:
@@ -202,6 +203,15 @@ def confirm():
                 ['confirm_code', 'name', 'account_type'],
                 ['name'], [user]
             )
+            if res[0][3] is not None:
+                account_types = get_all_account_types()
+                course_role = 'staff'
+                if account_types['student'] == account_type:
+                    course_role = 'student'
+                course_role_id = db.select_columns(
+                    'course_roles', ['id'], ['name'], [course_role]
+                )
+                enroll_user(res[0][0], res[0][3], course_role_id[0][0])
             db.delete_rows('update_account_types', ['id'], [res[0][0]])
         else:
             db.update_rows('users', [''], ['confirm_code'], ['name'], [user])

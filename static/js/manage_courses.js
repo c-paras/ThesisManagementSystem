@@ -49,3 +49,25 @@ function updateTask(task_id, checkbox_id) {
   data = {'table': 'tasks', 'id': task_id, 'type': type};
   makeChange(data, type, checkbox_id);
 }
+
+function enrollUser() {
+  const form = $('#enroll-account-form');
+  if (!formValid(form)) {
+    return;
+  }
+  data = form.serializeArray();
+  var form_dict = {
+    account_type: data[0].value,
+    email: data[1].value,
+    name: data[2].value,
+    table: data[3].value
+  };
+  makePOSTRequest('/manage_courses', form_dict, (res) => {
+    if (res.status === 'fail') {
+      flash(res.message, error = true);
+    } else {
+      delayToast('User enrolled', false);
+      window.location.href = '/manage_courses';
+    }
+  });
+}

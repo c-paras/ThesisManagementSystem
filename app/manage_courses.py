@@ -13,7 +13,8 @@ from app.helpers import error
 from app.helpers import get_fields
 from app.queries import queries
 from app.helpers import timestamp_to_string
-from app.update_accounts import update_from_file, update_account_type
+from app.update_accounts import update_from_file, update_account_type,
+from app.update_accounts import get_all_account_types
 
 import json
 import re
@@ -31,14 +32,21 @@ def manage_course_offerings():
     data = {}
     if request.method == 'POST':
         data = json.loads(request.data)
+
         if 'file_url' in data:
-            update_from_file(data['file_url'])
+            # might need to do file stuff here
+            db.connect()
+            update_from_file(data['file_url'], session['current_co'])
+            db.close()
 
         if 'table' in data:
             if data['table'] == 'update_account_types':
+                db.connect()
                 update_account_type(
-                    data['email'], data['name'], data['account_type']
+                    data['email'], data['name'],
+                    data['account_type'], session['current_co']
                 )
+                db.close()
 
             if data['table'] == 'materials':
                 db.connect()
@@ -110,7 +118,11 @@ def manage_course_offerings():
     file_types = db.select_columns('file_types', ['name'])
     file_types = list(map(lambda x: x[0], file_types))
     allowed_file_types = ','.join(file_types)
-
+    account_types = get_all_account_types()
+    accepted_account_types = [
+        ('student', account_types['student']),
+        ('admin', account_types['course_admin'])
+    ]
     db.close()
     return render_template(
         'manage_courses.html',
@@ -122,7 +134,9 @@ def manage_course_offerings():
         courses=courses,
         default_co=co,
         max_file_size=config.MAX_FILE_SIZE,
-        accepted_files=allowed_file_types)
+        accepted_files=allowed_file_types,
+        account_types=accepted_account_types
+    )
 
 
 @manage_courses.route('/upload_material', methods=['POST'])

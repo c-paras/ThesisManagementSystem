@@ -222,7 +222,8 @@
         {% endif %}
       </div>
       <a
-        class="waves-effect waves-light btn" id="enroll-btn" name="enroll-btn" href="#!"
+        class="waves-effect waves-light btn modal-trigger" id="add-material-btn" name="add-material-btn"
+        href="#enroll-account-modal" style="float: left;"
       >
         Enroll Students
         <i class="material-icons right">group_add</i>
@@ -238,6 +239,7 @@
     <!-- Add material modal -->
     {% include "modals/add_material.html" %}
     <script type="text/javascript" src="{{ url_for('static', filename='js/material.js') }}" defer></script>
+    {% include "modals/enroll_accounts.html" %}
 
   </div>
 {% endblock %}
