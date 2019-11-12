@@ -2,6 +2,13 @@ from app.db_manager import sqliteManager as db
 
 
 class queries:
+    def get_session_ids_in_range(start, end):
+        res = db.custom_query("""SELECT id
+                                 FROM sessions
+                                 WHERE year >= ? AND year < ?""",
+                              [start, end])
+        return res
+
     def get_terms_per_year(year):
         res = db.custom_query("""
                                  SELECT DISTINCT(term)

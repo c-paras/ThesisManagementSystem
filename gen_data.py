@@ -143,7 +143,6 @@ def gen_courses():
 
 def gen_course_offering():
     with open('db/courses.json') as f:
-        query = []
         for c in json.load(f):
             res = db.select_columns('courses', ['id'],
                                     ['code'], [c['code']])
@@ -164,12 +163,7 @@ def gen_course_offering():
 
             else:
                 # create offering for thesis A/B/C in years after 2018
-                session_ids = db.select_columns_operator('sessions',
-                                                         ['id'],
-                                                         ['year'],
-                                                         ['2019'],
-                                                         '>=')
-
+                session_ids = db_queries.get_session_ids_in_range(2019, 2021)
                 for session_id in session_ids:
                     db.insert_single('course_offerings',
                                      [course_id, session_id[0]],
