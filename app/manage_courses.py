@@ -13,7 +13,7 @@ from app.helpers import error
 from app.helpers import get_fields
 from app.queries import queries
 from app.helpers import timestamp_to_string
-from app.update_accounts import update_from_file, update_account_type,
+from app.update_accounts import update_from_file, update_account_type
 from app.update_accounts import get_all_account_types
 
 import json
