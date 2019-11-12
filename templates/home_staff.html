@@ -9,14 +9,14 @@
     <div class="section col s12">
       <h5>Topic Requests:</h5>
       {% if curr_requests|length %}
-        <table class="striped centered responsive-table" style="margin-bottom: 10px;">
+        <table class="striped centered responsive-table js-sort-table" style="margin-bottom: 10px;">
 
           <!-- Table header -->
           <thead>
             <tr>
-              <th>Name</th>
-              <th>zID</th>
-              <th>Topic</th>
+              <th class="sortable">Name</th>
+              <th class="sortable">zID</th>
+              <th class="sortable">Topic</th>
               <th>Review</th>
             </tr>
           </thead>

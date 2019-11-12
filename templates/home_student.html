@@ -7,7 +7,7 @@
     <div class="section col s12">
       <h5>Materials:</h5>
       {% if materials|length %}
-        <table class="striped centered responsive-table">
+        <table class="striped centered responsive-table js-sort-table">
           <colgroup>
             <col span="1" style="width: 50%;">
             <col span="1" style="width: 50%;">
@@ -16,8 +16,8 @@
           <!-- Table header -->
           <thead>
             <tr>
-              <th>Name</th>
-              <th>File</th>
+              <th class="sortable">Name</th>
+              <th class="sortable">File</th>
             </tr>
           </thead>
 
@@ -46,7 +46,7 @@
     <div class="section col s12">
       <h5>Assessments:</h5>
       {% if tasks|length %}
-        <table class="striped centered responsive-table">
+        <table class="striped centered responsive-table js-sort-table">
           <colgroup>
             <col span="1" style="width: 15%;">
             <col span="1" style="width: 25%;">
@@ -59,11 +59,11 @@
           <!-- Table header -->
           <thead>
             <tr>
-              <th>Course</th>
-              <th>Task</th>
-              <th>Status</th>
-              <th>Supervisor Result</th>
-              <th>Assessor Result</th>
+              <th class="sortable">Course</th>
+              <th class="sortable">Task</th>
+              <th class="sortable">Status</th>
+              <th class="sortable">Supervisor Result</th>
+              <th class="sortable">Assessor Result</th>
               <th>View Task</th>
             </tr>
           </thead>
