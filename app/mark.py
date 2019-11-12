@@ -63,7 +63,13 @@ def mark_submission():
                 submission['file'] = FileUpload(filename=res[0][1])
             else:
                 submission['text'] = res[0][2]
-                submission['status'] = get_sub_status(student_id, task_id)
+                status = db.select_columns('submissions', ['status'],
+                                           ['student', 'task'],
+                                           [student_id, task_id])[0][0]
+                submission['status'] = db.select_columns('request_statuses',
+                                                         ['name'], ['id'],
+                                                         [status])[0][0]
+                print(submission['status'])
 
         marked_feedback = []
         for criteria in task_criteria:
@@ -106,14 +112,33 @@ def mark_submission():
     task_criteria = data['taskCriteria']
     task_max = data['taskMax']
 
+    db.connect()
     try:
         check = data['approveCheck']
+        if (not check):
+            print('not checked')
+            res = db.select_columns('request_statuses',
+                                    ['id'], ['name'], ['pending'])
+            print(res)
+            db.update_rows('submissions', [res[0][0]],
+                           ['status'],
+                           ['student', 'task'],
+                           [studentId, task_id])
+        else:
+            res = db.select_columns('request_statuses',
+                                    ['id'], ['name'], ['approved'])
+            db.update_rows('submissions', [res[0][0]],
+                           ['status'],
+                           ['student', 'task'],
+                           [studentId, task_id])
+
         print(check)
         print(marks)
         marks = [100]
 
         if feedback[0] == '':
             feedback = [None]
+
     except KeyError:
         pass
 
@@ -139,7 +164,6 @@ def mark_submission():
             return jsonify({'status': 'fail',
                             'message': 'Please enter some feedback'})
 
-    db.connect()
     for i in range(len(marks)):
         try:
             db.insert_single(
