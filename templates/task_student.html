@@ -3,45 +3,43 @@
 {% from "macros.html" import upload_spinner, file_upload %}
 
 {% block body %}
-  <div class="row">
-
-    <!-- Show student their current materials for their corses -->
-    <div class="section col s12">
-      <h5>Task Details:</h5>
-      <div class="col s12">
-        <div class="col s12">
-          <b>Deadline:</b> {{ deadline_text }}
-        </div>
-        <div class="col s12">
-          <b>Description:</b> {{ description }}
-        </div>
-        <div class="col s12">
-          <b>Attachments:</b>
-          {% if not attachments|length %}
-            No attachments
-          {% else %}
-            {% for a in attachments %}
-              <div class="col s12">
-                <a href="{{ a.get_url() }}" download="{{ a.get_original_name() }}">{{ a.get_original_name() }}</a>
-              </div>
-            {% endfor %}
-          {% endif %}
-        </div>
-        <div class="col s12">
-          &nbsp; <br />
-          &nbsp;
-        </div>
+  <!-- Show student their current materials for their corses -->
+  <div class="section row">
+    <h5>Task Details:</h5>
+    <div class="col 12">
+      <div>
+        <b>Deadline:</b> {{ deadline_text }}
       </div>
+      <br>
+      <div>
+        <b>Description:</b> {{ description }}<br/>
+      </div>
+      <br>
+      <div>
+        <b>Attachment:</b>
+        {% if not attachments|length %}
+          No attachments
+        {% else %}
+          {% for a in attachments %}
+            <div>
+              <a href="{{ a.get_url() }}" download="{{ a.get_original_name() }}">{{ a.get_original_name() }}</a>
+            </div>
+          {% endfor %}
+        {% endif %}
+      </div>
+      <br>
     </div>
+  </div>
+  <hr/>
 
-    <!-- Give the student the ability to submit text/afile -->
-    <div class="section col s12">
-      <hr/>
-      <h5>Your Submission:</h5>
+  <!-- Give the student the ability to submit text/afile -->
+  <div class="section row">
+    <h5>Your Submission:</h5>
+    <div class="col s12">
       {% if not can_submit %}
         <div class="row" >
-          <div class="col s12">
-            <h6>Submissions Closed</h6>
+          <div class="col s2 offset-s5 amber darken-4 center-align">
+            <span class="white-text" style="line-height: 2em;">Submissions Closed</span>
           </div>
         </div>
       {% endif %}
@@ -52,12 +50,12 @@
           {% if prev_submission %}
             {{ prev_submission['modify_date'].strftime('%A %d/%m/%Y at %I:%M:%S %p') }}
           {% else %}
-            <b>No recoreded submission</b>
+            No recorded submission
           {% endif %}
         </div>
       </div>
 
-      <div class="col s12">
+      <div class="row">
         <div class="col s12">
           {% if text_info|length %}
             {% include "task_submit_text.html" %}
@@ -65,77 +63,98 @@
             {% include "task_submit_file.html" %}
           {% endif %}
         </div>
-        <div class="col s12">
-          &nbsp; <br />
-          &nbsp;
-        </div>
       </div>
     </div>
+  </div>
+  <hr/>
 
+
+  <div class="section row">
     <!-- Show student their current assessments for their corses -->
-    <div class="section col s12">
-      <hr/>
-      {% if is_approval %}
-        <h5>Approval:</h5>
-      {% else %}
-        <h5>Marking:</h5>
-      {% endif %}
-      <div class="col s12">
-        {% if not prev_submission %}
-          <p>Awaiting Submission.</p>
-        {% elif is_approval %}
-          <p>{{ mark_details["Approval"] }}</p>
-        {% else %}
-          {% for staff_type in ["Supervisor", "Assessor"] %}
+    {% if is_approval %}
+      <h5>Approval:</h5>
+    {% else %}
+      <h5>Marking:</h5>
+    {% endif %}
+    <div class="col s12">
+      {% if awaiting_marks %}
+        {% for staff_type in ["Supervisor"] %}
+          <div class="row">
             <div class="col s12">
-              <h6>{{ staff_type }}:</h6>
+              {% if mark_details[staff_type]|length %}
+                <table class="striped centered responsive-table">
 
-              <div class="col s12">
-                {% if not mark_details[staff_type]|length %}
-                  <!-- Student has no staff member assigned -->
-                  {% if staff_type|first in 'AEIOU' %}
-                    <p>You have not been assigned an {{ staff_type|lower }} yet.</p>
-                  {% else %}
-                    <p>You have not been assigned a {{ staff_type|lower }} yet.</p>
-                  {% endif %}
-                {% else %}
-                  <table class="highlight responsive-table">
+                  <!-- Table header -->
+                  <thead>
+                    <tr>
+                      <th>Criteria</th>
+                      <th class="center-align">Mark</th>
+                    </tr>
+                  </thead>
 
-                    <!-- Table header -->
-                    <thead>
+                  <!-- Table body, should be replaced with a loop when actually connected to database -->
+                  <tbody>
+                    {% for item in mark_details[staff_type] %}
                       <tr>
-                        <th>Criteria</th>
-                        <th class="center-align">Mark</th>
-                        <th>Feedback</th>
+                        <td>{{item[0]}}</td>
+                        <td class="center-align">{{item[2]}}</td>
                       </tr>
-                    </thead>
+                    {% endfor %}
+                  </tbody>
 
-                    <!-- Table body, should be replaced with a loop when actually connected to database -->
-                    <tbody>
-                      {% for item in mark_details[staff_type] %}
-                        <tr>
-                          <td>{{item[0]}}</td>
-                          <td class="center-align">{{item[1]}}/{{item[2]}}</td>
-                          {% if item[1] == '-' %}
-                            <td><i>{{item[3]}}</i></td>
-                          {% else %}
-                            <td>{{item[3]}}</td>
-                          {% endif %}
-                        </tr>
-                      {% endfor %}
-                    </tbody>
-
-                  </table>
-                {% endif %}
-              </div>
+                </table>
+              {% endif %}
             </div>
+          </div>
+        {% endfor %}
+      {% elif is_approval %}
+        <p>{{ mark_details["Approval"] }}</p>
+      {% else %}
+        {% for staff_type in ["Supervisor", "Assessor"] %}
+          <div class="row">
+            <h6>{{ staff_type }}:</h6>
+
             <div class="col s12">
-              &nbsp; <br />
-              &nbsp;
+              {% if not mark_details[staff_type]|length %}
+                <!-- Student has no staff member assigned -->
+                {% if staff_type|first in 'AEIOU' %}
+                  <p>You have not been assigned an {{ staff_type|lower }} yet.</p>
+                {% else %}
+                  <p>You have not been assigned a {{ staff_type|lower }} yet.</p>
+                {% endif %}
+              {% else %}
+                <table class="striped centered responsive-table">
+
+                  <!-- Table header -->
+                  <thead>
+                    <tr>
+                      <th>Criteria</th>
+                      <th class="center-align">Mark</th>
+                      <th>Feedback</th>
+                    </tr>
+                  </thead>
+
+                  <!-- Table body, should be replaced with a loop when actually connected to database -->
+                  <tbody>
+                    {% for item in mark_details[staff_type] %}
+                      <tr>
+                        <td>{{item[0]}}</td>
+                        <td class="center-align">{{item[1]}}/{{item[2]}}</td>
+                        {% if item[1] == '-' %}
+                          <td><i>{{item[3]}}</i></td>
+                        {% else %}
+                          <td>{{item[3]}}</td>
+                        {% endif %}
+                      </tr>
+                    {% endfor %}
+                  </tbody>
+
+                </table>
+              {% endif %}
             </div>
-          {% endfor %}
-        {% endif %}
-      </div>
+          </div>
+        {% endfor %}
+      {% endif %}
     </div>
   </div>
 {% endblock %}

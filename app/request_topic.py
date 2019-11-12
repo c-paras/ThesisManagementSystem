@@ -74,10 +74,10 @@ def request_new_topic():
 
 
 @request_topic.route('/lookup_request', methods=['POST'])
-@at_least_role(UserRole.STUDENT)
+@at_least_role(UserRole.STAFF)
 def lookup_request():
     data = json.loads(request.data)
-    if session['acc_type'] == 'student' and\
+    if session['acc_type'] == 'student' and \
        session['id'] != data['student_id']:
         return error('Lookup failure')
 

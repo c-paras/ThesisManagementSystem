@@ -4,17 +4,18 @@ from flask import request
 from flask import session
 from flask import jsonify
 
-import re
-import json
 from datetime import datetime
-import calendar
-import sqlite3
 
-from app.auth import UserRole
 from app.auth import at_least_role
+from app.auth import UserRole
 from app.db_manager import sqliteManager as db
+from app.file_upload import FileUpload
 from app.queries import queries
 from app.helpers import send_email
+
+import calendar
+import json
+import sqlite3
 
 import config
 
@@ -38,7 +39,11 @@ def mark_submission():
 
         deadline_text = weekday + " " + due_date.strftime(time_format)
 
-        material = queries.get_material_and_attachment(task_id)
+        res = queries.get_material_and_attachment(task_id)
+        attachment = None
+        if res:
+            attachment = FileUpload(filename=res[0][0])
+
         task_criteria = db.select_columns('task_criteria',
                                           ['id', 'task', 'name', 'max_mark'],
                                           ['task'], [task_id])
@@ -46,9 +51,15 @@ def mark_submission():
                                             ['id'], [student_id])
 
         student_email = student_details[0][1].split('@')[0]
-        submission = db.select_columns('submissions', ['name', 'path'],
-                                       ['student', 'task'],
-                                       [student_id, task_id])
+        res = db.select_columns('submissions', ['name', 'path'],
+                                ['student', 'task'],
+                                [student_id, task_id])
+        submission = {}
+        # Account for no submission and a text based submission (no path)
+        if res:
+            submission['name'] = res[0][0]
+            if res[0][1]:
+                submission['file'] = FileUpload(filename=res[0][1])
 
         marked_feedback = []
         for criteria in task_criteria:
@@ -69,15 +80,15 @@ def mark_submission():
         db.close()
         return render_template('mark_submission.html',
                                topic_request_text=config.TOPIC_REQUEST_TEXT,
-                               heading='Mark Submission',
-                               title='Mark Submission',
+                               heading=task_info[0] + " - " + task_info[1],
+                               title=task_info[1],
                                deadline=deadline_text,
                                description=task_info[3],
-                               criteria=material[0][0],
+                               attachment=attachment,
                                taskCriteria=task_criteria,
                                studentName=student_details[0][0],
                                studentEmail=student_email,
-                               submission=submission[0],
+                               submission=submission,
                                studentId=student_id,
                                taskCriteriaId=task_criteria_id,
                                taskMax=task_max,

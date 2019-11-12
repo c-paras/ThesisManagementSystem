@@ -4,7 +4,7 @@
 
     <!-- Modal heading -->
     <div class="row">
-      <div class="col s12">
+      <div class="col s10 offset-s1">
         <h4 class="teal-text center">Accept or Reject Topic</h4>
       </div>
     </div>
@@ -15,11 +15,16 @@
         <div class="row center">
           <div class="col s10 offset-s1">
             <p>
-              <span>Topic: </span><em><span id="topic-name"></span></em>
+              Topic:
+              <em>
+                <span id="topic-name"></span>
+              </em>
             </p>
-            <span>Student: </span><span id="student-name"></span>
+            Student:
+            <span id="student-name"></span>
             <br>
-            <span>Requested: </span><span id="date-requested"></span>
+            Requested:
+            <span id="date-requested"></span>
           </div>
           <p></p>
         </div>
@@ -47,9 +52,8 @@
             <select id="assessor-select" name="assessor" class="contacts-collection">
               <option value="-1" disabled selected>Assessor</option>
               {% for assessor in assessors %}
-                <option value="{{ assessor['id'] }}">
-                  {{ assessor['name'] }} ({{ assessor['email'].split('@')[0] }})
-                </option>
+                {% set display_name = assessor['name'] + ' (' + assessor['email'].split('@')[0] + ')' %}
+                <option value="{{ assessor['id'] }}">{{ display_name }}</option>
               {% endfor %}
             </select>
             <label>Choose an Assessor</label>

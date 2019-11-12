@@ -89,7 +89,7 @@ function searchResults() {
       }));
 
       if (res.topics.length > 0) {
-        $('#search-title').html('Search Results (found ' + res.topics.length + ' matching topics)');
+        $('#search-title').html('Search Results (found ' + res.topics.length + ' matching topics):');
       } else {
         $('#search-title').html('Your search returned no matching topics');
       }

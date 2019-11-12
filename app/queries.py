@@ -378,11 +378,29 @@ class queries:
             WHERE task IN (
                 SELECT id
                 FROM tasks
-                WHERE course_offering IN (
+                WHERE visible = 1
+                AND course_offering IN (
                     SELECT course_offering
                     FROM enrollments
                     WHERE user = {user_id}
                 )
             );'''.format(user_id=user_id)
         )
-        return res
+        return list(map(lambda x: x[0], res))
+
+    def get_allowed_material_attachments(user_id):
+        res = db.custom_query('''
+            SELECT path
+            FROM material_attachments
+            WHERE material IN (
+                SELECT id
+                FROM materials
+                WHERE visible = 1
+                AND course_offering IN (
+                    SELECT course_offering
+                    FROM enrollments
+                    WHERE user = {user_id}
+                )
+            );'''.format(user_id=user_id)
+        )
+        return list(map(lambda x: x[0], res))

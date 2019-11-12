@@ -19,17 +19,8 @@ submissions = Blueprint('submissions', __name__)
 
 
 @submissions.route('/view_submission', methods=['GET'])
-@at_least_role(UserRole.STUDENT)
+@at_least_role(UserRole.STAFF)
 def view_submission():
-    user_type = session['acc_type']
-
-    if user_type == 'student':
-        return student_view()
-    else:
-        return staff_view()
-
-
-def staff_view():
     db.connect()
     student_id = int(request.args.get('submissions', None))
     student_info = db.select_columns('users', ['name', 'email'],
@@ -45,10 +36,15 @@ def staff_view():
         weekday = calendar.day_name[datetime.fromtimestamp(task[4]).weekday()]
         submit_date_text = weekday + " " + submit_date.strftime(time_format)
 
+        file_url = None
+        if task[3]:
+            file_url = FileUpload(filename=task[3]).get_url()
+
         status = get_sub_status(student_id, task[0])
         if 'approval' in task[2]:
             tasks.append((
-                task[0], task[1], submit_date_text, status, task[3], "True"))
+                task[1], submit_date_text, status, file_url))
+
         else:
             criteria = db.select_columns(
                 'task_criteria', ['id', 'max_mark'], ['task'], [task[0]]
@@ -72,16 +68,15 @@ def staff_view():
             tasks.append((
                 task[0], task[1], submit_date_text,
                 str(staff_mark) + '/' + str(total_max_mark),
-                FileUpload(filename=task[3]).get_url(),
-                "False"
+                file_url
             ))
 
     db.close()
+    zid = student_info[0][1].split('@')[0]
+    heading = f'Submissions - {student_info[0][0]} ({zid})'
     return render_template('submission_staff.html',
-                           heading='View Submissions',
-                           title='View Submissions',
-                           student=student_info,
-                           student_id=student_id,
+                           heading=heading,
+                           title=heading,
                            submissions=tasks)
 
 
@@ -102,10 +97,6 @@ def get_sub_status(user, task):
         )
         status = status_name[0][0]
     return status
-
-
-def student_view():
-    abort(404)  # TODO: we may have a student version of submission page?
 
 
 # get a nicely formatted table containing the marks of a student, or a blank

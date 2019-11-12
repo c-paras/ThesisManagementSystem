@@ -14,8 +14,6 @@ from app.file_upload import FileUpload
 from app.helpers import error
 from app.queries import queries
 
-import calendar
-
 
 tasks = Blueprint('tasks', __name__)
 
@@ -66,6 +64,7 @@ def student_view():
     # get criteria & marks
     #
     is_approval = (task_info[5] == 'requires approval')
+    awaiting_marks = False
     mark_details = {}
 
     if is_approval:
@@ -86,6 +85,9 @@ def student_view():
         mark_details["Assessor"] = get_marks_table(session['id'],
                                                    res,
                                                    task_id)
+        if not (type(mark_details["Supervisor"]) == () and
+                type(mark_details["Assessor"]) == ()):
+            awaiting_marks = True
 
     res = db.select_columns('task_attachments', ['path'], ['task'], [task_id])
     attachments = [FileUpload(filename=r[0]) for r in res]
@@ -105,7 +107,7 @@ def student_view():
         except LookupError as e:
             print(f"Submission {task_id} {session['user']}: {e}")
 
-    if task_info[4] == "file submission":
+    if prev_submission and task_info[4] == "file submission":
         prev_submission['url'] = FileUpload(filename=res[0][1]).get_url()
 
     text_info = {}
@@ -136,7 +138,8 @@ def student_view():
                            task_id=task_id,
                            max_size=task_info[6],
                            attachments=attachments,
-                           can_submit=can_submit)
+                           can_submit=can_submit,
+                           awaiting_marks=awaiting_marks)
 
 
 # get a nicely formatted table containing the marks of a student, or a blank
@@ -248,7 +251,7 @@ def submit_file_task():
 
     db.insert_single('submissions', [session['id'], task['id'],
                                      sent_file.get_original_name(),
-                                     str(sent_file.get_path()),
+                                     str(sent_file.get_name()),
                                      datetime.now().timestamp(),
                                      mark_method_id],
                      ['student', 'task', 'name', 'path',

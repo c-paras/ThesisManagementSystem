@@ -12,12 +12,24 @@
     <br>
     <div>
       <b>Attachment:</b>
-      <a href="{{ url_for('static', filename='%s'%criteria) }}"> Marking Criteria </a>
+      {% if attachment %}
+        <a href="{{ attachment.get_url() }}">{{ attachment.get_original_name() }}</a>
+      {% else %}
+        No attachment
+      {% endif %}
     </div>
     <br>
     <div>
       <b>Submission:</b>
-      <a href="{{ url_for('static', filename='%s'%submission[1]) }}"> {{submission[0]}} </a>
+      {% if submission %}
+        {% if submission['file'] %}
+          <a href="{{ submission['file'].get_url() }}"> {{submission['name']}} </a>
+        {% else %}
+          Text Submission
+        {% endif %}
+      {% else %}
+        No recorded submission
+      {% endif %}
     </div>
     <br>
     <div>
@@ -35,7 +47,7 @@
       <b>Assessment:</b>
     </div>
     <div>
-      <table class="highlight responsive-table">
+      <table class="striped centered responsive-table">
         <thead>
           <tr>
             <th style='width: 25%;'>Criteria</th>
@@ -52,7 +64,7 @@
               <td>{{ taskCriteria[i][3] }}</td>
               {% if markedFeedback[i] == [] %}
                 <td>
-                  <textarea id="enteredMark" class="materialize-textarea" placeholder="Enter Mark"></textarea>
+                  <input id="enteredMark" type="number" min="0" max="{{ taskCriteria[i][3] }}">
                 </td>
                 <td>
                   <div>
@@ -62,7 +74,7 @@
                 </td>
               {% else %}
                 <td>
-                  <textarea id="enteredMark" class="materialize-textarea">{{markedFeedback[i][0][0]}}</textarea>
+                  <input id="enteredMark" type="number" min="0" max="{{ taskCriteria[i][3] }}" value="{{markedFeedback[i][0][0]}}">
                 </td>
                 <td>
                   <div>

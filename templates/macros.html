@@ -26,3 +26,47 @@
   </div>
 </div>
 {% endmacro %}
+
+{% macro current_past_students_summary(heading, students_list, if_none) %}
+<div class="section col s12">
+  <h5>{{ heading }}</h5>
+  {% if students_list|length %}
+    <table class="striped centered responsive-table" style="margin-bottom: 10px;">
+
+      <!-- Table header -->
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>zID</th>
+          <th>Topic</th>
+          <th>Role</th>
+          <th>Submissions</th>
+        </tr>
+      </thead>
+
+      <!-- Table body -->
+      <tbody>
+        {% for student in students_list %}
+          <tr>
+            <td>{{ student[0] }}</td>
+            <td>
+              <a href="mailto:{{ student[1] }}">
+                {{ student[1].split('@')[0] }}
+              </a>
+            </td>
+            <td>{{ student[2] }}</td>
+            <td>{{ student[4] }}</td>
+            <td>
+              <a href="{{ url_for('submissions.view_submission', submissions=student[3]) }}">
+                <i class="small material-icons teal-text">pageview</i>
+              </a>
+            </td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  {% else %}
+    <p>{{ if_none }}</p>
+  {% endif %}
+</div>
+{% endmacro %}
