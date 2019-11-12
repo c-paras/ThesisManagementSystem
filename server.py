@@ -11,7 +11,8 @@ from app.db_manager import sqliteManager as db
 from app.create_task import create_task
 from app.create_topic import create_topic
 from app.errors import errors
-from app.auth import is_at_least_role, UserRole
+from app.auth import is_at_least_role
+from app.auth import UserRole
 from app.home import home
 from app.mark import mark
 from app.manage_courses import manage_courses
