@@ -6,14 +6,14 @@
     <!-- Show staff the tasks and submission info of the student -->
     <div class="section col s12">
       {% if submissions|length %}
-        <table class="striped centered responsive-table">
+        <table class="striped centered responsive-table js-sort-table">
 
           <!-- Table header -->
           <thead>
             <tr>
-              <th>Task</th>
-              <th>Submitted Time</th>
-              <th>Mark</th>
+              <th class="sortable">Task</th>
+              <th class="sortable">Submitted Time</th>
+              <th class="sortable">Mark</th>
               <th>View</th>
             </tr>
           </thead>

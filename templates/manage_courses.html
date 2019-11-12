@@ -39,7 +39,7 @@
     <div class="section col s12">
       <h5>Materials:</h5>
       {% if materials|length %}
-        <table class="striped centered responsive-table" style="margin-bottom: 20px;">
+        <table class="striped centered responsive-table js-sort-table" style="margin-bottom: 20px;">
           <colgroup>
             <col span="1" style="width: 50%;">
             <col span="1" style="width: 40%;">
@@ -48,8 +48,8 @@
           </colgroup>
           <thead>
             <tr>
-              <th>Name</th>
-              <th>File</th>
+              <th class="sortable">Name</th>
+              <th class="sortable">File</th>
               <th>Visible</th>
               <th>Edit</th>
             </tr>
@@ -111,7 +111,7 @@
     <div class="section col s12">
       <h5>Tasks:</h5>
       {% if tasks|length %}
-        <table class="striped centered responsive-table" style="margin-bottom: 20px;">
+        <table class="striped centered responsive-table js-sort-table" style="margin-bottom: 20px;">
           <colgroup>
             <col span="1" style="width: 25%;">
             <col span="1" style="width: 25%;">
@@ -121,9 +121,9 @@
           </colgroup>
           <thead>
             <tr>
-              <th>Task</th>
-              <th>Deadline</th>
-              <th>File</th>
+              <th class="sortable">Task</th>
+              <th class="sortable">Deadline</th>
+              <th class="sortable">File</th>
               <th>Visible</th>
               <th>Edit</th>
             </tr>
@@ -194,7 +194,7 @@
       <h5>Enrollments:</h5>
       <div style="max-height: 300px; overflow-y: scroll; margin-bottom: 20px;">
         {% if enrollments|length %}
-          <table class="striped centered responsive-table">
+          <table class="striped centered responsive-table js-sort-table">
             <colgroup>
               <col span="1" style="width: 25%;">
               <col span="1" style="width: 25%;">
@@ -202,9 +202,9 @@
             </colgroup>
             <thead>
               <tr>
-                <th>Name</th>
-                <th>zID</th>
-                <th>Topic</th>
+                <th class="sortable">Name</th>
+                <th class="sortable">zID</th>
+                <th class="sortable">Topic</th>
               </tr>
             </thead>
             <tbody>

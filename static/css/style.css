@@ -65,3 +65,11 @@ input {
   line-height: 2.25rem !important;
   margin-top: 10px !important;
 }
+
+/* sortable icons for table headers in sortable columns */
+th.sortable {
+  background-repeat: no-repeat;
+  background-position: center right;
+  cursor: pointer;
+  background-image: url(../img/sort.png);
+}
