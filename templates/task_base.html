@@ -108,7 +108,7 @@
 
   <div class="section row">
     <!-- Show student their current assessments for their corses -->
-    {% if is_approval or (staffUser and submission['markingMethod']) %}
+    {% if is_approval or (staffUser and submission['markingMethod'] == 'approval') %}
       <h5>Approval:</h5>
     {% else %}
       <h5>Marking:</h5>
