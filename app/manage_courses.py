@@ -190,9 +190,6 @@ def create_course():
         for i in range(num_terms):
             if str(i + 1) in request.form:
                 course['offerings'][i] = True
-        if True not in course['offerings']:
-            err = error('You must select at least one term offering')
-            raise ValueError(err)
     except ValueError as e:
         db.close()
         return e.args[0]
@@ -209,6 +206,10 @@ def create_course():
     if curr_year > course['year']:
         db.close()
         return error(f"Year must be at least {curr_year}")
+
+    if True not in course['offerings']:
+        db.close()
+        return error('You must select at least one term offering')
 
     sessions = queries.get_course_sessions(course['code'])
     sessions = filter(lambda s: s[0] == course['year'], sessions)
