@@ -154,11 +154,11 @@ $(function() {
 
 
 function showAdvanced() {
-  if($(event.target).find('i').text().indexOf('down') >= 0) {
-    $(event.target).find('i').text('arrow_drop_up');
-    $('#advanced-menu').show();
-  } else {
+  if($('#advanced-menu').is(':visible')) {
     $(event.target).find('i').text('arrow_drop_down');
     $('#advanced-menu').hide();
+  } else {
+    $(event.target).find('i').text('arrow_drop_up');
+    $('#advanced-menu').show();
   }
 }
