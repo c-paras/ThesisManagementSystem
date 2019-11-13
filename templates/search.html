@@ -48,8 +48,14 @@
           <label>Sort By</label>
         </div>
         <div class="input-field col s4">
-          <label for="entries">Entries per page:</label>
-          <input id="entries" type="number" name="entries" min="1" value="10">
+          <select id="entries" name="entries">
+            <option value="5" selected>5</option>
+            <option value="10">10</option>
+            <option value="20">20</option>
+            <option value="50">50</option>
+            <option value="infinite">Unlimited</option>
+          </select>
+          <label>Entries per page</label>
         </div>
         <div class="input-field col s4">
           <label>

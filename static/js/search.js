@@ -94,7 +94,10 @@ function searchResults() {
         $('#search-title').html('Your search returned no matching topics');
       }
 
-      const entriesPerPage = $('#entries').val();
+      let entriesPerPage = $('#entries').val();
+      if(entriesPerPage === 'infinite') {
+        entriesPerPage = cards.length;
+      }
       $.myTopicCards = cards;
 
       $('#search-title').show();
