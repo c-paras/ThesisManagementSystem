@@ -138,6 +138,7 @@ def manage_course_offerings():
 
 
 @manage_courses.route('/upload_enrollments', methods=['POST'])
+@at_least_role(UserRole.COURSE_ADMIN)
 def upload_enroll():
     try:
         enroll_file = FileUpload(req=request)

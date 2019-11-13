@@ -17,8 +17,8 @@ def get_all_account_types():
 # email, new_name, account_type
 
 
-def update_from_file(url, course_offering=None):
-    with open(url) as csv_file:
+def update_from_file(path, course_offering=None):
+    with open(path) as csv_file:
         csv_reader = csv.reader(csv_file, delimiter=',')
         account_types = get_all_account_types()
         line = 0
