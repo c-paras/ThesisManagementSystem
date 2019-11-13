@@ -59,9 +59,9 @@ function searchResults() {
     'searchTerm': $('#search-input').val(),
     'checkbox': $('#checkbox-vis').is(':checked'),
     'topicArea': M.Chips.getInstance($('#topics')).chipsData,
-    'supervisor': M.Chips.getInstance($('#supervisor')).chipsData
+    'supervisor': M.Chips.getInstance($('#supervisor')).chipsData,
+    'sortBy': form.find('[name=sortby]').val()
   };
-
   makePOSTRequest('/search', data, (res) => {
     if (res.status === 'fail') {
       flash(res.message, error = true);
