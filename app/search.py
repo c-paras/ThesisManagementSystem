@@ -103,31 +103,41 @@ def search_topic():
                                               [sup[1], area[1]]))
         res = [i for sub in temp for i in sub]
 
-    # checking if search terms are matched
-    matched = [False] * len(res)
-    for word in search_terms:
-        for i in range(len(res)):
-            if re.search(word, res[i][1].upper()):
-                matched[i] = True
-
-            if re.search(word, res[i][3].upper()):
-                matched[i] = True
+    topics = []
+    for r in res:
+        topics.append({
+            'id': r[0],
+            'title': r[1],
+            'supervisor': {
+                'id': r[2],
+                'name': None,
+                'email': None
+            },
+            'description': r[3],
+            'visible': int(r[4]),
+            'preqs': []
+        })
 
     matched_search_phrase = []
-    for i in range(len(res)):
-        if len(search_terms) == 0 or matched[i]:
-            matched_search_phrase.append({
-                'id': res[i][0],
-                'title': res[i][1],
-                'supervisor': {
-                    'id': res[i][2],
-                    'name': None,
-                    'email': None
-                },
-                'description': res[i][3],
-                'visible': int(res[i][4]),
-                'preqs': []
-            })
+    if len(data['searchTerm']) > 0:
+        for t in topics:
+            match = False
+            if data.get('strictMatching', False):
+                if re.search(data['searchTerm'], t['title'], flags=re.I):
+                    match = True
+                if re.search(data['searchTerm'], t['description'], flags=re.I):
+                    match = True
+            else:
+                for word in search_terms:
+                    if re.search(word, t['title'].upper()):
+                        match = True
+
+                    if re.search(word, t['description'].upper()):
+                        match = True
+            if match:
+                matched_search_phrase.append(t)
+    else:
+        matched_search_phrase = topics
 
     # checking if topics are visible or not
     to_return_searches = []
