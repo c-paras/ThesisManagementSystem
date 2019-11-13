@@ -110,7 +110,6 @@ function toggleEnrollTypeStaff() {
 }
 
 function setFormTypeAddStaff() {
-  
   $('#account_type_enroll option').each(function() {
     $(this).remove();
   });
@@ -122,6 +121,7 @@ function setFormTypeAddStaff() {
    toggleEnrollTypeStaff();
   });
   $('#enroll-account-modal').modal('open');
+  $('select').formSelect();
 }
 
 function setFormTypeUser() {
@@ -130,11 +130,11 @@ function setFormTypeUser() {
   });
   $('#account_type_enroll').append('<option value="student">Student</option>');
   $('#account_type_enroll').append('<option value="course_admin">Admin</option>');
-  
   $('#btn-request-enroll').attr('onclick', 'enrollUser()');
   $('#enroll-title').text("Enroll users");
   $('#select-e-type').text("Select enrollment type");
   $('[name="enroll-type"]').change(function () {
     toggleEnrollTypeCourse();
   });
+  $('select').formSelect();
 }

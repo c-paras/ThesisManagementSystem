@@ -66,8 +66,14 @@ def update_account_type(email, new_name, account_type, course_offering=None):
 
 
 def enroll_user(user, course_offering, role):
-    db.insert_single(
-        'enrollments',
-        [user, course_offering, role],
-        ['user', 'course_offering', 'role']
+    res = db.select_columns(
+        'enrollments', ['*'],
+        ['user', 'course_offering'],
+        [user, course_offering]
     )
+    if len(res) == 0:
+        db.insert_single(
+            'enrollments',
+            [user, course_offering, role],
+            ['user', 'course_offering', 'role']
+        )
