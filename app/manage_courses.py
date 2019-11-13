@@ -4,7 +4,6 @@ from flask import jsonify
 from flask import render_template
 from flask import request
 from flask import session
-import flask_excel as excel
 
 from app.auth import at_least_role
 from app.auth import UserRole
