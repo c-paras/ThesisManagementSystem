@@ -67,17 +67,16 @@ function searchResults() {
       flash(res.message, error = true);
     } else {
       let cards = [];
-      for (let i = 0; i < res.topics.length; i++) {
-        let preqs = '';
-        if (res.preqs[i].length === 0) {
-          preqs = 'None';
-        } else {
-          preqs = res.preqs[i].join(', ');
+      for (const i in res.topics) {
+        topic = res.topics[i];
+        let preqs = 'None';
+        if(topic.preqs.length !== 0) {
+          const preqList = topic.preqs.map(value => value.code);
+          preqs = preqList.join(', ');
         }
-        cards.push(makeCard(res.topics[i][0], res.topics[i][1],
-          res.topics[i][3], res.topicsArea[i].join(', '),
-          res.topicSupervisor[i][0][0], res.topicSupervisor[i][0][1], preqs)
-        );
+        cards.push(makeCard(topic.id, topic.title, topic.description,
+                            topic.areas.join(', '), topic.supervisor.name,
+                            topic.supervisor.email, preqs));
       }
 
       $("[id='tagsTopic']").each((function () {

@@ -114,56 +114,52 @@ def search_topic():
                 matched[i] = True
 
     matched_search_phrase = []
-    if len(search_terms) == 0:
-        matched_search_phrase = res
-    else:
-        for i in range(len(res)):
-            if matched[i]:
-                matched_search_phrase.append(res[i])
+    for i in range(len(res)):
+        if len(search_terms) == 0 or matched[i]:
+            matched_search_phrase.append({
+                'id': res[i][0],
+                'title': res[i][1],
+                'supervisor': {
+                    'id': res[i][2],
+                    'name': None,
+                    'email': None
+                },
+                'description': res[i][3],
+                'visible': int(res[i][4]),
+                'preqs': []
+            })
 
     # checking if topics are visible or not
     to_return_searches = []
     if search_check:
         for results in matched_search_phrase:
-            if results[4] == 1:
+            if results['visible'] == 1:
                 to_return_searches.append(results)
     else:
         to_return_searches = matched_search_phrase
 
-    # getting the topics_areas for the filtered topics
-    to_return_topic_area = []
-    for topics in to_return_searches:
-        to_return_topic_area.append(queries.get_topic_areas(topics[0]))
+    for topic in to_return_searches:
+        res = queries.get_topic_areas(topic['id'])
+        topic['areas'] = [r[0] for r in res]
 
-    # getting the supervisors for the filtered topics
-    to_return_supervisor = []
-    for topics in to_return_searches:
-        to_return_supervisor.append(db.select_columns('users',
-                                                      ['name', 'email'],
-                                                      ['id'], [topics[2]]))
+        res = db.select_columns('users',
+                                ['name', 'email'],
+                                ['id'], [topic['supervisor']['id']])
+        topic['supervisor']['name'] = res[0][0]
+        topic['supervisor']['email'] = res[0][1]
 
-    preqs = []
-    for topics in to_return_searches:
-        preqs.append(db.select_columns('prerequisites',
-                                       ['course'],
-                                       ['topic'], [topics[0]]))
+        res = db.select_columns('prerequisites',
+                                ['course'],
+                                ['topic'], [topic['id']])
+        topic['preq'] = [{'id': r[0]} for r in res]
+        for course in topic['preqs']:
+            res = db.select_columns('courses',
+                                    ['code'],
+                                    ['id'], [course['id']])
+            course['code'] = res[0][0]
 
-    preqs_course = []
-    for pre in preqs:
-        if len(pre) == 0:
-            preqs_course.append([])
-        else:
-            temp = []
-            for course in pre:
-                temp.append(db.select_columns('courses',
-                                              ['code'],
-                                              ['id'], [course[0]])[0][0])
-            preqs_course.append(temp)
     return jsonify({'status': 'ok', 'topics': to_return_searches,
-                    'topicsArea': to_return_topic_area,
-                    'topicSupervisor': to_return_supervisor,
-                    'canRequest': session['acc_type'] == 'student',
-                    'preqs': preqs_course})
+                    'canRequest': session['acc_type'] == 'student'})
 
 
 @search.route('/search_chips', methods=['GET'])
