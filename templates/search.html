@@ -22,52 +22,40 @@
         </div>
       </div>
       <div class="row">
-        <div class="input-field col s12">
-          <p>
-            <label>
-              <input
-                type="checkbox" class="filled-in" checked="checked"
-                name="checkbox-vis" id="checkbox-vis"
-              >
-              <span>Hide topics that are no longer on offer</span>
-            </label>
-          </p>
+        <div class="input-field col s10">
+          <label>
+            <input
+              type="checkbox" class="filled-in" checked="checked"
+              name="checkbox-vis" id="checkbox-vis"
+            >
+            <span>Hide topics that are no longer on offer</span>
+          </label>
+        </div>
+        <div class="input-field col s2">
+          <a class="waves-effect waves-light btn" onclick="showAdvanced()">Advanced<i class="material-icons right">arrow_drop_down</i></a>
         </div>
       </div>
-      <div class="row">
-        <div class="col s12">
-          <a class="waves-effect waves-light btn" onclick="showAdvanced()">Advanced</a>
-          <div id="advanced-menu" style="display: none;">
-            <div class="row">
-              <div class="col s2">
-                <div class="input-field">
-                  <select name="sortby">
-                    <option value="create-ascend" selected>Newest</option>
-                    <option value="create-descend">Oldest</option>
-                    <option value="title-ascend">Title (A - Z)</option>
-                    <option value="title-descend">Title (Z - A)</option>
-                    <option value="supervisor-ascend">Supervisor (A - Z)</option>
-                    <option value="supervisor-descend">Supervisor (Z - A)</option>
-                  </select>
-                  <label>Sort By</label>
-                </div>
-              </div>
-            </div>
-            <div class="row">
-              <div class="input-field col s2">
-                <label for="entries">Entries per page:</label>
-                <input id="entries" type="number" name="entries" min="1" value="10">
-              </div>
-            </div>
-            <div class="row">
-              <div class="input-field col s12">
-                <label>
-                  <input name="strict-match" type="checkbox" class="filled-in" />
-                  <span>Strict search term matching</span>
-                </label>
-              </div>
-            </div>
-          </div>
+      <div id="advanced-menu" class="row" style="display: none;">
+        <div class="input-field col s4">
+          <select name="sortby">
+            <option value="create-ascend" selected>Newest</option>
+            <option value="create-descend">Oldest</option>
+            <option value="title-ascend">Title (A - Z)</option>
+            <option value="title-descend">Title (Z - A)</option>
+            <option value="supervisor-ascend">Supervisor (A - Z)</option>
+            <option value="supervisor-descend">Supervisor (Z - A)</option>
+          </select>
+          <label>Sort By</label>
+        </div>
+        <div class="input-field col s4">
+          <label for="entries">Entries per page:</label>
+          <input id="entries" type="number" name="entries" min="1" value="10">
+        </div>
+        <div class="input-field col s4">
+          <label>
+            <input name="strict-match" type="checkbox" class="filled-in" />
+            <span>Strict search term matching</span>
+          </label>
         </div>
       </div>
       <div class="center">

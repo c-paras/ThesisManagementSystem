@@ -151,6 +151,11 @@ $(function() {
 
 
 function showAdvanced() {
-  $(event.target).toggle();
-  $('#advanced-menu').toggle();
+  if($(event.target).find('i').text().indexOf('down') >= 0) {
+    $(event.target).find('i').text('arrow_drop_up');
+    $('#advanced-menu').show();
+  } else {
+    $(event.target).find('i').text('arrow_drop_down');
+    $('#advanced-menu').hide();
+  }
 }
