@@ -14,7 +14,9 @@ from functools import wraps
 
 from app.db_manager import sqliteManager as db
 from app.file_upload import FileUpload
-from app.helpers import error, get_fields, send_email
+from app.helpers import error
+from app.helpers import get_fields
+from app.helpers import send_email
 from app.queries import queries
 from app.update_accounts import enroll_user, get_all_account_types
 
