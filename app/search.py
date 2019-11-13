@@ -169,19 +169,19 @@ def search_topic():
                                     ['id'], [course['id']])
             course['code'] = res[0][0]
 
-    sort_words = ['create', 'title', 'supervisor']
     sort_req = data.get('sortBy', 'create-ascend')
     reverse = 'descend' in sort_req
-    if sort_words[0] in sort_req:
-        to_return_searches = sorted(to_return_searches,
-                                    key=lambda x: x['id'], reverse=reverse)
-    if sort_words[1] in sort_req:
-        to_return_searches = sorted(to_return_searches,
-                                    key=lambda x: x['title'], reverse=reverse)
-    if sort_words[2] in sort_req:
-        to_return_searches = sorted(to_return_searches,
-                                    key=lambda x: x['supervisor']['name'],
-                                    reverse=reverse)
+    sort_words = {
+        'create': lambda t: t['id'],
+        'title': lambda t: t['title'],
+        'supervisor': lambda t: t['supervisor']['name']
+    }
+    # Retrieve the function from the above dictionary if the requested
+    # sort by parameter is one of the keys, defaults to create
+    sort_function = next((f for k, f in sort_words.items() if k in sort_req),
+                         sort_words['create'])
+    to_return_searches = sorted(to_return_searches,
+                                key=sort_function, reverse=reverse)
 
     return jsonify({'status': 'ok', 'topics': to_return_searches,
                     'canRequest': session['acc_type'] == 'student'})
