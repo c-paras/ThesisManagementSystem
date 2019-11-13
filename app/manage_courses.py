@@ -76,6 +76,7 @@ def manage_course_offerings():
         'tasks', ['id', 'name', 'deadline', 'visible'],
         ['course_offering'], [co]
     )
+    task_ids = []
     for task in task_query:
         attachments = []
         attachments_query = db.select_columns(
@@ -86,14 +87,17 @@ def manage_course_offerings():
         date = datetime.fromtimestamp(task[2])
         print_date = date.strftime("%b %d %Y at %H:%M")
         tasks.append((task[0], task[1], print_date, attachments, task[3]))
+        task_ids.append(task[0])
     enrollments = []
     enrollments_query = queries.get_student_enrollments(co)
     for student in enrollments_query:
         zid = student[2].split('@')[0]
         if student[3] is not None:
-            enrollments.append((student[1], zid, student[2], student[3]))
+            enrollments.append((student[1], zid, student[2], student[3],
+                                student[0]))
         else:
-            enrollments.append((student[1], zid, student[2], 'No topic'))
+            enrollments.append((student[1], zid, student[2], 'No topic',
+                                student[0]))
 
     # for material file upload
     file_types = db.select_columns('file_types', ['name'])
@@ -111,7 +115,8 @@ def manage_course_offerings():
         courses=courses,
         default_co=co,
         max_file_size=config.MAX_FILE_SIZE,
-        accepted_files=allowed_file_types)
+        accepted_files=allowed_file_types,
+        task_ids=task_ids)
 
 
 @manage_courses.route('/upload_material', methods=['POST'])
@@ -238,3 +243,91 @@ def create_course():
     db.insert_multiple(query)
     db.close()
     return jsonify({'status': 'ok'})
+
+
+@manage_courses.route('/export_marks', methods=['POST'])
+@at_least_role(UserRole.COURSE_ADMIN)
+def exportMarks():
+    db.connect()
+    data = json.loads(request.data)
+    studentIds = data['studentIds']
+    taskIds = data['taskIds']
+    details = {}
+    ass_and_sup = []
+    for ids in studentIds:
+        student_query = db.select_columns('users', ['name', 'email', 'id'],
+                                          ['id'], [ids])
+        ass_and_sup_query = queries.get_user_ass_sup(ids)
+
+        if ass_and_sup_query:
+            ass_and_sup = (ass_and_sup_query[0][0], ass_and_sup_query[0][1])
+        else:
+            ass_and_sup = (None, None)
+
+        for task in taskIds:
+            task_query = db.select_columns('tasks', ['name', 'id'],
+                                           ['id'], [task])
+            ass_name = db.select_columns('users', ['name'], ['id'],
+                                         [ass_and_sup[0]])
+            super_name = db.select_columns('users', ['name'], ['id'],
+                                           [ass_and_sup[1]])
+
+            if not ass_name:
+                ass_name = [('Not Assigned',)]
+
+            if not super_name:
+                super_name = [('Not Assigned',)]
+
+            details[(student_query[0][2],
+                     task_query[0][1])] = [student_query[0][0],
+                                           student_query[0][1].split('@')[0],
+                                           task_query[0][0], '-', '-',
+                                           ass_and_sup[0], ass_and_sup[1],
+                                           task_query[0][1], ass_name[0][0],
+                                           super_name[0][0]]
+
+    task_criteria = []
+    for task in taskIds:
+        task_criteria_query = db.select_columns('task_criteria',
+                                                ['id', 'task'],
+                                                ['task'], [task])
+        for crit in task_criteria_query:
+            task_criteria.append(crit)
+
+    for crit in task_criteria:
+
+        for student in studentIds:
+            # assessor
+            if (details[(student, crit[1])][5] is not None):
+                marks_query = db.select_columns('marks', ['mark'],
+                                                ['criteria', 'student',
+                                                'marker'],
+                                                [crit[0], student,
+                                                details[(student,
+                                                         crit[1])][5]])
+                if marks_query:
+                    if (details[(student, crit[1])][3] == '-'):
+                        details[(student, crit[1])][3] = marks_query[0][0]
+                    else:
+                        details[(student, crit[1])][3] = details[(student,
+                                                                  crit[1])][3]\
+                                                         + marks_query[0][0]
+
+            # supervisor
+            if (details[(student, crit[1])][6] is not None):
+                marks_query = db.select_columns('marks', ['mark'],
+                                                ['criteria', 'student',
+                                                'marker'],
+                                                [crit[0], student,
+                                                details[(student,
+                                                         crit[1])][6]])
+                if marks_query:
+                    if (details[(student, crit[1])][4] == '-'):
+                        details[(student, crit[1])][4] = marks_query[0][0]
+                    else:
+                        details[(student, crit[1])][4] = details[(student,
+                                                                  crit[1])][4]\
+                                                         + marks_query[0][0]
+    db.close()
+
+    return jsonify({'status': 'ok', 'details': list(details.values())})
