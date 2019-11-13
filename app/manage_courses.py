@@ -33,12 +33,6 @@ def manage_course_offerings():
     if request.method == 'POST':
         data = json.loads(request.data)
 
-        if 'file_url' in data:
-            # might need to do file stuff here
-            db.connect()
-            update_from_file(data['file_url'], session['current_co'])
-            db.close()
-
         if 'table' in data:
             if data['table'] == 'update_account_types':
                 db.connect()
@@ -74,7 +68,8 @@ def manage_course_offerings():
     if 'current_co' in session:
         co = session['current_co']
     else:
-        pass  # maybe default to whatever course is in the current session
+        session['current_co'] = co
+        # maybe default to whatever course is in the current session
     db.connect()
     courses = queries.get_course_offering_details()
     courses.reverse()
@@ -137,6 +132,26 @@ def manage_course_offerings():
         accepted_files=allowed_file_types,
         account_types=accepted_account_types
     )
+
+
+@manage_courses.route('/upload_enrollments', methods=['POST'])
+def upload_enroll():
+    # request.files['file'] = data['file_name']
+    try:
+        enroll_file = FileUpload(req=request)
+    except KeyError:
+        return error('Could not find a file to upload')
+
+    if enroll_file.get_extention() != '.csv':
+        return error('File type must be csv')
+    enroll_file.commit()
+    print(enroll_file.get_extention())
+    print(enroll_file.get_path)
+    print(enroll_file.get_original_name)
+    db.connect()
+    update_from_file(enroll_file.get_url(), session['current_co'])
+    db.close()
+    return jsonify({'status': 'ok'})
 
 
 @manage_courses.route('/upload_material', methods=['POST'])

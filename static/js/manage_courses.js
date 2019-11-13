@@ -51,7 +51,7 @@ function updateTask(task_id, checkbox_id) {
 }
 
 function enrollUser() {
-  const form = $('#enroll-account-form');
+  const form = $('#enroll-email-form');
   if (!formValid(form)) {
     return;
   }
@@ -71,3 +71,48 @@ function enrollUser() {
     }
   });
 }
+
+function enrollFile() {
+  const form = $('#enroll-file-form');
+  console.log(form);
+  if (!formValid(form)) {
+    return;
+  }
+  data = form.serializeArray();
+  var form_dict = {
+    files: form,
+    table: data[1].value,
+    file_name: data[0].value
+  };
+  console.log(form_dict);
+  //$('#btn-request-enroll').toggle();
+  //$('#btn-cancel-enroll').toggle();
+  //$('#upload-spinner-enroll').toggle();
+  makeMultiPartRequest('/upload_enrollments', form, (res) => {
+    $('#btn-request-enroll').toggle();
+    $('#btn-cancel-enroll').toggle();
+    $('#upload-spinner-enroll').toggle();
+    if (res.status === 'fail') {
+      flash(res.message, error = true);
+    } else {
+      delayToast('User enrolled', false);
+      window.location.href = '/manage_courses';
+    }
+  });
+}
+
+function toggleEnrollType() {
+  if ($('#email-type').prop('checked') === true) {
+    $('#enroll-user-block').show();
+    $('#enroll-file-block').hide();
+    $('#btn-request-enroll').attr('onclick', 'enrollUser()');
+  } else {
+    $('#enroll-user-block').hide();
+    $('#enroll-file-block').show();
+    $('#btn-request-enroll').attr('onclick', 'enrollFile()');
+  }
+}
+
+$('[name="enroll-type"]').change(function () {
+  toggleEnrollType();
+});
