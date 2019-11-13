@@ -94,14 +94,15 @@ function searchResults() {
         $('#search-title').html('Your search returned no matching topics');
       }
 
+      const entriesPerPage = $('#entries').val();
       $.myTopicCards = cards;
 
       $('#search-title').show();
-      $('#search-results').html(cards.slice(0, 10));
+      $('#search-results').html(cards.slice(0, entriesPerPage));
       $('#page').html('');
       $('#page').materializePagination({
         align: 'center',
-        lastPage: Math.ceil(cards.length / 10),
+        lastPage: Math.ceil(cards.length / entriesPerPage),
         firstPage: 1,
         useUrlParameter: false,
         onClickCallback: function (requestedPage) {
@@ -140,4 +141,12 @@ function loadPage() {
   });
 }
 
-loadPage();
+$(function() {
+  loadPage();
+});
+
+
+function showAdvanced() {
+  $(event.target).toggle();
+  $('#advanced-menu').toggle();
+}

@@ -22,7 +22,7 @@
         </div>
       </div>
       <div class="row">
-        <div class="input-field">
+        <div class="input-field col s12">
           <p>
             <label>
               <input
@@ -32,6 +32,34 @@
               <span>Hide topics that are no longer on offer</span>
             </label>
           </p>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col s12">
+          <a class="waves-effect waves-light btn" onclick="showAdvanced()">Advanced</a>
+          <div id="advanced-menu" style="display: none;">
+            <div class="row">
+              <div class="col s2">
+                <div class="input-field">
+                  <select>
+                    <option value="created" selected>Newest</option>
+                    <option value="created" selected>Oldest</option>
+                    <option value="title-ascending">Title A Z</option>
+                    <option value="title-descending">Title Z A</option>
+                    <option value="supervisor-ascending">Supvisor (A - Z)</option>
+                    <option value="supervisor-descending">Supvisor (Z - A)</option>
+                  </select>
+                  <label>Sort By</label>
+                </div>
+              </div>
+            </div>
+            <div class="row">
+              <div class="input-field col s2">
+                <label for="entries">Entries per page:</label>
+                <input id="entries" type="number" name="entries" min="1" value="10">
+              </div>
+            </div>
+          </div>
         </div>
       </div>
       <div class="center">
