@@ -1,4 +1,3 @@
-from flask import abort
 from flask import Blueprint
 from flask import render_template
 from flask import session
@@ -43,7 +42,9 @@ def view_submission():
         status = get_sub_status(student_id, task[0])
         if 'approval' in task[2]:
             tasks.append((
-                task[1], submit_date_text, status, file_url))
+                task[1], submit_date_text, status, file_url,
+                task[0], student_id))
+
         else:
             criteria = db.select_columns(
                 'task_criteria', ['id', 'max_mark'], ['task'], [task[0]]
@@ -67,12 +68,14 @@ def view_submission():
             tasks.append((
                 task[1], submit_date_text,
                 str(staff_mark) + '/' + str(total_max_mark),
-                file_url
+                file_url, task[0], student_id
             ))
 
     db.close()
     zid = student_info[0][1].split('@')[0]
     heading = f'Submissions - {student_info[0][0]} ({zid})'
+    print(student_id)
+    print(student_tasks)
     return render_template('submission_staff.html',
                            heading=heading,
                            title=heading,

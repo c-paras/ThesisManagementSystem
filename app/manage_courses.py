@@ -14,9 +14,9 @@ from app.helpers import get_fields
 from app.queries import queries
 
 import json
+import re
 
 import config
-
 
 manage_courses = Blueprint('manage_courses', __name__)
 
@@ -170,6 +170,71 @@ def upload_material():
     db.insert_single('material_attachments',
                      [res[0][0], sent_file.get_name()],
                      ['material', 'path'])
+    db.close()
+    return jsonify({'status': 'ok'})
 
+
+@manage_courses.route('/create_course', methods=['POST'])
+@at_least_role(UserRole.COURSE_ADMIN)
+def create_course():
+    db.connect()
+    curr_year = datetime.now().year
+    num_terms = queries.get_terms_per_year(curr_year)
+    course = {
+        'offerings': [False for _ in range(num_terms)]
+    }
+    try:
+        res = get_fields(request.form,
+                         ['title', 'code', 'description', 'year'],
+                         ['year'])
+        for i in range(num_terms):
+            if str(i + 1) in request.form:
+                course['offerings'][i] = True
+    except ValueError as e:
+        db.close()
+        return e.args[0]
+
+    course['title'] = res[0]
+    course['code'] = res[1]
+    course['description'] = res[2]
+
+    if not re.match(config.COURSE_CODE_FORMAT, course['code']):
+        db.close()
+        return error("Invalid course code")
+
+    course['year'] = int(res[3])
+    if curr_year > course['year']:
+        db.close()
+        return error(f"Year must be at least {curr_year}")
+
+    if True not in course['offerings']:
+        db.close()
+        return error('You must select at least one term offering')
+
+    sessions = queries.get_course_sessions(course['code'])
+    sessions = filter(lambda s: s[0] == course['year'], sessions)
+    for year, term in sessions:
+        if course['offerings'][term - 1]:
+            db.close()
+            return error(f"{course['code']} already offered in {year} T{term}")
+
+    db.insert_single('courses',
+                     [course['code'], course['title'], course['description']],
+                     ['code', 'name', 'description'])
+    res = db.select_columns('courses', ['id'], ['code'], [course['code']])
+    course['id'] = res[0][0]
+
+    query = []
+    for i in range(len(course['offerings'])):
+        if not course['offerings'][i]:
+            continue
+        res = db.select_columns('sessions', ['id'],
+                                ['year', 'term'],
+                                [course['year'], i + 1])
+        session_id = res[0][0]
+        query.append(('course_offerings',
+                      [course['id'], session_id],
+                      ['course', 'session']))
+    db.insert_multiple(query)
     db.close()
     return jsonify({'status': 'ok'})

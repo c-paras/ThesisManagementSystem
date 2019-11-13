@@ -103,7 +103,7 @@ def gen_sessions():
                     datetime.datetime(year, 11, 30, 23, 59, 59).timestamp()
                     ])
 
-    for year in range(2019, 2021):
+    for year in range(2019, 2025):
         ret.append([year, 1,
                     datetime.datetime(year, 1, 1, 0, 0, 0).timestamp(),
                     datetime.datetime(year, 4, 30, 23, 59, 59).timestamp()
@@ -143,7 +143,6 @@ def gen_courses():
 
 def gen_course_offering():
     with open('db/courses.json') as f:
-        query = []
         for c in json.load(f):
             res = db.select_columns('courses', ['id'],
                                     ['code'], [c['code']])
@@ -164,12 +163,7 @@ def gen_course_offering():
 
             else:
                 # create offering for thesis A/B/C in years after 2018
-                session_ids = db.select_columns_operator('sessions',
-                                                         ['id'],
-                                                         ['year'],
-                                                         ['2019'],
-                                                         '>=')
-
+                session_ids = db_queries.get_session_ids_in_range(2019, 2021)
                 for session_id in session_ids:
                     db.insert_single('course_offerings',
                                      [course_id, session_id[0]],
@@ -618,7 +612,7 @@ def gen_submissions():
                 queries.append((
                     'submissions',
                     [student[0], task[0], 'smiley',
-                     str(stem), 'ez', now,
+                     None, 'ez', now,
                      request_types['approved']]
                 ))
             else:
