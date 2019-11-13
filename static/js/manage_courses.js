@@ -61,7 +61,23 @@ function exportMarks(enrolledStudents, tasks) {
     if (res.status === 'fail') {
       flash(res.message, error = true);
     } else {
-      
+      let csv = 'Name,zid,Task Name\n';
+
+      res.details.forEach(element => {
+        csv += element[0] + ',';
+        csv += element[1] + ',';
+        csv += element[2] + ',';
+        csv += element[3] + ',';
+        csv += element[4] + ',';
+        csv += element[8] + ',';
+        csv += element[9] + '\n';
+      });
+
+      let hiddenElement = document.getElementById('dummyDownload');
+      hiddenElement.href = 'data:text/csv;charset=utf-8,' + encodeURI(csv);
+      hiddenElement.target = '_blank';
+      hiddenElement.download = 'people.csv';
+      hiddenElement.click();
     }
   });
 

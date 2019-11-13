@@ -253,29 +253,82 @@ def exportMarks():
     data = json.loads(request.data)
     studentIds = data['studentIds']
     taskIds = data['taskIds']
-    print(studentIds)
-    print(taskIds)
-    students = []
+    details = {}
     ass_and_sup = []
     for ids in studentIds:
-        res = db.select_columns('users', ['name', 'email'], ['id'], [ids])
-        students.append((res[0][0], res[0][1].split('@')[0]))
-        res = queries.get_user_ass_sup(ids)
+        student_query = db.select_columns('users', ['name', 'email', 'id'],
+                                          ['id'], [ids])
+        ass_and_sup_query = queries.get_user_ass_sup(ids)
 
-        if res:
-            print(res)
-            ass_and_sup.append((res[0][0], res[0][1]))
+        if ass_and_sup_query:
+            ass_and_sup = (ass_and_sup_query[0][0], ass_and_sup_query[0][1])
         else:
-            ass_and_sup.append((None, None))
+            ass_and_sup = (None, None)
 
-    print(students)
-    print(ass_and_sup)
+        for task in taskIds:
+            task_query = db.select_columns('tasks', ['name', 'id'],
+                                           ['id'], [task])
+            ass_name = db.select_columns('users', ['name'], ['id'],
+                                         [ass_and_sup[0]])
+            super_name = db.select_columns('users', ['name'], ['id'],
+                                           [ass_and_sup[1]])
 
-    task_names = []
+            if not ass_name:
+                ass_name = [('Not Assigned',)]
+
+            if not super_name:
+                super_name = [('Not Assigned',)]
+
+            details[(student_query[0][2],
+                     task_query[0][1])] = [student_query[0][0],
+                                           student_query[0][1].split('@')[0],
+                                           task_query[0][0], '-', '-',
+                                           ass_and_sup[0], ass_and_sup[1],
+                                           task_query[0][1], ass_name[0][0],
+                                           super_name[0][0]]
+
+    task_criteria = []
     for task in taskIds:
-        res = db.select_columns('tasks', ['name'], ['id'], [task])
-        task_names.append(res[0][0])
-    print(task_names)
+        task_criteria_query = db.select_columns('task_criteria',
+                                                ['id', 'task'],
+                                                ['task'], [task])
+        for crit in task_criteria_query:
+            task_criteria.append(crit)
+
+    for crit in task_criteria:
+
+        for student in studentIds:
+            # assessor
+            if (details[(student, crit[1])][5] is not None):
+                marks_query = db.select_columns('marks', ['mark'],
+                                                ['criteria', 'student',
+                                                'marker'],
+                                                [crit[0], student,
+                                                details[(student,
+                                                         crit[1])][5]])
+                if marks_query:
+                    if (details[(student, crit[1])][3] == '-'):
+                        details[(student, crit[1])][3] = marks_query[0][0]
+                    else:
+                        details[(student, crit[1])][3] = details[(student,
+                                                                  crit[1])][3]\
+                                                         + marks_query[0][0]
+
+            # supervisor
+            if (details[(student, crit[1])][6] is not None):
+                marks_query = db.select_columns('marks', ['mark'],
+                                                ['criteria', 'student',
+                                                'marker'],
+                                                [crit[0], student,
+                                                details[(student,
+                                                         crit[1])][6]])
+                if marks_query:
+                    if (details[(student, crit[1])][4] == '-'):
+                        details[(student, crit[1])][4] = marks_query[0][0]
+                    else:
+                        details[(student, crit[1])][4] = details[(student,
+                                                                  crit[1])][4]\
+                                                         + marks_query[0][0]
     db.close()
 
-    return jsonify({'status': 'ok'})
+    return jsonify({'status': 'ok', 'details': list(details.values())})
