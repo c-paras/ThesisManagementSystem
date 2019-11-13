@@ -76,7 +76,7 @@ function exportMarks(enrolledStudents, tasks) {
       let hiddenElement = document.getElementById('dummyDownload');
       hiddenElement.href = 'data:text/csv;charset=utf-8,' + encodeURI(csv);
       hiddenElement.target = '_blank';
-      hiddenElement.download = 'mark.csv';
+      hiddenElement.download = 'marks.csv';
       hiddenElement.click();
     }
   });
