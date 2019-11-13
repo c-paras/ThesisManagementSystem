@@ -74,7 +74,6 @@ function enrollUser() {
 
 function enrollFile() {
   const form = $('#enroll-file-form');
-  console.log(form);
   if (!formValid(form)) {
     return;
   }
@@ -84,10 +83,9 @@ function enrollFile() {
     table: data[1].value,
     file_name: data[0].value
   };
-  console.log(form_dict);
-  //$('#btn-request-enroll').toggle();
-  //$('#btn-cancel-enroll').toggle();
-  //$('#upload-spinner-enroll').toggle();
+  $('#btn-request-enroll').toggle();
+  $('#btn-cancel-enroll').toggle();
+  $('#upload-spinner-enroll').toggle();
   makeMultiPartRequest('/upload_enrollments', form, (res) => {
     $('#btn-request-enroll').toggle();
     $('#btn-cancel-enroll').toggle();

@@ -1,4 +1,6 @@
 import csv
+import re
+import config
 
 from app.db_manager import sqliteManager as db
 from app.file_upload import FileUpload
@@ -15,17 +17,25 @@ def get_all_account_types():
 # email, new_name, account_type
 
 
-def update_from_file(url, couse_offering=None):
-    # TODO use proper upload file if necessary
+def update_from_file(url, course_offering=None):
     with open(url) as csv_file:
         csv_reader = csv.reader(csv_file, delimiter=',')
         account_types = get_all_account_types()
-        for row in csv_file:
+        line = 0
+        for row in csv_reader:
+            line += 1
+            if len(row) < 3:
+                error_string = f"Invalid format on line number {line}"
+                return error_string
+            if not re.match(config.EMAIL_FORMAT, row[0]):
+                error_string = f"Invalid email on line number {line}"
+                return error_string
             account_type = row[2]
             if row[2] in account_types:
                 account_type = account_types[row[2]]
 
             update_account_type(row[0], row[1], account_type, course_offering)
+    return ""
 
 
 def update_account_type(email, new_name, account_type, course_offering=None):

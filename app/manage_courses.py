@@ -29,13 +29,16 @@ manage_courses = Blueprint('manage_courses', __name__)
 @manage_courses.route('/manage_courses', methods=['GET', 'POST'])
 @at_least_role(UserRole.COURSE_ADMIN)
 def manage_course_offerings():
+
     data = {}
     if request.method == 'POST':
         data = json.loads(request.data)
-
         if 'table' in data:
             if data['table'] == 'update_account_types':
                 db.connect()
+                if not re.match(config.EMAIL_FORMAT, data['email']):
+                    db.close()
+                    return error("Invalid email address")
                 update_account_type(
                     data['email'], data['name'],
                     data['account_type'], session['current_co']
@@ -136,7 +139,6 @@ def manage_course_offerings():
 
 @manage_courses.route('/upload_enrollments', methods=['POST'])
 def upload_enroll():
-    # request.files['file'] = data['file_name']
     try:
         enroll_file = FileUpload(req=request)
     except KeyError:
@@ -144,13 +146,18 @@ def upload_enroll():
 
     if enroll_file.get_extention() != '.csv':
         return error('File type must be csv')
+
+    if enroll_file.get_size() > config.MAX_FILE_SIZE:
+        return error('File is too large')
     enroll_file.commit()
-    print(enroll_file.get_extention())
-    print(enroll_file.get_path)
-    print(enroll_file.get_original_name)
     db.connect()
-    update_from_file(enroll_file.get_url(), session['current_co'])
+    error_string = update_from_file(
+        enroll_file.get_path(), session['current_co']
+    )
     db.close()
+    enroll_file.remove_file()
+    if error_string != "":
+        return error(error_string)
     return jsonify({'status': 'ok'})
 
 
