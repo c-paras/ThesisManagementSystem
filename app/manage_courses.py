@@ -4,6 +4,7 @@ from flask import jsonify
 from flask import render_template
 from flask import request
 from flask import session
+import flask_excel as excel
 
 from app.auth import at_least_role
 from app.auth import UserRole
@@ -76,6 +77,7 @@ def manage_course_offerings():
         'tasks', ['id', 'name', 'deadline', 'visible'],
         ['course_offering'], [co]
     )
+    task_ids = []
     for task in task_query:
         attachments = []
         attachments_query = db.select_columns(
@@ -86,14 +88,17 @@ def manage_course_offerings():
         date = datetime.fromtimestamp(task[2])
         print_date = date.strftime("%b %d %Y at %H:%M")
         tasks.append((task[0], task[1], print_date, attachments, task[3]))
+        task_ids.append(task[0])
     enrollments = []
     enrollments_query = queries.get_student_enrollments(co)
     for student in enrollments_query:
         zid = student[2].split('@')[0]
         if student[3] is not None:
-            enrollments.append((student[1], zid, student[2], student[3]))
+            enrollments.append((student[1], zid, student[2], student[3],
+                                student[0]))
         else:
-            enrollments.append((student[1], zid, student[2], 'No topic'))
+            enrollments.append((student[1], zid, student[2], 'No topic',
+                                student[0]))
 
     # for material file upload
     file_types = db.select_columns('file_types', ['name'])
@@ -111,7 +116,8 @@ def manage_course_offerings():
         courses=courses,
         default_co=co,
         max_file_size=config.MAX_FILE_SIZE,
-        accepted_files=allowed_file_types)
+        accepted_files=allowed_file_types,
+        task_ids=task_ids)
 
 
 @manage_courses.route('/upload_material', methods=['POST'])
@@ -237,4 +243,39 @@ def create_course():
                       ['course', 'session']))
     db.insert_multiple(query)
     db.close()
+    return jsonify({'status': 'ok'})
+
+
+@manage_courses.route('/export_marks', methods=['POST'])
+@at_least_role(UserRole.COURSE_ADMIN)
+def exportMarks():
+    db.connect()
+    data = json.loads(request.data)
+    studentIds = data['studentIds']
+    taskIds = data['taskIds']
+    print(studentIds)
+    print(taskIds)
+    students = []
+    ass_and_sup = []
+    for ids in studentIds:
+        res = db.select_columns('users', ['name', 'email'], ['id'], [ids])
+        students.append((res[0][0], res[0][1].split('@')[0]))
+        res = queries.get_user_ass_sup(ids)
+
+        if res:
+            print(res)
+            ass_and_sup.append((res[0][0], res[0][1]))
+        else:
+            ass_and_sup.append((None, None))
+
+    print(students)
+    print(ass_and_sup)
+
+    task_names = []
+    for task in taskIds:
+        res = db.select_columns('tasks', ['name'], ['id'], [task])
+        task_names.append(res[0][0])
+    print(task_names)
+    db.close()
+
     return jsonify({'status': 'ok'})

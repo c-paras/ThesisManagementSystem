@@ -49,3 +49,20 @@ function updateTask(task_id, checkbox_id) {
   data = {'table': 'tasks', 'id': task_id, 'type': type};
   makeChange(data, type, checkbox_id);
 }
+
+function exportMarks(enrolledStudents, tasks) {
+
+  data = {
+    'studentIds': enrolledStudents,
+    'taskIds': tasks
+  };
+  
+  makePOSTRequest('/export_marks', data, (res) => {
+    if (res.status === 'fail') {
+      flash(res.message, error = true);
+    } else {
+      
+    }
+  });
+
+}
