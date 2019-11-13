@@ -61,7 +61,7 @@ function exportMarks(enrolledStudents, tasks) {
     if (res.status === 'fail') {
       flash(res.message, error = true);
     } else {
-      let csv = 'Name,zid,Task Name\n';
+      let csv = 'Name,zid,Task Name, Assessor Mark, Supervisor Mark, Assessor, Supervisor\n';
 
       res.details.forEach(element => {
         csv += element[0] + ',';
