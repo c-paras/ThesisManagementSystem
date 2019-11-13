@@ -162,7 +162,7 @@ def search_topic():
         res = db.select_columns('prerequisites',
                                 ['course'],
                                 ['topic'], [topic['id']])
-        topic['preq'] = [{'id': r[0]} for r in res]
+        topic['preqs'] = [{'id': r[0]} for r in res]
         for course in topic['preqs']:
             res = db.select_columns('courses',
                                     ['code'],
