@@ -67,7 +67,7 @@ def update_account_type(email, new_name, account_type, course_offering=None):
 
 def enroll_user(user, course_offering, role):
     res = db.select_columns(
-        'enrollments', ['*'],
+        'enrollments', ['role'],
         ['user', 'course_offering'],
         [user, course_offering]
     )
@@ -77,3 +77,9 @@ def enroll_user(user, course_offering, role):
             [user, course_offering, role],
             ['user', 'course_offering', 'role']
         )
+    else:
+        if res[0][0] != role:
+            db.update_rows(
+                'enrollments', [role], ['role'],
+                ['user', 'course_offering'], [user, course_offering]
+            )
