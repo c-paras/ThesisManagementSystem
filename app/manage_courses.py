@@ -5,14 +5,11 @@ from flask import render_template
 from flask import request
 from flask import session
 
-from app.auth import at_least_role
-from app.auth import UserRole
+from app.auth import at_least_role, UserRole
 from app.db_manager import sqliteManager as db
 from app.file_upload import FileUpload
-from app.helpers import error
-from app.helpers import get_fields
+from app.helpers import error, get_fields, timestamp_to_string
 from app.queries import queries
-from app.helpers import timestamp_to_string
 from app.update_accounts import update_from_file, update_account_type
 from app.update_accounts import get_all_account_types
 
@@ -38,7 +35,8 @@ def manage_course_offerings():
                 db.connect()
                 if not re.match(config.EMAIL_FORMAT, data['email']):
                     db.close()
-                    return error("Invalid email address")
+                    return error(f"""Invalid email address<br>
+                        {config.EMAIL_FORMAT_ERROR}""")
                 update_account_type(
                     data['email'], data['name'],
                     data['account_type'], session['current_co']
@@ -137,9 +135,27 @@ def manage_course_offerings():
     )
 
 
+@manage_courses.route('/enrol_user', methods=['POST'])
+@at_least_role(UserRole.COURSE_ADMIN)
+def upload_enroll_user():
+    data = json.loads(request.data)
+    if 'table' in data and data['table'] == 'update_account_types':
+        db.connect()
+        if not re.match(config.EMAIL_FORMAT, data['email']):
+            db.close()
+            return error(f"""Invalid email address<br>
+                {config.EMAIL_FORMAT_ERROR}""")
+        update_account_type(
+            data['email'], data['name'],
+            data['account_type'], session['current_co']
+        )
+        db.close()
+    return jsonify({'status': 'ok'})
+
+
 @manage_courses.route('/upload_enrollments', methods=['POST'])
 @at_least_role(UserRole.COURSE_ADMIN)
-def upload_enroll():
+def upload_enroll_file():
     try:
         enroll_file = FileUpload(req=request)
     except KeyError:

@@ -4,7 +4,7 @@
     <!-- Modal heading -->
     <div class="row">
       <div class="col s10 offset-s1">
-        <h4 class="teal-text center">Enroll a user</h4>
+        <h4 class="teal-text center" id="enroll-title"></h4>
       </div>
     </div>
 
@@ -35,23 +35,20 @@
     <div class="row" id="enroll-user-block">
       <form class="col s8 offset-s2 modal-form" id="enroll-email-form" name="enroll-email-form">
         <div class="input-field">
-          Select enrollment type:
+          <div id="select-e-type"></div>
           <select
-            id="account_type" name="account_type" class="validate"
+            id="account_type_enroll" name="account_type_enroll" class="validate"
             required="" aria-required="true"
           >
-            {% for type in account_types %}
-              <option value="{{ type[1] }}">{{ type[0] }}</option>
-            {% endfor %}
           </select>
           <span class="helper-text" data-error="type is required"></span>
           <input
-            type="text" name="email" id="email" placeholder="Enter a users email"
+            type="email" name="email" id="email" placeholder="Enter email"
             class="validate" required="" aria-required="true"
           >
           <span class="helper-text" data-error="Email is required"></span>
           <input
-            type="text" name="name" id="name" placeholder="Enter a name"
+            type="text" name="name" id="name" placeholder="Enter name"
             class="validate" required="" aria-required="true"
           >
           <span class="helper-text" data-error="Name is required"></span>
@@ -67,7 +64,7 @@
       <form class="col s8 offset-s2 modal-form" id="enroll-file-form" name="enroll-file-form">
         <div class="input-field">
           <div class="col s12">
-            {{ file_upload("file-name", 'csv', "Select file to upload", 100) }}
+            {{ file_upload("file-name", '.csv', "Select file to upload", 100) }}
           </div>
           <input
             type="hidden" name="table" id="table" value="update_account_types"
@@ -83,7 +80,7 @@
           Cancel
         </a>
         <a
-          href="#!" id="btn-request-enroll" onclick="enrollUser()"
+          href="#!" id="btn-request-enroll" onclick=""
           class="modal-action waves-effect waves-teal teal btn"
         >
           Enroll

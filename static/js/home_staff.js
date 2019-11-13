@@ -32,8 +32,8 @@ function openRequestModal(studentId, topicId) {
     $('#topic-name').text(res.topicName);
 
     const d = new Date(res.reqDate);
-    var dif = new Date(new Date() - d)/1000;
-    var timeframe =" Seconds Ago";
+    let dif = new Date(new Date() - d)/1000;
+    let timeframe =" Seconds Ago";
 
     if (dif > 60){
       dif /= 60;
@@ -52,7 +52,7 @@ function openRequestModal(studentId, topicId) {
     dif = Math.floor(dif);
     const date = d.getDate();
     const year = d.getFullYear();
-    var month = [];
+    let month = [];
     month[0] = "Jan";
     month[1] = "Feb";
     month[2] = "Mar";

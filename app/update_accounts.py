@@ -28,7 +28,8 @@ def update_from_file(path, course_offering=None):
                 error_string = f"Invalid format on line number {line}"
                 return error_string
             if not re.match(config.EMAIL_FORMAT, row[0]):
-                error_string = f"Invalid email on line number {line}"
+                error_string = f"""Invalid email on line number {line}<br>
+                   {config.EMAIL_FORMAT_ERROR}"""
                 return error_string
             account_type = row[2]
             if row[2] in account_types:
@@ -42,7 +43,9 @@ def update_account_type(email, new_name, account_type, course_offering=None):
 
     account_types = get_all_account_types()
     course_role = 'staff'
-    if account_types['student'] == account_type:
+    if account_type in account_types:
+        account_type = account_types[account_type]
+    elif account_types['student'] == account_type:
         course_role = 'student'
     res = db.select_columns('course_roles', ['id'], ['name'], [course_role])
     course_role = res[0][0]
