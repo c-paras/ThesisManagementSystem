@@ -37,14 +37,16 @@ def view_task():
 
 
 def student_view():
+    task_id = request.args.get('task', None, type=int)
+    if task_id is None:
+        abort(400)
     db.connect()
-    task_id = int(request.args.get('task', None))
 
     # check that this user is allowed to view this task
     can_view = False
     my_tasks = queries.get_user_tasks(session['id'])
     for task in my_tasks:
-        if task[0] == int(task_id):
+        if task[0] == task_id:
             can_view = True
             break
 
@@ -172,10 +174,23 @@ def get_marks_table(student_id, staff_query, task_id):
 
 def staff_view():
     if request.method == 'GET':
+        task_id = request.args.get('task', None, type=int)
+        student_id = request.args.get('student', None, type=int)
+        if task_id is None or student_id is None:
+            abort(400)
         db.connect()
-        task_id = int(request.args.get('task', None))
-        student_id = int(request.args.get('student', None))
-        task_info = queries.get_general_task_info(task_id)[0]
+        task_info = queries.get_general_task_info(task_id)
+        if not task_info:
+            db.close()
+            abort(404)
+        else:
+            task_info = task_info[0]
+        student_details = db.select_columns('users', ['name', 'email'],
+                                            ['id'], [student_id])
+        if not student_details:
+            db.close()
+            abort(404)
+
         # get deadline
 
         deadline_text = timestamp_to_string(task_info[2], True)
@@ -188,8 +203,6 @@ def staff_view():
         task_criteria = db.select_columns('task_criteria',
                                           ['id', 'task', 'name', 'max_mark'],
                                           ['task'], [task_id])
-        student_details = db.select_columns('users', ['name', 'email'],
-                                            ['id'], [student_id])
 
         student_email = student_details[0][1].split('@')[0]
         res = db.select_columns('submissions',

@@ -1,3 +1,4 @@
+from flask import abort
 from flask import Blueprint
 from flask import render_template
 from flask import session
@@ -21,11 +22,17 @@ submissions = Blueprint('submissions', __name__)
 @submissions.route('/view_submission', methods=['GET'])
 @at_least_role(UserRole.STAFF)
 def view_submission():
+    student_id = request.args.get('submissions', None, type=int)
+    if student_id is None:
+        abort(400)
     db.connect()
-    student_id = int(request.args.get('submissions', None))
     student_info = db.select_columns('users', ['name', 'email'],
                                      ['id'],
                                      [student_id])
+    if not len(student_info):
+        db.close()
+        abort(404)
+
     # get tasks for this student
     tasks = []
     student_tasks = queries.get_student_submissions(student_id)

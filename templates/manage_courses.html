@@ -228,10 +228,11 @@
       </a>
       <a
         class="waves-effect waves-light btn" id="marks-btn" name="marks-btn" href="#!" style="float: right;"
-      >
+        onclick="exportMarks({{enrollments}}, {{task_ids}})">
         Export Marks
         <i class="material-icons right">cloud_download</i>
       </a>
+      <a id="dummyDownload"></a>
     </div>
 
     <!-- Add material modal -->
