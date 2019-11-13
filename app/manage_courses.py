@@ -130,8 +130,7 @@ def manage_course_offerings():
         courses=courses,
         default_co=co,
         max_file_size=config.MAX_FILE_SIZE,
-        accepted_files=allowed_file_types,
-        account_types=accepted_account_types
+        accepted_files=allowed_file_types
     )
 
 
