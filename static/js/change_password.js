@@ -7,9 +7,7 @@ function submitChange() {
     if (res.status === 'fail') {
       flash(res.message, error = true);
     } else {
-      delayToast(
-        'Password Changed!',false);
-      window.location.href = '/home';
+      delayToast('Password Changed!',false);
     }
   });
 }
@@ -23,6 +21,7 @@ function submitResetReq() {
     if (res.status === 'fail') {
       flash(res.message, error = true);
     } else {
+      delayToast('You have been sent an email with instructions!');
       window.location.href = '/login';
     }
   });
@@ -36,7 +35,8 @@ function submitReset(user_id, reset_id) {
   const data = {
     'user_id': user_id,
     'reset_id': reset_id,
-    'new_pass': $('#new-password').val()
+    'new_pass': $('#new-password').val(),
+    'new_confirm': $('#new-confirm-password').val()
   };
   makePOSTRequest('/reset_password', data, (res) => {
     if (res.status === 'fail') {

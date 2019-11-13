@@ -30,7 +30,7 @@ def change_user_password():
         fields = ['password', 'confirm-password']
         password, confim_pass = get_fields(request.form, fields)
     except ValueError as e:
-        return e.args
+        return e.args[0]
 
     if len(password) < 8:
         return error('Password must be at least 8 characters long!')
@@ -52,7 +52,7 @@ def reset_request():
         email = get_fields(request.form, fields)
         email = email[0]
     except ValueError as e:
-        return e.args
+        return e.args[0]
 
     if not re.match(config.EMAIL_FORMAT, email):
         return error(f'Invalid email format!<br>{config.EMAIL_FORMAT_ERROR}')
@@ -69,10 +69,13 @@ def reset_request():
                          resetID=reset_id, _external=True)
     send_email(to=email, name=res[0][0], subject='Reset Password',
                messages=[
-                   'You have submitted a request to reset the password.',
-                   f'The account is "{email}".',
-                   'You can click reset your password ' +
-                   f'<a href="{reset_link}" onclick="submitReset()">here</a>'
+                   'You have submitted a request ' +
+                   'to reset your password on TMS.',
+                   f'Your account is "{email}".',
+                   'click ' +
+                   f'<a href="{reset_link}">here</a>' +
+                   ' to reset your password'
+
                ])
 
     return jsonify({'status': 'ok'})
@@ -93,8 +96,13 @@ def reset():
     user_id = data['user_id']
     reset_id = data['reset_id']
     new_pass = data['new_pass']
+    new_confirm = data['new_confirm']
+    print(new_confirm)
     if len(new_pass) < 8:
         return error('Password must be at least 8 characters long!')
+
+    if new_pass != new_confirm:
+        return error('Passwords do not match!')
 
     reset_id_test = session['reset']
 
