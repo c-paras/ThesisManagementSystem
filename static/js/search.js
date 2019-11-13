@@ -143,6 +143,10 @@ function loadPage() {
 
 $(function() {
   loadPage();
+  $('#checkbox-vis').change(searchResults);
+  $('#search-form').find('select[name=sortby]').change(searchResults);
+  $('#search-form').find('input[name=strict-match]').change(searchResults);
+  $('#entries').change(searchResults);
 });
 
 
