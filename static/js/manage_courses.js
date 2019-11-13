@@ -61,7 +61,7 @@ function exportMarks(enrolledStudents, tasks) {
     if (res.status === 'fail') {
       flash(res.message, error = true);
     } else {
-      let csv = 'Name,zid,Task Name, Assessor Mark, Supervisor Mark, Assessor, Supervisor\n';
+      let csv = 'Name,zID,Task Name,Assessor Mark,Supervisor Mark,Assessor, Supervisor\n';
 
       res.details.forEach(element => {
         csv += element[0] + ',';
@@ -76,7 +76,7 @@ function exportMarks(enrolledStudents, tasks) {
       let hiddenElement = document.getElementById('dummyDownload');
       hiddenElement.href = 'data:text/csv;charset=utf-8,' + encodeURI(csv);
       hiddenElement.target = '_blank';
-      hiddenElement.download = 'people.csv';
+      hiddenElement.download = 'mark.csv';
       hiddenElement.click();
     }
   });
