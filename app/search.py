@@ -138,6 +138,7 @@ def search_topic():
     else:
         to_return_searches = matched_search_phrase
 
+    # Fill in data for found topics
     for topic in to_return_searches:
         res = queries.get_topic_areas(topic['id'])
         topic['areas'] = [r[0] for r in res]
@@ -157,6 +158,20 @@ def search_topic():
                                     ['code'],
                                     ['id'], [course['id']])
             course['code'] = res[0][0]
+
+    sort_words = ['create', 'title', 'supervisor']
+    sort_req = data.get('sortBy', 'create-ascend')
+    reverse = 'descend' in sort_req
+    if sort_words[0] in sort_req:
+        to_return_searches = sorted(to_return_searches,
+                                    key=lambda x: x['id'], reverse=reverse)
+    if sort_words[1] in sort_req:
+        to_return_searches = sorted(to_return_searches,
+                                    key=lambda x: x['title'], reverse=reverse)
+    if sort_words[2] in sort_req:
+        to_return_searches = sorted(to_return_searches,
+                                    key=lambda x: x['supervisor']['name'],
+                                    reverse=reverse)
 
     return jsonify({'status': 'ok', 'topics': to_return_searches,
                     'canRequest': session['acc_type'] == 'student'})
