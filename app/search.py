@@ -26,20 +26,13 @@ def search_topic():
                                topic_request_text=config.TOPIC_REQUEST_TEXT,
                                heading='Search Topics', title='Search Topics')
 
-    stop_words = ['AND', 'THE', 'WAS', 'IS', 'A', 'WE', 'THAT', 'IN', 'TO']
-
     # getting input from forms
     data = json.loads(request.data)
     search_topic = [topic['tag'] for topic in data['topicArea']]
     search_super = [supers['tag'] for supers in data['supervisor']]
-    search_terms = data['searchTerm']
+    search_term = data['searchTerm']
     search_check = data['checkbox']
 
-    # cleaning up input
-    search_terms = search_terms.upper()
-    search_terms = re.split(r'\s+', str(search_terms))
-    search_terms = list(filter(None, search_terms))
-    search_terms = [word for word in search_terms if word not in stop_words]
     db.connect()
 
     # getting submitted topic_area
@@ -119,22 +112,11 @@ def search_topic():
         })
 
     matched_search_phrase = []
-    if len(data['searchTerm']) > 0:
+    if len(search_term) > 0:
         for t in topics:
-            match = False
-            if data.get('strictMatching', False):
-                if re.search(data['searchTerm'], t['title'], flags=re.I):
-                    match = True
-                if re.search(data['searchTerm'], t['description'], flags=re.I):
-                    match = True
-            else:
-                for word in search_terms:
-                    if re.search(word, t['title'].upper()):
-                        match = True
-
-                    if re.search(word, t['description'].upper()):
-                        match = True
-            if match:
+            if re.search(search_term, t['title'], flags=re.I):
+                matched_search_phrase.append(t)
+            if re.search(search_term, t['description'], flags=re.I):
                 matched_search_phrase.append(t)
     else:
         matched_search_phrase = topics

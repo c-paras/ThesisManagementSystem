@@ -60,8 +60,7 @@ function searchResults() {
     'checkbox': $('#checkbox-vis').is(':checked'),
     'topicArea': M.Chips.getInstance($('#topics')).chipsData,
     'supervisor': M.Chips.getInstance($('#supervisor')).chipsData,
-    'sortBy': form.find('[name=sortby]').val(),
-    'strictMatching': form.find('[name=strict-match]').prop('checked')
+    'sortBy': form.find('[name=sortby]').val()
   };
   makePOSTRequest('/search', data, (res) => {
     if (res.status === 'fail') {
