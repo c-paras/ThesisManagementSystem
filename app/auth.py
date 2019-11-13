@@ -18,7 +18,8 @@ from app.helpers import error
 from app.helpers import get_fields
 from app.helpers import send_email
 from app.queries import queries
-from app.update_accounts import enroll_user, get_all_account_types
+from app.update_accounts import enroll_user
+from app.update_accounts import get_all_account_types
 
 import bcrypt
 import re
