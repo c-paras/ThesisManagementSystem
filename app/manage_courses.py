@@ -173,7 +173,7 @@ def upload_enroll_file():
     enroll_file.commit()
     db.connect()
     error_string = update_from_file(
-        enroll_file.get_path(), session['current_co']
+        enroll_file.get_path(), session['current_co'], 'student'
     )
     db.close()
     enroll_file.remove_file()

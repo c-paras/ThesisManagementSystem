@@ -17,7 +17,7 @@ def get_all_account_types():
 # email, new_name, account_type
 
 
-def update_from_file(path, course_offering=None):
+def update_from_file(path, course_offering=None, default='student'):
     with open(path) as csv_file:
         csv_reader = csv.reader(csv_file, delimiter=',')
         account_types = get_all_account_types()
@@ -36,7 +36,7 @@ def update_from_file(path, course_offering=None):
                    {config.EMAIL_FORMAT_ERROR}"""
                 return error_string
             if len(row) < 3:
-                clean_row.append('student')
+                clean_row.append(default)
             account_type = clean_row[2]
             if clean_row[2] in account_types:
                 account_type = account_types[clean_row[2]]

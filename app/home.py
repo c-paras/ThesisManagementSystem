@@ -225,7 +225,7 @@ def upload_staff():
     enroll_file.commit()
     db.connect()
     error_string = update_from_file(
-        enroll_file.get_path()
+        enroll_file.get_path(), default='supervisor'
     )
     db.close()
     enroll_file.remove_file()
