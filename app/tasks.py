@@ -259,7 +259,7 @@ def staff_view():
                                title=task_info[1],
                                deadline_text=deadline_text,
                                description=task_info[3],
-                               attachments=[attachment],
+                               attachment=attachment,
                                taskCriteria=task_criteria,
                                studentName=student_details[0][0],
                                studentEmail=student_email,
@@ -366,7 +366,6 @@ def get_sub_status(user, task):
         )
         status = status_name[0][0]
     return status
-
 
 
 @tasks.route('/submit_file_task', methods=['POST'])
