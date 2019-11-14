@@ -107,9 +107,14 @@ def create():
             get_fields(request.form, fields,
                        optional=['word-limit', 'file-name'],
                        ints=['maximum-file-size', 'num-criteria',
-                             'word-limit', 'course-id', 'old_task_id'])
+                             'word-limit', 'course-id'])
     except ValueError as e:
         return e.args
+
+    try:
+        old_task_id = int(old_task_id)
+    except ValueError as e:
+        old_task_id = None
 
     try:
         deadline = datetime.strptime(deadline, '%d/%m/%Y %H:%M').timestamp()
