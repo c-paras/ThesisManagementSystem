@@ -63,8 +63,12 @@ def reset_request():
     if len(res) == 0:
         return jsonify({'status': 'ok'})
 
-    reset_id = uuid.uuid1()
-    session['reset'] = str(reset_id)
+    reset_id = str(uuid.uuid1())
+    db.connect()
+    db.update_rows('users', [reset_id], ['reset_code'],
+                   ['id'], [res[0][1]])
+    db.close()
+
     reset_link = url_for('.reset', user=res[0][1],
                          resetID=reset_id, _external=True)
     send_email(to=email, name=res[0][0], subject='Reset Password',
@@ -97,21 +101,26 @@ def reset():
     reset_id = data['reset_id']
     new_pass = data['new_pass']
     new_confirm = data['new_confirm']
-    print(new_confirm)
+
     if len(new_pass) < 8:
         return error('Password must be at least 8 characters long!')
 
     if new_pass != new_confirm:
         return error('Passwords do not match!')
 
-    reset_id_test = session['reset']
+    db.connect()
+    reset_id_test = db.select_columns('users', ['reset_code'],
+                                      ['id'], [user_id])[0][0]
 
     hash_pass = bcrypt.hashpw(new_pass.encode('utf-8'), bcrypt.gensalt())
 
     if reset_id == reset_id_test:
-        db.connect()
-        db.update_rows('users', [hash_pass], ['password'], ['id'], [user_id])
+
+        db.update_rows('users', [hash_pass, ''],
+                       ['password', 'reset_code'], ['id'], [user_id])
         db.close()
 
-    session.clear()
+    else:
+        return error('You are not allowed to change this password!')
+
     return jsonify({'status': 'ok'})
