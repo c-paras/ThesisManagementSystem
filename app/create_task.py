@@ -194,8 +194,18 @@ def create():
                 f'File exceeds the maximum size of {config.MAX_FILE_SIZE} MB'
             )
         if old_task_id is not None:
-            pass
-            # TODO: Delete old file
+            old = db.select_columns('task_attachments', ['path'],
+                                    ['task'],
+                                    [old_task_id])
+            if res:
+                db.delete_rows('task_attachments', ['task'], [old_task_id])
+                try:
+                    prev_submission = FileUpload(filename=old[0][0])
+                    prev_submission.remove_file()
+                except LookupError:
+                    # If the file doesn't exists don't worry as we are deleting
+                    # the attachment anyway
+                    pass
         else:
             sent_file.commit()
 
