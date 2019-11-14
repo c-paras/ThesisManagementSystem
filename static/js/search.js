@@ -1,12 +1,19 @@
 let canRequest;
 
-function makeCard(id, title, description, topics, supervisor, email, preqs) {
+function makeCard(id, title, description, topics, supervisor, email, preqs, visible) {
+  let badge = '';
+  if (!visible) {
+    badge = '<span class="new badge red" data-badge-caption="">Not on offer</span>';
+  }
   const card = `<div class="row">
   <div class="col s12">
     <div class="card white-grey darken-1">
       <div class="card-content black-text">
         <span class="card-title">${title}</span>
-          <p>Topic Area: ${topics}</p>
+          <p>
+            Topic Area: ${topics}
+            ${badge}
+          </p>
           <hr>
         </span>
         <p>Supervisor: ${supervisor}
@@ -20,6 +27,7 @@ function makeCard(id, title, description, topics, supervisor, email, preqs) {
         <a
           name="request-btn" class="modal-trigger"
           href="#request-modal" onclick="loadTopic(${id}, '${supervisor}')"
+          visible="${visible}"
         >
           Request Topic
         </a>
@@ -30,14 +38,24 @@ function makeCard(id, title, description, topics, supervisor, email, preqs) {
   return card;
 }
 
+function disableTopicRequest(elem, msg) {
+  elem.attr('href', '#!');
+  elem.prop('onclick', null);
+  elem.removeClass('modal-trigger');
+  elem.click(function () {
+    flash(msg, error = true);
+  });
+}
+
 function updateCanRequest() {
+  $('[name="request-btn"]').each(function () {
+    if ($(this).attr('visible') === '0') {
+      disableTopicRequest($(this), 'This topic is not available for request!');
+    }
+  });
   if (!canRequest) {
     $('[name="request-btn"]').each(function () {
-      $(this).attr('href', '#!');
-      $(this).prop('onclick', null);
-      $(this).click(function () {
-        flash('Only students enrolled in a thesis course may request a topic!', error = true);
-      });
+      disableTopicRequest($(this), 'Only students enrolled in a thesis course may request a topic!');
     });
   }
 }
@@ -76,7 +94,7 @@ function searchResults() {
         }
         cards.push(makeCard(topic.id, topic.title, topic.description,
                             topic.areas.join(', '), topic.supervisor.name,
-                            topic.supervisor.email, preqs));
+                            topic.supervisor.email, preqs, topic.visible));
       }
 
       $("[id='tagsTopic']").each((function () {
