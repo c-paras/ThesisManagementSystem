@@ -47,9 +47,10 @@ def gen_users():
             name = names[i]['name']
             query.append(('users',
                           [name, f'{zid}@unsw.edu.au',
-                           password, types['student'], '', timestamp],
+                           password, types['student'], '', '', timestamp],
                           ['name', 'email', 'password',
-                           'account_type', 'confirm_code', 'date_created']))
+                           'account_type', 'confirm_code',
+                           'reset_code', 'date_created']))
 
         # public users
         public = []
@@ -59,9 +60,10 @@ def gen_users():
             name = names[100+i]['name']
             query.append(('users',
                           [name, f'{zid}@unsw.edu.au',
-                           password, types['public'], '', timestamp],
+                           password, types['public'], '', '', timestamp],
                           ['name', 'email', 'password',
-                           'account_type', 'confirm_code', 'date_created']))
+                           'account_type', 'confirm_code',
+                           'reset_code', 'date_created']))
 
         # supervisor/assessor users
         supervisors = []
@@ -71,9 +73,10 @@ def gen_users():
             name = names[200+i]['name']
             query.append(('users',
                           [name, f'{zid}@unsw.edu.au',
-                           password, types['supervisor'], '', timestamp],
+                           password, types['supervisor'], '', '', timestamp],
                           ['name', 'email', 'password',
-                           'account_type', 'confirm_code', 'date_created']))
+                           'account_type', 'confirm_code',
+                           'reset_code', 'date_created']))
 
         # course admin users
         course_admin = []
@@ -83,9 +86,10 @@ def gen_users():
             name = names[300+i]['name']
             query.append(('users',
                           [name, f'{zid}@unsw.edu.au',
-                           password, types['course_admin'], '', timestamp],
+                           password, types['course_admin'], '', '', timestamp],
                           ['name', 'email', 'password',
-                           'account_type', 'confirm_code', 'date_created']))
+                           'account_type', 'confirm_code',
+                           'reset_code', 'date_created']))
 
         db.insert_multiple(query)
 

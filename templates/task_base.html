@@ -16,18 +16,16 @@
       </div>
       <br>
       <div>
-        {% if not attachments|length %}
+        {% if not attachment %}
           <b>Attachment:</b> No attachments
         {% else %}
-          {% for a in attachments %}
-            <div>
-              <b>Attachment:</b> 
-              <a class="waves-effect waves-light" href="{{ a.get_url() }}" download="{{ a.get_original_name() }}">
-                {{ a.get_original_name() }}
-                <i class="material-icons right">file_download</i>
-              </a>
-            </div>
-          {% endfor %}
+          <div>
+            <b>Attachment:</b>
+            <a class="waves-effect waves-light" href="{{ attachment.get_url() }}" download="{{ attachment.get_original_name() }}">
+              {{ attachment.get_original_name() }}
+              <i class="material-icons right">file_download</i>
+            </a>
+          </div>
         {% endif %}
       </div>
       <br>
@@ -44,7 +42,7 @@
           <div class="col s12">
             <b>Last Submission: </b>
             {% if submission %}
-              {{ submission['date_modified'].strftime('%A %d/%m/%Y at %I:%M:%S %p') }}
+              {{ submission['date_modified'] }}
             {% else %}
               No recorded submission
             {% endif %}
@@ -84,7 +82,7 @@
           <div class="col s12">
             <b>Last Submission: </b>
             {% if prev_submission %}
-              {{ prev_submission['modify_date'].strftime('%A %d/%m/%Y at %I:%M:%S %p') }}
+              {{ prev_submission['modify_date'] }}
             {% else %}
               No recorded submission
             {% endif %}

@@ -11,7 +11,7 @@ from app.auth import at_least_role
 from app.auth import UserRole
 from app.db_manager import sqliteManager as db
 from app.file_upload import FileUpload
-from app.helpers import error
+from app.helpers import error, timestamp_to_string
 from app.queries import queries
 from app.helpers import send_email
 
@@ -65,9 +65,8 @@ def student_view():
     if not text_submission:
         accepted_files = ','.join(queries.get_tasks_accepted_files(task_id))
     # get deadline
-    time_format = '%A %d/%m/%Y at %I:%M:%S %p'
-    due_date = datetime.fromtimestamp(task_info[2])
-    deadline_text = due_date.strftime(time_format)
+
+    deadline_text = timestamp_to_string(task_info[2], True)
 
     #
     # get criteria & marks
@@ -98,8 +97,10 @@ def student_view():
                 type(mark_details["Assessor"]) == ()):
             awaiting_marks = True
 
+    attachment = None
     res = db.select_columns('task_attachments', ['path'], ['task'], [task_id])
-    attachments = [FileUpload(filename=r[0]) for r in res]
+    if res:
+        attachment = FileUpload(filename=res[0][0])
     prev_submission = None
     # check if the student needs to submit
     res = db.select_columns('submissions',
@@ -111,7 +112,7 @@ def student_view():
         try:
             prev_submission = {
                 'name': res[0][0],
-                'modify_date': datetime.fromtimestamp(res[0][2])
+                'modify_date': timestamp_to_string(res[0][2], True)
             }
         except LookupError as e:
             print(f"Submission {task_id} {session['user']}: {e}")
@@ -128,9 +129,8 @@ def student_view():
                                 where_col=['student', 'task'],
                                 where_val=[session['id'], task_id])
         if res:
-            edited_time = datetime.fromtimestamp(int(res[0][1]))
             text_info["old_text"] = res[0][0]
-            text_info["edited_time"] = edited_time.strftime(time_format)
+            text_info["edited_time"] = timestamp_to_string(res[0][1])
             text_info["button_text"] = "Edit Submission"
 
     db.close()
@@ -146,7 +146,7 @@ def student_view():
                            is_approval=is_approval,
                            task_id=task_id,
                            max_size=task_info[6],
-                           attachments=attachments,
+                           attachment=attachment,
                            can_submit=can_submit,
                            awaiting_marks=awaiting_marks)
 
@@ -194,12 +194,8 @@ def staff_view():
             abort(404)
 
         # get deadline
-        time_format = '%d/%m/%Y at %I:%M:%S %p'
-        due_date = datetime.fromtimestamp(task_info[2])
-        weekday = \
-            calendar.day_name[datetime.fromtimestamp(task_info[2]).weekday()]
 
-        deadline_text = weekday + " " + due_date.strftime(time_format)
+        deadline_text = timestamp_to_string(task_info[2], True)
 
         res = queries.get_material_and_attachment(task_id)
         attachment = None
@@ -259,7 +255,7 @@ def staff_view():
                                title=task_info[1],
                                deadline_text=deadline_text,
                                description=task_info[3],
-                               attachments=[attachment],
+                               attachment=attachment,
                                taskCriteria=task_criteria,
                                studentName=student_details[0][0],
                                studentEmail=student_email,
@@ -366,7 +362,6 @@ def get_sub_status(user, task):
         )
         status = status_name[0][0]
     return status
-
 
 
 @tasks.route('/submit_file_task', methods=['POST'])

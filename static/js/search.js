@@ -59,25 +59,24 @@ function searchResults() {
     'searchTerm': $('#search-input').val(),
     'checkbox': $('#checkbox-vis').is(':checked'),
     'topicArea': M.Chips.getInstance($('#topics')).chipsData,
-    'supervisor': M.Chips.getInstance($('#supervisor')).chipsData
+    'supervisor': M.Chips.getInstance($('#supervisor')).chipsData,
+    'sortBy': form.find('[name=sortby]').val()
   };
-
   makePOSTRequest('/search', data, (res) => {
     if (res.status === 'fail') {
       flash(res.message, error = true);
     } else {
       let cards = [];
-      for (let i = 0; i < res.topics.length; i++) {
-        let preqs = '';
-        if (res.preqs[i].length === 0) {
-          preqs = 'None';
-        } else {
-          preqs = res.preqs[i].join(', ');
+      for (const i in res.topics) {
+        topic = res.topics[i];
+        let preqs = 'None';
+        if(topic.preqs.length !== 0) {
+          const preqList = topic.preqs.map(value => value.code);
+          preqs = preqList.join(', ');
         }
-        cards.push(makeCard(res.topics[i][0], res.topics[i][1],
-          res.topics[i][3], res.topicsArea[i].join(', '),
-          res.topicSupervisor[i][0][0], res.topicSupervisor[i][0][1], preqs)
-        );
+        cards.push(makeCard(topic.id, topic.title, topic.description,
+                            topic.areas.join(', '), topic.supervisor.name,
+                            topic.supervisor.email, preqs));
       }
 
       $("[id='tagsTopic']").each((function () {
@@ -94,14 +93,18 @@ function searchResults() {
         $('#search-title').html('Your search returned no matching topics');
       }
 
+      let entriesPerPage = $('#entries').val();
+      if(entriesPerPage === 'infinite') {
+        entriesPerPage = cards.length;
+      }
       $.myTopicCards = cards;
 
       $('#search-title').show();
-      $('#search-results').html(cards.slice(0, 10));
+      $('#search-results').html(cards.slice(0, entriesPerPage));
       $('#page').html('');
       $('#page').materializePagination({
         align: 'center',
-        lastPage: Math.ceil(cards.length / 10),
+        lastPage: Math.ceil(cards.length / entriesPerPage),
         firstPage: 1,
         useUrlParameter: false,
         onClickCallback: function (requestedPage) {
@@ -140,4 +143,21 @@ function loadPage() {
   });
 }
 
-loadPage();
+$(function() {
+  loadPage();
+  $('#checkbox-vis').change(searchResults);
+  $('#search-form').find('select[name=sortby]').change(searchResults);
+  $('#search-form').find('input[name=strict-match]').change(searchResults);
+  $('#entries').change(searchResults);
+});
+
+
+function showAdvanced() {
+  if($('#advanced-menu').is(':visible')) {
+    $(event.target).find('i').text('arrow_drop_down');
+    $('#advanced-menu').hide();
+  } else {
+    $(event.target).find('i').text('arrow_drop_up');
+    $('#advanced-menu').show();
+  }
+}

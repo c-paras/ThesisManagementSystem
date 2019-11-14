@@ -26,20 +26,13 @@ def search_topic():
                                topic_request_text=config.TOPIC_REQUEST_TEXT,
                                heading='Search Topics', title='Search Topics')
 
-    stop_words = ['AND', 'THE', 'WAS', 'IS', 'A', 'WE', 'THAT', 'IN', 'TO']
-
     # getting input from forms
     data = json.loads(request.data)
     search_topic = [topic['tag'] for topic in data['topicArea']]
     search_super = [supers['tag'] for supers in data['supervisor']]
-    search_terms = data['searchTerm']
+    search_term = data['searchTerm']
     search_check = data['checkbox']
 
-    # cleaning up input
-    search_terms = search_terms.upper()
-    search_terms = re.split(r'\s+', str(search_terms))
-    search_terms = list(filter(None, search_terms))
-    search_terms = [word for word in search_terms if word not in stop_words]
     db.connect()
 
     # getting submitted topic_area
@@ -103,67 +96,77 @@ def search_topic():
                                               [sup[1], area[1]]))
         res = [i for sub in temp for i in sub]
 
-    # checking if search terms are matched
-    matched = [False] * len(res)
-    for word in search_terms:
-        for i in range(len(res)):
-            if re.search(word, res[i][1].upper()):
-                matched[i] = True
-
-            if re.search(word, res[i][3].upper()):
-                matched[i] = True
+    topics = []
+    for r in res:
+        topics.append({
+            'id': r[0],
+            'title': r[1],
+            'supervisor': {
+                'id': r[2],
+                'name': None,
+                'email': None
+            },
+            'description': r[3],
+            'visible': int(r[4]),
+            'preqs': []
+        })
 
     matched_search_phrase = []
-    if len(search_terms) == 0:
-        matched_search_phrase = res
+    if len(search_term) > 0:
+        for t in topics:
+            if re.search(search_term, t['title'], flags=re.I):
+                matched_search_phrase.append(t)
+            if re.search(search_term, t['description'], flags=re.I):
+                matched_search_phrase.append(t)
     else:
-        for i in range(len(res)):
-            if matched[i]:
-                matched_search_phrase.append(res[i])
+        matched_search_phrase = topics
 
     # checking if topics are visible or not
     to_return_searches = []
     if search_check:
         for results in matched_search_phrase:
-            if results[4] == 1:
+            if results['visible'] == 1:
                 to_return_searches.append(results)
     else:
         to_return_searches = matched_search_phrase
 
-    # getting the topics_areas for the filtered topics
-    to_return_topic_area = []
-    for topics in to_return_searches:
-        to_return_topic_area.append(queries.get_topic_areas(topics[0]))
+    # Fill in data for found topics
+    for topic in to_return_searches:
+        res = queries.get_topic_areas(topic['id'])
+        topic['areas'] = [r[0] for r in res]
 
-    # getting the supervisors for the filtered topics
-    to_return_supervisor = []
-    for topics in to_return_searches:
-        to_return_supervisor.append(db.select_columns('users',
-                                                      ['name', 'email'],
-                                                      ['id'], [topics[2]]))
+        res = db.select_columns('users',
+                                ['name', 'email'],
+                                ['id'], [topic['supervisor']['id']])
+        topic['supervisor']['name'] = res[0][0]
+        topic['supervisor']['email'] = res[0][1]
 
-    preqs = []
-    for topics in to_return_searches:
-        preqs.append(db.select_columns('prerequisites',
-                                       ['course'],
-                                       ['topic'], [topics[0]]))
+        res = db.select_columns('prerequisites',
+                                ['course'],
+                                ['topic'], [topic['id']])
+        topic['preqs'] = [{'id': r[0]} for r in res]
+        for course in topic['preqs']:
+            res = db.select_columns('courses',
+                                    ['code'],
+                                    ['id'], [course['id']])
+            course['code'] = res[0][0]
 
-    preqs_course = []
-    for pre in preqs:
-        if len(pre) == 0:
-            preqs_course.append([])
-        else:
-            temp = []
-            for course in pre:
-                temp.append(db.select_columns('courses',
-                                              ['code'],
-                                              ['id'], [course[0]])[0][0])
-            preqs_course.append(temp)
+    sort_req = data.get('sortBy', 'create-ascend')
+    reverse = 'descend' in sort_req
+    sort_words = {
+        'create': lambda t: t['id'],
+        'title': lambda t: t['title'],
+        'supervisor': lambda t: t['supervisor']['name']
+    }
+    # Retrieve the function from the above dictionary if the requested
+    # sort by parameter is one of the keys, defaults to create
+    sort_function = next((f for k, f in sort_words.items() if k in sort_req),
+                         sort_words['create'])
+    to_return_searches = sorted(to_return_searches,
+                                key=sort_function, reverse=reverse)
+
     return jsonify({'status': 'ok', 'topics': to_return_searches,
-                    'topicsArea': to_return_topic_area,
-                    'topicSupervisor': to_return_supervisor,
-                    'canRequest': session['acc_type'] == 'student',
-                    'preqs': preqs_course})
+                    'canRequest': session['acc_type'] == 'student'})
 
 
 @search.route('/search_chips', methods=['GET'])

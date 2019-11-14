@@ -278,6 +278,18 @@ CREATE TABLE topic_requests(
 );
 
 
+DROP TABLE IF EXISTS update_account_types;
+CREATE TABLE update_account_types(
+    id              INTEGER NOT NULL PRIMARY KEY,
+    new_name        TEXT NOT NULL,
+    email           TEXT NOT NULL,
+    account_type    INTEGER NOT NULL,
+    course_offering INTEGER,
+    FOREIGN KEY(account_type) REFERENCES account_types(id),
+    FOREIGN KEY(course_offering) REFERENCES course_offerings(id)
+);
+
+
 DROP TABLE IF EXISTS users;
 CREATE TABLE users(
     id           INTEGER NOT NULL PRIMARY KEY,
@@ -286,6 +298,7 @@ CREATE TABLE users(
     password     TEXT NOT NULL,
     account_type INTEGER,
     confirm_code TEXT NOT NULL,
+    reset_code   TEXT NOT NULL,
     date_created INTEGER NOT NULL,
     FOREIGN KEY(account_type) REFERENCES account_types(id)
 );

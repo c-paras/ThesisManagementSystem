@@ -21,6 +21,7 @@ from app.request_topic import request_topic
 from app.search import search
 from app.submission import submissions
 from app.tasks import tasks
+from app.change_password import change_password
 
 import os
 
@@ -67,7 +68,8 @@ def fill_create_course():
 def init_app():
     blueprints = [
         auth, home, errors, create_topic, search, request_topic,
-        tasks, manage_topics, create_task, submissions, manage_courses
+        tasks, manage_topics, create_task, submissions, manage_courses,
+        change_password
     ]
 
     # register blueprints
