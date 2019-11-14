@@ -33,25 +33,27 @@ function openRequestModal(studentId, topicId) {
 
     const d = new Date(res.reqDate);
     let dif = new Date(new Date() - d)/1000;
-    let timeframe =" Seconds Ago";
+    let timeframe =" seconds ago";
 
     if (dif > 60){
       dif /= 60;
-      timeframe = " Minutes Ago";
+      timeframe = " minutes ago";
     }
 
     if(dif > 60){
       dif = dif/60;
-      timeframe = " Hours Ago";
+      timeframe = " hours ago";
     }
 
-    if(dif > 24 && timeframe === " Hours Ago"){
+    if(dif > 24 && timeframe === " hours ago"){
       dif /= 24;
-      timeframe = " Days Ago";
+      timeframe = " days ago";
     }
     dif = Math.floor(dif);
     const date = d.getDate();
     const year = d.getFullYear();
+    const hour = d.getHours();
+    const minutes = d.getMinutes();
     let month = [];
     month[0] = "Jan";
     month[1] = "Feb";
@@ -66,7 +68,8 @@ function openRequestModal(studentId, topicId) {
     month[10] = "Nov";
     month[11] = "Dec";
     month_code = month[d.getMonth()];
-    const date_string = (date + ' ' + month_code + ' ' + year);
+    const date_string = (date + ' ' + month_code + ' ' +
+      year + ' ' + hour + ':' + minutes);
     $('#date-requested').attr('data-tooltip', date_string);
     $('#date-requested').text(dif + timeframe);
     $('.tooltipped').tooltip();

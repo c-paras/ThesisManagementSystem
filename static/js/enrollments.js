@@ -129,7 +129,7 @@ function setFormTypeUser() {
     $(this).remove();
   });
   $('#account_type_enroll').append('<option value="student">Student</option>');
-  $('#account_type_enroll').append('<option value="course_admin">Admin</option>');
+  //$('#account_type_enroll').append('<option value="course_admin">Admin</option>');
   $('#btn-request-enroll').attr('onclick', 'enrollUser()');
   $('#enroll-title').text("Enroll users");
   $('#select-e-type').text("Select enrollment type");

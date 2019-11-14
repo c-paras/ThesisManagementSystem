@@ -24,25 +24,36 @@ def update_from_file(path, course_offering=None):
         line = 0
         for row in csv_reader:
             line += 1
-            if len(row) < 3:
+            clean_row = []
+            for i in row:
+                temp = i.strip().lower()
+                clean_row.append(temp)
+            if len(row) < 2:
                 error_string = f"Invalid format on line number {line}"
                 return error_string
-            if not re.match(config.EMAIL_FORMAT, row[0]):
+            if not re.match(config.EMAIL_FORMAT, clean_row[0]):
                 error_string = f"""Invalid email on line number {line}<br>
                    {config.EMAIL_FORMAT_ERROR}"""
                 return error_string
-            account_type = row[2]
-            if row[2] in account_types:
-                account_type = account_types[row[2]]
+            if len(row) < 3:
+                clean_row.append('student')
+            account_type = clean_row[2]
+            if clean_row[2] in account_types:
+                account_type = account_types[clean_row[2]]
 
-            update_account_type(row[0], row[1], account_type, course_offering)
+            update_account_type(
+                clean_row[0], clean_row[1], account_type, course_offering
+            )
     return ""
 
 
-def update_account_type(email, new_name, account_type, course_offering=None):
+def update_account_type(
+        email, new_name, account_type=None, course_offering=None):
 
     account_types = get_all_account_types()
     course_role = 'staff'
+    if account_type = None:
+        account_type = 'student'
     if account_type in account_types:
         account_type = account_types[account_type]
     elif account_types['student'] == account_type:
