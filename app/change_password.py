@@ -27,7 +27,7 @@ change_password = Blueprint('change_password', __name__)
 def change_user_password():
 
     try:
-        fields = ['password', 'confirm-password']
+        fields = ['new-password', 'new-confirm-password']
         password, confim_pass = get_fields(request.form, fields)
     except ValueError as e:
         return e.args[0]
@@ -35,6 +35,7 @@ def change_user_password():
     if len(password) < 8:
         return error('Password must be at least 8 characters long!')
 
+    print("here we are!")
     acc_id = session['id']
     hash_pass = bcrypt.hashpw(password.encode('utf-8'), bcrypt.gensalt())
 

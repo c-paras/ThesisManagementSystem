@@ -8,6 +8,7 @@ function submitChange() {
       flash(res.message, error = true);
     } else {
       delayToast('Password Changed!',false);
+      location.reload();
     }
   });
 }
@@ -21,7 +22,7 @@ function submitResetReq() {
     if (res.status === 'fail') {
       flash(res.message, error = true);
     } else {
-      delayToast('You have been sent an email with instructions!');
+      delayToast('You have been sent an email with instructions!', false);
       window.location.href = '/login';
     }
   });
