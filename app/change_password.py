@@ -97,7 +97,7 @@ def reset():
         res = db.select_columns('users', ['id'], ['reset_code'],
                                 [reset_id])
         db.close()
-        if user_id != res[0][0]:
+        if not len(res) or user_id != str(res[0][0]):
             return redirect(url_for('auth.login'))
 
         return render_template('reset_password.html',
