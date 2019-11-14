@@ -50,10 +50,28 @@
 
         <div class="row">
           <div class="col s12">
-            {{
-               file_upload("file-name", accepted_file_types,
-               "Upload attachment, e.g. marking criteria", max_file_size)
-            }}
+            {% for f in default_fields['task_attachments'] %}
+              <div>
+                <b>Current Attachment: </b>
+                <a class="waves-effect waves-light" href="{{ f.get_url() }}" download="{{ f.get_original_name() }}">
+                  {{ f.get_original_name() }}
+                  <i class="material-icons right">file_download</i>
+                </a>
+              </div>
+            {% endfor %}
+            <div>
+              {% if old_task_id %}
+                {{
+                   file_upload("file-name", accepted_file_types,
+                   "Upload a replacement attachment, e.g. marking criteria", max_file_size)
+                }}
+              {% else %}
+                {{
+                   file_upload("file-name", accepted_file_types,
+                   "Upload attachment, e.g. marking criteria", max_file_size)
+                }}
+              {% endif %}
+            </div>
           </div>
         </div>
 
@@ -208,6 +226,32 @@
                   </tr>
                 {% else %}
                   <!-- else add old criterea  -->
+                  {% for criteria in default_fields['criteria'] %}
+                    <tr id="marking-criteria-{{ loop.index+1 }}" name="marking-criteria-{{ loop.index+1 }}">
+                      <td>
+                        <input
+                          id="criteria-{{ loop.index }}" name="criteria-{{ loop.index }}" type="text" class="validate"
+                          required="" aria-required="true" placeholder="Enter Criteria"
+                          requiredif="marking-method=criteria" value={{criteria[0]}}
+                        >
+                      </td>
+                      <td>
+                        <input
+                          type="number" id="maximum-mark-{{ loop.index }}" name="maximum-mark-{{ loop.index }}" min="1" max="100"
+                          placeholder="Enter Mark" class="validate" required="" aria-required="true"
+                          requiredif="marking-method=criteria" value={{criteria[1]}}
+                        >
+                      </td>
+                      <td class="center">
+                        <a
+                          class="waves-effect waves-light btn-floating btn-small"
+                          name="remove-criteria" onclick="removeCriteria({{ loop.index }})"
+                        >
+                          <i class="material-icons prefix">delete</i>
+                        </a>
+                      </td>
+                    </tr>
+                  {% endfor%}
                 {% endif %}
                 <tr id="add-criteria">
                   <td colspan="3">

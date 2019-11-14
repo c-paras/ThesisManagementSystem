@@ -42,7 +42,7 @@ def create():
                           'task-description': '', 'submission-type': 'text',
                           'word-limit': '', 'maximum-file-size': '',
                           'accepted-file-type': '', 'marking-method': 'accept',
-                          'criteria': []}
+                          'criteria': [], 'task_attachments': []}
 
         # if updating old task then load old task data
         old_task_id = request.args.get('update', None, type=int)
@@ -59,6 +59,13 @@ def create():
                 default_fields['deadline'] = due_date.strftime(time_format)
                 default_fields['task-description'] = res[2]
 
+                attachments = db.select_columns('task_attachments',
+                                                ['path'], ['task'],
+                                                [old_task_id])
+                for r in attachments:
+                    file = [FileUpload(filename=r[0])]
+                    default_fields['task_attachments'] = file
+
                 # submission method specific
                 if res[3] == 'text submission':
                     default_fields['word-limit'] = res[4]
@@ -70,6 +77,12 @@ def create():
                 # marking method specifics
                 if res[7] == 'requires mark':
                     default_fields['marking-method'] = 'criteria'
+                    crit = db.select_columns('task_criteria',
+                                             ['name, max_mark'],
+                                             ['task'],
+                                             [old_task_id])
+                    if crit is not None:
+                        default_fields['criteria'] = crit
 
         db.close()
         return render_template('create_task.html', heading=heading,
