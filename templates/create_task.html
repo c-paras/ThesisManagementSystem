@@ -51,12 +51,26 @@
         <div class="row">
           <div class="col s12">
             {% for f in default_fields['task_attachments'] %}
-              <div>
+              <div id="old-attachment-area">
                 <b>Current Attachment: </b>
                 <a class="waves-effect waves-light" href="{{ f.get_url() }}" download="{{ f.get_original_name() }}">
                   {{ f.get_original_name() }}
                   <i class="material-icons right">file_download</i>
                 </a>
+                <a class="waves-effect waves-light btn-floating btn-small red darken-3 modal-trigger" href="#deleteModal">
+                  <i class="material-icons prefix">delete</i>
+                </a>
+              </div>
+              <!-- Modal Structure -->
+              <div id="deleteModal" class="modal">
+                <div class="modal-content">
+                  <h4>Confirm Deletion</h4>
+                  <p>Are you sure you want to delete the attachment: '{{ f.get_original_name() }}'?</p>
+                </div>
+                <div class="modal-footer">
+                  <a href="#!" class="modal-close waves-effect waves-light btn grey">Cancel</a>
+                  <a href="#!" class="modal-close waves-effect waves-light btn red darken-3" onclick="removeOldAttachment()">Confirm</a>
+                </div>
               </div>
             {% endfor %}
             <div>
@@ -279,7 +293,9 @@
 
         <input type="hidden" id="num-criteria" name="num-criteria" value="">
         <input type="hidden" id="course-id" name="course-id" value="{{ course_id }}">
+
         <input type="hidden" id="old_task_id" name="old_task_id" value="{{ old_task_id }}">
+        <input type="hidden" id="delete_old_attachment" name="delete_old_attachment" value="0">
       </div>
 
       <div class="row">

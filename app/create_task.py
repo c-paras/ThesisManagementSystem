@@ -99,15 +99,17 @@ def create():
             'task-name', 'deadline', 'task-description', 'submission-type',
             'word-limit', 'maximum-file-size', 'accepted-file-type',
             'marking-method', 'num-criteria', 'course-id', 'file-name',
-            'old_task_id'
+            'old_task_id', 'delete_old_attachment'
         ]
         task_name, deadline, task_description, submission_type, \
             word_limit, max_file_size, accepted_ftype, marking_method, \
-            num_criteria, course_id, file_name, old_task_id = \
+            num_criteria, course_id, file_name, old_task_id, \
+            delete_old_attachment = \
             get_fields(request.form, fields,
                        optional=['word-limit', 'file-name'],
                        ints=['maximum-file-size', 'num-criteria',
-                             'word-limit', 'course-id'])
+                             'word-limit', 'course-id',
+                             'delete_old_attachment'])
     except ValueError as e:
         return e.args
 
@@ -198,21 +200,21 @@ def create():
             return error(
                 f'File exceeds the maximum size of {config.MAX_FILE_SIZE} MB'
             )
-        if old_task_id is not None:
-            old = db.select_columns('task_attachments', ['path'],
-                                    ['task'],
-                                    [old_task_id])
-            if res:
-                db.delete_rows('task_attachments', ['task'], [old_task_id])
-                try:
-                    prev_submission = FileUpload(filename=old[0][0])
-                    prev_submission.remove_file()
-                except LookupError:
-                    # If the file doesn't exists don't worry as we are deleting
-                    # the attachment anyway
-                    pass
-        else:
-            sent_file.commit()
+        sent_file.commit()
+
+    if (len(file_name) and old_task_id is not None) or delete_old_attachment:
+        old = db.select_columns('task_attachments', ['path'],
+                                ['task'],
+                                [old_task_id])
+        if res:
+            db.delete_rows('task_attachments', ['task'], [old_task_id])
+            try:
+                prev_submission = FileUpload(filename=old[0][0])
+                prev_submission.remove_file()
+            except LookupError:
+                # If the file doesn't exists don't worry as we are deleting
+                # the attachment anyway
+                pass
 
     res = db.select_columns('submission_methods', ['id'],
                             ['name'],
