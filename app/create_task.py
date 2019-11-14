@@ -91,7 +91,7 @@ def create():
                                max_file_size=config.MAX_FILE_SIZE,
                                max_word_limit=config.MAX_WORD_LIMIT,
                                accepted_file_types=allowed_file_types,
-                               old_task_id=int(old_task_id),
+                               old_task_id=old_task_id,
                                default_fields=default_fields)
 
     try:
