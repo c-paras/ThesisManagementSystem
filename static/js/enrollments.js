@@ -16,7 +16,7 @@ function addStaff() {
       flash(res.message, error = true);
     } else {
       delayToast('Account type changed', false);
-      window.location.href = '/manage_courses';
+      location.reload();
     }
   });
 }
@@ -80,7 +80,7 @@ function addStaffFile() {
       flash(res.message, error = true);
     } else {
       delayToast('Account type changed', false);
-      window.location.href = '/manage_courses';
+      location.reload();
     }
   });
 }
