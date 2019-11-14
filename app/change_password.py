@@ -3,6 +3,7 @@ from flask import jsonify
 from flask import request
 from flask import session
 from flask import url_for
+from flask import redirect
 from flask import render_template
 
 from app.auth import at_least_role
@@ -91,6 +92,14 @@ def reset():
     if request.method == 'GET':
         user_id = request.args.get('user', None)
         reset_id = request.args.get('resetID', None)
+
+        db.connect()
+        res = db.select_columns('users', ['id'], ['reset_code'],
+                                [reset_id])
+        db.close()
+        if user_id != res[0][0]:
+            return redirect(url_for('auth.login'))
+
         return render_template('reset_password.html',
                                title='Reset Password',
                                hide_navbar=True,
