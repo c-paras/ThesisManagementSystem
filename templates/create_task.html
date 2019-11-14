@@ -87,7 +87,8 @@
                 <label>
                   <input
                     class="with-gap" name="submission-type" id="text-type"
-                    type="radio" value="text" {% if default_fields["submission-type"] == "text" %}checked{% endif %}
+                    type="radio" value="text"
+                    {% if default_fields["submission-type"] == "text" %}checked{% endif %}
                   >
                   <span>Text Entry</span>
                 </label>
@@ -96,7 +97,8 @@
                 <label>
                   <input
                     class="with-gap" name="submission-type" id="file-type"
-                    type="radio" value="file" {% if default_fields["submission-type"] == "file" %}checked{% endif %}
+                    type="radio" value="file"
+                    {% if default_fields["submission-type"] == "file" %}checked{% endif %}
                   >
                   <span>File Upload</span>
                 </label>
@@ -227,7 +229,7 @@
                 {% else %}
                   <!-- else add old criterea  -->
                   {% for criteria in default_fields['criteria'] %}
-                    <tr id="marking-criteria-{{ loop.index+1 }}" name="marking-criteria-{{ loop.index+1 }}">
+                    <tr id="marking-criteria-{{ loop.index }}" name="marking-criteria-{{ loop.index }}">
                       <td>
                         <input
                           id="criteria-{{ loop.index }}" name="criteria-{{ loop.index }}" type="text" class="validate"
