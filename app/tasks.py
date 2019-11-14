@@ -98,8 +98,10 @@ def student_view():
                 type(mark_details["Assessor"]) == ()):
             awaiting_marks = True
 
+    attachment = None
     res = db.select_columns('task_attachments', ['path'], ['task'], [task_id])
-    attachments = [FileUpload(filename=r[0]) for r in res]
+    if res:
+        attachment = FileUpload(filename=res[0][0])
     prev_submission = None
     # check if the student needs to submit
     res = db.select_columns('submissions',
@@ -146,7 +148,7 @@ def student_view():
                            is_approval=is_approval,
                            task_id=task_id,
                            max_size=task_info[6],
-                           attachments=attachments,
+                           attachment=attachment,
                            can_submit=can_submit,
                            awaiting_marks=awaiting_marks)
 
