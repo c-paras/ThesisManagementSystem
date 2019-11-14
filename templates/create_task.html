@@ -15,7 +15,7 @@
               <i class="material-icons prefix">assignment</i>
               <input
                 id="task-name" name="task-name" type="text" class="validate"
-                required="" aria-required="true" placeholder="Name of Task"
+                required="" aria-required="true" placeholder="Name of Task" value="{{ default_fields['task-name'] }}"
               >
               <span class="helper-text" data-error="Task name is required"></span>
             </div>
@@ -28,7 +28,7 @@
               <i class="material-icons prefix">date_range</i>
               <input
                 id="deadline" name="deadline" type="text" class="validate"
-                placeholder="Deadline" required="" aria-required="true"
+                placeholder="Deadline" required="" aria-required="true" value="{{ default_fields['deadline'] }}"
               >
               <span class="helper-text" data-error="Deadline is required"></span>
             </div>
@@ -41,7 +41,7 @@
               <i class="material-icons prefix">event_note</i>
               <textarea
                 id="task-description" name="task-description" class="materialize-textarea validate"
-                placeholder="Task Description" required="" aria-required="true"
+                placeholder="Task Description" required="" aria-required="true" value="{{ default_fields['task-description'] }}"
               ></textarea>
               <span class="helper-text" data-error="Task description is required"></span>
             </div>
@@ -69,7 +69,7 @@
                 <label>
                   <input
                     class="with-gap" name="submission-type" id="text-type"
-                    type="radio" value="text" checked
+                    type="radio" value="text" {% if default_fields["submission-type"] == "text" %}checked{% endif %}
                   >
                   <span>Text Entry</span>
                 </label>
@@ -78,7 +78,7 @@
                 <label>
                   <input
                     class="with-gap" name="submission-type" id="file-type"
-                    type="radio" value="file"
+                    type="radio" value="file" {% if default_fields["submission-type"] == "file" %}checked{% endif %}
                   >
                   <span>File Upload</span>
                 </label>
@@ -93,6 +93,7 @@
                 type="number" id="word-limit" name="word-limit" min="1" max="{{ max_word_limit }}"
                 placeholder="Word Limit" class="validate"
                 required="" aria-required="true" requiredif="submission-type=text"
+                value="{{ default_fields['word-limit'] }}"
               >
               <span id="word-limit-error" class="helper-text" data-error="Word limit is required"></span>
             </div>
@@ -103,7 +104,7 @@
               <i class="material-icons prefix">insert_drive_file</i>
               <select
                 id="maximum-file-size" name="maximum-file-size" class="validate"
-                required="" aria-required="true"
+                required="" aria-required="true" value="{{ default_fields['maximum-file-size'] }}"
               >
                 {% for size in [1, 2, 3, 4, 5, 10, 15, 20, 25, 50, 75, 100] %}
                   <option value="{{ size }}">{{ size }} MB</option>
@@ -118,7 +119,7 @@
               <i class="material-icons prefix">description</i>
               <select
                 id="accepted-file-type" name="accepted-file-type" class="validate"
-                required="" aria-required="true"
+                required="" aria-required="true" value="{{ default_fields['accepted-file-type'] }}"
               >
                 {% for type in file_types %}
                   <option value="{{ type }}">{{ type|upper|replace('.', '') }}</option>
@@ -141,7 +142,7 @@
                 <label>
                   <input
                     class="with-gap" name="marking-method" id="accept-method"
-                    type="radio" value="accept" checked
+                    type="radio" value="accept" {% if default_fields["marking-method"] == "accept" %}checked{% endif %}
                   >
                   <span>Supervisor to mark as accepted</span>
                 </label>
@@ -150,7 +151,7 @@
                 <label>
                   <input
                     class="with-gap" name="marking-method" id="criteria-method"
-                    type="radio" value="criteria"
+                    type="radio" value="criteria" {% if default_fields["marking-method"] == "criteria" %}checked{% endif %}
                   >
                   <span>Supervisor and assessor to mark according to criteria</span>
                 </label>
@@ -179,30 +180,35 @@
 
               <!-- Table body -->
               <tbody>
-                <tr id="marking-criteria-1" name="marking-criteria-1">
-                  <td>
-                    <input
-                      id="criteria-1" name="criteria-1" type="text" class="validate"
-                      required="" aria-required="true" placeholder="Enter Criteria"
-                      requiredif="marking-method=criteria"
-                    >
-                  </td>
-                  <td>
-                    <input
-                      type="number" id="maximum-mark-1" name="maximum-mark-1" min="1" max="100"
-                      placeholder="Enter Mark" class="validate" required="" aria-required="true"
-                      requiredif="marking-method=criteria"
-                    >
-                  </td>
-                  <td class="center">
-                    <a
-                      class="waves-effect waves-light btn-floating btn-small"
-                      name="remove-criteria" onclick="removeCriteria(1)"
-                    >
-                      <i class="material-icons prefix">delete</i>
-                    </a>
-                  </td>
-                </tr>
+                {% if not default_fields["criteria"]|length %}
+                  <!-- If new task then show single empty criterea  -->
+                  <tr id="marking-criteria-1" name="marking-criteria-1">
+                    <td>
+                      <input
+                        id="criteria-1" name="criteria-1" type="text" class="validate"
+                        required="" aria-required="true" placeholder="Enter Criteria"
+                        requiredif="marking-method=criteria"
+                      >
+                    </td>
+                    <td>
+                      <input
+                        type="number" id="maximum-mark-1" name="maximum-mark-1" min="1" max="100"
+                        placeholder="Enter Mark" class="validate" required="" aria-required="true"
+                        requiredif="marking-method=criteria"
+                      >
+                    </td>
+                    <td class="center">
+                      <a
+                        class="waves-effect waves-light btn-floating btn-small"
+                        name="remove-criteria" onclick="removeCriteria(1)"
+                      >
+                        <i class="material-icons prefix">delete</i>
+                      </a>
+                    </td>
+                  </tr>
+                {% else %}
+                  <!-- else add old criterea  -->
+                {% endif %}
                 <tr id="add-criteria">
                   <td colspan="3">
                     <a class="waves-effect waves-light btn" id="add-criteria-btn" onclick="addCriteria()">

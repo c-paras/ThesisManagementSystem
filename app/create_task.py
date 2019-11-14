@@ -35,13 +35,25 @@ def create():
         file_types = db.select_columns('file_types', ['name'])
         file_types = list(map(lambda x: x[0], file_types))
         allowed_file_types = ','.join(file_types)
+
+        default_fields = {'task-name': '', 'deadline': '',
+                          'task-description': '', 'submission-type': 'text',
+                          'word-limit': '', 'maximum-file-size': '',
+                          'accepted-file-type': '', 'marking-method': 'accept',
+                          'file-name': '', 'criteria': []}
+
+        # check if updating old task
+        old_task_id = request.args.get('update', None, type=int)
+
         db.close()
         return render_template('create_task.html', heading='Create Task',
                                title='Create Task', file_types=file_types,
                                course_id=course_id,
                                max_file_size=config.MAX_FILE_SIZE,
                                max_word_limit=config.MAX_WORD_LIMIT,
-                               accepted_file_types=allowed_file_types)
+                               accepted_file_types=allowed_file_types,
+                               old_task_id=old_task_id,
+                               default_fields=default_fields)
 
     try:
         fields = [
