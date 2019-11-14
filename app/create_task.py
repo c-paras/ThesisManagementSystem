@@ -238,7 +238,7 @@ def create():
             [old_task_id]
         )
     else:
-        # add a new task
+        # add a new task`
         db.insert_single(
             'tasks',
             [task_name, course_id, deadline, task_description,
@@ -262,6 +262,11 @@ def create():
     # delete old entries in other tables
     if old_task_id is not None:
         db.delete_rows('submission_types', ['task'], [old_task_id])
+
+        res = db.select_columns('task_criteria', ['id'], ['task'],
+                                [old_task_id])
+        for r in res:
+            db.delete_rows('marks', ['criteria'], [r[0]])
         db.delete_rows('task_criteria', ['task'], [old_task_id])
 
     # commit accepted file type

@@ -242,14 +242,14 @@
                         <input
                           id="criteria-{{ loop.index }}" name="criteria-{{ loop.index }}" type="text" class="validate"
                           required="" aria-required="true" placeholder="Enter Criteria"
-                          requiredif="marking-method=criteria" value={{criteria[0]}}
+                          requiredif="marking-method=criteria" value="{{criteria[0]}}"
                         >
                       </td>
                       <td>
                         <input
                           type="number" id="maximum-mark-{{ loop.index }}" name="maximum-mark-{{ loop.index }}" min="1" max="100"
                           placeholder="Enter Mark" class="validate" required="" aria-required="true"
-                          requiredif="marking-method=criteria" value={{criteria[1]}}
+                          requiredif="marking-method=criteria" value="{{criteria[1]}}"
                         >
                       </td>
                       <td class="center">
