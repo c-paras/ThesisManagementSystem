@@ -52,7 +52,7 @@ def update_account_type(
 
     account_types = get_all_account_types()
     course_role = 'staff'
-    if account_type = None:
+    if account_type is None:
         account_type = 'student'
     if account_type in account_types:
         account_type = account_types[account_type]
