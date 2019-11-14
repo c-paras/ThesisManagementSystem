@@ -91,22 +91,23 @@ def create():
                                max_file_size=config.MAX_FILE_SIZE,
                                max_word_limit=config.MAX_WORD_LIMIT,
                                accepted_file_types=allowed_file_types,
-                               old_task_id=old_task_id,
+                               old_task_id=int(old_task_id),
                                default_fields=default_fields)
 
     try:
         fields = [
             'task-name', 'deadline', 'task-description', 'submission-type',
             'word-limit', 'maximum-file-size', 'accepted-file-type',
-            'marking-method', 'num-criteria', 'course-id', 'file-name'
+            'marking-method', 'num-criteria', 'course-id', 'file-name',
+            'old_task_id'
         ]
         task_name, deadline, task_description, submission_type, \
             word_limit, max_file_size, accepted_ftype, marking_method, \
-            num_criteria, course_id, file_name = \
+            num_criteria, course_id, file_name, old_task_id = \
             get_fields(request.form, fields,
                        optional=['word-limit', 'file-name'],
                        ints=['maximum-file-size', 'num-criteria',
-                             'word-limit', 'course-id'])
+                             'word-limit', 'course-id', 'old_task_id'])
     except ValueError as e:
         return e.args
 
@@ -157,9 +158,10 @@ def create():
     if not len(res):
         db.close()
         return error('Cannot create task for unknown course!')
-    res = db.select_columns('tasks', ['name'], ['name', 'course_offering'],
+    res = db.select_columns('tasks', ['id', 'name'],
+                            ['name', 'course_offering'],
                             [task_name, course_id])
-    if len(res):
+    if len(res) and res[0][0] != old_task_id:
         db.close()
         return error('A task with that name already exists in this course!')
 
@@ -191,7 +193,11 @@ def create():
             return error(
                 f'File exceeds the maximum size of {config.MAX_FILE_SIZE} MB'
             )
-        sent_file.commit()
+        if old_task_id is not None:
+            pass
+            # TODO: Delete old file
+        else:
+            sent_file.commit()
 
     res = db.select_columns('submission_methods', ['id'],
                             ['name'],
@@ -203,13 +209,30 @@ def create():
     mark_method_id = res[0][0]
 
     # commit task
-    db.insert_single(
-        'tasks',
-        [task_name, course_id, deadline, task_description,
-         max_file_size, 0, submission_method_id, mark_method_id, word_limit],
-        ['name', 'course_offering', 'deadline', 'description', 'size_limit',
-         'visible', 'submission_method', 'marking_method', 'word_limit']
-    )
+    if old_task_id is not None:
+        # update an existing task
+        db.update_rows(
+            'tasks',
+            [task_name, course_id, deadline, task_description,
+             max_file_size, submission_method_id, mark_method_id,
+             word_limit],
+            ['name', 'course_offering', 'deadline', 'description',
+             'size_limit', 'submission_method', 'marking_method',
+             'word_limit'],
+            ['id'],
+            [old_task_id]
+        )
+    else:
+        # add a new task
+        db.insert_single(
+            'tasks',
+            [task_name, course_id, deadline, task_description,
+             max_file_size, 0, submission_method_id, mark_method_id,
+             word_limit],
+            ['name', 'course_offering', 'deadline', 'description',
+             'size_limit', 'visible', 'submission_method', 'marking_method',
+             'word_limit']
+        )
 
     res = db.select_columns('tasks', ['id'],
                             ['name', 'course_offering'],
@@ -220,6 +243,11 @@ def create():
         db.insert_single('task_attachments',
                          [task_id, sent_file.get_name()],
                          ['task', 'path'])
+
+    # delete old entries in other tables
+    if old_task_id is not None:
+        db.delete_rows('submission_types', ['task'], [old_task_id])
+        db.delete_rows('task_criteria', ['task'], [old_task_id])
 
     # commit accepted file type
     db.insert_single('submission_types', [file_type_id, task_id],
