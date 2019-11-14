@@ -115,7 +115,7 @@ function setFormTypeAddStaff() {
   });
   $('#account_type_enroll').append('<option value="supervisor">Staff</option>');
   $('#btn-request-enroll').attr('onclick', 'addStaff()');
-  $('#enroll-title').text("Add staff");
+  $('#enroll-title').text("Add Staff");
   $('#select-e-type').text("Select staff type");
   $('[name="enroll-type"]').change(function () {
    toggleEnrollTypeStaff();
@@ -131,7 +131,7 @@ function setFormTypeUser() {
   $('#account_type_enroll').append('<option value="student">Student</option>');
   //$('#account_type_enroll').append('<option value="course_admin">Admin</option>');
   $('#btn-request-enroll').attr('onclick', 'enrollUser()');
-  $('#enroll-title').text("Enroll users");
+  $('#enroll-title').text("Enroll Users");
   $('#select-e-type').text("Select enrollment type");
   $('[name="enroll-type"]').change(function () {
     toggleEnrollTypeCourse();
