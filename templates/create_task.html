@@ -15,7 +15,7 @@
               <i class="material-icons prefix">assignment</i>
               <input
                 id="task-name" name="task-name" type="text" class="validate"
-                required="" aria-required="true" placeholder="Name of Task"
+                required="" aria-required="true" placeholder="Name of Task" value="{{ default_fields['task-name'] }}"
               >
               <span class="helper-text" data-error="Task name is required"></span>
             </div>
@@ -28,7 +28,7 @@
               <i class="material-icons prefix">date_range</i>
               <input
                 id="deadline" name="deadline" type="text" class="validate"
-                placeholder="Deadline" required="" aria-required="true"
+                placeholder="Deadline" required="" aria-required="true" value="{{ default_fields['deadline'] }}"
               >
               <span class="helper-text" data-error="Deadline is required"></span>
             </div>
@@ -42,7 +42,7 @@
               <textarea
                 id="task-description" name="task-description" class="materialize-textarea validate"
                 placeholder="Task Description" required="" aria-required="true"
-              ></textarea>
+              >{{ default_fields['task-description'] }}</textarea>
               <span class="helper-text" data-error="Task description is required"></span>
             </div>
           </div>
@@ -50,10 +50,42 @@
 
         <div class="row">
           <div class="col s12">
-            {{
-               file_upload("file-name", accepted_file_types,
-               "Upload attachment, e.g. marking criteria", max_file_size)
-            }}
+            {% for f in default_fields['task_attachments'] %}
+              <div id="old-attachment-area">
+                <b>Current Attachment: </b>
+                <a class="waves-effect waves-light" href="{{ f.get_url() }}" download="{{ f.get_original_name() }}">
+                  {{ f.get_original_name() }}
+                  <i class="material-icons right">file_download</i>
+                </a>
+                <a class="waves-effect waves-light btn-floating btn-small red darken-3 modal-trigger" href="#deleteModal">
+                  <i class="material-icons prefix">delete</i>
+                </a>
+              </div>
+              <!-- Modal Structure -->
+              <div id="deleteModal" class="modal">
+                <div class="modal-content">
+                  <h4>Confirm Deletion</h4>
+                  <p>Are you sure you want to delete the attachment: '{{ f.get_original_name() }}'?</p>
+                </div>
+                <div class="modal-footer">
+                  <a href="#!" class="modal-close waves-effect waves-light btn grey">Cancel</a>
+                  <a href="#!" class="modal-close waves-effect waves-light btn red darken-3" onclick="removeOldAttachment()">Confirm</a>
+                </div>
+              </div>
+            {% endfor %}
+            <div>
+              {% if old_task_id %}
+                {{
+                   file_upload("file-name", accepted_file_types,
+                   "Upload a replacement attachment, e.g. marking criteria", max_file_size)
+                }}
+              {% else %}
+                {{
+                   file_upload("file-name", accepted_file_types,
+                   "Upload attachment, e.g. marking criteria", max_file_size)
+                }}
+              {% endif %}
+            </div>
           </div>
         </div>
 
@@ -69,7 +101,9 @@
                 <label>
                   <input
                     class="with-gap" name="submission-type" id="text-type"
-                    type="radio" value="text" checked
+                    type="radio" value="text"
+                    {% if default_fields["submission-type"] == "text" %}checked{% endif %}
+                    {% if old_task_id %}disabled="disabled"{% endif %}
                   >
                   <span>Text Entry</span>
                 </label>
@@ -79,6 +113,8 @@
                   <input
                     class="with-gap" name="submission-type" id="file-type"
                     type="radio" value="file"
+                    {% if default_fields["submission-type"] == "file" %}checked{% endif %}
+                    {% if old_task_id %}disabled="disabled"{% endif %}
                   >
                   <span>File Upload</span>
                 </label>
@@ -93,6 +129,7 @@
                 type="number" id="word-limit" name="word-limit" min="1" max="{{ max_word_limit }}"
                 placeholder="Word Limit" class="validate"
                 required="" aria-required="true" requiredif="submission-type=text"
+                value="{{ default_fields['word-limit'] }}"
               >
               <span id="word-limit-error" class="helper-text" data-error="Word limit is required"></span>
             </div>
@@ -106,7 +143,8 @@
                 required="" aria-required="true"
               >
                 {% for size in [1, 2, 3, 4, 5, 10, 15, 20, 25, 50, 75, 100] %}
-                  <option value="{{ size }}">{{ size }} MB</option>
+                  <option value="{{ size }}"
+                  {% if default_fields["maximum-file-size"] == size %}selected{% endif %}>{{ size }} MB</option>
                 {% endfor %}
               </select>
               <label>Maximum File Size</label>
@@ -121,7 +159,8 @@
                 required="" aria-required="true"
               >
                 {% for type in file_types %}
-                  <option value="{{ type }}">{{ type|upper|replace('.', '') }}</option>
+                  <option value="{{ type }}"
+                  {% if default_fields["accepted-file-type"] == type %}selected{% endif %}>{{ type|upper|replace('.', '') }}</option>
                 {% endfor %}
               </select>
               <label>Accepted File Type</label>
@@ -141,7 +180,9 @@
                 <label>
                   <input
                     class="with-gap" name="marking-method" id="accept-method"
-                    type="radio" value="accept" checked
+                    type="radio" value="accept"
+                    {% if default_fields["marking-method"] == "accept" %}checked{% endif %}
+                    {% if old_task_id %}disabled="disabled"{% endif %}
                   >
                   <span>Supervisor to mark as accepted</span>
                 </label>
@@ -151,6 +192,8 @@
                   <input
                     class="with-gap" name="marking-method" id="criteria-method"
                     type="radio" value="criteria"
+                    {% if default_fields["marking-method"] == "criteria" %}checked{% endif %}
+                    {% if old_task_id %}disabled="disabled"{% endif %}
                   >
                   <span>Supervisor and assessor to mark according to criteria</span>
                 </label>
@@ -179,30 +222,61 @@
 
               <!-- Table body -->
               <tbody>
-                <tr id="marking-criteria-1" name="marking-criteria-1">
-                  <td>
-                    <input
-                      id="criteria-1" name="criteria-1" type="text" class="validate"
-                      required="" aria-required="true" placeholder="Enter Criteria"
-                      requiredif="marking-method=criteria"
-                    >
-                  </td>
-                  <td>
-                    <input
-                      type="number" id="maximum-mark-1" name="maximum-mark-1" min="1" max="100"
-                      placeholder="Enter Mark" class="validate" required="" aria-required="true"
-                      requiredif="marking-method=criteria"
-                    >
-                  </td>
-                  <td class="center">
-                    <a
-                      class="waves-effect waves-light btn-floating btn-small"
-                      name="remove-criteria" onclick="removeCriteria(1)"
-                    >
-                      <i class="material-icons prefix">delete</i>
-                    </a>
-                  </td>
-                </tr>
+                {% if not default_fields["criteria"]|length %}
+                  <!-- If new task then show single empty criterea  -->
+                  <tr id="marking-criteria-1" name="marking-criteria-1">
+                    <td>
+                      <input
+                        id="criteria-1" name="criteria-1" type="text" class="validate"
+                        required="" aria-required="true" placeholder="Enter Criteria"
+                        requiredif="marking-method=criteria"
+                      >
+                    </td>
+                    <td>
+                      <input
+                        type="number" id="maximum-mark-1" name="maximum-mark-1" min="1" max="100"
+                        placeholder="Enter Mark" class="validate" required="" aria-required="true"
+                        requiredif="marking-method=criteria"
+                      >
+                    </td>
+                    <td class="center">
+                      <a
+                        class="waves-effect waves-light btn-floating btn-small"
+                        name="remove-criteria" onclick="removeCriteria(1)"
+                      >
+                        <i class="material-icons prefix">delete</i>
+                      </a>
+                    </td>
+                  </tr>
+                {% else %}
+                  <!-- else add old criterea  -->
+                  {% for criteria in default_fields['criteria'] %}
+                    <tr id="marking-criteria-{{ loop.index }}" name="marking-criteria-{{ loop.index }}">
+                      <td>
+                        <input
+                          id="criteria-{{ loop.index }}" name="criteria-{{ loop.index }}" type="text" class="validate"
+                          required="" aria-required="true" placeholder="Enter Criteria"
+                          requiredif="marking-method=criteria" value="{{criteria[0]}}"
+                        >
+                      </td>
+                      <td>
+                        <input
+                          type="number" id="maximum-mark-{{ loop.index }}" name="maximum-mark-{{ loop.index }}" min="1" max="100"
+                          placeholder="Enter Mark" class="validate" required="" aria-required="true"
+                          requiredif="marking-method=criteria" value="{{criteria[1]}}"
+                        >
+                      </td>
+                      <td class="center">
+                        <a
+                          class="waves-effect waves-light btn-floating btn-small"
+                          name="remove-criteria" onclick="removeCriteria({{ loop.index }})"
+                        >
+                          <i class="material-icons prefix">delete</i>
+                        </a>
+                      </td>
+                    </tr>
+                  {% endfor%}
+                {% endif %}
                 <tr id="add-criteria">
                   <td colspan="3">
                     <a class="waves-effect waves-light btn" id="add-criteria-btn" onclick="addCriteria()">
@@ -219,12 +293,19 @@
 
         <input type="hidden" id="num-criteria" name="num-criteria" value="">
         <input type="hidden" id="course-id" name="course-id" value="{{ course_id }}">
+
+        <input type="hidden" id="old_task_id" name="old_task_id" value="{{ old_task_id }}">
+        <input type="hidden" id="delete_old_attachment" name="delete_old_attachment" value="0">
       </div>
 
       <div class="row">
         <div class="center">
           <a class="waves-effect waves-light btn" id="create-task-btn" onclick="submitCreate()">
-            Create Task
+            {% if old_task_id %}
+              Update Task
+            {% else %}
+              Create Task
+            {% endif %}
             <i class="material-icons right">send</i>
           </a>
           {{ upload_spinner(id='upload-spinner') }}

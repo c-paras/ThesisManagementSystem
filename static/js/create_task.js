@@ -91,6 +91,12 @@ function removeCriteria(criteria) {
   }
 }
 
+function removeOldAttachment() {
+  $("#old-attachment-area").hide();
+  const flag = $('#delete_old_attachment');
+  flag.val('1');
+}
+
 $('#word-limit').on('input, change, keydown', function () {
   const val = $(this).val();
   if ($(this).hasClass('invalid')) {
@@ -101,4 +107,8 @@ $('#word-limit').on('input, change, keydown', function () {
       $('#word-limit-error').attr('data-error', 'Word limit is required');
     }
   }
+});
+
+$(document).ready(function(){
+  $('.modal').modal();
 });

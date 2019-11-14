@@ -164,7 +164,7 @@
                 </td>
                 <td>
                   <!-- TODO: add link to edit material here -->
-                  <a href="#!">
+                  <a href="{{ url_for('create_task.create', course_offering_id=default_co, update=task[0]) }}">
                     <i class="material-icons">edit</i>
                   </a>
                 </td>

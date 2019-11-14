@@ -433,3 +433,21 @@ class queries:
             );'''.format(user_id=user_id)
         )
         return list(map(lambda x: x[0], res))
+
+    def get_past_task_data(task_id):
+        res = db.custom_query('''
+            SELECT t.name, t.deadline, t.description, sm.name, t.word_limit,
+                   t.size_limit, ft.name, mm.name
+            FROM tasks t
+            INNER JOIN submission_methods sm
+                ON sm.id = t.submission_method
+            INNER JOIN marking_methods mm
+                ON mm.id = t.marking_method
+            LEFT JOIN submission_types st
+                ON t.id = st.task
+            LEFT JOIN file_types ft
+                ON st.file_type = ft.id
+            WHERE t.id={task_id}
+            ;'''.format(task_id=task_id)
+        )
+        return res
