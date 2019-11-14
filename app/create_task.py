@@ -12,6 +12,7 @@ from app.db_manager import sqliteManager as db
 from app.file_upload import FileUpload
 from app.helpers import error
 from app.helpers import get_fields
+from app.queries import queries
 
 import config
 
@@ -36,18 +37,43 @@ def create():
         file_types = list(map(lambda x: x[0], file_types))
         allowed_file_types = ','.join(file_types)
 
+        heading = 'Create Task'
         default_fields = {'task-name': '', 'deadline': '',
                           'task-description': '', 'submission-type': 'text',
                           'word-limit': '', 'maximum-file-size': '',
                           'accepted-file-type': '', 'marking-method': 'accept',
-                          'file-name': '', 'criteria': []}
+                          'criteria': []}
 
-        # check if updating old task
+        # if updating old task then load old task data
         old_task_id = request.args.get('update', None, type=int)
+        if old_task_id is not None:
+            res = queries.get_past_task_data(old_task_id)
+            if res is not None:
+                res = res[0]
+                heading = 'Edit Task'
+
+                # basic task details
+                default_fields['task-name'] = res[0]
+                time_format = '%d/%m/%Y %H:%M'
+                due_date = datetime.fromtimestamp(res[1])
+                default_fields['deadline'] = due_date.strftime(time_format)
+                default_fields['task-description'] = res[2]
+
+                # submission method specific
+                if res[3] == 'text submission':
+                    default_fields['word-limit'] = res[4]
+                else:
+                    default_fields['submission-type'] = 'file'
+                    default_fields['maximum-file-size'] = int(res[5])
+                    default_fields['accepted-file-type'] = res[6]
+
+                # marking method specifics
+                if res[7] == 'requires mark':
+                    default_fields['marking-method'] = 'criteria'
 
         db.close()
-        return render_template('create_task.html', heading='Create Task',
-                               title='Create Task', file_types=file_types,
+        return render_template('create_task.html', heading=heading,
+                               title=heading, file_types=file_types,
                                course_id=course_id,
                                max_file_size=config.MAX_FILE_SIZE,
                                max_word_limit=config.MAX_WORD_LIMIT,
