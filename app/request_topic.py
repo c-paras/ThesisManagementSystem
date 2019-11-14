@@ -34,13 +34,17 @@ def request_new_topic():
         return e.args
     db.connect()
 
-    res = db.select_columns('topics', ['id', 'name', 'supervisor'],
+    res = db.select_columns('topics', ['id', 'name', 'supervisor', 'visible'],
                             ['id'], [topic])
     topic_name = res[0][1]
     supervisor = res[0][2]
+
     if not len(res):
         db.close()
         return error('No such topic exists!')
+    if not int(res[0][3]):
+        db.close()
+        return error('This topic is not available for request!')
 
     res = db.select_columns('request_statuses', ['id'], ['name'], ['pending'])
 
