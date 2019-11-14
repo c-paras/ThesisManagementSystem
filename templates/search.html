@@ -22,16 +22,40 @@
         </div>
       </div>
       <div class="row">
-        <div class="input-field">
-          <p>
-            <label>
-              <input
-                type="checkbox" class="filled-in" checked="checked"
-                name="checkbox-vis" id="checkbox-vis"
-              >
-              <span>Hide topics that are no longer on offer</span>
-            </label>
-          </p>
+        <div class="input-field col s10">
+          <label>
+            <input
+              type="checkbox" class="filled-in" checked="checked"
+              name="checkbox-vis" id="checkbox-vis"
+            >
+            <span>Hide topics that are no longer on offer</span>
+          </label>
+        </div>
+        <div class="input-field right">
+          <a class="waves-effect waves-light btn" onclick="showAdvanced()">Advanced<i class="material-icons right">arrow_drop_down</i></a>
+        </div>
+      </div>
+      <div id="advanced-menu" class="row" style="display: none;">
+        <div class="input-field col s4 offset-s1">
+          <select name="sortby">
+            <option value="create-ascend" selected>Newest</option>
+            <option value="create-descend">Oldest</option>
+            <option value="title-ascend">Title (A - Z)</option>
+            <option value="title-descend">Title (Z - A)</option>
+            <option value="supervisor-ascend">Supervisor (A - Z)</option>
+            <option value="supervisor-descend">Supervisor (Z - A)</option>
+          </select>
+          <label>Sort by</label>
+        </div>
+        <div class="input-field col s4 offset-s2">
+          <select id="entries" name="entries">
+            <option value="5" selected>5</option>
+            <option value="10">10</option>
+            <option value="20">20</option>
+            <option value="50">50</option>
+            <option value="infinite">Show All</option>
+          </select>
+          <label>Entries per page</label>
         </div>
       </div>
       <div class="center">
