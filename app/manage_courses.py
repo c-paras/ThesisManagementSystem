@@ -5,13 +5,13 @@ from flask import render_template
 from flask import request
 from flask import session
 
-from app.auth import at_least_role
-from app.auth import UserRole
+from app.auth import at_least_role, UserRole
 from app.db_manager import sqliteManager as db
 from app.file_upload import FileUpload
-from app.helpers import error
-from app.helpers import get_fields
+from app.helpers import error, get_fields, timestamp_to_string
 from app.queries import queries
+from app.update_accounts import update_from_file, update_account_type
+from app.update_accounts import get_all_account_types
 
 import json
 import re
@@ -26,26 +26,40 @@ manage_courses = Blueprint('manage_courses', __name__)
 @manage_courses.route('/manage_courses', methods=['GET', 'POST'])
 @at_least_role(UserRole.COURSE_ADMIN)
 def manage_course_offerings():
+
     data = {}
     if request.method == 'POST':
         data = json.loads(request.data)
-        if 'table' in data and data['table'] == 'materials':
-            db.connect()
-            db.update_rows(
-                'materials',
-                [data['type']], ['visible'],
-                ['id'], [data['id']]
-            )
-            db.close()
+        if 'table' in data:
+            if data['table'] == 'update_account_types':
+                db.connect()
+                if not re.match(config.EMAIL_FORMAT, data['email']):
+                    db.close()
+                    return error(f"""Invalid email address<br>
+                        {config.EMAIL_FORMAT_ERROR}""")
+                update_account_type(
+                    data['email'], data['name'],
+                    data['account_type'], session['current_co']
+                )
+                db.close()
 
-        if 'table' in data and data['table'] == 'tasks':
-            db.connect()
-            db.update_rows(
-                'tasks',
-                [data['type']], ['visible'],
-                ['id'], [data['id']]
-            )
-            db.close()
+            if data['table'] == 'materials':
+                db.connect()
+                db.update_rows(
+                    'materials',
+                    [data['type']], ['visible'],
+                    ['id'], [data['id']]
+                )
+                db.close()
+
+            if data['table'] == 'tasks':
+                db.connect()
+                db.update_rows(
+                    'tasks',
+                    [data['type']], ['visible'],
+                    ['id'], [data['id']]
+                )
+                db.close()
 
         if 'name' in data and data['name'] == 'courses':
             session['current_co'] = data['value']
@@ -55,7 +69,8 @@ def manage_course_offerings():
     if 'current_co' in session:
         co = session['current_co']
     else:
-        pass  # maybe default to whatever course is in the current session
+        session['current_co'] = co
+        # maybe default to whatever course is in the current session
     db.connect()
     courses = queries.get_course_offering_details()
     courses.reverse()
@@ -76,6 +91,7 @@ def manage_course_offerings():
         'tasks', ['id', 'name', 'deadline', 'visible'],
         ['course_offering'], [co]
     )
+    task_ids = []
     for task in task_query:
         attachments = []
         attachments_query = db.select_columns(
@@ -83,23 +99,30 @@ def manage_course_offerings():
         )
         for x in attachments_query:
             attachments.append(FileUpload(filename=x[0]))
-        date = datetime.fromtimestamp(task[2])
-        print_date = date.strftime("%b %d %Y at %H:%M")
+
+        print_date = timestamp_to_string(task[2])
         tasks.append((task[0], task[1], print_date, attachments, task[3]))
+        task_ids.append(task[0])
     enrollments = []
     enrollments_query = queries.get_student_enrollments(co)
     for student in enrollments_query:
         zid = student[2].split('@')[0]
         if student[3] is not None:
-            enrollments.append((student[1], zid, student[2], student[3]))
+            enrollments.append((student[1], zid, student[2], student[3],
+                                student[0]))
         else:
-            enrollments.append((student[1], zid, student[2], 'No topic'))
+            enrollments.append((student[1], zid, student[2], 'No topic',
+                                student[0]))
 
     # for material file upload
     file_types = db.select_columns('file_types', ['name'])
     file_types = list(map(lambda x: x[0], file_types))
     allowed_file_types = ','.join(file_types)
-
+    account_types = get_all_account_types()
+    accepted_account_types = [
+        ('student', account_types['student']),
+        ('admin', account_types['course_admin'])
+    ]
     db.close()
     return render_template(
         'manage_courses.html',
@@ -111,7 +134,52 @@ def manage_course_offerings():
         courses=courses,
         default_co=co,
         max_file_size=config.MAX_FILE_SIZE,
-        accepted_files=allowed_file_types)
+        accepted_files=allowed_file_types,
+        task_ids=task_ids
+    )
+
+
+@manage_courses.route('/enrol_user', methods=['POST'])
+@at_least_role(UserRole.COURSE_ADMIN)
+def upload_enroll_user():
+    data = json.loads(request.data)
+    if 'table' in data and data['table'] == 'update_account_types':
+        db.connect()
+        if not re.match(config.EMAIL_FORMAT, data['email']):
+            db.close()
+            return error(f"""Invalid email address<br>
+                {config.EMAIL_FORMAT_ERROR}""")
+        update_account_type(
+            data['email'], data['name'],
+            data['account_type'], session['current_co']
+        )
+        db.close()
+    return jsonify({'status': 'ok'})
+
+
+@manage_courses.route('/upload_enrollments', methods=['POST'])
+@at_least_role(UserRole.COURSE_ADMIN)
+def upload_enroll_file():
+    try:
+        enroll_file = FileUpload(req=request)
+    except KeyError:
+        return error('Could not find a file to upload')
+
+    if enroll_file.get_extention() != '.csv':
+        return error('File type must be csv')
+
+    if enroll_file.get_size() > config.MAX_FILE_SIZE:
+        return error('File is too large')
+    enroll_file.commit()
+    db.connect()
+    error_string = update_from_file(
+        enroll_file.get_path(), session['current_co'], 'student'
+    )
+    db.close()
+    enroll_file.remove_file()
+    if error_string != "":
+        return error(error_string)
+    return jsonify({'status': 'ok'})
 
 
 @manage_courses.route('/upload_material', methods=['POST'])
@@ -238,3 +306,91 @@ def create_course():
     db.insert_multiple(query)
     db.close()
     return jsonify({'status': 'ok'})
+
+
+@manage_courses.route('/export_marks', methods=['POST'])
+@at_least_role(UserRole.COURSE_ADMIN)
+def exportMarks():
+    db.connect()
+    data = json.loads(request.data)
+    studentIds = data['studentIds']
+    taskIds = data['taskIds']
+    details = {}
+    ass_and_sup = []
+    for ids in studentIds:
+        student_query = db.select_columns('users', ['name', 'email', 'id'],
+                                          ['id'], [ids])
+        ass_and_sup_query = queries.get_user_ass_sup(ids)
+
+        if ass_and_sup_query:
+            ass_and_sup = (ass_and_sup_query[0][0], ass_and_sup_query[0][1])
+        else:
+            ass_and_sup = (None, None)
+
+        for task in taskIds:
+            task_query = db.select_columns('tasks', ['name', 'id'],
+                                           ['id'], [task])
+            ass_name = db.select_columns('users', ['name'], ['id'],
+                                         [ass_and_sup[0]])
+            super_name = db.select_columns('users', ['name'], ['id'],
+                                           [ass_and_sup[1]])
+
+            if not ass_name:
+                ass_name = [('Not Assigned',)]
+
+            if not super_name:
+                super_name = [('Not Assigned',)]
+
+            details[(student_query[0][2],
+                     task_query[0][1])] = [student_query[0][0],
+                                           student_query[0][1].split('@')[0],
+                                           task_query[0][0], '-', '-',
+                                           ass_and_sup[0], ass_and_sup[1],
+                                           task_query[0][1], ass_name[0][0],
+                                           super_name[0][0]]
+
+    task_criteria = []
+    for task in taskIds:
+        task_criteria_query = db.select_columns('task_criteria',
+                                                ['id', 'task'],
+                                                ['task'], [task])
+        for crit in task_criteria_query:
+            task_criteria.append(crit)
+
+    for crit in task_criteria:
+
+        for student in studentIds:
+            # assessor
+            if (details[(student, crit[1])][5] is not None):
+                marks_query = db.select_columns('marks', ['mark'],
+                                                ['criteria', 'student',
+                                                'marker'],
+                                                [crit[0], student,
+                                                details[(student,
+                                                         crit[1])][5]])
+                if marks_query:
+                    if (details[(student, crit[1])][3] == '-'):
+                        details[(student, crit[1])][3] = marks_query[0][0]
+                    else:
+                        details[(student, crit[1])][3] = details[(student,
+                                                                  crit[1])][3]\
+                                                         + marks_query[0][0]
+
+            # supervisor
+            if (details[(student, crit[1])][6] is not None):
+                marks_query = db.select_columns('marks', ['mark'],
+                                                ['criteria', 'student',
+                                                'marker'],
+                                                [crit[0], student,
+                                                details[(student,
+                                                         crit[1])][6]])
+                if marks_query:
+                    if (details[(student, crit[1])][4] == '-'):
+                        details[(student, crit[1])][4] = marks_query[0][0]
+                    else:
+                        details[(student, crit[1])][4] = details[(student,
+                                                                  crit[1])][4]\
+                                                         + marks_query[0][0]
+    db.close()
+
+    return jsonify({'status': 'ok', 'details': list(details.values())})

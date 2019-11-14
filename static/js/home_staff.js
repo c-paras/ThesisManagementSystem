@@ -32,7 +32,47 @@ function openRequestModal(studentId, topicId) {
     $('#topic-name').text(res.topicName);
 
     const d = new Date(res.reqDate);
-    $('#date-requested').text(d.toLocaleDateString() + ' at ' + d.toLocaleTimeString());
+    let dif = new Date(new Date() - d)/1000;
+    let timeframe =" seconds ago";
+
+    if (dif > 60){
+      dif /= 60;
+      timeframe = " minutes ago";
+    }
+
+    if(dif > 60){
+      dif = dif/60;
+      timeframe = " hours ago";
+    }
+
+    if(dif > 24 && timeframe === " hours ago"){
+      dif /= 24;
+      timeframe = " days ago";
+    }
+    dif = Math.floor(dif);
+    const date = d.getDate();
+    const year = d.getFullYear();
+    const hour = d.getHours();
+    const minutes = d.getMinutes();
+    let month = [];
+    month[0] = "Jan";
+    month[1] = "Feb";
+    month[2] = "Mar";
+    month[3] = "Apr";
+    month[4] = "May";
+    month[5] = "Jun";
+    month[6] = "Jul";
+    month[7] = "Aug";
+    month[8] = "Sep";
+    month[9] = "Oct";
+    month[10] = "Nov";
+    month[11] = "Dec";
+    month_code = month[d.getMonth()];
+    const date_string = (date + ' ' + month_code + ' ' +
+      year + ' ' + hour + ':' + minutes);
+    $('#date-requested').attr('data-tooltip', date_string);
+    $('#date-requested').text(dif + timeframe);
+    $('.tooltipped').tooltip();
     toggleViewAssessor();
     const modal = M.Modal.getInstance($('#request-modal'));
     modal.open();

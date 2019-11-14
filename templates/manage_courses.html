@@ -1,7 +1,5 @@
 {% extends "base.html" %}
 
-{% from "macros.html" import upload_spinner, file_upload %}
-
 {% block body %}
   <div class="row">
 
@@ -222,22 +220,24 @@
         {% endif %}
       </div>
       <a
-        class="waves-effect waves-light btn" id="enroll-btn" name="enroll-btn" href="#!"
+        class="waves-effect waves-light btn modal-trigger" id="add-enroll-btn" name="add-enroll-btn"
+        href="#enroll-account-modal" style="float: left;" onclick="setFormTypeUser()"
       >
-        Enroll Students
+        Enroll Users
         <i class="material-icons right">group_add</i>
       </a>
       <a
         class="waves-effect waves-light btn" id="marks-btn" name="marks-btn" href="#!" style="float: right;"
-      >
+        onclick="exportMarks({{enrollments}}, {{task_ids}})">
         Export Marks
         <i class="material-icons right">cloud_download</i>
       </a>
+      <a id="dummyDownload"></a>
     </div>
 
     <!-- Add material modal -->
     {% include "modals/add_material.html" %}
     <script type="text/javascript" src="{{ url_for('static', filename='js/material.js') }}" defer></script>
-
+    
   </div>
 {% endblock %}

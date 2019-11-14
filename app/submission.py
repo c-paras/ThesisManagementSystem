@@ -1,3 +1,4 @@
+from flask import abort
 from flask import Blueprint
 from flask import render_template
 from flask import session
@@ -10,6 +11,7 @@ from app.auth import UserRole
 from app.db_manager import sqliteManager as db
 from app.file_upload import FileUpload
 from app.queries import queries
+from app.helpers import timestamp_to_string
 
 import calendar
 
@@ -20,20 +22,23 @@ submissions = Blueprint('submissions', __name__)
 @submissions.route('/view_submission', methods=['GET'])
 @at_least_role(UserRole.STAFF)
 def view_submission():
+    student_id = request.args.get('submissions', None, type=int)
+    if student_id is None:
+        abort(400)
     db.connect()
-    student_id = int(request.args.get('submissions', None))
     student_info = db.select_columns('users', ['name', 'email'],
                                      ['id'],
                                      [student_id])
+    if not len(student_info):
+        db.close()
+        abort(404)
+
     # get tasks for this student
     tasks = []
     student_tasks = queries.get_student_submissions(student_id)
     for task in student_tasks:
 
-        time_format = '%d/%m/%Y at %I:%M:%S %p'
-        submit_date = datetime.fromtimestamp(task[4])
-        weekday = calendar.day_name[datetime.fromtimestamp(task[4]).weekday()]
-        submit_date_text = weekday + " " + submit_date.strftime(time_format)
+        submit_date_text = timestamp_to_string(task[4], True)
 
         file_url = None
         if task[3]:
