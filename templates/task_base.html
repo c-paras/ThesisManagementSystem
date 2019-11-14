@@ -42,7 +42,7 @@
           <div class="col s12">
             <b>Last Submission: </b>
             {% if submission %}
-              {{ submission['date_modified'].strftime('%A %d/%m/%Y at %I:%M:%S %p') }}
+              {{ submission['date_modified'] }}
             {% else %}
               No recorded submission
             {% endif %}
@@ -82,7 +82,7 @@
           <div class="col s12">
             <b>Last Submission: </b>
             {% if prev_submission %}
-              {{ prev_submission['modify_date'].strftime('%A %d/%m/%Y at %I:%M:%S %p') }}
+              {{ prev_submission['modify_date'] }}
             {% else %}
               No recorded submission
             {% endif %}

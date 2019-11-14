@@ -1,6 +1,8 @@
 from flask import Blueprint
 from flask import render_template
 from flask import session
+from flask import request
+from flask import jsonify
 
 from datetime import datetime
 
@@ -9,7 +11,13 @@ from app.auth import UserRole
 from app.file_upload import FileUpload
 from app.db_manager import sqliteManager as db
 from app.queries import queries
+from app.helpers import error
+from app.update_accounts import update_from_file, update_account_type
+from app.update_accounts import get_all_account_types
 
+import json
+import re
+import config
 
 home = Blueprint('home', __name__)
 
@@ -181,3 +189,46 @@ def staff_dashboard():
                            curr_students=curr_students,
                            past_students=past_students,
                            assessors=potential_assessors)
+
+
+@home.route('/add_staff', methods=['POST'])
+@at_least_role(UserRole.COURSE_ADMIN)
+def add_staff():
+    data = json.loads(request.data)
+    if 'table' in data and data['table'] == 'update_account_types':
+        db.connect()
+        if not re.match(config.EMAIL_FORMAT, data['email']):
+            db.close()
+            return error(f"""Invalid email address<br>
+                {config.EMAIL_FORMAT_ERROR}""")
+        update_account_type(
+            data['email'], data['name'],
+            data['account_type']
+        )
+        db.close()
+    return jsonify({'status': 'ok'})
+
+
+@home.route('/upload_staff', methods=['POST'])
+@at_least_role(UserRole.COURSE_ADMIN)
+def upload_staff():
+    try:
+        enroll_file = FileUpload(req=request)
+    except KeyError:
+        return error('Could not find a file to upload')
+
+    if enroll_file.get_extention() != '.csv':
+        return error('File type must be csv')
+
+    if enroll_file.get_size() > config.MAX_FILE_SIZE:
+        return error('File is too large')
+    enroll_file.commit()
+    db.connect()
+    error_string = update_from_file(
+        enroll_file.get_path(), default='supervisor'
+    )
+    db.close()
+    enroll_file.remove_file()
+    if error_string != "":
+        return error(error_string)
+    return jsonify({'status': 'ok'})

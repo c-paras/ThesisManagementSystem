@@ -11,6 +11,7 @@ from app.auth import UserRole
 from app.db_manager import sqliteManager as db
 from app.file_upload import FileUpload
 from app.queries import queries
+from app.helpers import timestamp_to_string
 
 import calendar
 
@@ -37,10 +38,7 @@ def view_submission():
     student_tasks = queries.get_student_submissions(student_id)
     for task in student_tasks:
 
-        time_format = '%d/%m/%Y at %I:%M:%S %p'
-        submit_date = datetime.fromtimestamp(task[4])
-        weekday = calendar.day_name[datetime.fromtimestamp(task[4]).weekday()]
-        submit_date_text = weekday + " " + submit_date.strftime(time_format)
+        submit_date_text = timestamp_to_string(task[4], True)
 
         file_url = None
         if task[3]:

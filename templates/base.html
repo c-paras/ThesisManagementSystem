@@ -52,10 +52,9 @@
         <ul id="nav-bar-dropdown-courses" class="dropdown-content">
           <li><a href="#!" onclick="openCreateCourseModal()">Create Course</a></li>
           <li><a href="/manage_courses">Manage Courses</a></li>
-          <li><a href="#!">Add Staff</a></li>
+          <li><a href="#!" id="add-staff-btn" name="add-staff-btn" onclick="setFormTypeAddStaff()">Add Staff</a></li>
         </ul>
       {% endif %}
-
       <!-- Navigation -->
       <div class="navbar-fixed">
         <nav>
@@ -115,7 +114,7 @@
           <h4>{{ heading }}</h4>
           <hr>
         {% endif %}
-
+        {% from "macros.html" import upload_spinner, file_upload %}
         <!-- Page content -->
         {% block body %}
         {% endblock %}
@@ -184,6 +183,8 @@
       {% if session['acc_type'] == 'course_admin' %}
         {% include "modals/create_course.html" %}
         <script defer type="text/javascript" src={{ url_for('static', filename='js/create_course.js') }}></script>
+        {% include "modals/enroll_accounts.html" %}
+        <script type="text/javascript" src="{{ url_for('static', filename='js/enrollments.js') }}" defer></script>
       {% endif %}
     {% endif %}
 

@@ -18,6 +18,8 @@ from app.helpers import error
 from app.helpers import get_fields
 from app.helpers import send_email
 from app.queries import queries
+from app.update_accounts import enroll_user
+from app.update_accounts import get_all_account_types
 
 import bcrypt
 import re
@@ -181,8 +183,10 @@ def confirm():
     db.connect()
 
     # get the user's confirm code & creation date
-    res = db.select_columns('users', ['confirm_code', 'date_created'],
-                            ['name'], [user])
+    res = db.select_columns(
+        'users', ['confirm_code', 'date_created', 'email', 'id'],
+        ['name'], [user]
+    )
 
     expired = False
     now = datetime.now().timestamp()
@@ -193,7 +197,30 @@ def confirm():
               'You must register your account again.', 'error')
     if not expired and len(res) and confirm_code == res[0][0]:
         # clear confirm code to "mark" account as activated
-        db.update_rows('users', [''], ['confirm_code'], ['name'], [user])
+        user_id = res[0][3]
+        res = db.select_columns(
+            'update_account_types',
+            ['id', 'new_name', 'account_type', 'course_offering'],
+            ['email'], [res[0][2]]
+        )
+        if len(res) > 0:
+            db.update_rows(
+                'users', ['', res[0][1], res[0][2]],
+                ['confirm_code', 'name', 'account_type'],
+                ['name'], [user]
+            )
+            if res[0][3] is not None:
+                account_types = get_all_account_types()
+                course_role = 'staff'
+                if account_types['student'] == res[0][2]:
+                    course_role = 'student'
+                course_role_id = db.select_columns(
+                    'course_roles', ['id'], ['name'], [course_role]
+                )
+                enroll_user(user_id, res[0][3], course_role_id[0][0])
+            db.delete_rows('update_account_types', ['id'], [res[0][0]])
+        else:
+            db.update_rows('users', [''], ['confirm_code'], ['name'], [user])
         flash('Account activated! You can now log in.', 'success')
     db.close()
     return redirect(url_for('.login'))
