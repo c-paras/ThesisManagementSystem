@@ -143,8 +143,12 @@
                 required="" aria-required="true"
               >
                 {% for size in [1, 2, 3, 4, 5, 10, 15, 20, 25, 50, 75, 100] %}
-                  <option value="{{ size }}"
-                  {% if default_fields["maximum-file-size"] == size %}selected{% endif %}>{{ size }} MB</option>
+                  <option
+                    value="{{ size }}"
+                    {% if default_fields["maximum-file-size"] == size %}
+                      selected
+                    {% endif %}
+                  >{{ size }} MB</option>
                 {% endfor %}
               </select>
               <label>Maximum File Size</label>
@@ -159,8 +163,12 @@
                 required="" aria-required="true"
               >
                 {% for type in file_types %}
-                  <option value="{{ type }}"
-                  {% if default_fields["accepted-file-type"] == type %}selected{% endif %}>{{ type|upper|replace('.', '') }}</option>
+                  <option
+                    value="{{ type }}"
+                    {% if default_fields["accepted-file-type"] == type %}
+                      selected
+                    {% endif %}
+                  >{{ type|upper|replace('.', '') }}</option>
                 {% endfor %}
               </select>
               <label>Accepted File Type</label>

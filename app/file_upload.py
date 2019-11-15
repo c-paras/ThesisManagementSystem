@@ -78,7 +78,7 @@ class FileUpload:
         p = Path('.')
         for part in self.path.parts[1:]:
             p = p / part
-        return url_for(config.STATIC_PATH, filename=p)
+        return url_for(config.STATIC_PATH, filename=p.as_posix())
 
     def get_size(self):
         '''
