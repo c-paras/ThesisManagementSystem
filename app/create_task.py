@@ -206,7 +206,7 @@ def create():
         old = db.select_columns('task_attachments', ['path'],
                                 ['task'],
                                 [old_task_id])
-        if res:
+        if old:
             db.delete_rows('task_attachments', ['task'], [old_task_id])
             try:
                 prev_submission = FileUpload(filename=old[0][0])

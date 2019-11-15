@@ -186,12 +186,26 @@ def upload_enroll_file():
 @at_least_role(UserRole.COURSE_ADMIN)
 def upload_material():
     try:
-        fields = ['file-label', 'file-name', 'course-offering']
-        file_label, file_name, course_offering = get_fields(
-            request.form, fields, ints=['course-offering'])
+        fields = ['file-label', 'file-name', 'course-offering',
+                  'old-material-id', 'delete-old-file']
+        file_label, file_name, course_offering, old_material_id, \
+            delete_old_file = \
+            get_fields(request.form, fields,
+                       optional=['word-limit', 'file-name'],
+                       ints=['course-offering'])
     except ValueError as e:
         return e.args[0]
     db.connect()
+
+    try:
+        old_material_id = int(old_material_id)
+    except ValueError as e:
+        old_material_id = None
+
+    # check if no file when there should be one
+    if file_name == '' and \
+            (delete_old_file == 'true' or old_material_id is None):
+        return error('File Name is required!')
 
     # check if course offering is valid
     res = db.select_columns('course_offerings', ['id'],
@@ -204,40 +218,69 @@ def upload_material():
     res = db.select_columns('materials', ['id'],
                             ['name', 'course_offering'],
                             [file_label, course_offering])
-    if len(res):
+    if len(res) and old_material_id != res[0][0]:
         db.close()
         return error('An item with that label already exists in this course')
 
     # otherwise, we can insert the material into the course
-    try:
-        sent_file = FileUpload(req=request)
-    except KeyError:
-        db.close()
-        return error('Could not find a file to upload')
-    res = db.select_columns('file_types', ['name'])
-    file_types = list(map(lambda x: x[0], res))
-    if sent_file.get_extention() not in file_types:
-        db.close()
-        accept_files = ', '.join(file_types)
-        return error(f'Accepted file types are: {accept_files}')
-    if sent_file.get_size() > config.MAX_FILE_SIZE:
-        sent_file.remove_file()
-        db.close()
-        return error(
-            f'File exceeds the maximum size of {config.MAX_FILE_SIZE} MB'
-        )
-    sent_file.commit()
+    if len(file_name):
+        try:
+            sent_file = FileUpload(req=request)
+        except KeyError:
+            db.close()
+            return error('Could not find a file to upload')
+        res = db.select_columns('file_types', ['name'])
+        file_types = list(map(lambda x: x[0], res))
+        if sent_file.get_extention() not in file_types:
+            db.close()
+            accept_files = ', '.join(file_types)
+            return error(f'Accepted file types are: {accept_files}')
+        if sent_file.get_size() > config.MAX_FILE_SIZE:
+            sent_file.remove_file()
+            db.close()
+            return error(
+                f'File exceeds the maximum size of {config.MAX_FILE_SIZE} MB'
+            )
+        sent_file.commit()
 
-    # add material and file path to db
-    db.insert_single('materials',
-                     [course_offering, file_label, 0],
-                     ['course_offering', 'name', 'visible'])
-    res = db.select_columns('materials', ['id'],
-                            ['name', 'course_offering'],
-                            [file_label, course_offering])
-    db.insert_single('material_attachments',
-                     [res[0][0], sent_file.get_name()],
-                     ['material', 'path'])
+    if delete_old_file == 'true':
+        old = db.select_columns('material_attachments', ['path'],
+                                ['material'],
+                                [old_material_id])
+        if old:
+            db.delete_rows('material_attachments', ['material'],
+                           [old_material_id])
+            try:
+                prev_submission = FileUpload(filename=old[0][0])
+                prev_submission.remove_file()
+            except LookupError:
+                # If the file doesn't exists don't worry as we are deleting
+                # the attachment anyway
+                pass
+
+    if old_material_id is not None:
+        # update existing material entries
+        db.update_rows('materials',
+                       [file_label], ['name'],
+                       ['id'], [old_material_id])
+        db.update_rows('materials',
+                       [file_label], ['name'],
+                       ['id'], [old_material_id])
+        if delete_old_file == 'true':
+            db.insert_single('material_attachments',
+                             [old_material_id, sent_file.get_name()],
+                             ['material', 'path'])
+    else:
+        # add material and file path to db
+        db.insert_single('materials',
+                         [course_offering, file_label, 0],
+                         ['course_offering', 'name', 'visible'])
+        res = db.select_columns('materials', ['id'],
+                                ['name', 'course_offering'],
+                                [file_label, course_offering])
+        db.insert_single('material_attachments',
+                         [res[0][0], sent_file.get_name()],
+                         ['material', 'path'])
     db.close()
     return jsonify({'status': 'ok'})
 
