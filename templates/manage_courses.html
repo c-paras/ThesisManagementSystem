@@ -85,7 +85,7 @@
                 </td>
                 <td>
                   <!-- TODO: add link to edit material here -->
-                  <a href="#!">
+                  <a onclick="openEditMaterial({{ material[0] }}, '{{ material[1] }}', '{{ material[2][0].get_url() }}', '{{ material[2][0].get_original_name() }}' )">
                     <i class="material-icons">edit</i>
                   </a>
                 </td>
@@ -97,8 +97,7 @@
         <p>There are currently no materials for this course offering</p>
       {% endif %}
       <a
-        class="waves-effect waves-light btn modal-trigger" id="add-material-btn" name="add-material-btn"
-        href="#add-material-modal" style="float: right;"
+        class="waves-effect waves-light btn" id="add-material-btn" name="add-material-btn" style="float: right;" onclick="openAddMaterial()"
       >
         Add Material
         <i class="material-icons right">add</i>
