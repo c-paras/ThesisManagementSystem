@@ -21,7 +21,7 @@ function addMaterial() {
 }
 
 function openAddMaterial() {
-  $('#modal-name').html('Add Material');
+  $('#add-material-modal-heading').html('Add Material');
   $('#old-material-id').val('None');
   $('#file-label').val('');
   $('#btn-request').html('Upload');
@@ -40,7 +40,7 @@ function deleteOldFile(){
 }
 
 function openEditMaterial(materialID, materialName, filePath, fileName) {
-  $('#modal-name').html('Edit Material');
+  $('#add-material-modal-heading').html('Edit Material');
   $('#old-material-id').val(materialID);
   $('#file-label').val(materialName);
 
