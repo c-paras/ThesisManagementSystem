@@ -83,13 +83,28 @@ function exportMarks(enrolledStudents, tasks) {
 
 }
 
-function deleteTask(task_id) {
+function deleteTask(taskId) {
   
   const data = {
-    "taskId": task_id
+    "taskId": taskId
   };
 
   makePOSTRequest('/delete_task', data, (res) => {
+    if (res.status === 'fail') {
+      flash(res.message, error = true);
+    } else {
+      delayToast(res.message);
+      location.reload();
+    }
+  });
+}
+
+function deleteMaterial(materialId) {
+  const data = {
+    "materialId": materialId
+  };
+
+  makePOSTRequest('/delete_material', data, (res) => {
     if (res.status === 'fail') {
       flash(res.message, error = true);
     } else {

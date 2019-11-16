@@ -460,3 +460,16 @@ def delete_task():
 
     db.close()
     return jsonify({'status': 'ok', "message": "Deleted Task"})
+
+
+@manage_courses.route('/delete_material', methods=['POST'])
+@at_least_role(UserRole.COURSE_ADMIN)
+def delete_material():
+    data = json.loads(request.data)
+    material_id = data['materialId']
+
+    db.connect()
+    db.delete_rows('materials', ['id'], [material_id])
+    db.delete_rows('material_attachments', ['material'], [material_id])
+
+    return jsonify({'status': 'ok', "message": "Deleted Material"})

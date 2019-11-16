@@ -28,10 +28,10 @@ function updateTopicVisibility(id) {
   });
 }
 
-function deleteTopic(topic_id) {
+function deleteTopic(topicId) {
   
   const data = {
-    "topicId": topic_id
+    "topicId": topicId
   };
 
   makePOSTRequest('/delete_topic', data, (res) => {
