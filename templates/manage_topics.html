@@ -15,8 +15,9 @@
 
           <table class="striped centered responsive-table js-sort-table">
             <colgroup>
-              <col span="1" style="width: 50%">
+              <col span="1" style="width: 45%">
               <col span="1" style="width: 40%">
+              <col span="1" style="width: 5%">
               <col span="1" style="width: 5%">
               <col span="1" style="width: 5%">
             </colgroup>
@@ -28,6 +29,7 @@
                 <th class="sortable">Topic Areas</th>
                 <th>Visible</th>
                 <th>Edit</th>
+                <th>Delete</th>
               </tr>
             </thead>
 
@@ -63,6 +65,11 @@
                   <td>
                     <a id="{{ topic[0] }}" href="#">
                       <i class="material-icons">edit</i>
+                    </a>
+                  </td>
+                  <td>
+                    <a id="delete{{ topic[0] }}"  href="#!">
+                      <i class="material-icons" onclick="deleteTopic({{topic[3]}})">delete_forever</i>
                     </a>
                   </td>
                 </tr>

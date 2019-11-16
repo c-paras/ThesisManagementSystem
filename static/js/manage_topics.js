@@ -28,6 +28,21 @@ function updateTopicVisibility(id) {
   });
 }
 
+function deleteTopic(topic_id) {
+  
+  const data = {
+    "topicId": topic_id
+  };
+
+  makePOSTRequest('/delete_topic', data, (res) => {
+    if (res.status === 'fail') {
+      flash(res.message, error = true);
+    } else {
+      location.reload();
+    }
+  });
+}
+
 $('#checkall-btn').on('click', function () {
   $('input[type="checkbox"]').prop('checked', false);
   updateTopicVisibility();
