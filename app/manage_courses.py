@@ -437,3 +437,26 @@ def exportMarks():
     db.close()
 
     return jsonify({'status': 'ok', 'details': list(details.values())})
+
+
+@manage_courses.route('/delete_task', methods=['POST'])
+@at_least_role(UserRole.COURSE_ADMIN)
+def delete_task():
+    data = json.loads(request.data)
+    task_id = data['taskId']
+
+    db.connect()
+    submissions = db.select_columns('submissions', ['name'],
+                                    ['task'], [task_id])
+
+    if submissions:
+        return jsonify({'status': 'fail',
+                        'message': "Unable to delete - \
+                         Students have already made submissions"})
+
+    db.delete_rows('tasks', ['id'], [task_id])
+    db.delete_rows('task_attachments', ['task'], [task_id])
+    db.delete_rows('task_criteria', ['task'], [task_id])
+
+    db.close()
+    return jsonify({'status': 'ok', "message": "Deleted Task"})

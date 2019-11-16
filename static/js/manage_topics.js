@@ -38,6 +38,7 @@ function deleteTopic(topic_id) {
     if (res.status === 'fail') {
       flash(res.message, error = true);
     } else {
+      delayToast(res.message);
       location.reload();
     }
   });

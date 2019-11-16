@@ -112,7 +112,8 @@
           <colgroup>
             <col span="1" style="width: 25%;">
             <col span="1" style="width: 25%;">
-            <col span="1" style="width: 40%;">
+            <col span="1" style="width: 35%;">
+            <col span="1" style="width: 5%;">
             <col span="1" style="width: 5%;">
             <col span="1" style="width: 5%;">
           </colgroup>
@@ -123,6 +124,7 @@
               <th class="sortable">File</th>
               <th>Visible</th>
               <th>Edit</th>
+              <th>Delete</th>
             </tr>
           </thead>
           <tbody>
@@ -165,6 +167,11 @@
                   <!-- TODO: add link to edit material here -->
                   <a href="{{ url_for('create_task.create', course_offering_id=default_co, update=task[0]) }}">
                     <i class="material-icons">edit</i>
+                  </a>
+                </td>
+                <td>
+                  <a id="delete{{task[0]}}"  href="#!">
+                    <i class="material-icons" onclick="deleteTask({{task[0]}})">delete_forever</i>
                   </a>
                 </td>
               </tr>

@@ -82,3 +82,19 @@ function exportMarks(enrolledStudents, tasks) {
   });
 
 }
+
+function deleteTask(task_id) {
+  
+  const data = {
+    "taskId": task_id
+  };
+
+  makePOSTRequest('/delete_task', data, (res) => {
+    if (res.status === 'fail') {
+      flash(res.message, error = true);
+    } else {
+      delayToast(res.message);
+      location.reload();
+    }
+  });
+}

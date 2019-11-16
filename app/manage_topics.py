@@ -95,5 +95,5 @@ def delete_topic():
     db.delete_rows('topic_to_area', ['topic'], [topic_id])
     db.delete_rows('announcements', ['topic'], [topic_id])
     db.delete_rows('prerequisites', ['topic'], [topic_id])
-
-    return jsonify({'status': 'ok'})
+    db.close()
+    return jsonify({'status': 'ok', "message": "Deleted Topic"})
