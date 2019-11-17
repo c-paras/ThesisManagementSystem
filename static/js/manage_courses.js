@@ -137,7 +137,7 @@ function checkDeleteTask(taskName, taskId) {
 }
 
 function openMaterialDeleteConfirmation(materialName, materialId) {
-  let text = 'Are you sure you want to delete the Material: ' + materialName;
+  let text = 'Are you sure you want to delete Material: ' + materialName;
   $('#deletion-message').text(text);
   $('#confirm-deletion').click(function callDelet() {
     deleteMaterial(materialId);

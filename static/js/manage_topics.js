@@ -45,7 +45,7 @@ function deleteTopic(topicId) {
 }
 
 function openTopicDeleteConfirmation(topicName, topicId) {
-  let text = 'Are you sure you want to delete the Material: ' + topicName;
+  let text = 'Are you sure you want to delete the Topic: ' + topicName;
   $('#deletion-message').text(text);
   $('#confirm-deletion').click(function callDelet() {
     deleteTopic(topicId);
