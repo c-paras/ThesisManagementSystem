@@ -119,7 +119,7 @@ def register():
         fields = ['email', 'password', 'confirm-password']
         email, password, confirm = get_fields(request.form, fields)
     except ValueError as e:
-        return e.args
+        return e.args[0]
 
     if not re.match(config.EMAIL_FORMAT, email):
         return error(f'Invalid email format!<br>{config.EMAIL_FORMAT_ERROR}')
@@ -237,7 +237,7 @@ def login():
     try:
         email, password = get_fields(request.form, ['email', 'password'])
     except ValueError as e:
-        return e.args
+        return e.args[0]
 
     db.connect()
     res = db.select_columns('users',

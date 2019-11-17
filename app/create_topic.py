@@ -30,7 +30,7 @@ def create():
         prereqs = [prereq['tag'] for prereq in data['prereqs']]
         details = data['details']
     except ValueError as e:
-        return e.args
+        return e.args[0]
 
     # make sure the course codes are uppercase and strip for areas and prereqs
     if len(areas) == 0:

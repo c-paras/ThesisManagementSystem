@@ -31,7 +31,7 @@ def request_new_topic():
         fields = ['topic', 'message']
         topic, message = get_fields(request.form, fields)
     except ValueError as e:
-        return e.args
+        return e.args[0]
     db.connect()
 
     res = db.select_columns('topics', ['id', 'name', 'supervisor', 'visible'],
