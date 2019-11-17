@@ -74,10 +74,23 @@ def delete_topic():
     data = json.loads(request.data)
     topic_id = data['topicId']
     db.connect()
+    db.delete_rows('topics', ['id'], [topic_id])
+    db.delete_rows('topic_to_area', ['topic'], [topic_id])
+    db.delete_rows('announcements', ['topic'], [topic_id])
+    db.delete_rows('prerequisites', ['topic'], [topic_id])
+    db.close()
+    return jsonify({'status': 'ok', "message": "Deleted Topic"})
+
+
+@manage_topics.route('/check_delete_topic', methods=['POST'])
+@at_least_role(UserRole.STAFF)
+def check_delete_topic():
+    data = json.loads(request.data)
+    topic_id = data['topicId']
+    db.connect()
     # checking if a student has been enrolled in topic
     student_topic = db.select_columns('student_topic', ['student'],
                                       ['topic'], [topic_id])
-
     if student_topic:
         return jsonify({'status': 'fail',
                         'message': "Unable to delete - Students are enrolled"})
@@ -94,10 +107,5 @@ def delete_topic():
         return jsonify({'status': 'fail',
                         'message': "Unable to delete - \
                          There are pending topic requests"})
-    # otherwise we can safely delete
-    db.delete_rows('topics', ['id'], [topic_id])
-    db.delete_rows('topic_to_area', ['topic'], [topic_id])
-    db.delete_rows('announcements', ['topic'], [topic_id])
-    db.delete_rows('prerequisites', ['topic'], [topic_id])
     db.close()
     return jsonify({'status': 'ok', "message": "Deleted Topic"})
