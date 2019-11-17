@@ -82,9 +82,13 @@ def delete_topic():
         return jsonify({'status': 'fail',
                         'message': "Unable to delete - Students are enrolled"})
 
-    # checking if a there is a topic request
+    # checking if a there is any pending topic requests
+    pending = 'pending'
+    pending_id = db.select_columns('request_statuses', ['id'],
+                                   ['name'], [pending])
     topic_request = db.select_columns('topic_requests',
-                                      ['student'], ['topic'], [topic_id])
+                                      ['student'], ['topic', 'status'],
+                                      [topic_id, pending_id[0][0]])
 
     if topic_request:
         return jsonify({'status': 'fail',
