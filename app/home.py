@@ -55,7 +55,7 @@ def student_dashboard():
         )
         for x in attachments_query:
             attachments.append(FileUpload(filename=x[0]))
-        cur_materials.append((material[1], attachments))
+        cur_materials.append((material[1], attachments, material[4]))
 
     assessor = -1
     supervisor = -1
