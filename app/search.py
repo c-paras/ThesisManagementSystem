@@ -8,6 +8,7 @@ from app.auth import at_least_role
 from app.auth import UserRole
 from app.db_manager import sqliteManager as db
 from app.queries import queries
+from app.update_accounts import get_all_account_types
 
 import re
 import json
@@ -174,7 +175,13 @@ def search_topic():
 def get_chips():
     db.connect()
     topic_area = db.select_columns('topic_areas', ['name'])
-    supervisors = db.select_columns('users', ['name'], ['account_type'], [2])
+    account_types = get_all_account_types()
+    supervisors = db.select_columns(
+        'users', ['name'], ['account_type'], [account_types['supervisor']]
+    )
+    supervisors += db.select_columns(
+        'users', ['name'], ['account_type'], [account_types['course_admin']]
+    )
 
     chips_topic_area = {}
     for topic in topic_area:
