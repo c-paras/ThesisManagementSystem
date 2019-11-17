@@ -40,7 +40,8 @@
         <table class="striped centered responsive-table js-sort-table" style="margin-bottom: 20px;">
           <colgroup>
             <col span="1" style="width: 50%;">
-            <col span="1" style="width: 40%;">
+            <col span="1" style="width: 35%;">
+            <col span="1" style="width: 5%;">
             <col span="1" style="width: 5%;">
             <col span="1" style="width: 5%;">
           </colgroup>
@@ -50,6 +51,7 @@
               <th class="sortable">File</th>
               <th>Visible</th>
               <th>Edit</th>
+              <th>Delete</th>
             </tr>
           </thead>
           <tbody>
@@ -89,6 +91,11 @@
                     <i class="material-icons">edit</i>
                   </a>
                 </td>
+                <td>
+                  <a id="deleteMaterial{{material[0]}}"  href="#!" onclick="openMaterialDeleteConfirmation('{{ material[1]  }}', {{ material[0] }})">
+                    <i class="material-icons">delete_forever</i>
+                  </a>
+                </td>
               </tr>
             {% endfor %}
           </tbody>
@@ -112,7 +119,8 @@
           <colgroup>
             <col span="1" style="width: 25%;">
             <col span="1" style="width: 25%;">
-            <col span="1" style="width: 40%;">
+            <col span="1" style="width: 35%;">
+            <col span="1" style="width: 5%;">
             <col span="1" style="width: 5%;">
             <col span="1" style="width: 5%;">
           </colgroup>
@@ -123,6 +131,7 @@
               <th class="sortable">File</th>
               <th>Visible</th>
               <th>Edit</th>
+              <th>Delete</th>
             </tr>
           </thead>
           <tbody>
@@ -165,6 +174,11 @@
                   <!-- TODO: add link to edit material here -->
                   <a href="{{ url_for('create_task.create', course_offering_id=default_co, update=task[0]) }}">
                     <i class="material-icons">edit</i>
+                  </a>
+                </td>
+                <td>
+                  <a id="deleteTask{{task[0]}}"  href="#!" onclick="checkDeleteTask('{{ task[1]  }}', {{ task[0] }})">
+                    <i class="material-icons">delete_forever</i>
                   </a>
                 </td>
               </tr>
@@ -233,10 +247,12 @@
       </a>
       <a id="dummyDownload"></a>
     </div>
+    
 
     <!-- Add material modal -->
     {% include "modals/add_material.html" %}
     <script type="text/javascript" src="{{ url_for('static', filename='js/material.js') }}" defer></script>
+    {% include "modals/confirm_deletion.html" %}
     
   </div>
 {% endblock %}
