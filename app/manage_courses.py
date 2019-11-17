@@ -462,6 +462,25 @@ def delete_task():
     return jsonify({'status': 'ok', "message": "Deleted Task"})
 
 
+@manage_courses.route('/check_delete_task', methods=['POST'])
+@at_least_role(UserRole.COURSE_ADMIN)
+def check_delete_task():
+    data = json.loads(request.data)
+    task_id = data['taskId']
+
+    db.connect()
+    submissions = db.select_columns('submissions', ['name'],
+                                    ['task'], [task_id])
+
+    if submissions:
+        return jsonify({'status': 'fail',
+                        'message': "Unable to delete - \
+                         Students have already made submissions"})
+
+    db.close()
+    return jsonify({'status': 'ok', "message": "Deleted Task"})
+
+
 @manage_courses.route('/delete_material', methods=['POST'])
 @at_least_role(UserRole.COURSE_ADMIN)
 def delete_material():

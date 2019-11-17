@@ -122,6 +122,20 @@ function openTaskDeleteConfirmation(taskName, taskId) {
   $('#deleteModal').modal('open');
 }
 
+function checkDeleteTask(taskName, taskId) {
+  const data = {
+    "taskId": taskId
+  };
+
+  makePOSTRequest('/check_delete_task', data, (res) => {
+    if (res.status === 'fail') {
+      flash(res.message, error = true);
+    } else {
+      openTaskDeleteConfirmation(taskName, taskId);
+    }
+  });
+}
+
 function openMaterialDeleteConfirmation(materialName, materialId) {
   let text = 'Are you sure you want to delete the Material: ' + materialName;
   $('#deletion-message').text(text);
