@@ -84,7 +84,6 @@ function exportMarks(enrolledStudents, tasks) {
 }
 
 function deleteTask(taskId) {
-  
   const data = {
     "taskId": taskId
   };
@@ -113,3 +112,26 @@ function deleteMaterial(materialId) {
     }
   });
 }
+
+function openTaskDeleteConfirmation(taskName, taskId) {
+  let text = 'Are you sure you want to delete the task: ' + taskName;
+  $('#deletion-message').text(text);
+  $('#confirm-deletion').click(function callDelet() {
+    deleteTask(taskId);
+  });
+  $('#deleteModal').modal('open');
+}
+
+function openMaterialDeleteConfirmation(materialName, materialId) {
+  let text = 'Are you sure you want to delete the Material: ' + materialName;
+  $('#deletion-message').text(text);
+  $('#confirm-deletion').click(function callDelet() {
+    deleteMaterial(materialId);
+  });
+  $('#deleteModal').modal('open');
+}
+
+$(document).ready(function(){
+  $('.modal').modal();
+});
+

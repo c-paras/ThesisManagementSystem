@@ -43,8 +43,20 @@ function deleteTopic(topicId) {
     }
   });
 }
+function openTopicDeleteConfirmation(topicName, topicId) {
+  let text = 'Are you sure you want to delete the Material: ' + topicName;
+  $('#deletion-message').text(text);
+  $('#confirm-deletion').click(function callDelet() {
+    deleteTopic(topicId);
+  });
+  $('#deleteModal').modal('open');
+}
 
 $('#checkall-btn').on('click', function () {
   $('input[type="checkbox"]').prop('checked', false);
   updateTopicVisibility();
+});
+
+$(document).ready(function(){
+  $('.modal').modal();
 });
