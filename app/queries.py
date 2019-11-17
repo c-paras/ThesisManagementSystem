@@ -232,7 +232,7 @@ class queries:
         res = db.custom_query(
             """
                 SELECT
-                t.name, ta.name, t.visible
+                t.name, ta.name, t.visible, t.id
                 FROM users u
                 INNER JOIN topics t
                     ON u.id = t.supervisor

@@ -28,7 +28,52 @@ function updateTopicVisibility(id) {
   });
 }
 
+function deleteTopic(topicId) {
+  
+  const data = {
+    "topicId": topicId
+  };
+
+  makePOSTRequest('/delete_topic', data, (res) => {
+    if (res.status === 'fail') {
+      flash(res.message, error = true);
+    } else {
+      delayToast(res.message);
+      location.reload();
+    }
+  });
+}
+
+function openTopicDeleteConfirmation(topicName, topicId) {
+  let text = 'Are you sure you want to delete the Topic: ' + topicName;
+  $('#deletion-message').text(text);
+  $('#confirm-deletion').click(function callDelet() {
+    deleteTopic(topicId);
+  });
+  $('#deleteModal').modal('open');
+}
+
+function checkDeleteTopic(topicName, topicId) {
+  
+  const data = {
+    "topicId": topicId
+  };
+
+  makePOSTRequest('/check_delete_topic', data, (res) => {
+    if (res.status === 'fail') {
+      flash(res.message, error = true);
+    } else {
+      openTopicDeleteConfirmation(topicName, topicId);
+    }
+  });
+}
+
+
 $('#checkall-btn').on('click', function () {
   $('input[type="checkbox"]').prop('checked', false);
   updateTopicVisibility();
+});
+
+$(document).ready(function(){
+  $('.modal').modal();
 });
