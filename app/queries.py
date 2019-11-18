@@ -173,6 +173,21 @@ class queries:
 
         return res
 
+    # gets the prerequisite codes by topic id
+    def get_prereqs_by_topic(topic_id):
+        res = db.custom_query(
+            """
+                SELECT c.code
+                FROM courses c
+                INNER JOIN prerequisites p
+                    ON c.id = p.course
+                INNER JOIN topics t
+                    ON p.topic = t.id
+                WHERE t.id = "{topic_id}"
+            """.format(topic_id=topic_id)
+        )
+        return res
+
     def get_user_materials(user_id):
         res = db.custom_query(
             """
@@ -232,7 +247,7 @@ class queries:
         res = db.custom_query(
             """
                 SELECT
-                t.name, ta.name, t.visible
+                t.name, ta.name, t.visible, t.id
                 FROM users u
                 INNER JOIN topics t
                     ON u.id = t.supervisor

@@ -50,6 +50,7 @@ def manage():
 def clean_topic_tuples(curr_topics):
     topic_dict = dict()
     visible = []
+    id = []
     for topic in curr_topics:
 
         # if it's in the dict, append values only
@@ -60,7 +61,8 @@ def clean_topic_tuples(curr_topics):
         else:
             topic_dict[topic[0]] = topic[1]
             visible.append(topic[2])
+            id.append(topic[3])
 
     return list(zip(list(topic_dict.keys()),
                     list(topic_dict.values()),
-                    visible))
+                    visible, id))
