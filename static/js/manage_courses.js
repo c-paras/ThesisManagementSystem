@@ -3,14 +3,35 @@ function submitCO() {
   if (!formValid(form)) {
     return;
   }
-  data = form.serializeArray()[0];
-
-  makePOSTRequest('/manage_courses', data, (res) => {
+  data = form.serializeArray();
+  makePOSTRequest('/update_course_offering', data, (res) => {
     if (res.status === 'fail') {
       flash(res.message, error = true);
     } else {
       delayToast('Details loaded', false);
       window.location.href = '/manage_courses';
+    }
+  });
+}
+
+function setSessions() {
+  course = $('#courses').children("option:selected").val();
+  makePOSTRequest('/get_sessions', course, (res) => {
+    if (res.status === 'fail') {
+      flash(res.message, error = true);
+    } else {
+      //delayToast('Details loaded', false);
+      //window.location.href = '/manage_courses';
+      $('#sessions option').each(function() {
+        $(this).remove();
+      });
+      $.each(res.data, function(index, val) {
+        $('#sessions').append($('<option>', {
+          value: val[1],
+          text: val[0]
+        }));
+      });
+      $('select').formSelect();
     }
   });
 }

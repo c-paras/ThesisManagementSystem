@@ -8,22 +8,35 @@
       <form id="change-co">
         <div class="input-field">
           <div class="row">
-            <div class="col s5">
+            <div class="col s4">
               <select
                 id="courses" name="courses" class="validate"
-                required="" aria-required="true"
+                required="" aria-required="true" onchange="setSessions({{ sessions }})"
               >
-                {% for course in courses %}
+                {% for key, value in courses.items() %}
                   <option
-                    {% if course[0]|int == default_co|int %}
+                    {% if key|int == co_map[default_co]['course']|int %}
                       selected="selected"
                     {% endif %}
-                    value="{{ course[0] }}">{{ course[1] }} - {{ course[3] }}T{{ course[2] }}
-                  </option>
+                    value="{{ key }}">{{value}}</option>
                 {% endfor %}
               </select>
             </div>
-            <div class="col s3" style="padding-top: 10px;">
+            <div class="col s4">
+              <select
+                id="sessions" name="sessions" class="validate"
+                required="" aria-required="true"
+              >
+                {% for value in sessions %}
+                  <option
+                    {% if value[1]|int == co_map[default_co]['session']|int %}
+                      selected="selected"
+                    {% endif %}
+                    value="{{ value[1] }}">{{value[0]}}</option>
+                {% endfor %}
+              </select>
+            </div>
+            <div class="col s3" style="padding-top: 9px;">
               <a class="waves-effect waves-light btn" id="change-co-btn" onclick="submitCO()">Refresh
                 <i class="material-icons right">autorenew</i>
               </a>
