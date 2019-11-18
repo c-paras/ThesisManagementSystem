@@ -21,6 +21,7 @@
                     value="{{ key }}">{{value}}</option>
                 {% endfor %}
               </select>
+              <label style="padding-top: 20px;">Course code</label>
             </div>
             <div class="col s4">
               <select
@@ -35,6 +36,7 @@
                     value="{{ value[1] }}">{{value[0]}}</option>
                 {% endfor %}
               </select>
+              <label style="padding-top: 20px;">Session</label>
             </div>
             <div class="col s3" style="padding-top: 9px;">
               <a class="waves-effect waves-light btn" id="change-co-btn" onclick="submitCO()">Refresh
