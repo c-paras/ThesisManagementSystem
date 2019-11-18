@@ -172,6 +172,7 @@ def update_course_offering():
         ['session', 'course'],
         [session_id, course_id]
     )
+    db.close()
     if len(res) > 0:
         session['current_co'] = res[0][0]
         return jsonify({'status': 'ok'})
