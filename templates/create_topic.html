@@ -6,42 +6,75 @@
       <div class="row">
         <div class="input-field">
           <i class="material-icons prefix">assignment</i>
-          <input
-            id="topic" name="topic" type="text" class="validate"
-            required="" aria-required="true" placeholder="Topic Title"
-          >
+          {% if topic_id %}
+            <input
+              id="topic" name="topic" type="text" class="validate"
+              required="" aria-required="true" placeholder="Topic Title" value="{{ topic_info[0] }}"
+            >
+          {% else %}
+            <input
+              id="topic" name="topic" type="text" class="validate"
+              required="" aria-required="true" placeholder="Topic Title"
+            >
+          {% endif %}
           <span class="helper-text" data-error="Topic title is required"></span>
         </div>
       </div>
       <div class="row">
         <div class="input-field">
           <i class="material-icons prefix">bookmark</i>
-          <div class="chips enter-no-submit" id="areas"></div>
+          {% if topic_id %}
+            <div class="chips enter-no-submit" id="areas-edit-{{ topic_id }}"></div>
+          {% else %}
+            <div class="chips enter-no-submit" id="areas"></div>
+          {% endif %}
+
           <span class="helper-text" data-error="At least one topic area is required"></span>
         </div>
       </div>
       <div class="row">
         <div class="input-field">
           <i class="material-icons prefix">check_circle</i>
-          <div class="chips enter-no-submit" id="prereqs"></div>
+          {% if topic_id %}
+            <div class="chips enter-no-submit" id="prereqs-edit-{{ topic_id }}"></div>
+          {% else %}
+            <div class="chips enter-no-submit" id="prereqs"></div>
+          {% endif %}
+
           <span class="helper-text" data-error="Field is required"></span>
         </div>
       </div>
       <div class="row">
         <div class="input-field">
           <i class="material-icons prefix">event_note</i>
-          <textarea
-            id="details" name="details" class="materialize-textarea validate" placeholder="Topic Details"
-            required="" aria-required="true"
+          {% if topic_id %}
+            <textarea
+              id="details" name="details" class="materialize-textarea validate" placeholder="Topic Details"
+              required="" aria-required="true"
+          >{{ topic_info[1] }}</textarea>
+          {% else %}
+            <textarea
+              id="details" name="details" class="materialize-textarea validate" placeholder="Topic Details"
+              required="" aria-required="true"
           ></textarea>
+          {% endif %}
+
           <span class="helper-text" data-error="Topic details are required"></span>
         </div>
       </div>
       <div class="row">
         <div class="center">
-          <a class="waves-effect waves-light btn" id="register-btn" onclick="submitCreate()">Create Topic
-            <i class="material-icons right">send</i>
-          </a>
+          {% if topic_id %}
+            <a class="waves-effect waves-light btn" id="register-btn" onclick="submitEditTopic()">
+              Update Topic
+              <i class="material-icons right">send</i>
+            </a>
+          {% else %}
+            <a class="waves-effect waves-light btn" id="register-btn" onclick="submitCreate()">
+              Create Topic
+              <i class="material-icons right">send</i>
+            </a>
+          {% endif %}
         </div>
       </div>
     </form>

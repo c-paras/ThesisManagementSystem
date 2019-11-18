@@ -63,7 +63,7 @@
                     {% endif %}
                   </td>
                   <td>
-                    <a id="{{ topic[0] }}" href="#">
+                    <a id="{{ topic[0] }}" href="{{ url_for('create_topic.create', update=topic[3]) }}">
                       <i class="material-icons">edit</i>
                     </a>
                   </td>
