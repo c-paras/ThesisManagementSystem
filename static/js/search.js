@@ -112,7 +112,7 @@ function searchResults() {
       }
 
       let entriesPerPage = $('#entries').val();
-      if(entriesPerPage === 'infinite') {
+      if (entriesPerPage === 'infinite') {
         entriesPerPage = cards.length;
       }
       $.myTopicCards = cards;
@@ -120,15 +120,17 @@ function searchResults() {
       $('#search-title').show();
       $('#search-results').html(cards.slice(0, entriesPerPage));
       $('#page').html('');
-      $('#page').materializePagination({
-        align: 'center',
-        lastPage: Math.ceil(cards.length / entriesPerPage),
-        firstPage: 1,
-        useUrlParameter: false,
-        onClickCallback: function (requestedPage) {
-          nextPage(requestedPage);
-        }
-      });
+      if (res.topics.length > 0) {
+        $('#page').materializePagination({
+          align: 'center',
+          lastPage: Math.ceil(cards.length / entriesPerPage),
+          firstPage: 1,
+          useUrlParameter: false,
+          onClickCallback: function (requestedPage) {
+            nextPage(requestedPage);
+          }
+        });
+      }
 
       canRequest = res.canRequest;
       updateCanRequest();
@@ -161,7 +163,7 @@ function loadPage() {
   });
 }
 
-$(function() {
+$(function () {
   loadPage();
   $('#checkbox-vis').change(searchResults);
   $('#search-form').find('select[name=sortby]').change(searchResults);
@@ -169,9 +171,8 @@ $(function() {
   $('#entries').change(searchResults);
 });
 
-
 function showAdvanced() {
-  if($('#advanced-menu').is(':visible')) {
+  if ($('#advanced-menu').is(':visible')) {
     $(event.target).find('i').text('arrow_drop_down');
     $('#advanced-menu').hide();
   } else {

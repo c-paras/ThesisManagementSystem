@@ -73,3 +73,12 @@ th.sortable {
   cursor: pointer;
   background-image: url(../img/sort.png);
 }
+
+/* prevent icons in forms being treated like text */
+.prefix {
+  text-decoration: none;
+  pointer-events: none;
+}
+.prefix {
+  cursor: default;
+}

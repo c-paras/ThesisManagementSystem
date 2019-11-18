@@ -51,6 +51,7 @@ def clean_topic_tuples(curr_topics):
     topic_dict = dict()
     visible = []
     topic_id = []
+
     for topic in curr_topics:
 
         # if it's in the dict, append values only
