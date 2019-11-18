@@ -20,8 +20,6 @@ function setSessions() {
     if (res.status === 'fail') {
       flash(res.message, error = true);
     } else {
-      //delayToast('Details loaded', false);
-      //window.location.href = '/manage_courses';
       $('#sessions option').each(function() {
         $(this).remove();
       });

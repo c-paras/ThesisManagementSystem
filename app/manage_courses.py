@@ -172,8 +172,11 @@ def update_course_offering():
         ['session', 'course'],
         [session_id, course_id]
     )
-    session['current_co'] = res[0][0]
-    return jsonify({'status': 'ok'})
+    if len(res) > 0:
+        session['current_co'] = res[0][0]
+        return jsonify({'status': 'ok'})
+    else:
+        return error("Failed to find course offering")
 
 
 @manage_courses.route('/get_sessions', methods=['POST'])
@@ -192,10 +195,13 @@ def get_sessions():
         ses_string = str(ses_details[0])[2:] + 'T' + str(ses_details[1])
         sessions.append((ses_string, co[0]))
     db.close()
-    return jsonify({
-        'status': 'ok',
-        'data': sessions
-    })
+    if len(session) > 0:
+        return jsonify({
+            'status': 'ok',
+            'data': sessions
+        })
+    else:
+        return error("Failed to find sessions")
 
 
 @manage_courses.route('/enrol_user', methods=['POST'])
