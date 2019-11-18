@@ -466,3 +466,17 @@ class queries:
             ;'''.format(task_id=task_id)
         )
         return res
+
+    def get_student_topic(student_id):
+        print(student_id)
+        res = db.custom_query('''
+            SELECT name
+            FROM topics
+            WHERE id = (
+                SELECT topic
+                FROM student_topic
+                WHERE student = {student_id}
+            )
+            ;'''.format(student_id=student_id)
+        )
+        return res

@@ -111,12 +111,43 @@ def student_dashboard():
                 task[0]
             ))
 
+    # get info about selected topic and assigned supervisor/assessor
+    try:
+        sup = db.select_columns('users', ['name', 'email'],
+                                ['id'], [supervisor])[0]
+        has_sup = True
+    except IndexError:
+        sup = 'Not assigned'  # should not happen anyway
+        has_sup = False
+    try:
+        assess = db.select_columns('users', ['name', 'email'],
+                                   ['id'], [assessor])[0]
+        has_assess = True
+    except IndexError:
+        assess = 'Not assigned'
+        has_assess = False
+    try:
+        topic = queries.get_student_topic(session['id'])[0][0]
+        has_topic = True
+    except IndexError:
+        topic = 'You have not selected a topic yet.'
+        has_topic = False
+    topic_info = {
+        'has_topic': has_topic,
+        'topic': topic,
+        'supervisor': sup,
+        'assessor': assess,
+        'has_supervisor': has_sup,
+        'has_assessor': has_assess
+    }
+
     db.close()
     return render_template('home_student.html',
                            heading='My Dashboard',
                            title='My Dashboard',
                            materials=cur_materials,
-                           tasks=tasks)
+                           tasks=tasks,
+                           topic_info=topic_info)
 
 
 def get_sub_status(user, task):
