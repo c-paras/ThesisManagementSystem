@@ -5,8 +5,8 @@
 function flash(msg, error = false) {
   M.Toast.dismissAll();
   const color = (error) ? 'red' : 'blue';
-  if(!msg) {
-    msg = "Undefined message";
+  if (!msg) {
+    msg = 'Undefined message.';
   }
   if (msg && !(msg.endsWith('.') || msg.endsWith('!'))) {
     if (msg.includes('!')) {
@@ -191,20 +191,6 @@ $(function () {
 });
 
 /*
- * Manually add and remove active class from chips fields.
- * This makes chips fields consistent with normal input fields.
- */
-$(function () {
-  $('.chips input').on('focus', function () {
-    $(this).parent().siblings('.prefix').addClass('active');
-  });
-
-  $('.chips input').on('blur', function () {
-    $(this).parent().siblings('.prefix').removeClass('active');
-  });
-});
-
-/*
  * Prevent fields containing only spaces from being treated as valid.
  * The `pattern' attribute is not supported for textareas yet.
  */
@@ -217,4 +203,57 @@ $(function () {
       }
     });
   });
+});
+
+/*
+ * Manually add and remove active class from chips fields.
+ * This makes chips fields consistent with normal input fields.
+ */
+$(function () {
+  const observer = new MutationObserver(function (mutations) {
+    for (const elem of mutations) {
+      const elemId = elem.target.getAttribute('id');
+      if (elem.target.getAttribute('class').includes('focus')) {
+        $(`#${elemId}`).parent().find('.prefix').addClass('active');
+      } else {
+        $(`#${elemId}`).parent().find('.prefix').removeClass('active');
+      }
+    }
+  });
+  for (const elem of document.getElementsByClassName('chips')) {
+    observer.observe(elem, {
+      attributes: true,
+      attributeFilter: ['class'],
+      childList: false,
+      characterData: false
+    });
+  }
+});
+
+/*
+ * Automatically convert text in a chips field into a chip
+ * when the user leaves the field. The time delays ensure
+ * the adding of a chip is synchronized better with respect
+ * to Materialize's own chip-adding functionality. It prevents
+ * a chip being added inadvertently if Materialize is also adding
+ * the chip at the same time, e.g. via the autocomplete field.
+ */
+$(function () {
+  setTimeout(function () {
+    $('body').find('.chips').each(function () {
+      const elem = $(this);
+      M.Chips.getInstance(elem).$input.on('blur', function () {
+        const chipsInputField = M.Chips.getInstance(elem).$input;
+        setTimeout(function () {
+          const stringNotInChip = chipsInputField.val();
+          if (stringNotInChip) {
+            M.Chips.getInstance(elem).addChip({
+              tag: stringNotInChip
+            });
+            chipsInputField.val('');
+          }
+        }, 100);
+      });
+    });
+  }, 1000);
 });

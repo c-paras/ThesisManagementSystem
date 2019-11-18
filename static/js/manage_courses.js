@@ -82,3 +82,70 @@ function exportMarks(enrolledStudents, tasks) {
   });
 
 }
+
+function deleteTask(taskId) {
+  const data = {
+    "taskId": taskId
+  };
+
+  makePOSTRequest('/delete_task', data, (res) => {
+    if (res.status === 'fail') {
+      flash(res.message, error = true);
+    } else {
+      delayToast(res.message);
+      location.reload();
+    }
+  });
+}
+
+function deleteMaterial(materialId) {
+  const data = {
+    "materialId": materialId
+  };
+
+  makePOSTRequest('/delete_material', data, (res) => {
+    if (res.status === 'fail') {
+      flash(res.message, error = true);
+    } else {
+      delayToast(res.message);
+      location.reload();
+    }
+  });
+}
+
+function openTaskDeleteConfirmation(taskName, taskId) {
+  let text = 'Are you sure you want to delete the task: ' + taskName;
+  $('#deletion-message').text(text);
+  $('#confirm-deletion').click(function callDelet() {
+    deleteTask(taskId);
+  });
+  $('#deleteModal').modal('open');
+}
+
+function checkDeleteTask(taskName, taskId) {
+  const data = {
+    "taskId": taskId
+  };
+
+  makePOSTRequest('/check_delete_task', data, (res) => {
+    if (res.status === 'fail') {
+      flash(res.message, error = true);
+    } else {
+      openTaskDeleteConfirmation(taskName, taskId);
+    }
+  });
+}
+
+function openMaterialDeleteConfirmation(materialName, materialId) {
+  let text = 'Are you sure you want to delete the Material: ' + materialName;
+  $('#deletion-message').text(text);
+  $('#confirm-deletion').click(function callDelet() {
+    deleteMaterial(materialId);
+  });
+  $('#deleteModal').modal('open');
+}
+
+$(document).ready(function(){
+  $('.modal').modal();
+});
+

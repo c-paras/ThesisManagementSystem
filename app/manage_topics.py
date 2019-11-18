@@ -50,7 +50,8 @@ def manage():
 def clean_topic_tuples(curr_topics):
     topic_dict = dict()
     visible = []
-    id = []
+    topic_id = []
+
     for topic in curr_topics:
 
         # if it's in the dict, append values only
@@ -61,8 +62,51 @@ def clean_topic_tuples(curr_topics):
         else:
             topic_dict[topic[0]] = topic[1]
             visible.append(topic[2])
-            id.append(topic[3])
+            topic_id.append(topic[3])
 
     return list(zip(list(topic_dict.keys()),
                     list(topic_dict.values()),
-                    visible, id))
+                    visible, topic_id))
+
+
+@manage_topics.route('/delete_topic', methods=['POST'])
+@at_least_role(UserRole.STAFF)
+def delete_topic():
+    data = json.loads(request.data)
+    topic_id = data['topicId']
+    db.connect()
+    db.delete_rows('topics', ['id'], [topic_id])
+    db.delete_rows('topic_to_area', ['topic'], [topic_id])
+    db.delete_rows('announcements', ['topic'], [topic_id])
+    db.delete_rows('prerequisites', ['topic'], [topic_id])
+    db.close()
+    return jsonify({'status': 'ok', "message": "Deleted Topic"})
+
+
+@manage_topics.route('/check_delete_topic', methods=['POST'])
+@at_least_role(UserRole.STAFF)
+def check_delete_topic():
+    data = json.loads(request.data)
+    topic_id = data['topicId']
+    db.connect()
+    # checking if a student has been enrolled in topic
+    student_topic = db.select_columns('student_topic', ['student'],
+                                      ['topic'], [topic_id])
+    if student_topic:
+        return jsonify({'status': 'fail',
+                        'message': "Unable to delete - Students are enrolled"})
+
+    # checking if a there is any pending topic requests
+    pending = 'pending'
+    pending_id = db.select_columns('request_statuses', ['id'],
+                                   ['name'], [pending])
+    topic_request = db.select_columns('topic_requests',
+                                      ['student'], ['topic', 'status'],
+                                      [topic_id, pending_id[0][0]])
+
+    if topic_request:
+        return jsonify({'status': 'fail',
+                        'message': "Unable to delete - \
+                         There are pending topic requests"})
+    db.close()
+    return jsonify({'status': 'ok', "message": "Deleted Topic"})

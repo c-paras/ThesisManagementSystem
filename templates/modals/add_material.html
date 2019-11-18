@@ -12,17 +12,17 @@
     <div class="row">
       <form class="col s10 offset-s1 modal-form" id="add-material-form" name="add-material-form">
         <div class="row">
-          <div id="old-file-area">
-            <b>Current File: </b>
-            <a id='old-file-download' class="waves-effect waves-light" href="" download="">
-              <span id='old-file-name'></span>
+          <div id="old-file-area" class="col s12 center">
+            <b>Current File:</b>
+            <a id="old-file-download" class="waves-effect waves-light" href="" download="">
+              <span id="old-file-name"></span>
               <i class="material-icons right">file_download</i>
             </a>
             <a class="waves-effect waves-light btn-floating btn-small red darken-3" onclick="deleteOldFile()">
               <i class="material-icons prefix">delete</i>
             </a>
           </div>
-          <div id="upload-file-area" class="col s12">
+          <div id="upload-file-area">
             {{ file_upload("file-name", accepted_files, "Select file to upload", max_file_size) }}
           </div>
         </div>

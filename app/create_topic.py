@@ -11,7 +11,10 @@ from app.db_manager import sqliteManager as db
 from app.helpers import error
 from app.queries import queries
 
+import re
 import json
+
+import config
 
 
 create_topic = Blueprint('create_topic', __name__)
@@ -51,7 +54,7 @@ def create():
         prereqs = [prereq['tag'] for prereq in data['prereqs']]
         details = data['details']
     except ValueError as e:
-        return e.args
+        return e.args[0]
 
     # check if there is an edit param, if there is, get the topic id
     update_id = request.args.get('update', None, type=str)
@@ -61,28 +64,34 @@ def create():
     # make sure the course codes are uppercase and strip for areas and prereqs
     if len(areas) == 0:
         return error('You should enter at least one topic area')
-    prereqs = [x.upper() for x in prereqs]
-    prereqs = [x.strip() for x in prereqs]
+    original_prereqs = prereqs
+    prereqs = [x.upper().strip() for x in prereqs]
     areas = [x.strip() for x in areas]
 
     db.connect()
     user_id = session['id']
 
     # test if there is such course in the database
-    course_ids = []
-    for prereq in prereqs:
 
+    course_ids = []
+    i = 0
+    for prereq in prereqs:
         course_id = db.select_columns(
             'courses', ['id', 'prereq'], ['code'], [prereq]
         )
         if len(course_id) == 0:
             db.close()
-            return error('Sorry, you must enter a valid course code!')
+            err_msg = f'{original_prereqs[i]} is an unknown course code!'
+            if not re.match(config.COURSE_CODE_FORMAT, prereqs[i]):
+                err_msg = f'{original_prereqs[i]} is an invalid course code!'
+            return error(err_msg)
         if course_id[0][1] == 0:
             db.close()
-            return error('Sorry, this course cannot be a prerequisite!')
+
+            return error(f'{prereqs[i]} cannot be a prerequisite!')
 
         course_ids.append(course_id[0][0])
+        i += 1
 
     if not update_id:
         # test if there is such topic in the database

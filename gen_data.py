@@ -190,6 +190,19 @@ def gen_topic_areas(topic_id, areas):
         )
 
 
+def gen_topic_prereqs(topic_id, course_ids):
+    if not random.randrange(0, 15):
+        # skip a couple of topics so they don't have prereqs
+        return
+    course_ids = random.sample(course_ids, random.randrange(1, 4))
+    for course_id in course_ids:
+        db.insert_single(
+            'prerequisites',
+            [0, topic_id, course_id],
+            ['type', 'topic', 'course']
+        )
+
+
 def gen_topics():
     with open('db/topics.json') as f:
         topics = json.load(f)
@@ -215,6 +228,8 @@ def gen_topics():
         topics_per_sup = math.floor(len(topics)/len(supervisors))
         topics_per_sup = min(topics_per_sup, 10)
 
+        course_ids = db.select_columns('courses', ['id'], ['prereq'], [1])
+        course_ids = list(map(lambda x: x[0], course_ids))
         base_topic_id = 1
         for sup in supervisors:
             for i in range(0, topics_per_sup):
@@ -225,6 +240,7 @@ def gen_topics():
                     ['id', 'name', 'supervisor', 'description', 'visible']
                 ))
                 gen_topic_areas(i+base_topic_id, t['areas'])
+                gen_topic_prereqs(i+base_topic_id, course_ids)
             base_topic_id += topics_per_sup
         db.insert_multiple(query)
 
