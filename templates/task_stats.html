@@ -16,6 +16,7 @@
         <thead>
           <tr>
             <th class="sortable">zID</th>
+            <th class="sortable">Name</th>
             <th class="sortable">Status</th>
             <th class="sortable">Last Submission</th>
             <th>View</th>
@@ -28,6 +29,9 @@
                 <a href="mailto:{{ student['email'] }}">
                   {{ student['email'].split('@')[0] }}
                 </a>
+              </td>
+              <td>
+                {{ student['name'] }}
               </td>
               <td>
                 {{ student['status']['name'] }}
