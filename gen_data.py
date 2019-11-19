@@ -372,7 +372,7 @@ def gen_tasks2():
             task_id += 1
 
         task_name = course[1] + " Presentation"
-        description = "Please present your progress for the current course"
+        description = "Please present your progress for the current course "
         size_limit = 5
         marking_method = marking_methods['requires mark']
         submission_method = submission_methods['file submission']
@@ -392,7 +392,7 @@ def gen_tasks2():
 
         task_name = course[1] + " Report"
         description = """Please write up a report to cover all of your progress
-            made in""" + course[1]
+            made in """ + course[1]
         size_limit = 10
         dif = datetime.timedelta(days=(7*11), minutes=-1)
         deadline = datetime.datetime.timestamp(start_date + dif)

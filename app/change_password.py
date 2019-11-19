@@ -36,7 +36,6 @@ def change_user_password():
     if len(password) < 8:
         return error('Password must be at least 8 characters long!')
 
-    print("here we are!")
     acc_id = session['id']
     hash_pass = bcrypt.hashpw(password.encode('utf-8'), bcrypt.gensalt())
 

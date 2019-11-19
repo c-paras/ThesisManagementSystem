@@ -470,7 +470,6 @@ class queries:
         return res
 
     def get_student_topic(student_id):
-        print(student_id)
         res = db.custom_query('''
             SELECT name
             FROM topics
