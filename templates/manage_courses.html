@@ -13,6 +13,7 @@
                 id="courses" name="courses" class="validate"
                 required="" aria-required="true" onchange="setSessions({{ sessions }})"
               >
+                <option value="-1" disabled selected>Course code</option>
                 {% for key, value in courses.items() %}
                   <option
                     {% if key|int == co_map[default_co]['course']|int %}
@@ -28,6 +29,7 @@
                 id="sessions" name="sessions" class="validate"
                 required="" aria-required="true"
               >
+                <option value="-1" disabled selected>Session</option>
                 {% for value in sessions %}
                   <option
                     {% if value[1]|int == co_map[default_co]['session']|int %}

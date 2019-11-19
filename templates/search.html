@@ -38,6 +38,7 @@
       <div id="advanced-menu" class="row" style="display: none;">
         <div class="input-field col s4 offset-s1">
           <select name="sortby">
+            <option value="-1" disabled selected>Sort by</option>
             <option value="create-ascend" selected>Newest</option>
             <option value="create-descend">Oldest</option>
             <option value="title-ascend">Title (A - Z)</option>
@@ -49,6 +50,7 @@
         </div>
         <div class="input-field col s4 offset-s2">
           <select id="entries" name="entries">
+            <option value="-1" disabled selected>Entries per page</option>
             <option value="5" selected>5</option>
             <option value="10">10</option>
             <option value="20">20</option>
