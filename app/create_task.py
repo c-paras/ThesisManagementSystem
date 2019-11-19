@@ -111,7 +111,7 @@ def create():
                              'word-limit', 'course-id',
                              'delete_old_attachment'])
     except ValueError as e:
-        return e.args
+        return e.args[0]
 
     try:
         old_task_id = int(old_task_id)
@@ -134,7 +134,7 @@ def create():
             word_limit = get_fields(request.form,
                                     ['word-limit'], ints=['word-limit'])[0]
         except ValueError as e:
-            return e.args
+            return e.args[0]
         max_word_limit = config.MAX_WORD_LIMIT
         if not (1 <= word_limit <= max_word_limit):
             return error(
@@ -153,7 +153,7 @@ def create():
                 criteria = get_fields(request.form, criteria)
                 marks = get_fields(request.form, marks, ints=marks)
             except ValueError as e:
-                return e.args
+                return e.args[0]
 
         if sum([mark for mark in marks]) != 100:
             return error('Marks must add to 100!')
