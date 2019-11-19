@@ -25,7 +25,9 @@
           {% for student in students %}
             <tr>
               <td>
-                {{ student['email'].split('@')[0] }}
+                <a href="mailto:{{ student['email'] }}">
+                  {{ student['email'].split('@')[0] }}
+                </a>
               </td>
               <td>
                 {{ student['status']['name'] }}
