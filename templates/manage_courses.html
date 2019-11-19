@@ -147,6 +147,7 @@
               <th>Visible</th>
               <th>Edit</th>
               <th>Delete</th>
+              <th>Info</th>
             </tr>
           </thead>
           <tbody>
@@ -194,6 +195,11 @@
                 <td>
                   <a id="deleteTask{{task[0]}}"  href="#!" onclick="checkDeleteTask('{{ task[1]  }}', {{ task[0] }})">
                     <i class="material-icons">delete_forever</i>
+                  </a>
+                </td>
+                <td>
+                  <a href="{{ url_for('tasks.task_info', task_id=task[0]) }}">
+                    <i class="material-icons">info</i>
                   </a>
                 </td>
               </tr>

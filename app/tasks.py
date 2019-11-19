@@ -472,25 +472,7 @@ def submit_text_task():
     text = request.form.get('text-submission', -1)
 
     db.connect()
-    res = db.select_columns('tasks', ['deadline', 'marking_method',
-                                      'visible', 'course_offering',
-                                      'word_limit', 'name'],
-                            ['id'], [task_id])
-    if not res:
-        db.close()
-        return error("Task not found")
-
-    task = {
-        'id': task_id,
-        'deadline': datetime.fromtimestamp(res[0][0]),
-        'sub_method': {
-            'id': res[0][1]
-        },
-        'visible': res[0][2],
-        'offering': res[0][3],
-        'word_limit': res[0][4],
-        'name': res[0][5]
-    }
+    task = build_task(task_id)
 
     res = db.select_columns('enrollments', ['user'],
                             ['user', 'course_offering'],
@@ -506,10 +488,6 @@ def submit_text_task():
     if datetime.now() >= task['deadline']:
         db.close()
         return error("Submissions closed")
-
-    res = db.select_columns('marking_methods', ['name'],
-                            ['id'], [task['sub_method']['id']])
-    task['sub_method']['name'] = res[0][0]
 
     mark_method_id = None
     if task['sub_method']['name'] == 'requires approval':
@@ -540,3 +518,100 @@ def submit_text_task():
                       'date_modified', 'status'])
     db.close()
     return jsonify({'status': 'ok'})
+
+
+@tasks.route('/task_info', methods=['GET'])
+@at_least_role(UserRole.COURSE_ADMIN)
+def task_info():
+    db.connect()
+    task = build_task(request.args.get('task_id', -1, type=int))
+    if not task:
+        db.close()
+        return abort(404)
+    time_format = '%A %d/%m/%Y at %I:%M:%S %p'
+    deadline_text = task['deadline'].strftime(time_format)
+
+    students = get_student_statuses(task)
+    for s in students:
+        if s['submission_date']:
+            s['submission_date'] = timestamp_to_string(s['submission_date'])
+    db.close()
+    return render_template('task_stats.html',
+                           deadline_text=deadline_text,
+                           description=task['description'],
+                           task_id=task['id'],
+                           students=students,
+                           heading=f"{task['name']} - Statistics",
+                           title="Task Statistics")
+
+
+@tasks.route('/task_status', methods=['GET'])
+@at_least_role(UserRole.COURSE_ADMIN)
+def task_status():
+    db.connect()
+    task = build_task(request.args.get('task_id', -1, type=int))
+    if not task:
+        db.close()
+        return error("Couldn't find task")
+    students = get_student_statuses(task)
+    db.close()
+    return jsonify({'status': 'ok', 'students': students})
+
+
+def get_student_statuses(task):
+    res = db.select_columns('enrollments', ['user'],
+                            ['course_offering'], [task['offering']])
+    students = [{'id': r[0]} for r in res]
+    for student in students:
+        res = db.select_columns('users', ['name', 'email'],
+                                ['id'], [student['id']])
+        student['name'] = res[0][0]
+        student['email'] = res[0][1]
+
+        res = db.select_columns('submissions',
+                                ['date_modified', 'status'],
+                                ['task', 'student'],
+                                [task['id'], student['id']])
+        submissions = [{'date': r[0], 'status': {'id': r[1]}} for r in res]
+        if not submissions:
+            student['submission_date'] = None
+            student['status'] = {'id': -1, 'name': 'not submitted'}
+        else:
+            # We only support one submission at a time
+            student['submission_date'] = submissions[0]['date']
+            res = db.select_columns('request_statuses', ['name'],
+                                    ['id'], [submissions[0]['status']['id']])
+            submissions[0]['status']['name'] = res[0][0]
+            student['status'] = submissions[0]['status']
+    return students
+
+
+def build_task(task_id):
+    'Assumes you already have a database connection open'
+    res = db.select_columns('tasks', ['deadline', 'marking_method',
+                                      'visible', 'course_offering',
+                                      'word_limit', 'name', 'description'],
+                            ['id'], [task_id])
+    if not res:
+        return None
+
+    task = {
+        'id': task_id,
+        'deadline': datetime.fromtimestamp(res[0][0]),
+        'sub_method': {
+            'id': res[0][1]
+        },
+        'visible': res[0][2],
+        'offering': res[0][3],
+        'word_limit': res[0][4],
+        'name': res[0][5],
+        'description': res[0][6],
+        'attachment': None
+    }
+    res = db.select_columns('marking_methods', ['name'],
+                            ['id'], [task['sub_method']['id']])
+    task['sub_method']['name'] = res[0][0]
+    res = db.select_columns('task_attachments', ['path'], ['task'], [task_id])
+    if res:
+        task['attachment'] = [FileUpload(filename=res[0][0])]
+    return task
