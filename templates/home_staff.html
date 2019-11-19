@@ -14,8 +14,8 @@
           <!-- Table header -->
           <thead>
             <tr>
-              <th class="sortable">Name</th>
               <th class="sortable">zID</th>
+              <th class="sortable">Name</th>
               <th class="sortable">Topic</th>
               <th>Review</th>
             </tr>
@@ -25,12 +25,12 @@
           <tbody>
             {% for request in curr_requests %}
               <tr>
-                <td>{{ request['stu_name'] }}</td>
                 <td>
                   <a href="mailto:{{ request['stu_email'] }}">
                     {{ request['stu_email'].split('@')[0] }}
                   </a>
                 </td>
+                <td>{{ request['stu_name'] }}</td>
                 <td>{{ request['topic_name'] }}</td>
                 <td>
                   <a
