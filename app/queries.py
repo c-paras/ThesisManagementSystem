@@ -191,7 +191,7 @@ class queries:
     def get_user_materials(user_id):
         res = db.custom_query(
             """
-                SELECT m.id, m.name, s.start_date, s.end_date
+                SELECT m.id, m.name, s.start_date, s.end_date, c.name
                 FROM users u
                 INNER JOIN enrollments e
                     ON e.user = u.id
@@ -201,6 +201,8 @@ class queries:
                     ON s.id = co.session
                 INNER JOIN materials m
                     on m.course_offering = co.id
+                INNER JOIN courses c
+                    on c.id = co.course
                 WHERE u.id = "{id}" AND
                     m.visible = 1;
             """.format(id=user_id)
@@ -389,7 +391,7 @@ class queries:
     def get_course_offering_details():
         res = db.custom_query(
             """
-                SELECT co.id, c.code, s.term, s.year
+                SELECT co.id, c.code, s.term, s.year, c.id, s.id
                 FROM course_offerings co
                 INNER JOIN sessions s
                     ON s.id = co.session

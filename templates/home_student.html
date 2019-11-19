@@ -41,13 +41,15 @@
       {% if materials|length %}
         <table class="striped centered responsive-table js-sort-table">
           <colgroup>
-            <col span="1" style="width: 50%;">
-            <col span="1" style="width: 50%;">
+            <col span="1" style="width: 15%;">
+            <col span="1" style="width: 40%;">
+            <col span="1" style="width: 45%;">
           </colgroup>
 
           <!-- Table header -->
           <thead>
             <tr>
+              <th class="sortable">Course</th>
               <th class="sortable">Name</th>
               <th class="sortable">File</th>
             </tr>
@@ -57,6 +59,7 @@
           <tbody>
             {% for material in materials %}
               <tr>
+                <td>{{ material[2] }}</td>
                 <td>{{ material[0] }}</td>
                 <td>
                   {% for attachment in material[1] %}

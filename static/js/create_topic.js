@@ -38,7 +38,7 @@ function submitEditTopic() {
       flash(res.message, error = true);
     } else {
       delayToast('Topic edited!', false);
-      window.location.href = '/home';
+      window.location.href = '/manage_topics';
     }
   });
 }

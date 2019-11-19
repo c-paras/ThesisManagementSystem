@@ -60,9 +60,6 @@ def manage_course_offerings():
                     ['id'], [data['id']]
                 )
                 db.close()
-
-        if 'name' in data and data['name'] == 'courses':
-            session['current_co'] = data['value']
         return jsonify({'status': 'ok'})
 
     co = 1
@@ -72,8 +69,8 @@ def manage_course_offerings():
         session['current_co'] = co
         # maybe default to whatever course is in the current session
     db.connect()
-    courses = queries.get_course_offering_details()
-    courses.reverse()
+    course_offerings = queries.get_course_offering_details()
+    co_map, courses, sessions = split_co(course_offerings)
     materials_query = db.select_columns(
         'materials', ['id', 'name', 'visible'], ['course_offering'], [co]
     )
@@ -123,6 +120,7 @@ def manage_course_offerings():
         ('student', account_types['student']),
         ('admin', account_types['course_admin'])
     ]
+    sessions_list = sessions[co_map[co]['course']]
     db.close()
     return render_template(
         'manage_courses.html',
@@ -132,11 +130,79 @@ def manage_course_offerings():
         tasks=tasks,
         enrollments=enrollments,
         courses=courses,
+        sessions=sessions_list,
+        co_map=co_map,
         default_co=co,
         max_file_size=config.MAX_FILE_SIZE,
         accepted_files=allowed_file_types,
         task_ids=task_ids
     )
+
+
+def split_co(course_offerings):
+    co_map = {}
+    courses = {}
+    sessions = {}
+    for co in course_offerings:
+        if co[0] not in co_map:
+            temp = {
+                'course': co[4],
+                'session': co[5],
+            }
+            co_map[co[0]] = temp
+
+        if co[4] not in courses:
+            courses[co[4]] = co[1]
+            sessions[co[4]] = []
+
+        ses_string = str(co[3])[2:] + 'T' + str(co[2])
+        sessions[co[4]].append((ses_string, co[5]))
+    return co_map, courses, sessions
+
+
+@manage_courses.route('/update_course_offering', methods=['POST'])
+@at_least_role(UserRole.COURSE_ADMIN)
+def update_course_offering():
+    data = json.loads(request.data)
+    db.connect()
+    course_id = data[0]['value']
+    session_id = data[1]['value']
+    res = db.select_columns(
+        'course_offerings', ['id'],
+        ['session', 'course'],
+        [session_id, course_id]
+    )
+    db.close()
+    if len(res) > 0:
+        session['current_co'] = res[0][0]
+        return jsonify({'status': 'ok'})
+    else:
+        return error("Failed to find course offering")
+
+
+@manage_courses.route('/get_sessions', methods=['POST'])
+@at_least_role(UserRole.COURSE_ADMIN)
+def get_sessions():
+    data = json.loads(request.data)
+    db.connect()
+    res = db.select_columns(
+        'course_offerings', ['session'], ['course'], [data]
+    )
+    sessions = []
+    for co in res:
+        ses_details = db.select_columns(
+            'sessions', ['year', 'term'], ['id'], [co[0]]
+        )[0]
+        ses_string = str(ses_details[0])[2:] + 'T' + str(ses_details[1])
+        sessions.append((ses_string, co[0]))
+    db.close()
+    if len(session) > 0:
+        return jsonify({
+            'status': 'ok',
+            'data': sessions
+        })
+    else:
+        return error("Failed to find sessions")
 
 
 @manage_courses.route('/enrol_user', methods=['POST'])
