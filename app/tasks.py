@@ -524,7 +524,7 @@ def task_info():
     students = get_student_statuses(task)
     for s in students:
         if s['submission_date']:
-            s['submission_date'] = s['submission_date'].strftime(time_format)
+            s['submission_date'] = timestamp_to_string(s['submission_date'])
     db.close()
     return render_template('task_stats.html',
                            deadline_text=deadline_text,
@@ -561,8 +561,7 @@ def get_student_statuses(task):
                                 ['date_modified', 'status'],
                                 ['task', 'student'],
                                 [task['id'], student['id']])
-        submissions = [{'date': datetime.fromtimestamp(r[0]),
-                        'status': {'id': r[1]}} for r in res]
+        submissions = [{'date': r[0], 'status': {'id': r[1]}} for r in res]
         if not submissions:
             student['submission_date'] = None
             student['status'] = {'id': -1, 'name': 'not submitted'}
