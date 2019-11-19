@@ -44,7 +44,7 @@ function drawChart() {
         height: "90%"
       },
       pieHole: 0.4,
-      colors: ['#a66426', '#a6262c', '#26a69a']
+      colors: ['#26a69a', '#a66426', '#a6262c']
     };
 
     const chart = new google.visualization.PieChart(document.getElementById('piechart'));
