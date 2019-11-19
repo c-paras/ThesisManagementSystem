@@ -4,6 +4,7 @@ from flask import jsonify
 from flask import render_template
 from flask import request
 from flask import session
+from flask import url_for
 
 from datetime import datetime
 
@@ -355,10 +356,19 @@ def staff_view():
                            ['criteria', 'student', 'marker'],
                            [task_criteria[i], studentId, session['id']])
 
-    res = db.select_columns('users', ['name', 'email'], ['id'], [studentId])
-
-    send_email(to=res[0][1], name=res[0][0], subject="Marks Released",
-               messages=['Your submission has been marked'])
+    # send email
+    student = db.select_columns('users', ['name', 'email'],
+                                ['id'], [studentId])[0]
+    task_name = db.select_columns('tasks', ['name'], ['id'], [task_id])[0][0]
+    marker = session['name']
+    subject = f'Marks Entered for Task "{task_name}"'
+    msg1 = f'Your submission for task "{task_name}"' + \
+           f' has just been marked by {marker}.'
+    view_link = url_for('.view_task', task=task_id, _external=True)
+    msg2 = f'You can view your marks and feedback ' + \
+           f'<a href="{view_link}">here</a>.'
+    send_email(to=student[1], name=student[0], subject=subject,
+               messages=[msg1, msg2])
 
     db.close()
     return jsonify({'status': 'ok'})
@@ -481,25 +491,7 @@ def submit_text_task():
     text = request.form.get('text-submission', -1)
 
     db.connect()
-    res = db.select_columns('tasks', ['deadline', 'marking_method',
-                                      'visible', 'course_offering',
-                                      'word_limit', 'name'],
-                            ['id'], [task_id])
-    if not res:
-        db.close()
-        return error("Task not found")
-
-    task = {
-        'id': task_id,
-        'deadline': datetime.fromtimestamp(res[0][0]),
-        'sub_method': {
-            'id': res[0][1]
-        },
-        'visible': res[0][2],
-        'offering': res[0][3],
-        'word_limit': res[0][4],
-        'name': res[0][5]
-    }
+    task = build_task(task_id)
 
     res = db.select_columns('enrollments', ['user'],
                             ['user', 'course_offering'],
@@ -515,10 +507,6 @@ def submit_text_task():
     if datetime.now() >= task['deadline']:
         db.close()
         return error("Submissions closed")
-
-    res = db.select_columns('marking_methods', ['name'],
-                            ['id'], [task['sub_method']['id']])
-    task['sub_method']['name'] = res[0][0]
 
     mark_method_id = None
     if task['sub_method']['name'] == 'requires approval':
@@ -549,3 +537,103 @@ def submit_text_task():
                       'date_modified', 'status'])
     db.close()
     return jsonify({'status': 'ok'})
+
+
+@tasks.route('/task_info', methods=['GET'])
+@at_least_role(UserRole.COURSE_ADMIN)
+def task_info():
+    db.connect()
+    task = request.args.get('task_id', None, type=int)
+    if not task:
+        db.close()
+        return abort(400)
+    task = build_task(task)
+    if not task:
+        db.close()
+        return abort(404)
+    deadline_text = timestamp_to_string(task['deadline'], True)
+
+    students = get_student_statuses(task)
+    for s in students:
+        if s['submission_date']:
+            s['submission_date'] = timestamp_to_string(s['submission_date'])
+    db.close()
+    return render_template('task_stats.html',
+                           deadline_text=deadline_text,
+                           description=task['description'],
+                           task_id=task['id'],
+                           students=students,
+                           heading=f"{task['name']} - Statistics",
+                           title=f"{task['name']} - Statistics")
+
+
+@tasks.route('/task_status', methods=['GET'])
+@at_least_role(UserRole.COURSE_ADMIN)
+def task_status():
+    db.connect()
+    task = build_task(request.args.get('task_id', -1, type=int))
+    if not task:
+        db.close()
+        return error("Couldn't find task")
+    students = get_student_statuses(task)
+    db.close()
+    return jsonify({'status': 'ok', 'students': students})
+
+
+def get_student_statuses(task):
+    res = db.select_columns('enrollments', ['user'],
+                            ['course_offering'], [task['offering']])
+    students = [{'id': r[0]} for r in res]
+    for student in students:
+        res = db.select_columns('users', ['name', 'email'],
+                                ['id'], [student['id']])
+        student['name'] = res[0][0]
+        student['email'] = res[0][1]
+
+        res = db.select_columns('submissions',
+                                ['date_modified', 'status'],
+                                ['task', 'student'],
+                                [task['id'], student['id']])
+        submissions = [{'date': r[0], 'status': {'id': r[1]}} for r in res]
+        if not submissions:
+            student['submission_date'] = None
+            student['status'] = {'id': -1, 'name': 'not submitted'}
+        else:
+            # We only support one submission at a time
+            student['submission_date'] = submissions[0]['date']
+            res = db.select_columns('request_statuses', ['name'],
+                                    ['id'], [submissions[0]['status']['id']])
+            submissions[0]['status']['name'] = res[0][0]
+            student['status'] = submissions[0]['status']
+    return students
+
+
+def build_task(task_id):
+    'Assumes you already have a database connection open'
+    res = db.select_columns('tasks', ['deadline', 'marking_method',
+                                      'visible', 'course_offering',
+                                      'word_limit', 'name', 'description'],
+                            ['id'], [task_id])
+    if not res:
+        return None
+
+    task = {
+        'id': task_id,
+        'deadline': res[0][0],
+        'sub_method': {
+            'id': res[0][1]
+        },
+        'visible': res[0][2],
+        'offering': res[0][3],
+        'word_limit': res[0][4],
+        'name': res[0][5],
+        'description': res[0][6],
+        'attachment': None
+    }
+    res = db.select_columns('marking_methods', ['name'],
+                            ['id'], [task['sub_method']['id']])
+    task['sub_method']['name'] = res[0][0]
+    res = db.select_columns('task_attachments', ['path'], ['task'], [task_id])
+    if res:
+        task['attachment'] = [FileUpload(filename=res[0][0])]
+    return task

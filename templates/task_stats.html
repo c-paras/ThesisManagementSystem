@@ -1,0 +1,69 @@
+{% extends "base.html" %}
+
+{% block body %}
+  {% include "task_summary.html" %}
+
+  <div class="row">
+    <div class="col s12">
+      <hr>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col s12">
+      <h5>Submission Statistics:</h5>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col s6 offset-s3">
+      <div style="height: 400px;" id="piechart"></div>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col s12">
+      <table class="striped centered responsive-table js-sort-table">
+        <thead>
+          <tr>
+            <th class="sortable">zID</th>
+            <th class="sortable">Name</th>
+            <th class="sortable">Status</th>
+            <th class="sortable">Last Submission</th>
+            <th>View</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for student in students %}
+            <tr>
+              <td>
+                <a href="mailto:{{ student['email'] }}">
+                  {{ student['email'].split('@')[0] }}
+                </a>
+              </td>
+              <td>
+                {{ student['name'] }}
+              </td>
+              <td>
+                {{ student['status']['name'] }}
+              </td>
+              <td>
+                {% if student['submission_date'] %}
+                  {{ student['submission_date'] }}
+                {% else %}
+                  N/A
+                {% endif %}
+              </td>
+              <td>
+                <a href="{{ url_for('tasks.view_task', task=task_id, student=student['id']) }}">
+                  <i class="small material-icons teal-text">pageview</i>
+                </a>
+              </td>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+  <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+{% endblock %}

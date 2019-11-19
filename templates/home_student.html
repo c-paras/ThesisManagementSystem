@@ -3,6 +3,38 @@
 {% block body %}
   <div class="row">
 
+    <!-- Show student their topic information -->
+    <div class="section col s12">
+      <h5>Topic Information:</h5>
+      {% if topic_info['has_topic'] %}
+        <p>
+          <b>Topic:</b> <span><em>{{ topic_info['topic'] }}</em></span>
+        </p>
+        {% for has, type in [('has_supervisor', 'supervisor'), ('has_assessor', 'assessor')] %}
+          <p>
+            {% if topic_info[has] %}
+              <b>{{ type|lower|cap_first }}:</b>
+              <span>
+                {{ topic_info[type][0] }}
+                <a href="mailto:{{ topic_info[type][1] }}">
+                  ({{ topic_info[type][1] }})
+                </a>
+              </span>
+            {% else %}
+              <b>{{ type|lower|cap_first }}:</b> <span>{{ topic_info[type] }}</span>
+            {% endif %}
+          </p>
+        {% endfor %}
+      {% else %}
+        <p>
+          {{ topic_info['topic'] }}
+        </p>
+        <p>
+          You can search for topics <a href="{{ url_for('search.search_topic') }}">here</a>.
+        </p>
+      {% endif %}
+    </div>
+
     <!-- Show student the current materials for their courses -->
     <div class="section col s12">
       <h5>Materials:</h5>
@@ -77,7 +109,7 @@
               <tr>
                 <td>{{ task[0] }}</td>
                 <td>{{ task[1] }}</td>
-                <td>{{ task[2] }}</td>
+                <td>{{ task[2]|cap_first }}</td>
                 <td>{{ task[3] }}</td>
                 <td>{{ task[4] }}</td>
                 <td>

@@ -36,8 +36,8 @@
       <!-- Table header -->
       <thead>
         <tr>
-          <th class="sortable">Name</th>
           <th class="sortable">zID</th>
+          <th class="sortable">Name</th>
           <th class="sortable">Topic</th>
           <th class="sortable">Role</th>
           <th>Submissions</th>
@@ -48,12 +48,12 @@
       <tbody>
         {% for student in students_list %}
           <tr>
-            <td>{{ student[0] }}</td>
             <td>
               <a href="mailto:{{ student[1] }}">
                 {{ student[1].split('@')[0] }}
               </a>
             </td>
+            <td>{{ student[0] }}</td>
             <td>{{ student[2] }}</td>
             <td>{{ student[4] }}</td>
             <td>

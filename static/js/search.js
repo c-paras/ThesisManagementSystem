@@ -1,4 +1,5 @@
 let canRequest;
+let entriesPerPage;
 
 function makeCard(id, title, description, topics, supervisor, email, preqs, visible) {
   let badge = '';
@@ -62,7 +63,9 @@ function updateCanRequest() {
 
 function nextPage(requestedPage) {
   let cards = $.myTopicCards;
-  $('#search-results').html(cards.slice(requestedPage * 10 - 10, requestedPage * 10));
+  $('#search-results').html(
+    cards.slice(requestedPage * entriesPerPage - entriesPerPage, requestedPage * entriesPerPage)
+  );
   $(window).scrollTop($('a#search-btn').offset().top);
   updateCanRequest();
 }
@@ -73,7 +76,7 @@ function searchResults() {
     return;
   }
 
-  let data = {
+  const data = {
     'searchTerm': $('#search-input').val(),
     'checkbox': $('#checkbox-vis').is(':checked'),
     'topicArea': M.Chips.getInstance($('#topics')).chipsData,
@@ -88,7 +91,7 @@ function searchResults() {
       for (const i in res.topics) {
         topic = res.topics[i];
         let preqs = 'None';
-        if(topic.preqs.length !== 0) {
+        if (topic.preqs.length !== 0) {
           const preqList = topic.preqs.map(value => value.code);
           preqs = preqList.join(', ');
         }
@@ -97,13 +100,8 @@ function searchResults() {
                             topic.supervisor.email, preqs, topic.visible));
       }
 
-      $("[id='tagsTopic']").each((function () {
-        $(this).val('');
-      }));
-
-      $("[id='tagsSupervisor']").each((function () {
-        $(this).val('');
-      }));
+      $("[id='tagsTopic']").val('');
+      $("[id='tagsSupervisor']").val('');
 
       if (res.topics.length > 0) {
         $('#search-title').html('Search Results (found ' + res.topics.length + ' matching topics):');
@@ -111,7 +109,7 @@ function searchResults() {
         $('#search-title').html('Your search returned no matching topics');
       }
 
-      let entriesPerPage = $('#entries').val();
+      entriesPerPage = $('#entries').val();
       if (entriesPerPage === 'infinite') {
         entriesPerPage = cards.length;
       }

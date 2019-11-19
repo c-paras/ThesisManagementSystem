@@ -79,8 +79,12 @@ def init_app():
     def file_exists(filename):
         return os.path.isfile(filename)
 
+    def cap_first(text):
+        return text.capitalize()
+
     # set up custom jinja filters
     app.jinja_env.filters['file_exists'] = file_exists
+    app.jinja_env.filters['cap_first'] = cap_first
 
 
 if __name__ == '__main__':
