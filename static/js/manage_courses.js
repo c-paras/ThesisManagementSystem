@@ -65,7 +65,7 @@ function exportMarks(enrolledStudents, tasks) {
 
       res.details.forEach(entry => {
         entry.splice(5, 3);
-        const dat = [entry[1]].concat([entry[2]]).concat(entry.splice(3).reverse());
+        const dat = [entry[1]].concat([entry[0]]).concat([entry[2]]).concat(entry.splice(3).reverse());
         csv += `${dat.join(',')}\n`;
       });
 
