@@ -3,4 +3,49 @@
 {% block body %}
   {% include "task_summary.html" %}
   <hr>
+
+  <div class="row">
+    <div class="col s12">
+      <div class="valign-wrapper">
+        <div id="piechart"></div>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col s12">
+      <table class="striped centered responsive-table js-sort-table">
+        <thead>
+          <tr>
+            <th class="sortable">zID</th>
+            <th class="sortable">Status</th>
+            <th class="sortable">Last Submission</th>
+            <th>View</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for student in students %}
+            <tr>
+              <td>
+                {{ student['email'].split('@')[0] }}
+              </td>
+              <td>
+                {{ student['status']['name'] }}
+              </td>
+              <td>
+                {% if student['submission_date'] %}
+                  {{ student['submission_date'] }}
+                {% else %}
+                  N/A
+                {% endif %}
+              </td>
+              <td>
+                <a href="{{ url_for('tasks.view_task', task=task_id, student=student['id']) }}">View</a>
+              </td>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+  <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
 {% endblock %}

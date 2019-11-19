@@ -510,9 +510,9 @@ def submit_text_task():
     return jsonify({'status': 'ok'})
 
 
-@tasks.route('/task_stats', methods=['GET'])
+@tasks.route('/task_info', methods=['GET'])
 @at_least_role(UserRole.COURSE_ADMIN)
-def task_stats():
+def task_info():
     db.connect()
     task = build_task(request.args.get('task_id', -1, type=int))
     if not task:
@@ -521,10 +521,58 @@ def task_stats():
     time_format = '%A %d/%m/%Y at %I:%M:%S %p'
     deadline_text = task['deadline'].strftime(time_format)
 
+    students = get_student_statuses(task)
+    for s in students:
+        if s['submission_date']:
+            s['submission_date'] = s['submission_date'].strftime(time_format)
     db.close()
     return render_template('task_stats.html',
                            deadline_text=deadline_text,
-                           description=task['description'])
+                           description=task['description'],
+                           task_id=task['id'],
+                           students=students)
+
+
+@tasks.route('/task_status', methods=['GET'])
+@at_least_role(UserRole.COURSE_ADMIN)
+def task_status():
+    db.connect()
+    task = build_task(request.args.get('task_id', -1, type=int))
+    if not task:
+        db.close()
+        return error("Couldn't find task")
+    students = get_student_statuses(task)
+    db.close()
+    return jsonify({'status': 'ok', 'students': students})
+
+
+def get_student_statuses(task):
+    res = db.select_columns('enrollments', ['user'],
+                            ['course_offering'], [task['offering']])
+    students = [{'id': r[0]} for r in res]
+    for student in students:
+        res = db.select_columns('users', ['name', 'email'],
+                                ['id'], [student['id']])
+        student['name'] = res[0][0]
+        student['email'] = res[0][1]
+
+        res = db.select_columns('submissions',
+                                ['date_modified', 'status'],
+                                ['task', 'student'],
+                                [task['id'], student['id']])
+        submissions = [{'date': datetime.fromtimestamp(r[0]),
+                        'status': {'id': r[1]}} for r in res]
+        if not submissions:
+            student['submission_date'] = None
+            student['status'] = {'id': -1, 'name': 'not submitted'}
+        else:
+            # We only support one submission at a time
+            student['submission_date'] = submissions[0]['date']
+            res = db.select_columns('request_statuses', ['name'],
+                                    ['id'], [submissions[0]['status']['id']])
+            submissions[0]['status']['name'] = res[0][0]
+            student['status'] = submissions[0]['status']
+    return students
 
 
 def build_task(task_id):
