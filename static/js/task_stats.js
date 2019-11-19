@@ -41,7 +41,7 @@ function drawChart() {
       },
       chartArea:{
         width:"100%",
-        height: "90%"
+        height: "75%"
       },
       pieHole: 0.4,
       colors: ['#26a69a', '#a66426', '#a6262c']
