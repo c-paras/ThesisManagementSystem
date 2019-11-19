@@ -15,7 +15,8 @@
               <i class="material-icons prefix">assignment</i>
               <input
                 id="task-name" name="task-name" type="text" class="validate"
-                required="" aria-required="true" placeholder="Name of Task" value="{{ default_fields['task-name'] }}"
+                required="" aria-required="true" placeholder="Name of Task"
+                value="{{ default_fields['task-name'] }}"
               >
               <span class="helper-text" data-error="Task name is required"></span>
             </div>
@@ -28,7 +29,8 @@
               <i class="material-icons prefix">date_range</i>
               <input
                 id="deadline" name="deadline" type="text" class="validate"
-                placeholder="Deadline" required="" aria-required="true" value="{{ default_fields['deadline'] }}"
+                placeholder="Deadline" required="" aria-required="true"
+                value="{{ default_fields['deadline'] }}"
               >
               <span class="helper-text" data-error="Deadline is required"></span>
             </div>
@@ -53,11 +55,17 @@
             {% for f in default_fields['task_attachments'] %}
               <div id="old-attachment-area">
                 <b>Current Attachment: </b>
-                <a class="waves-effect waves-light" href="{{ f.get_url() }}" download="{{ f.get_original_name() }}">
+                <a
+                  class="waves-effect waves-light" href="{{ f.get_url() }}"
+                  download="{{ f.get_original_name() }}"
+                >
                   {{ f.get_original_name() }}
                   <i class="material-icons right">file_download</i>
                 </a>
-                <a class="waves-effect waves-light btn-floating btn-small red darken-3 modal-trigger" href="#deleteModal">
+                <a
+                  class="waves-effect waves-light btn-floating btn-small red darken-3 modal-trigger"
+                  href="#deleteModal"
+                >
                   <i class="material-icons prefix">delete</i>
                 </a>
               </div>
@@ -69,7 +77,12 @@
                 </div>
                 <div class="modal-footer">
                   <a href="#!" class="modal-close waves-effect waves-light btn grey">Cancel</a>
-                  <a href="#!" class="modal-close waves-effect waves-light btn red darken-3" onclick="removeOldAttachment()">Confirm</a>
+                  <a
+                    href="#!" class="modal-close waves-effect waves-light btn red darken-3"
+                    onclick="removeOldAttachment()"
+                  >
+                    Confirm
+                  </a>
                 </div>
               </div>
             {% endfor %}
@@ -257,19 +270,21 @@
                     </td>
                   </tr>
                 {% else %}
-                  <!-- else add old criterea  -->
+                  <!-- else add old criterea -->
                   {% for criteria in default_fields['criteria'] %}
                     <tr id="marking-criteria-{{ loop.index }}" name="marking-criteria-{{ loop.index }}">
                       <td>
                         <input
-                          id="criteria-{{ loop.index }}" name="criteria-{{ loop.index }}" type="text" class="validate"
+                          id="criteria-{{ loop.index }}" name="criteria-{{ loop.index }}"
+                          type="text" class="validate"
                           required="" aria-required="true" placeholder="Enter Criteria"
                           requiredif="marking-method=criteria" value="{{criteria[0]}}"
                         >
                       </td>
                       <td>
                         <input
-                          type="number" id="maximum-mark-{{ loop.index }}" name="maximum-mark-{{ loop.index }}" min="1" max="100"
+                          type="number" id="maximum-mark-{{ loop.index }}"
+                          name="maximum-mark-{{ loop.index }}" min="1" max="100"
                           placeholder="Enter Mark" class="validate" required="" aria-required="true"
                           requiredif="marking-method=criteria" value="{{criteria[1]}}"
                         >

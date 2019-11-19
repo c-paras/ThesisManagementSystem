@@ -74,15 +74,31 @@ def student_view():
     is_approval = (task_info[5] == 'requires approval')
     awaiting_marks = False
     mark_details = {}
+    approval_feedback = ''
+    marked_by_sup = False
+    marked_by_assessor = False
+    pending_approval = False
 
     if is_approval:
         res = queries.get_submission_status(session['id'], task_id)
 
         if len(res) and res[0][0] == "pending":
             mark_details["Approval"] = "Your submission is pending approval."
+            pending_approval = True
         elif len(res):
             mark_details["Approval"] = """Your submission has been {status}.
                                        """.format(status=res[0][0])
+
+        res = queries.get_students_supervisor(session['id'])
+        feedback1 = get_marks_table(session['id'], res, task_id)[0][3]
+        res = queries.get_students_assessor(session['id'])
+        feedback2 = get_marks_table(session['id'], res, task_id)
+        if feedback2:
+            feedback2 = feedback2[0][3]
+        if feedback1 != 'Awaiting Marking':
+            approval_feedback = feedback1
+        if feedback2 != 'Awaiting Marking':
+            approval_feedback = feedback2
     else:
         res = queries.get_students_supervisor(session['id'])
         mark_details["Supervisor"] = get_marks_table(session['id'],
@@ -93,9 +109,8 @@ def student_view():
         mark_details["Assessor"] = get_marks_table(session['id'],
                                                    res,
                                                    task_id)
-        if not (type(mark_details["Supervisor"]) == () and
-                type(mark_details["Assessor"]) == ()):
-            awaiting_marks = True
+        marked_by_sup = mark_details['Supervisor'] is None
+        marked_by_assessor = mark_details['Assessor'] is None
 
     attachment = None
     res = db.select_columns('task_attachments', ['path'], ['task'], [task_id])
@@ -142,13 +157,17 @@ def student_view():
                            text_info=text_info,
                            accepted_files=accepted_files,
                            mark_details=mark_details,
+                           approval_feedback=approval_feedback,
                            prev_submission=prev_submission,
                            is_approval=is_approval,
                            task_id=task_id,
                            max_size=task_info[6],
                            attachment=attachment,
                            can_submit=can_submit,
-                           awaiting_marks=awaiting_marks)
+                           marked_by_sup=marked_by_sup,
+                           marked_by_assessor=marked_by_assessor,
+                           awaiting_marks=awaiting_marks,
+                           pending_approval=pending_approval)
 
 
 # get a nicely formatted table containing the marks of a student, or a blank
@@ -206,7 +225,7 @@ def staff_view():
                                           ['id', 'task', 'name', 'max_mark'],
                                           ['task'], [task_id])
 
-        student_email = student_details[0][1].split('@')[0]
+        student_email = student_details[0][1]
         res = db.select_columns('submissions',
                                 ['name', 'path', 'text', 'date_modified'],
                                 ['student', 'task'],
@@ -215,7 +234,7 @@ def staff_view():
         # Account for no submission and a text based submission (no path)
         if res:
             submission['name'] = res[0][0]
-            submission['date_modified'] = datetime.fromtimestamp(res[0][3])
+            submission['date_modified'] = timestamp_to_string(res[0][3], True)
             if res[0][1] is not None:
                 submission['file'] = FileUpload(filename=res[0][1])
             else:

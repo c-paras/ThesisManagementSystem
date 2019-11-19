@@ -4,75 +4,74 @@
 
 {% block body %}
   <!-- Show student their current materials for their corses -->
-  <div class="section row">
-    <h5>Task Details:</h5>
+  <div class="row">
     <div class="col 12">
-      <div>
-        <b>Deadline:</b> {{ deadline_text }}
-      </div>
-      <br>
-      <div>
-        <b>Description:</b> {{ description }}<br/>
-      </div>
-      <br>
-      <div>
-        {% if not attachment %}
-          <b>Attachment:</b> No attachments
-        {% else %}
-          <div>
-            <b>Attachment:</b>
-            <a class="waves-effect waves-light" href="{{ attachment.get_url() }}" download="{{ attachment.get_original_name() }}">
-              {{ attachment.get_original_name() }}
-              <i class="material-icons right">file_download</i>
-            </a>
-          </div>
-        {% endif %}
-      </div>
-      <br>
+      <h5>Task Details:</h5>
+      <p></p>
+      <b>Deadline:</b> {{ deadline_text }}
+      <p></p>
+      <b>Description:</b> {{ description }}
+      <p></p>
+      {% if not attachment %}
+        <b>Attachment:</b> No attachments
+      {% else %}
+        <div>
+          <b>Attachment:</b>
+          <a
+            class="waves-effect waves-light" href="{{ attachment.get_url() }}"
+            download="{{ attachment.get_original_name() }}"
+          >
+            {{ attachment.get_original_name() }}
+            <i class="material-icons right">file_download</i>
+          </a>
+        </div>
+      {% endif %}
     </div>
   </div>
-  <hr/>
 
-  <!-- Give the student the ability to submit text/afile -->
-  <div class="section row">
+  <div class="row">
+    <div class="col s12">
+      <hr>
+    </div>
+  </div>
+
+  <!-- Give the student the ability to submit text/file -->
+  <div class="row">
     {% if staffUser %}
-      <h5>Submission:</h5>
       <div class="col s12">
-        <div class="row" >
-          <div class="col s12">
-            <b>Last Submission: </b>
-            {% if submission %}
-              {{ submission['date_modified'] }}
-            {% else %}
-              No recorded submission
-            {% endif %}
-          </div>
-        </div>
-        <div>
-          {% if submission %}
-            {% if submission['file'] %}
-              <a class="waves-effect waves-light" href="{{ submission['file'].get_url() }}">
-                {{submission['name']}} 
-                <i class="material-icons right">file_download</i>
-              </a>
-            {% else %}
-              <div class="row">
-                <div class="col s12" style="border:1px solid #000000;">
-                  {{ submission['text'] }}
-                </div>
-              </div>
-            {% endif %}
+        <h5>Submission:</h5>
+        <p></p>
+        <b>Student:</b>
+        {{ studentName }}
+        <a href="mailto:{{ studentEmail }}">({{ studentEmail }})</a>
+        <p></p>
+        <b>Last submission:</b>
+        {% if submission %}
+          {{ submission['date_modified'] }}
+        {% else %}
+          No recorded submission
+        {% endif %}
+        <p></p>
+        {% if submission %}
+          {% if submission['file'] %}
+            <b>File submitted:</b>
+            <a class="waves-effect waves-light" href="{{ submission['file'].get_url() }}">
+              {{ submission['name'] }}
+              <i class="material-icons right">file_download</i>
+            </a>
           {% else %}
-            No recorded submission
+            <div style="border: 1px solid #000000; padding: 5px;">
+              <em>{{ submission['text'] }}</em>
+            </div>
           {% endif %}
-        </div>
+        {% endif %}
       </div>
     {% else %}
-      <h5>Your Submission:</h5>
       <div class="col s12">
+        <h5>Your Submission:</h5>
         {% if not can_submit %}
-          <div class="row" >
-            <div class="col s2 offset-s5 amber darken-4 center-align">
+          <div class="row">
+            <div class="col s4 offset-s4 amber darken-4 center-align">
               <span class="white-text" style="line-height: 2em;">Submissions Closed</span>
             </div>
           </div>
@@ -80,7 +79,7 @@
 
         <div class="row" >
           <div class="col s12">
-            <b>Last Submission: </b>
+            <b>Last submission:</b>
             {% if prev_submission %}
               {{ prev_submission['modify_date'] }}
             {% else %}
@@ -101,21 +100,30 @@
       </div>
     {% endif %}
   </div>
-  <hr/>
 
+  {% if not (is_approval and not prev_submission) %}
+    <div class="row">
+      <div class="col s12">
+        <hr>
+      </div>
+    </div>
+  {% endif %}
 
-  <div class="section row">
-    <!-- Show student their current assessments for their corses -->
-    {% if is_approval or (staffUser and submission['markingMethod'] == 'approval') %}
-      <h5>Approval:</h5>
-    {% else %}
-      <h5>Marking:</h5>
-    {% endif %}
+  <div class="row">
     <div class="col s12">
+      {% if is_approval and not prev_submission %}
+        {# Don't display an awaiting approval if there is no submission! #}
+      {% else %}
+        {% if is_approval or (staffUser and submission['markingMethod'] == 'approval') %}
+          <h5>Approval:</h5>
+        {% else %}
+          <h5>Marking:</h5>
+        {% endif %}
+      {% endif %}
       {% if staffUser %}
         {% include "task_mark.html" %}
       {% else %}
-        {% if awaiting_marks %}
+        {% if awaiting_marks or not prev_submission %}
           {% for staff_type in ["Supervisor"] %}
             <div class="row">
               <div class="col s12">
@@ -146,13 +154,18 @@
             </div>
           {% endfor %}
         {% elif is_approval %}
-          <p>{{ mark_details["Approval"] }}</p>
+          {% if approval_feedback and not pending_approval %}
+            <b>Status:</b> <span>{{ mark_details["Approval"] }}</span>
+            <p></p>
+            <b>Feedback:</b> <span>{{ approval_feedback }}</span>
+          {% else %}
+            <span>{{ mark_details["Approval"] }}</span>
+          {% endif %}
         {% else %}
           {% for staff_type in ["Supervisor", "Assessor"] %}
             <div class="row">
-              <h6>{{ staff_type }}:</h6>
-
               <div class="col s12">
+                <b>{{ staff_type }}:</b>
                 {% if not mark_details[staff_type]|length %}
                   <!-- Student has no staff member assigned -->
                   {% if staff_type|first in 'AEIOU' %}
@@ -172,7 +185,7 @@
                       </tr>
                     </thead>
 
-                    <!-- Table body, should be replaced with a loop when actually connected to database -->
+                    <!-- Table body -->
                     <tbody>
                       {% for item in mark_details[staff_type] %}
                         <tr>
