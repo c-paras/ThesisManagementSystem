@@ -14,7 +14,7 @@ function drawChart() {
     const marked = ['approved', 'rejected', 'marked', 'cancelled'];
     let markedCount = 0;
 
-    const submitted = ['pending', 'pending_mark'];
+    const submitted = ['pending', 'pending mark'];
     let submittedCount = 0;
     for (var i in res.students) {
       if (marked.includes(res.students[i].status.name)) {
