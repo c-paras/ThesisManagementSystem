@@ -531,7 +531,8 @@ def task_info():
                            description=task['description'],
                            task_id=task['id'],
                            students=students,
-                           heading=f"{task['name']} - Statistics")
+                           heading=f"{task['name']} - Statistics",
+                           title="Task Statistics")
 
 
 @tasks.route('/task_status', methods=['GET'])
