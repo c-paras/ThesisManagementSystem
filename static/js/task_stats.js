@@ -40,7 +40,8 @@ function drawChart() {
         'fillOpacity': 0
       },
       chartArea:{
-        width:"100%"
+        width:"100%",
+        height: "90%"
       },
       pieHole: 0.4,
       colors: ['#a66426', '#a6262c', '#26a69a']
