@@ -4,6 +4,7 @@ from flask import jsonify
 from flask import render_template
 from flask import request
 from flask import session
+from flask import url_for
 
 from datetime import datetime
 
@@ -336,10 +337,19 @@ def staff_view():
                            ['criteria', 'student', 'marker'],
                            [task_criteria[i], studentId, session['id']])
 
-    res = db.select_columns('users', ['name', 'email'], ['id'], [studentId])
-
-    send_email(to=res[0][1], name=res[0][0], subject="Marks Released",
-               messages=['Your submission has been marked'])
+    # send email
+    student = db.select_columns('users', ['name', 'email'],
+                                ['id'], [studentId])[0]
+    task_name = db.select_columns('tasks', ['name'], ['id'], [task_id])[0][0]
+    marker = session['name']
+    subject = f'Marks Entered for Task "{task_name}"'
+    msg1 = f'Your submission for task "{task_name}"' + \
+           f' has just been marked by {marker}.'
+    view_link = url_for('.view_task', task=task_id, _external=True)
+    msg2 = f'You can view your marks and feedback ' + \
+           f'<a href="{view_link}">here</a>.'
+    send_email(to=student[1], name=student[0], subject=subject,
+               messages=[msg1, msg2])
 
     db.close()
     return jsonify({'status': 'ok'})

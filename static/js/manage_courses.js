@@ -3,7 +3,7 @@ function submitCO() {
   if (!formValid(form)) {
     return;
   }
-  data = form.serializeArray();
+  const data = form.serializeArray();
   makePOSTRequest('/update_course_offering', data, (res) => {
     if (res.status === 'fail') {
       flash(res.message, error = true);
@@ -58,20 +58,19 @@ function makeChange(data, type, checkbox_id) {
 }
 
 function updateMat(mat_id, checkbox_id) {
-  type = $(checkbox_id).attr('data-totype');
-  data = {'table': 'materials', 'id': mat_id, 'type': type};
+  const type = $(checkbox_id).attr('data-totype');
+  const data = {'table': 'materials', 'id': mat_id, 'type': type};
   makeChange(data, type, checkbox_id);
 }
 
 function updateTask(task_id, checkbox_id) {
-  type = $(checkbox_id).attr('data-totype');
-  data = {'table': 'tasks', 'id': task_id, 'type': type};
+  const type = $(checkbox_id).attr('data-totype');
+  const data = {'table': 'tasks', 'id': task_id, 'type': type};
   makeChange(data, type, checkbox_id);
 }
 
 function exportMarks(enrolledStudents, tasks) {
-
-  data = {
+  const data = {
     'studentIds': enrolledStudents,
     'taskIds': tasks
   };
@@ -80,19 +79,16 @@ function exportMarks(enrolledStudents, tasks) {
     if (res.status === 'fail') {
       flash(res.message, error = true);
     } else {
-      let csv = 'Name,zID,Task Name,Assessor Mark,Supervisor Mark,Assessor,Supervisor\n';
+      /* let csv = 'Name,zID,Task Name,Assessor Mark,Supervisor Mark,Assessor,Supervisor\n'; */
+      let csv = 'zID,Name,Task Name,Supervisor,Assessor,Supervisor Mark,Assessor Mark\n';
 
-      res.details.forEach(element => {
-        csv += element[0] + ',';
-        csv += element[1] + ',';
-        csv += element[2] + ',';
-        csv += element[3] + ',';
-        csv += element[4] + ',';
-        csv += element[8] + ',';
-        csv += element[9] + '\n';
+      res.details.forEach(entry => {
+        entry.splice(5, 3);
+        const dat = [entry[1]].concat([entry[0]]).concat([entry[2]]).concat(entry.splice(3).reverse());
+        csv += `${dat.join(',')}\n`;
       });
 
-      let hiddenElement = document.getElementById('dummyDownload');
+      const hiddenElement = document.getElementById('dummyDownload');
       hiddenElement.href = 'data:text/csv;charset=utf-8,' + encodeURI(csv);
       hiddenElement.target = '_blank';
       hiddenElement.download = 'marks.csv';
@@ -133,7 +129,7 @@ function deleteMaterial(materialId) {
 }
 
 function openTaskDeleteConfirmation(taskName, taskId) {
-  let text = 'Are you sure you want to delete the task: ' + taskName;
+  const text = 'Are you sure you want to delete the task: ' + taskName;
   $('#deletion-message').text(text);
   $('#confirm-deletion').click(function callDelet() {
     deleteTask(taskId);
@@ -156,7 +152,7 @@ function checkDeleteTask(taskName, taskId) {
 }
 
 function openMaterialDeleteConfirmation(materialName, materialId) {
-  let text = 'Are you sure you want to delete the Material: ' + materialName;
+  const text = 'Are you sure you want to delete the Material: ' + materialName;
   $('#deletion-message').text(text);
   $('#confirm-deletion').click(function callDelet() {
     deleteMaterial(materialId);
@@ -167,4 +163,3 @@ function openMaterialDeleteConfirmation(materialName, materialId) {
 $(document).ready(function(){
   $('.modal').modal();
 });
-

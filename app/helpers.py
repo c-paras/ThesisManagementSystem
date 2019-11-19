@@ -71,10 +71,12 @@ def send_email(to, name, subject, messages):
     # Construct the email and headers
     msg = MIMEMultipart()
     msg['From'] = config.SYSTEM_EMAIL
-    if config.DEBUG:
-        print(f'Debugging mode - sending email to {config.SYSTEM_EMAIL}')
-        print(f'In production - an email would be sent to {to} ({name})')
-        to = config.SYSTEM_EMAIL
+
+    # Always send email to config.SYSTEM_EMAIL just in case
+    print(f'Debugging mode - sending email to {config.SYSTEM_EMAIL}')
+    print(f'In production - an email would be sent to {to} ({name})')
+    to = config.SYSTEM_EMAIL
+
     msg['To'] = to
     msg['Subject'] = '{} | TMS'.format(subject)
     msg.add_header('Content-Type', 'text/html')

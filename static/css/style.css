@@ -82,3 +82,8 @@ th.sortable {
 .prefix {
   cursor: default;
 }
+
+/* change stripe color for tables */
+table > tbody > tr:nth-child(2n+1) > td, table > tbody > tr:nth-child(2n+1) > th {
+  background-color: #edf7f7 !important;
+}
