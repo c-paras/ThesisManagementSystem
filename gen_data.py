@@ -131,7 +131,7 @@ def gen_sessions():
                     datetime.datetime(year, 11, 30, 23, 59, 59).timestamp()
                     ])
 
-    for year in range(2019, 2025):
+    for year in range(2019, 2021):
         ret.append([year, 1,
                     datetime.datetime(year, 2, 18, 0, 0, 0).timestamp(),
                     datetime.datetime(year, 5, 18, 23, 59, 59).timestamp()
@@ -188,7 +188,6 @@ def gen_course_offering():
                     db.insert_single('course_offerings',
                                      [course_id, session_id[0]],
                                      ['course', 'session'])
-
             else:
                 # create offering for thesis A/B/C in years after 2018
                 session_ids = db_queries.get_session_ids_in_range(2019, 2021)
@@ -196,6 +195,19 @@ def gen_course_offering():
                     db.insert_single('course_offerings',
                                      [course_id, session_id[0]],
                                      ['course', 'session'])
+        session_id = db.select_columns(
+            'sessions', ['id'],
+            ['year', 'term'], [2019, 1]
+        )[0][0]
+        course_id = db.select_columns(
+            'courses', ['id'],
+            ['code'], ['COMP4931']
+        )[0][0]
+        db.insert_single(
+            'course_offerings',
+            [session_id, course_id],
+            ['session', 'course']
+        )
 
 
 def gen_topic_areas(topic_id, areas):
@@ -479,6 +491,177 @@ def gen_enrollments():
             db.insert_single('enrollments',
                              [student, course_offering],
                              ['user', 'course_offering'])
+
+
+def get_next_ses(year, term):
+    new_year = year
+    new_term = term
+    if year < 2019:
+        if term == 2:
+            new_year += 1
+            new_term = 1
+        else:
+            new_term += 1
+    else:
+        if term == 3:
+            new_year += 1
+            new_term = 1
+        else:
+            new_term += 1
+
+    if new_year > 2020:
+        return (-1, new_year, new_term)
+    res = db.select_columns(
+        'sessions', ['id', 'year', 'term'],
+        ['year', 'term'], [new_year, new_term]
+    )[0]
+    return res
+
+
+def get_next_course(name):
+    last_char = name[-1]
+    if last_char == 'A':
+        last_char = 'B'
+    else:
+        last_char = 'C'
+    course_name = name[:-1] + last_char
+    res = db.select_columns(
+        'courses', ['id', 'name', 'code'],
+        ['name'], [course_name]
+    )
+    if len(res) > 0:
+        return res[0]
+    return []
+
+
+def gen_enrollments2():
+    sessions = db.select_columns(
+        'sessions', ['id', 'year', 'term'], ['term'], [1]
+    )
+    sessions_t2 = db.select_columns(
+        'sessions', ['id', 'year', 'term'], ['term'], [2]
+    )
+    sessions_t3 = db.select_columns(
+        'sessions', ['id', 'year', 'term'], ['term'], [3]
+    )
+    types = get_all_account_types()
+    student_ids = db.select_columns(
+        'users', ['id'], ['account_type'], [types['student']]
+    )
+    for student in student_ids:
+        number = random.randrange(len(sessions))
+        ses_id = sessions[number][0]
+        ses_year = sessions[number][1]
+        ses_term = sessions[number][2]
+        number = random.randrange(5)
+        if not number:
+            term2 = random.randrange(2)
+            if term2:
+                temp_sessions = sessions_t2
+            else:
+                temp_sessions = sessions_t3
+            number = random.randrange(len(temp_sessions))
+            ses_id = temp_sessions[number][0]
+            ses_year = temp_sessions[number][1]
+            ses_term = temp_sessions[number][2]
+        number = random.randrange(10)
+        if ses_year < 2019:
+            if number < 2:
+                course_name = 'Thesis Part A+B'
+                co_id = get_co_id(ses_id, course_name)
+                db.insert_single(
+                    'enrollments',
+                    [student[0], co_id],
+                    ['user', 'course_offering']
+                )
+            else:
+                course_name = 'Thesis Part A'
+                co_id = get_co_id(ses_id, course_name)
+                db.insert_single(
+                    'enrollments',
+                    [student[0], co_id],
+                    ['user', 'course_offering']
+                )
+                _, course_name, _ = get_next_course(course_name)
+                ses_id, ses_year, ses_term = get_next_ses(ses_year, ses_term)
+                if ses_year > 2020:
+                    continue
+                co_id = get_co_id(ses_id, course_name)
+                db.insert_single(
+                    'enrollments',
+                    [student[0], co_id],
+                    ['user', 'course_offering']
+                )
+        else:
+            if number < 5:
+                course_name = 'Research Thesis A'
+                co_id = get_co_id(ses_id, course_name)
+                db.insert_single(
+                    'enrollments',
+                    [student[0], co_id],
+                    ['user', 'course_offering']
+                )
+                _, course_name, _ = get_next_course(course_name)
+                ses_id, ses_year, ses_term = get_next_ses(ses_year, ses_term)
+                if ses_year > 2020:
+                    continue
+                co_id = get_co_id(ses_id, course_name)
+                db.insert_single(
+                    'enrollments',
+                    [student[0], co_id],
+                    ['user', 'course_offering']
+                )
+                _, course_name, _ = get_next_course(course_name)
+                ses_id, ses_year, ses_term = get_next_ses(ses_year, ses_term)
+                if ses_year > 2020:
+                    continue
+                co_id = get_co_id(ses_id, course_name)
+                db.insert_single(
+                    'enrollments',
+                    [student[0], co_id],
+                    ['user', 'course_offering']
+                )
+            else:
+                course_name = 'Computer Science Thesis A'
+                co_id = get_co_id(ses_id, course_name)
+                db.insert_single(
+                    'enrollments',
+                    [student[0], co_id],
+                    ['user', 'course_offering']
+                )
+                _, course_name, _ = get_next_course(course_name)
+                ses_id, ses_year, ses_term = get_next_ses(ses_year, ses_term)
+                if ses_year > 2020:
+                    continue
+                co_id = get_co_id(ses_id, course_name)
+                db.insert_single(
+                    'enrollments',
+                    [student[0], co_id],
+                    ['user', 'course_offering']
+                )
+                _, course_name, _ = get_next_course(course_name)
+                ses_id, ses_year, ses_term = get_next_ses(ses_year, ses_term)
+                if ses_year > 2020:
+                    continue
+                co_id = get_co_id(ses_id, course_name)
+                db.insert_single(
+                    'enrollments',
+                    [student[0], co_id],
+                    ['user', 'course_offering']
+                )
+
+
+def get_co_id(ses_id, course_name):
+    course_id = db.select_columns(
+        'courses', ['id'],
+        ['name'], [course_name]
+    )[0][0]
+    co_id = db.select_columns(
+        'course_offerings', ['id'],
+        ['course', 'session'],
+        [course_id, ses_id]
+    )[0][0]
+    return co_id
 
 
 def gen_student_topics():
@@ -776,7 +959,7 @@ if __name__ == '__main__':
     gen_tasks2()
 
     print('Generating enrollments...')
-    gen_enrollments()
+    gen_enrollments2()
 
     print('Generating student topics and topic requests...')
     gen_student_topics()
