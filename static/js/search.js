@@ -6,22 +6,38 @@ function makeCard(id, title, description, topics, supervisor, email, preqs, visi
   if (!visible) {
     badge = '<span class="new badge red" data-badge-caption="">Not on offer</span>';
   }
+  let topicBadges = '';
+  let preqBadges = '';
+  for (const topic of topics.split(',')) {
+    topicBadges += `<span class="new badge teal lighten-1" data-badge-caption="">${topic}</span>`;
+  }
+  for (const preq of preqs.split(',')) {
+    preqBadges += `<span class="new badge teal lighten-1" data-badge-caption="">${preq}</span>`;
+  }
   const card = `<div class="row">
   <div class="col s12">
     <div class="card white-grey darken-1">
       <div class="card-content black-text">
         <span class="card-title">${title}</span>
           <p>
-            Topic Area: ${topics}
+            <span class="left" style="padding-bottom: 5px;">
+              <i class="material-icons tiny teal-text disable-icon">bookmark</i>
+              <span style="padding-bottom: 20px;">Topic Area(s):</span> ${topicBadges}
+            </span>
             ${badge}
-          </p>
+          </p><br>
           <hr>
         </span>
-        <p>Supervisor: ${supervisor}
-        <a href="mailto:${email}" target="_top"> (${email})</a>
+        <p>
+          <i class="material-icons tiny teal-text disable-icon">person</i>
+          Supervisor: ${supervisor}
+          <a href="mailto:${email}" target="_top"> (${email})</a>
         </p>
-        <p id="preqs">Prerequisites: ${preqs}</p>
-        <br>
+        <p id="preqs" class="left" style="padding-bottom: 20px;">
+          <i class="material-icons tiny teal-text disable-icon">check_circle</i>
+          Prerequisite(s): ${preqBadges}
+        </p>
+        <br><br>
         <p>${description}</p>
       </div>
       <div class="card-action">
@@ -140,7 +156,7 @@ function loadPage() {
   makeGETRequest('/search_chips', (res) => {
 
     $('#topics').chips({
-      placeholder: 'Enter a Topic',
+      placeholder: 'Enter a Topic Area',
       autocompleteOptions: {
         data: res.chipsTopic,
         limit: 20,

@@ -110,7 +110,7 @@ function toggleEnrollTypeStaff() {
 }
 
 function setFormTypeAddStaff() {
-  $('#account_type_enroll option').each(function() {
+  $('#account_type_enroll option').not(':first').each(function() {
     $(this).remove();
   });
   $('#account_type_enroll').append('<option value="supervisor">Staff</option>');
@@ -125,7 +125,7 @@ function setFormTypeAddStaff() {
 }
 
 function setFormTypeUser() {
-  $('#account_type_enroll option').each(function() {
+  $('#account_type_enroll option').not(':first').each(function() {
     $(this).remove();
   });
   $('#account_type_enroll').append('<option value="student">Student</option>');

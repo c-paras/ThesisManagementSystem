@@ -69,7 +69,7 @@ def view_submission():
                 else:
                     staff_mark = -1
             if staff_mark <= 0:
-                staff_mark = '?'
+                staff_mark = '- '
             tasks.append((
                 task[1], submit_date_text,
                 str(staff_mark) + '/' + str(total_max_mark),
@@ -79,8 +79,6 @@ def view_submission():
     db.close()
     zid = student_info[0][1].split('@')[0]
     heading = f'Submissions - {student_info[0][0]} ({zid})'
-    print(student_id)
-    print(student_tasks)
     return render_template('submission_staff.html',
                            heading=heading,
                            title=heading,
