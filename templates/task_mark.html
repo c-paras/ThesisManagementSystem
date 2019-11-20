@@ -1,19 +1,32 @@
-<div class="row col s12">
-  <div>
-    <table class="striped centered responsive-table">
+<div>
+  <form id="mark-form" method="">
+    <table class="striped centered responsive-table" style="margin-bottom: 20px;">
+      <colgroup>
+        {% if submission['markingMethod'] == 'approval' %}
+          <col span="1" style="width: 15%;">
+          <col span="1" style="width: 10%;">
+          <col span="1" style="width: 75%;">
+        {% else %}
+          <col span="1" style="width: 25%;">
+          <col span="1" style="width: 5%;">
+          <col span="1" style="width: 5%;">
+          <col span="1" style="width: 65%;">
+        {% endif %}
+      </colgroup>
+
       <thead>
         <tr>
-          <th style='width: 25%;'>Criteria</th>
+          <th>Criteria</th>
           {% if submission['markingMethod'] == 'approval' %}
-            <th style='width: 10%;'>Approved</th>
+            <th>Approved</th>
           {% else %}
-            <th style='width: 10%;'>Max Mark</th>
-            <th style='width: 10%;'>Assigned Mark</th>
+            <th>Max Mark</th>
+            <th>Assigned Mark</th>
           {% endif %}
-          <th style='width: 55%;'>Feedback</th>
-          <!-- <th class="right-align">Edit</th> -->
+          <th>Feedback</th>
         </tr>
       </thead>
+
       <tbody>
         {% for i in range(0, taskCriteria|length) %}
           <tr>
@@ -23,9 +36,9 @@
                 <td>
                   <label>
                     {% if submission['status'] == 'approved' %}
-                      <input id="approveCheck" type="checkbox" class="filled-in" checked="checked"/>
+                      <input id="approveCheck" type="checkbox" class="filled-in" checked="checked">
                     {% else %}
-                      <input id="approveCheck" type="checkbox" class="filled-in"/>
+                      <input id="approveCheck" type="checkbox" class="filled-in">
                     {% endif %}
                     <span></span>
                   </label>
@@ -33,13 +46,22 @@
               {% else %}
                 <td>{{ taskCriteria[i][3] }}</td>
                 <td>
-                  <input id="enteredMark" type="number" min="0" max="{{ taskCriteria[i][3] }}">
+                  <input
+                    id="enteredMark" type="number" min="0"
+                    max="{{ taskCriteria[i][3] }}" placeholder="Enter Mark" class="validate"
+                    required="" aria-required="true"
+                  >
                 </td>
               {% endif %}
               <td>
                 <div>
-                  <textarea id="enteredFeedback" class="materialize-textarea"
-                            rows="5" style="overflow:auto;" placeholder="Enter Feedback"></textarea>
+                  <textarea
+                    id="enteredFeedback" class="materialize-textarea validate"
+                    placeholder="Enter Feedback"
+                    {% if submission['markingMethod'] != 'approval' %}
+                      required="" aria-required="true"
+                    {% endif %}
+                  ></textarea>
                 </div>
               </td>
             {% else %}
@@ -47,9 +69,9 @@
                 <td>
                   <label>
                     {% if submission['status'] == 'approved' %}
-                      <input id="approveCheck" type="checkbox" class="filled-in" checked="checked"/>
+                      <input id="approveCheck" type="checkbox" class="filled-in" checked="checked">
                     {% else %}
-                      <input id="approveCheck" type="checkbox" class="filled-in"/>
+                      <input id="approveCheck" type="checkbox" class="filled-in">
                     {% endif %}
                     <span></span>
                   </label>
@@ -57,20 +79,31 @@
               {% else %}
                 <td>{{ taskCriteria[i][3] }}</td>
                 <td>
-                  <input id="enteredMark" type="number" min="0" max="{{ taskCriteria[i][3] }}" value="{{markedFeedback[i][0][0]}}">
+                  <input
+                    id="enteredMark" type="number" min="0" max="{{ taskCriteria[i][3] }}"
+                    value="{{markedFeedback[i][0][0]}}" placeholder="Enter Mark"
+                    required="" aria-required="true" class="validate"
+                  >
                 </td>
               {% endif %}
               <td>
                 {% if markedFeedback[i][0][1] == None %}
                   <div>
-                    <textarea id="enteredFeedback" class="materialize-textarea"
-                              rows="5" style="overflow:auto; max-height: 5em;" placeholder="Enter Feedback"></textarea>
+                    <textarea
+                      id="enteredFeedback" class="materialize-textarea validate"
+                      {% if submission['markingMethod'] != 'approval' %}
+                        required="" aria-required="true"
+                      {% endif %}
+                      placeholder="Enter Feedback"
+                    ></textarea>
                   </div>
                 {% else %}
-                  <div>
-                    <textarea id="enteredFeedback" class="materialize-textarea"
-                              rows="5" style="overflow:auto; max-height: 5em;">{{markedFeedback[i][0][1]}}</textarea>
-                  </div>
+                  <textarea
+                    id="enteredFeedback" class="materialize-textarea validate"
+                    {% if submission['markingMethod'] != 'approval' %}
+                      required="" aria-required="true"
+                    {% endif %}
+                  >{{ markedFeedback[i][0][1] }}</textarea>
                 {% endif %}
               </td>
             {% endif %}
@@ -78,11 +111,15 @@
         {% endfor %}
       </tbody>
     </table>
-  </div>
+  </form>
 </div>
-<div class="row col s12 right">
-  <a class="waves-effect waves-light btn" id="search-btn" 
-     onclick="updateMarks({{taskCriteria[0][1]}}, {{studentId}}, {{taskCriteriaId}}, {{taskMax}})">Commit Marks
+
+<div class="right">
+  <a
+    class="waves-effect waves-light btn" id="search-btn"
+    onclick="updateMarks({{ taskCriteria[0][1] }}, {{ studentId }}, {{ taskCriteriaId }}, {{ taskMax }})"
+  >
+    Commit Marks
     <i class="material-icons right">send</i>
   </a>
 </div>

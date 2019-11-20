@@ -111,8 +111,12 @@
         {% if not hide_navbar and heading %}
           {# There should be a heading on any page with a navbar #}
           {# If heading is blank, do not show <hr>, e.g. on error page if logged in #}
-          <h4>{{ heading }}</h4>
-          <hr>
+          <div class="row">
+            <div class="col s12">
+              <h4>{{ heading }}</h4>
+              <hr>
+            </div>
+          </div>
         {% endif %}
         {% from "macros.html" import upload_spinner, file_upload %}
         <!-- Page content -->
@@ -129,6 +133,7 @@
         </div>
       </footer>
     {% endif %}
+
     <!-- Change password modal -->
     {% include "modals/change_password.html" %}
     <script type="text/javascript" src="{{ url_for('static', filename='js/change_password.js') }}" defer></script>
@@ -185,7 +190,7 @@
 
       {% if session['acc_type'] == 'course_admin' %}
         {% include "modals/create_course.html" %}
-        <script defer type="text/javascript" src={{ url_for('static', filename='js/create_course.js') }}></script>
+        <script defer type="text/javascript" src="{{ url_for('static', filename='js/create_course.js') }}"></script>
         {% include "modals/enroll_accounts.html" %}
         <script type="text/javascript" src="{{ url_for('static', filename='js/enrollments.js') }}" defer></script>
       {% endif %}

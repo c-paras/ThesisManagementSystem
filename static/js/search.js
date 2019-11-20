@@ -156,7 +156,7 @@ function loadPage() {
   makeGETRequest('/search_chips', (res) => {
 
     $('#topics').chips({
-      placeholder: 'Enter a Topic',
+      placeholder: 'Enter a Topic Area',
       autocompleteOptions: {
         data: res.chipsTopic,
         limit: 20,

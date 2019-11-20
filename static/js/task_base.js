@@ -1,9 +1,9 @@
 function updateAllOwnWork() {
-    if($('#all-own-work').prop('checked')) {
-        $('#all-own-work').val('true');
-    } else {
-        $('#all-own-work').val('true');
-    }
+  if ($('#all-own-work').prop('checked')) {
+    $('#all-own-work').val('true');
+  } else {
+    $('#all-own-work').val('true');
+  }
 }
 
 function uploadFile() {
@@ -28,30 +28,33 @@ function uploadFile() {
       flash(res.message, true);
       return;
     }
-    delayToast("Success");
-    location.reload();
+    delayToast("Submission accepted", false);
+    window.location.href = location.href;
   });
 }
 
 function countWords(str) {
-    if(str.trim() === ""){
-        return 0;
-    }
-    return str.trim().concat(' ').split(/\s+/).length-1;
+  if (str.trim() === "") {
+    return 0;
+  }
+  return str.trim().concat(' ').split(/\s+/).length - 1;
 }
 
-function updateWordCount(textarea){
-    $('#word-counter').html(countWords($(textarea).val()));
+function updateWordCount(textarea) {
+  $('#word-counter').html(countWords($(textarea).val()));
 }
 
 function uploadText(btn) {
-  if($('#textarea1').val().trim().length === 0) {
+  const form = $('#text-upload-form');
+  formValid(form); /* auto-validate, but proceed to show errors below */
+
+  if ($('#textarea1').val().trim().length === 0) {
     flash('Your must enter some text to submit', true);
     return;
   }
 
-  if(countWords($('#textarea1').val()) > parseInt($('#word_limit').val())) {
-    flash('Your submission is above the word limit', true);
+  if (countWords($('#textarea1').val()) > parseInt($('#word_limit').val())) {
+    flash('Your submission exceeds the word limit', true);
     return;
   }
 
@@ -61,15 +64,13 @@ function uploadText(btn) {
     return;
   }
 
-  const form = $('#text-upload-form');
-
   makeRequest('/submit_text_task', form, (res) => {
     if (res.status === 'fail') {
       flash(res.message, true);
       return;
     }
     delayToast("Submission accepted!", false);
-    location.reload();
+    window.location.href = location.href;
   });
 }
 
@@ -83,14 +84,14 @@ function cancelFileSubmission() {
   $('#view-file-section').show();
 }
 
-function openTextEditor(){
+function openTextEditor() {
   updateWordCount($('#textarea1'));
   $('#all-own-work').prop('checked', false);
   $("#view_text_section").hide();
   $("#edit_text_section").show();
 }
 
-function closeTextEditor(){
+function closeTextEditor() {
   $('#textarea1').val("");
   $('#all-own-work').prop('checked', false);
   $("#view_text_section").show();
@@ -98,36 +99,41 @@ function closeTextEditor(){
 }
 
 function updateMarks(taskId, studentid, taskCriteriaId, taskMax) {
-    let marks = [];
+  const form = $('#mark-form');
+  if (!formValid(form)) {
+    return;
+  }
 
-    $("[id='enteredMark']").each((function() {
-        marks.push($(this).val());
-      }));
+  let marks = [];
 
-    let feedback = [];
-    $("[id='enteredFeedback']").each((function() {
-        feedback.push($(this).val());
-      }));
+  $("[id='enteredMark']").each((function() {
+    marks.push($(this).val());
+  }));
+
+  let feedback = [];
+  $("[id='enteredFeedback']").each((function() {
+    feedback.push($(this).val());
+  }));
     
-    
-    let data = {
+  const data = {
     'marks': marks,
     'feedback': feedback,
     'taskId': taskId,
     "studentId": studentid,
     "taskCriteria": taskCriteriaId,
     "taskMax": taskMax
-    };
+  };
 
-    if ($("#approveCheck").val() !== undefined) {
-      data.approveCheck = $("#approveCheck").is(':checked');
+  if ($("#approveCheck").val() !== undefined) {
+    data.approveCheck = $("#approveCheck").is(':checked');
+  }
+
+  makePOSTRequest('/view_task', data, (res) => {
+    if (res.status === 'fail') {
+      flash(res.message, error = true);
+    } else {
+      delayToast("Marks successfully saved", false);
+      window.location.href = location.href;
     }
-
-    makePOSTRequest('/view_task', data, (res) => {
-      if (res.status === 'fail') {
-          flash(res.message, error = true);
-      } else {
-          flash('Marks Saved');
-      }
-    });
+  });
 }
