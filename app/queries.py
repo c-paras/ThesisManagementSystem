@@ -83,7 +83,8 @@ class queries:
     def get_curr_topic_requests(email):
         res = db.custom_query("""
                                 SELECT stu.id, t.id,
-                                       stu.name, stu.email, t.name
+                                       stu.name, stu.email, t.name,
+                                       tr.date_created
                                 FROM users stu
                                 INNER JOIN topic_requests tr
                                     ON stu.id = tr.student
