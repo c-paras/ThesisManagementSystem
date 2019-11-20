@@ -15,7 +15,6 @@ from app.file_upload import FileUpload
 from app.helpers import error, timestamp_to_string, zid_sort
 from app.queries import queries
 from app.helpers import send_email
-from random import shuffle
 
 import calendar
 import json
@@ -559,7 +558,6 @@ def task_info():
         if s['submission_date']:
             s['submission_date'] = timestamp_to_string(s['submission_date'])
     db.close()
-    shuffle(students)
     students.sort(key=lambda x: zid_sort(x['email']))
     return render_template('task_stats.html',
                            deadline_text=deadline_text,
