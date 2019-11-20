@@ -504,7 +504,7 @@ def submit_text_task():
         db.close()
         return error("You must certify it is all your own work")
 
-    if datetime.now() >= task['deadline']:
+    if datetime.now().timestamp() >= task['deadline']:
         db.close()
         return error("Submissions closed")
 
