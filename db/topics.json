@@ -381,7 +381,7 @@
         "name": "Deep sequencing analysis of the early infection phase of hepatitis C virus",
         "description": "Hepatitis C virus is a pathogen that affects humans and monkey, with a prevalence of 2-3% among the Worldwide human population. The disease can be resolved by the host immune response in 40-60% of the cases, while for the other cases the infection results in a chronic disease, such as hepatitis, and sometimes cancer (hepatocellular carcinoma). A major obstacle in designing a vaccine against HCV is the tremendous rapidity at which the virus evolves. HCV mutates very rapidly its genome, at rate that the immune system cannot cope with. The result is a distribution of mutants that escape the immune response. A question that should be answered is how often mutants arise and how fast mutants grow within the host.",
         "areas": [
-            "Virology- immunology",
+            "Virology - immunology",
             "Bioinformatics",
             "Health informatics"
         ]

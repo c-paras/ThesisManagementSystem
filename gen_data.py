@@ -201,6 +201,7 @@ def gen_course_offering():
 def gen_topic_areas(topic_id, areas):
     query = []
     for area in areas:
+        area = area.title().replace('Hci', 'HCI').replace('And', 'and')
         res = db.select_columns('topic_areas', ['name'], ['name'], [area])
         if len(res) == 0:
             db.insert_single(

@@ -2,18 +2,25 @@
 
 {% block body %}
   {% include "task_summary.html" %}
-  <hr>
 
   <div class="row">
-    <div clsas="col s12">
+    <div class="col s12">
+      <hr>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col s12">
       <h5>Submission Statistics:</h5>
     </div>
   </div>
+
   <div class="row">
     <div class="col s6 offset-s3">
       <div style="height: 400px;" id="piechart"></div>
     </div>
   </div>
+
   <div class="row">
     <div class="col s12">
       <table class="striped centered responsive-table js-sort-table">

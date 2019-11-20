@@ -1,37 +1,31 @@
-<div id="view_text_section" class="row">
-  <div class="col s12">
-    <div>
-      {% if text_info["old_text"]|length %}
-        <div class="row">
-          <div class="col s12" style="border:1px solid #000000;">
-            {{ text_info["old_text"] }}
-          </div>
-        </div>
-      {% endif %}
+<div id="view_text_section">
+  {% if text_info["old_text"]|length %}
+    <div style="border: 1px solid #000000; padding: 5px;">
+      <em>{{ text_info["old_text"] }}</em>
     </div>
-    {% if can_submit %}
-      <br/>
-      <div>
-        <a class="waves-effect waves-light btn" onclick="openTextEditor();">
-          {{ text_info["button_text"] }}
-          <i class="material-icons right">edit</i>
-        </a>
-      </div>
+  {% endif %}
+  {% if can_submit %}
+    {% if prev_submission %}
+      <br>
     {% endif %}
-  </div>
+    <a class="waves-effect waves-light btn" onclick="openTextEditor();">
+      {{ text_info["button_text"] }}
+      <i class="material-icons right">edit</i>
+    </a>
+  {% endif %}
 </div>
 
-<div id="edit_text_section" style="display:none">
-  <form id="text-upload-form" action="/submit_text_task" method="post" enctype="multipart/form-data">
-    <div class="row">
-      <div class="input-field col s12">
+<div id="edit_text_section" style="display: none;">
+  <form id="text-upload-form" action="/submit_text_task" method="POST" enctype="multipart/form-data">
+    <div>
+      <div class="input-field">
         {% if text_info["old_text"]|length %}
-          <textarea name="text-submission" id="textarea1" class="materialize-textarea" onkeyup="updateWordCount(this)" placeholder="Type text here">{{ text_info["old_text"] }}</textarea>
+          <textarea name="text-submission" id="textarea1" class="materialize-textarea validate" onkeyup="updateWordCount(this)" placeholder="Enter text here" required="" aria-required="true">{{ text_info["old_text"] }}</textarea>
         {% else %}
-          <textarea name="text-submission" id="textarea1" class="materialize-textarea" onkeyup="updateWordCount(this)"></textarea>
+          <textarea name="text-submission" id="textarea1" class="materialize-textarea validate" onkeyup="updateWordCount(this)" placeholder="Enter text here" required="" aria-required="true"></textarea>
         {% endif %}
         <div class="right-align text-grey text-lighten-3">
-          <span id='word-counter'>test</span>/{{ text_info['limit'] }}
+          <span id='word-counter'></span>/{{ text_info['limit'] }}
         </div>
       </div>
     </div>
@@ -39,8 +33,10 @@
       <div class="input-field col s12">
         <div>
           <label>
-            <input name="certify" id="all-own-work" value="false" type="checkbox" />
-            <span>I certify this is all my own work, except where expressly indicated and correctly attributed</span>
+            <input name="certify" id="all-own-work" value="false" type="checkbox">
+            <span>
+              I certify this is all my own work, except where expressly indicated and correctly attributed
+            </span>
           </label>
         </div>
       </div>

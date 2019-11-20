@@ -12,6 +12,7 @@ from app.file_upload import FileUpload
 from app.db_manager import sqliteManager as db
 from app.queries import queries
 from app.helpers import error
+from app.helpers import zid_sort
 from app.update_accounts import update_from_file, update_account_type
 from app.update_accounts import get_all_account_types
 
@@ -71,7 +72,7 @@ def student_dashboard():
         if 'approval' in task[3]:
             tasks.append((
                 task[2], task[1], status, '-', '-',
-                task[0]
+                task[0], task[4]
             ))
         else:
             criteria = db.select_columns(
@@ -108,7 +109,7 @@ def student_dashboard():
                 assessor_mark = '-'
             tasks.append((
                 task[2], task[1], status, supervisor_mark, assessor_mark,
-                task[0]
+                task[0], task[4]
             ))
 
     # get info about selected topic and assigned supervisor/assessor
@@ -141,6 +142,7 @@ def student_dashboard():
         'has_assessor': has_assess
     }
 
+    tasks.sort(key=lambda x: (x[0], x[6]))
     db.close()
     return render_template('home_student.html',
                            heading='My Dashboard',
@@ -175,12 +177,15 @@ def staff_dashboard():
                       'topic_id': r[1],
                       'stu_name': r[2],
                       'stu_email': r[3],
-                      'topic_name': r[4]}
+                      'topic_name': r[4],
+                      'date_created': r[5]}
                      for r in queries.get_curr_topic_requests(session['user'])]
+
+    curr_requests = sorted(curr_requests, key=lambda i:
+                           i['date_created'], reverse=True)
 
     # the way of deciding between current and past students
     # is by testing start/end date and current unix timestamp
-
     curr_students = []
     past_students = []
 
@@ -207,6 +212,8 @@ def staff_dashboard():
         else:
             past_students.append(i)
 
+    curr_students.sort(key=lambda x: zid_sort(x[1]))
+    past_students.sort(key=lambda x: zid_sort(x[1]))
     # for the approve/reject topic dropdown
     potential_assessors = filter(lambda s: s['id'] != session['id'],
                                  queries.get_users_of_type('supervisor') +

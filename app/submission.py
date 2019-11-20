@@ -69,7 +69,7 @@ def view_submission():
                 else:
                     staff_mark = -1
             if staff_mark <= 0:
-                staff_mark = '?'
+                staff_mark = '- '
             tasks.append((
                 task[1], submit_date_text,
                 str(staff_mark) + '/' + str(total_max_mark),
