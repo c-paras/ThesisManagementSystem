@@ -11,7 +11,8 @@ from app.auth import UserRole
 from app.file_upload import FileUpload
 from app.db_manager import sqliteManager as db
 from app.queries import queries
-from app.helpers import error, atoi, natural_keys
+from app.helpers import error
+from app.helpers import zid_sort
 from app.update_accounts import update_from_file, update_account_type
 from app.update_accounts import get_all_account_types
 
@@ -72,7 +73,7 @@ def student_dashboard():
         if 'approval' in task[3]:
             tasks.append((
                 task[2], task[1], status, '-', '-',
-                task[0]
+                task[0], task[4]
             ))
         else:
             criteria = db.select_columns(
@@ -142,7 +143,7 @@ def student_dashboard():
         'has_assessor': has_assess
     }
 
-    tasks.sort(key=lambda x: (x[0], x[5]))
+    tasks.sort(key=lambda x: (x[0], x[6]))
     db.close()
     return render_template('home_student.html',
                            heading='My Dashboard',
@@ -212,8 +213,8 @@ def staff_dashboard():
         else:
             past_students.append(i)
 
-    curr_students.sort(key=natural_keys)
-    past_students.sort(key=natural_keys)
+    curr_students.sort(key=lambda x: zid_sort(x[1]))
+    past_students.sort(key=lambda x: zid_sort(x[1]))
     # for the approve/reject topic dropdown
     potential_assessors = filter(lambda s: s['id'] != session['id'],
                                  queries.get_users_of_type('supervisor') +

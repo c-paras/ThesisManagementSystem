@@ -8,8 +8,7 @@ from flask import session
 from app.auth import at_least_role, UserRole
 from app.db_manager import sqliteManager as db
 from app.file_upload import FileUpload
-from app.helpers import error, get_fields, timestamp_to_string, atoi,\
-                        natural_keys
+from app.helpers import error, get_fields, timestamp_to_string, zid_sort
 from app.queries import queries
 from app.update_accounts import update_from_file, update_account_type
 from app.update_accounts import get_all_account_types
@@ -123,7 +122,7 @@ def manage_course_offerings():
         ('admin', account_types['course_admin'])
     ]
     sessions_list = sessions[co_map[co]['course']]
-    enrollments.sort(key=natural_keys)
+    enrollments.sort(key=lambda x: zid_sort(x[1]))
     db.close()
     return render_template(
         'manage_courses.html',
