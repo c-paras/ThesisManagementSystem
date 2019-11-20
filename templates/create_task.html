@@ -155,6 +155,7 @@
                 id="maximum-file-size" name="maximum-file-size" class="validate"
                 required="" aria-required="true"
               >
+                <option value="-1" disabled selected>Max file size</option>
                 {% for size in [1, 2, 3, 4, 5, 10, 15, 20, 25, 50, 75, 100] %}
                   <option
                     value="{{ size }}"
@@ -175,6 +176,7 @@
                 id="accepted-file-type" name="accepted-file-type" class="validate"
                 required="" aria-required="true"
               >
+                <option value="-1" disabled selected>Accepted file type</option>
                 {% for type in file_types %}
                   <option
                     value="{{ type }}"
