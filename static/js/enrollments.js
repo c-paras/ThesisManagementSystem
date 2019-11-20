@@ -113,7 +113,8 @@ function setFormTypeAddStaff() {
   $('#account_type_enroll option').each(function() {
     $(this).remove();
   });
-  $('#account_type_enroll').append('<option value="supervisor">Staff</option>');
+  $('#account_type_enroll').append('<option value="-1" disabled selected>Account type</option>');
+  $('#account_type_enroll').append('<option value="supervisor" selected="selected">Staff</option>');
   $('#btn-request-enroll').attr('onclick', 'addStaff()');
   $('#enroll-title').text("Add Staff");
   $('#select-e-type').text("Select staff type");
@@ -128,7 +129,8 @@ function setFormTypeUser() {
   $('#account_type_enroll option').each(function() {
     $(this).remove();
   });
-  $('#account_type_enroll').append('<option value="student">Student</option>');
+  $('#account_type_enroll').append('<option value="-1" disabled selected>Course role</option>');
+  $('#account_type_enroll').append('<option value="student" selected="selected">Student</option>');
   //$('#account_type_enroll').append('<option value="course_admin">Admin</option>');
   $('#btn-request-enroll').attr('onclick', 'enrollUser()');
   $('#enroll-title').text("Enroll Users");
