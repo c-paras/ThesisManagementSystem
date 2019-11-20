@@ -19,7 +19,6 @@ from app.update_accounts import get_all_account_types
 import json
 import re
 import config
-from random import shuffle
 
 home = Blueprint('home', __name__)
 
