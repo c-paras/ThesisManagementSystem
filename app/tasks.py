@@ -48,18 +48,8 @@ def view_task():
 
     db.connect()
 
-    res = queries.get_students_supervisor(student['id'])
-    if res:
-        student['supervisor'] = {
-            'id': res[0][0],
-            'name': res[0][1]
-        }
-    res = queries.get_students_assessor(session['id'])
-    if res:
-        student['assessor'] = {
-            'id': res[0][0],
-            'name': res[0][1]
-        }
+    student['supervisor'], student['assessor'] =\
+        get_students_staff(student['id'])
 
     # check that this user is allowed to view this task
     can_view = False
@@ -112,14 +102,14 @@ def view_task():
         if student['supervisor']:
             feedback1 = get_marks_table_with_default(
                 student['id'],
-                student['supervisor']['id'],
+                student['supervisor'],
                 task_id)[0][3]
 
         feedback2 = []
         if student['assessor']:
             feedback2 = get_marks_table_with_default(
                 student['id'],
-                student['assessor']['id'],
+                student['assessor'],
                 task_id)
 
         if feedback2:
@@ -133,14 +123,14 @@ def view_task():
         if student['supervisor']:
             mark_details["Supervisor"] = get_marks_table_with_default(
                 student['id'],
-                student['supervisor']['id'],
+                student['supervisor'],
                 task_id)
 
         mark_details["Assessor"] = []
         if student['assessor']:
             mark_details["Assessor"] = get_marks_table_with_default(
                 student['id'],
-                student['assessor']['id'],
+                student['assessor'],
                 task_id)
 
         marked_by_sup = mark_details['Supervisor'] is []
@@ -224,7 +214,7 @@ def get_marks_table_with_default(student_id, staff_id, task_id):
 
 
 @tasks.route('/mark_task', methods=['GET', 'POST'])
-@at_least_role(UserRole.STUDENT)
+@at_least_role(UserRole.STAFF)
 def mark_task():
     if request.method == 'GET':
         task_id = request.args.get('task', None, type=int)
@@ -232,6 +222,11 @@ def mark_task():
         if task_id is None or student_id is None:
             abort(400)
         db.connect()
+
+        if session['id'] not in get_students_staff(student_id):
+            db.close()
+            abort(403)
+
         task_info = queries.get_general_task_info(task_id)
         if not task_info:
             db.close()
@@ -321,11 +316,15 @@ def mark_task():
     marks = data['marks']
     feedback = data['feedback']
     task_id = data['taskId']
-    studentId = data['studentId']
+    student_id = data['studentId']
     task_criteria = data['taskCriteria']
     task_max = data['taskMax']
 
     db.connect()
+    if session['id'] not in get_students_staff(student_id):
+        db.close()
+        abort(403)
+
     try:
         check = data['approveCheck']
         if (not check):
@@ -334,14 +333,14 @@ def mark_task():
             db.update_rows('submissions', [res[0][0]],
                            ['status'],
                            ['student', 'task'],
-                           [studentId, task_id])
+                           [student_id, task_id])
         else:
             res = db.select_columns('request_statuses',
                                     ['id'], ['name'], ['approved'])
             db.update_rows('submissions', [res[0][0]],
                            ['status'],
                            ['student', 'task'],
-                           [studentId, task_id])
+                           [student_id, task_id])
 
         marks = [100]
 
@@ -377,7 +376,7 @@ def mark_task():
         try:
             db.insert_single(
                 'marks',
-                [task_criteria[i], studentId,
+                [task_criteria[i], student_id,
                  session['id'], marks[i], feedback[i]],
                 ['criteria', 'student', 'marker', 'mark', 'feedback']
             )
@@ -385,11 +384,11 @@ def mark_task():
             db.update_rows('marks', [marks[i], feedback[i]],
                            ['mark', 'feedback'],
                            ['criteria', 'student', 'marker'],
-                           [task_criteria[i], studentId, session['id']])
+                           [task_criteria[i], student_id, session['id']])
 
     # send email
     student = db.select_columns('users', ['name', 'email'],
-                                ['id'], [studentId])[0]
+                                ['id'], [student_id])[0]
     task_name = db.select_columns('tasks', ['name'], ['id'], [task_id])[0][0]
     marker = session['name']
     subject = f'Marks Entered for Task "{task_name}"'
@@ -422,6 +421,19 @@ def get_sub_status(user, task):
         )
         status = status_name[0][0]
     return status
+
+
+def get_students_staff(student_id):
+    res = queries.get_students_supervisor(student_id)
+    supervisor = None
+    if res:
+        supervisor = res[0][0]
+
+    assessor = None
+    res = queries.get_students_assessor(student_id)
+    if res:
+        assessor = res[0][0]
+    return (supervisor, assessor)
 
 
 @tasks.route('/submit_file_task', methods=['POST'])
