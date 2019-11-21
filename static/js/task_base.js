@@ -114,7 +114,7 @@ function updateMarks(taskId, studentid, taskCriteriaId, taskMax) {
   $("[id='enteredFeedback']").each((function() {
     feedback.push($(this).val());
   }));
-    
+
   const data = {
     'marks': marks,
     'feedback': feedback,
@@ -128,7 +128,7 @@ function updateMarks(taskId, studentid, taskCriteriaId, taskMax) {
     data.approveCheck = $("#approveCheck").is(':checked');
   }
 
-  makePOSTRequest('/view_task', data, (res) => {
+  makePOSTRequest('/mark_task', data, (res) => {
     if (res.status === 'fail') {
       flash(res.message, error = true);
     } else {
