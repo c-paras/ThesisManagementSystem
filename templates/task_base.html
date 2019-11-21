@@ -45,7 +45,7 @@
       </div>
     {% else %}
       <div class="col s12">
-        <h5>Your Submission:</h5>
+        <h5>{{ownership}} Submission:</h5>
         {% if not can_submit %}
           <div class="row">
             <div class="col s4 offset-s4 amber darken-4 center-align">
@@ -146,9 +146,9 @@
                 {% if not mark_details[staff_type]|length %}
                   <!-- Student has no staff member assigned -->
                   {% if staff_type|first in 'AEIOU' %}
-                    <p>You have not been assigned an {{ staff_type|lower }} yet.</p>
+                    <p>{{pronown}} have not been assigned an {{ staff_type|lower }} yet.</p>
                   {% else %}
-                    <p>You have not been assigned a {{ staff_type|lower }} yet.</p>
+                    <p>{{pronown}} have not been assigned a {{ staff_type|lower }} yet.</p>
                   {% endif %}
                 {% else %}
                   <table class="striped centered responsive-table">

@@ -26,26 +26,44 @@ import config
 tasks = Blueprint('tasks', __name__)
 
 
-@tasks.route('/view_task', methods=['GET', 'POST'])
+@tasks.route('/view_task', methods=['GET'])
 @at_least_role(UserRole.STUDENT)
 def view_task():
-    user_type = session['acc_type']
-
-    if user_type == 'student':
-        return student_view()
-    else:
-        return staff_view()
-
-
-def student_view():
     task_id = request.args.get('task', None, type=int)
     if task_id is None:
         abort(400)
+
+    student = {
+        'id': None,
+        'supervisor': {},
+        'assessor': {}
+    }
+    if session['acc_type'] == 'student':
+        student['id'] = session['id']
+    else:
+        student['id'] = request.args.get('student', None, type=int)
+
+    if not student['id']:
+        abort(400)
+
     db.connect()
+
+    res = queries.get_students_supervisor(student['id'])
+    if res:
+        student['supervisor'] = {
+            'id': res[0][0],
+            'name': res[0][1]
+        }
+    res = queries.get_students_assessor(session['id'])
+    if res:
+        student['assessor'] = {
+            'id': res[0][0],
+            'name': res[0][1]
+        }
 
     # check that this user is allowed to view this task
     can_view = False
-    my_tasks = queries.get_user_tasks(session['id'])
+    my_tasks = queries.get_user_tasks(student['id'])
     for task in my_tasks:
         if task[0] == task_id:
             can_view = True
@@ -81,19 +99,29 @@ def student_view():
     pending_approval = False
 
     if is_approval:
-        res = queries.get_submission_status(session['id'], task_id)
+        res = queries.get_submission_status(student['id'], task_id)
 
-        if len(res) and res[0][0] == "pending":
+        if res and res[0][0] == "pending":
             mark_details["Approval"] = "Your submission is pending approval."
             pending_approval = True
-        elif len(res):
+        elif res:
             mark_details["Approval"] = """Your submission has been {status}.
                                        """.format(status=res[0][0])
 
-        res = queries.get_students_supervisor(session['id'])
-        feedback1 = get_marks_table(session['id'], res, task_id)[0][3]
-        res = queries.get_students_assessor(session['id'])
-        feedback2 = get_marks_table(session['id'], res, task_id)
+        feedback1 = []
+        if student['supervisor']:
+            feedback1 = get_marks_table_with_default(
+                student['id'],
+                student['supervisor']['id'],
+                task_id)[0][3]
+
+        feedback2 = []
+        if student['assessor']:
+            feedback2 = get_marks_table_with_default(
+                student['id'],
+                student['assessor']['id'],
+                task_id)
+
         if feedback2:
             feedback2 = feedback2[0][3]
         if feedback1 != 'Awaiting Marking':
@@ -101,17 +129,22 @@ def student_view():
         if feedback2 != 'Awaiting Marking':
             approval_feedback = feedback2
     else:
-        res = queries.get_students_supervisor(session['id'])
-        mark_details["Supervisor"] = get_marks_table(session['id'],
-                                                     res,
-                                                     task_id)
+        mark_details["Supervisor"] = []
+        if student['supervisor']:
+            mark_details["Supervisor"] = get_marks_table_with_default(
+                student['id'],
+                student['supervisor']['id'],
+                task_id)
 
-        res = queries.get_students_assessor(session['id'])
-        mark_details["Assessor"] = get_marks_table(session['id'],
-                                                   res,
-                                                   task_id)
-        marked_by_sup = mark_details['Supervisor'] is None
-        marked_by_assessor = mark_details['Assessor'] is None
+        mark_details["Assessor"] = []
+        if student['assessor']:
+            mark_details["Assessor"] = get_marks_table_with_default(
+                student['id'],
+                student['assessor']['id'],
+                task_id)
+
+        marked_by_sup = mark_details['Supervisor'] is []
+        marked_by_assessor = mark_details['Assessor'] is []
 
     attachment = None
     res = db.select_columns('task_attachments', ['path'], ['task'], [task_id])
@@ -122,7 +155,7 @@ def student_view():
     res = db.select_columns('submissions',
                             ['name', 'path', 'date_modified'],
                             where_col=['student', 'task'],
-                            where_val=[session['id'], task_id])
+                            where_val=[student['id'], task_id])
 
     if res:
         try:
@@ -143,13 +176,15 @@ def student_view():
 
         res = db.select_columns('submissions', ['text', 'date_modified'],
                                 where_col=['student', 'task'],
-                                where_val=[session['id'], task_id])
+                                where_val=[student['id'], task_id])
         if res:
             text_info["old_text"] = res[0][0]
             text_info["edited_time"] = timestamp_to_string(res[0][1])
             text_info["button_text"] = "Edit Submission"
 
     db.close()
+    ownership = 'Your' if session['id'] == student['id'] else 'Their'
+    pronown = 'You' if session['id'] == student['id'] else 'They'
     return render_template('task_base.html',
                            heading=task_info[0] + " - " + task_info[1],
                            title=task_info[1],
@@ -168,24 +203,18 @@ def student_view():
                            marked_by_sup=marked_by_sup,
                            marked_by_assessor=marked_by_assessor,
                            awaiting_marks=awaiting_marks,
-                           pending_approval=pending_approval)
+                           pending_approval=pending_approval,
+                           ownership=ownership,
+                           pronown=pronown)
 
 
 # get a nicely formatted table containing the marks of a student, or a blank
 # list of the criteria
-def get_marks_table(student_id, staff_query, task_id):
-
-    # check if staffmember is assigned to this student, else return blank list
-    if not len(staff_query):
-        return []
-
-    staff_id = staff_query[0][0]
+def get_marks_table_with_default(student_id, staff_id, task_id):
     res = queries.get_marks_table(student_id, staff_id, task_id)
-
     # check if any marks were returned, if so return those marks
-    if len(res):
+    if res:
         return res
-
     default_criteria = queries.get_task_criteria(task_id)
     ret_list = []
     for criteria in default_criteria:
@@ -194,7 +223,9 @@ def get_marks_table(student_id, staff_query, task_id):
     return ret_list
 
 
-def staff_view():
+@tasks.route('/mark_task', methods=['GET', 'POST'])
+@at_least_role(UserRole.STUDENT)
+def mark_task():
     if request.method == 'GET':
         task_id = request.args.get('task', None, type=int)
         student_id = request.args.get('student', None, type=int)
