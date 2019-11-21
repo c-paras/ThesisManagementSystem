@@ -125,8 +125,6 @@ def view_task():
                 task_id)
 
     submission = build_student_submission(student['id'], task_id)
-    print(submission)
-    print(mark_details)
 
     db.close()
     owner = session['id'] == student['id']
