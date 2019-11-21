@@ -118,7 +118,9 @@
                     {% if default_fields["submission-type"] == "text" %}checked{% endif %}
                     {% if old_task_id %}disabled="disabled"{% endif %}
                   >
-                  <span>Text Entry</span>
+                  <span {% if old_task_id %}style="cursor: not-allowed !important;"{% endif %}>
+                    Text Entry
+                  </span>
                 </label>
               </p>
               <p>
@@ -129,7 +131,9 @@
                     {% if default_fields["submission-type"] == "file" %}checked{% endif %}
                     {% if old_task_id %}disabled="disabled"{% endif %}
                   >
-                  <span>File Upload</span>
+                  <span {% if old_task_id %}style="cursor: not-allowed !important;"{% endif %}>
+                    File Upload
+                  </span>
                 </label>
               </p>
             </div>
@@ -207,7 +211,9 @@
                     {% if default_fields["marking-method"] == "accept" %}checked{% endif %}
                     {% if old_task_id %}disabled="disabled"{% endif %}
                   >
-                  <span>Supervisor to mark as accepted</span>
+                  <span {% if old_task_id %}style="cursor: not-allowed !important;"{% endif %}>
+                    Supervisor to mark as accepted
+                  </span>
                 </label>
               </p>
               <p>
@@ -218,7 +224,9 @@
                     {% if default_fields["marking-method"] == "criteria" %}checked{% endif %}
                     {% if old_task_id %}disabled="disabled"{% endif %}
                   >
-                  <span>Supervisor and assessor to mark according to criteria</span>
+                  <span {% if old_task_id %}style="cursor: not-allowed !important;"{% endif %}>
+                    Supervisor and assessor to mark according to criteria
+                  </span>
                 </label>
               </p>
             </div>
@@ -293,7 +301,7 @@
                       </td>
                       <td class="center">
                         <a
-                          class="waves-effect waves-light btn-floating btn-small"
+                          class="waves-effect waves-light btn-floating btn-small red darken-3"
                           name="remove-criteria" onclick="removeCriteria({{ loop.index }})"
                         >
                           <i class="material-icons prefix">delete</i>
