@@ -14,13 +14,13 @@
 
   <!-- Give the student the ability to submit text/file -->
   <div class="row">
-    {% if staffUser %}
+    {% if marker or not owner %}
       <div class="col s12">
         <h5>Submission:</h5>
         <p></p>
         <b>Student:</b>
-        {{ studentName }}
-        <a href="mailto:{{ studentEmail }}">({{ studentEmail }})</a>
+        {{ student['name'] }}
+        <a href="mailto:{{ student['email'] }}">({{ student['email'] }})</a>
         <p></p>
         <b>Last submission:</b>
         {% if submission %}
@@ -45,7 +45,7 @@
       </div>
     {% else %}
       <div class="col s12">
-        <h5>{{ownership}} Submission:</h5>
+        <h5>Your Submission:</h5>
         {% if not can_submit %}
           <div class="row">
             <div class="col s4 offset-s4 amber darken-4 center-align">
@@ -57,8 +57,8 @@
         <div class="row" >
           <div class="col s12">
             <b>Last submission:</b>
-            {% if prev_submission %}
-              {{ prev_submission['modify_date'] }}
+            {% if submission %}
+              {{ submission['date_modified'] }}
             {% else %}
               No recorded submission
             {% endif %}
@@ -67,7 +67,7 @@
 
         <div class="row">
           <div class="col s12">
-            {% if text_info|length %}
+            {% if 'text' in task['sub_method']['name'] %}
               {% include "task_submit_text.html" %}
             {% else %}
               {% include "task_submit_file.html" %}
@@ -78,7 +78,7 @@
     {% endif %}
   </div>
 
-  {% if not (is_approval and not prev_submission) %}
+  {% if not ('approval' in task['sub_method']['name'] and not submission) %}
     <div class="row">
       <div class="col s12">
         <hr>
@@ -88,55 +88,25 @@
 
   <div class="row">
     <div class="col s12">
-      {% if is_approval and not prev_submission %}
+      {% if 'approval' in task['sub_method']['name'] and not submission %}
         {# Don't display an awaiting approval if there is no submission! #}
       {% else %}
-        {% if is_approval or (staffUser and submission['markingMethod'] == 'approval') %}
+        {% if marker and submission['mark_method'] == 'approval' %}
           <h5>Approval:</h5>
         {% else %}
           <h5>Marking:</h5>
         {% endif %}
       {% endif %}
-      {% if staffUser %}
+      {% if marker %}
         {% include "task_mark.html" %}
       {% else %}
-        {% if awaiting_marks or not prev_submission %}
-          {% for staff_type in ["Supervisor"] %}
-            <div class="row">
-              <div class="col s12">
-                {% if mark_details[staff_type]|length %}
-                  <table class="striped centered responsive-table">
-
-                    <!-- Table header -->
-                    <thead>
-                      <tr>
-                        <th>Criteria</th>
-                        <th class="center-align">Mark</th>
-                      </tr>
-                    </thead>
-
-                    <!-- Table body, should be replaced with a loop when actually connected to database -->
-                    <tbody>
-                      {% for item in mark_details[staff_type] %}
-                        <tr>
-                          <td>{{item[0]}}</td>
-                          <td class="center-align">{{item[2]}}</td>
-                        </tr>
-                      {% endfor %}
-                    </tbody>
-
-                  </table>
-                {% endif %}
-              </div>
-            </div>
-          {% endfor %}
-        {% elif is_approval %}
-          {% if approval_feedback and not pending_approval %}
-            <b>Status:</b> <span>{{ mark_details["Approval"] }}</span>
+        {% if submission['mark_method'] == 'approval' %}
+          {% if not submission['status']['name'] == 'pending' %}
+            <b>Status:</b> <span>{{ 'Your' if owner else 'Their' }} submission has been approved.</span>
             <p></p>
             <b>Feedback:</b> <span>{{ approval_feedback }}</span>
           {% else %}
-            <span>{{ mark_details["Approval"] }}</span>
+            <span>{{ 'Your' if owner else 'Their' }} submission is pending approval</span>
           {% endif %}
         {% else %}
           {% for staff_type in ["Supervisor", "Assessor"] %}
@@ -146,9 +116,9 @@
                 {% if not mark_details[staff_type]|length %}
                   <!-- Student has no staff member assigned -->
                   {% if staff_type|first in 'AEIOU' %}
-                    <p>{{pronown}} have not been assigned an {{ staff_type|lower }} yet.</p>
+                    <p>{{ 'You' if owner else 'They' }} have not been assigned an {{ staff_type|lower }} yet.</p>
                   {% else %}
-                    <p>{{pronown}} have not been assigned a {{ staff_type|lower }} yet.</p>
+                    <p>{{ 'You' if owner else 'They' }} have not been assigned a {{ staff_type|lower }} yet.</p>
                   {% endif %}
                 {% else %}
                   <table class="striped centered responsive-table">

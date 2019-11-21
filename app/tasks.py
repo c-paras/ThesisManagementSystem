@@ -51,6 +51,14 @@ def view_task():
     student['supervisor'], student['assessor'] =\
         get_students_staff(student['id'])
 
+    res = db.select_columns('users', ['name', 'email'],
+                            ['id'], [student['id']])
+    if not res:
+        db.close()
+        abort(404)
+    student['name'] = res[0][0]
+    student['email'] = res[0][1]
+
     # check that this user is allowed to view this task
     can_view = False
     my_tasks = queries.get_user_tasks(student['id'])
@@ -61,51 +69,34 @@ def view_task():
 
     if not can_view:
         abort(403)
-
     #
     # get general page info
     #
 
-    task_info = queries.get_general_task_info(task_id)[0]
+    task = build_task(task_id)
 
-    can_submit = datetime.now().timestamp() <= task_info[2]
-    text_submission = task_info[4] == "text submission"
+    can_submit = datetime.now().timestamp() <= task['deadline']
     accepted_files = None
-    if not text_submission:
+    if 'text' not in task['sub_method']['name']:
         accepted_files = ','.join(queries.get_tasks_accepted_files(task_id))
-    # get deadline
-
-    deadline_text = timestamp_to_string(task_info[2], True)
 
     #
     # get criteria & marks
     #
-    is_approval = (task_info[5] == 'requires approval')
-    awaiting_marks = False
     mark_details = {}
     approval_feedback = ''
-    marked_by_sup = False
-    marked_by_assessor = False
-    pending_approval = False
 
-    if is_approval:
+    if 'approval' in task['mark_method']['name']:
         res = queries.get_submission_status(student['id'], task_id)
 
-        if res and res[0][0] == "pending":
-            mark_details["Approval"] = "Your submission is pending approval."
-            pending_approval = True
-        elif res:
-            mark_details["Approval"] = """Your submission has been {status}.
-                                       """.format(status=res[0][0])
-
-        feedback1 = []
+        feedback1 = None
         if student['supervisor']:
             feedback1 = get_marks_table_with_default(
                 student['id'],
                 student['supervisor'],
                 task_id)[0][3]
 
-        feedback2 = []
+        feedback2 = None
         if student['assessor']:
             feedback2 = get_marks_table_with_default(
                 student['id'],
@@ -116,7 +107,7 @@ def view_task():
             feedback2 = feedback2[0][3]
         if feedback1 != 'Awaiting Marking':
             approval_feedback = feedback1
-        if feedback2 != 'Awaiting Marking':
+        elif feedback2 != 'Awaiting Marking':
             approval_feedback = feedback2
     else:
         mark_details["Supervisor"] = []
@@ -133,69 +124,26 @@ def view_task():
                 student['assessor'],
                 task_id)
 
-        marked_by_sup = mark_details['Supervisor'] is []
-        marked_by_assessor = mark_details['Assessor'] is []
-
-    attachment = None
-    res = db.select_columns('task_attachments', ['path'], ['task'], [task_id])
-    if res:
-        attachment = FileUpload(filename=res[0][0])
-    prev_submission = None
-    # check if the student needs to submit
-    res = db.select_columns('submissions',
-                            ['name', 'path', 'date_modified'],
-                            where_col=['student', 'task'],
-                            where_val=[student['id'], task_id])
-
-    if res:
-        try:
-            prev_submission = {
-                'name': res[0][0],
-                'modify_date': timestamp_to_string(res[0][2], True)
-            }
-        except LookupError as e:
-            print(f"Submission {task_id} {session['user']}: {e}")
-
-    if prev_submission and task_info[4] == "file submission":
-        prev_submission['url'] = FileUpload(filename=res[0][1]).get_url()
-
-    text_info = {}
-    if task_info[4] == "text submission":
-        text_info["limit"] = task_info[7]
-        text_info["button_text"] = "Start Submission"
-
-        res = db.select_columns('submissions', ['text', 'date_modified'],
-                                where_col=['student', 'task'],
-                                where_val=[student['id'], task_id])
-        if res:
-            text_info["old_text"] = res[0][0]
-            text_info["edited_time"] = timestamp_to_string(res[0][1])
-            text_info["button_text"] = "Edit Submission"
+    submission = build_student_submission(student['id'], task_id)
+    print(submission)
+    print(mark_details)
 
     db.close()
-    ownership = 'Your' if session['id'] == student['id'] else 'Their'
-    pronown = 'You' if session['id'] == student['id'] else 'They'
+    owner = session['id'] == student['id']
     return render_template('task_base.html',
-                           heading=task_info[0] + " - " + task_info[1],
-                           title=task_info[1],
-                           deadline_text=deadline_text,
-                           description=task_info[3],
-                           text_info=text_info,
+                           heading=task['course_name'] + " - " + task['name'],
+                           title=task['name'],
+                           task=task,
                            accepted_files=accepted_files,
                            mark_details=mark_details,
                            approval_feedback=approval_feedback,
-                           prev_submission=prev_submission,
-                           is_approval=is_approval,
+                           submission=submission,
                            task_id=task_id,
-                           max_size=task_info[6],
-                           attachment=attachment,
+                           max_size=task['file_limit'],
                            can_submit=can_submit,
-                           marked_by_sup=marked_by_sup,
-                           marked_by_assessor=marked_by_assessor,
-                           awaiting_marks=awaiting_marks,
-                           pending_approval=pending_approval,
-                           ownership=ownership,
-                           pronown=pronown)
+                           owner=owner,
+                           student=student,
+                           marker=False)
 
 
 # get a nicely formatted table containing the marks of a student, or a blank
@@ -227,56 +175,27 @@ def mark_task():
             db.close()
             abort(403)
 
-        task_info = queries.get_general_task_info(task_id)
-        if not task_info:
-            db.close()
-            abort(404)
-        else:
-            task_info = task_info[0]
-        student_details = db.select_columns('users', ['name', 'email'],
-                                            ['id'], [student_id])
-        if not student_details:
+        task = build_task(task_id)
+        if not task:
             db.close()
             abort(404)
 
-        # get deadline
-
-        deadline_text = timestamp_to_string(task_info[2], True)
-
-        res = queries.get_material_and_attachment(task_id)
-        attachment = None
-        if res:
-            attachment = FileUpload(filename=res[0][0])
+        res = db.select_columns('users', ['name', 'email'],
+                                ['id'], [student_id])
+        if not res:
+            db.close()
+            abort(404)
+        student = {
+            'id': student_id,
+            'name': res[0][0],
+            'email': res[0][1]
+        }
 
         task_criteria = db.select_columns('task_criteria',
                                           ['id', 'task', 'name', 'max_mark'],
                                           ['task'], [task_id])
 
-        student_email = student_details[0][1]
-        res = db.select_columns('submissions',
-                                ['name', 'path', 'text', 'date_modified'],
-                                ['student', 'task'],
-                                [student_id, task_id])
-        submission = {}
-        # Account for no submission and a text based submission (no path)
-        if res:
-            submission['name'] = res[0][0]
-            submission['date_modified'] = timestamp_to_string(res[0][3], True)
-            if res[0][1] is not None:
-                submission['file'] = FileUpload(filename=res[0][1])
-            else:
-                submission['text'] = res[0][2]
-                status = db.select_columns('submissions', ['status'],
-                                           ['student', 'task'],
-                                           [student_id, task_id])[0][0]
-                submission['status'] = db.select_columns('request_statuses',
-                                                         ['name'], ['id'],
-                                                         [status])[0][0]
-
-        if 'approval' in task_info[5]:
-            submission['markingMethod'] = 'approval'
-        else:
-            submission['markingMethod'] = 'mark'
+        submission = build_student_submission(student_id, task_id)
 
         marked_feedback = []
         for criteria in task_criteria:
@@ -295,22 +214,22 @@ def mark_task():
             task_max.append(criteria[3])
 
         db.close()
+
+        heading = f"{task['course_name']} - {task['name']}"
+
         return render_template('task_base.html',
                                topic_request_text=config.TOPIC_REQUEST_TEXT,
-                               heading=task_info[0] + " - " + task_info[1],
-                               title=task_info[1],
-                               deadline_text=deadline_text,
-                               description=task_info[3],
-                               attachment=attachment,
+                               heading=heading,
+                               title=task['name'],
                                taskCriteria=task_criteria,
-                               studentName=student_details[0][0],
-                               studentEmail=student_email,
+                               student=student,
                                submission=submission,
                                studentId=student_id,
                                taskCriteriaId=task_criteria_id,
                                taskMax=task_max,
                                markedFeedback=marked_feedback,
-                               staffUser=True)
+                               task=task,
+                               marker=True)
 
     data = json.loads(request.data)
     marks = data['marks']
@@ -472,7 +391,7 @@ def submit_file_task():
         db.close()
         return error("You must certify it is all your own work")
 
-    if datetime.now() >= task['deadline']:
+    if datetime.now().timestamp() >= task['deadline']:
         db.close()
         return error("Submissions closed")
 
@@ -552,10 +471,10 @@ def submit_text_task():
         return error("Submissions closed")
 
     mark_method_id = None
-    if task['sub_method']['name'] == 'requires approval':
+    if task['mark_method']['name'] == 'requires approval':
         mark_method_id = db.select_columns('request_statuses', ['id'],
                                            ['name'], ['pending'])[0][0]
-    elif task['sub_method']['name'] == 'requires mark':
+    elif task['mark_method']['name'] == 'requires mark':
         mark_method_id = db.select_columns('request_statuses', ['id'],
                                            ['name'], ['pending mark'])[0][0]
 
@@ -594,7 +513,6 @@ def task_info():
     if not task:
         db.close()
         return abort(404)
-    deadline_text = timestamp_to_string(task['deadline'], True)
 
     students = get_student_statuses(task)
     for s in students:
@@ -603,9 +521,7 @@ def task_info():
     db.close()
     students.sort(key=lambda x: zid_sort(x['email']))
     return render_template('task_stats.html',
-                           deadline_text=deadline_text,
-                           description=task['description'],
-                           task_id=task['id'],
+                           task=task,
                            students=students,
                            heading=f"{task['name']} - Statistics",
                            title=f"{task['name']} - Statistics")
@@ -656,7 +572,9 @@ def build_task(task_id):
     'Assumes you already have a database connection open'
     res = db.select_columns('tasks', ['deadline', 'marking_method',
                                       'visible', 'course_offering',
-                                      'word_limit', 'name', 'description'],
+                                      'word_limit', 'name',
+                                      'description', 'submission_method',
+                                      'word_limit', 'size_limit'],
                             ['id'], [task_id])
     if not res:
         return None
@@ -664,20 +582,68 @@ def build_task(task_id):
     task = {
         'id': task_id,
         'deadline': res[0][0],
-        'sub_method': {
+        'pretty_deadline': timestamp_to_string(res[0][0]),
+        'mark_method': {
             'id': res[0][1]
+        },
+        'sub_method': {
+            'id': res[0][7]
         },
         'visible': res[0][2],
         'offering': res[0][3],
         'word_limit': res[0][4],
         'name': res[0][5],
         'description': res[0][6],
+        'text_limit': res[0][8],
+        'file_limit': res[0][9],
         'attachment': None
     }
+    res = queries.get_general_task_info(task_id)
+    task['course_name'] = res[0][0]
+
     res = db.select_columns('marking_methods', ['name'],
+                            ['id'], [task['mark_method']['id']])
+    task['mark_method']['name'] = res[0][0]
+
+    res = db.select_columns('submission_methods', ['name'],
                             ['id'], [task['sub_method']['id']])
     task['sub_method']['name'] = res[0][0]
+
     res = db.select_columns('task_attachments', ['path'], ['task'], [task_id])
     if res:
-        task['attachment'] = [FileUpload(filename=res[0][0])]
+        task['attachment'] = FileUpload(filename=res[0][0])
     return task
+
+
+def build_student_submission(student_id, task_id):
+    res = db.select_columns('submissions', ['name', 'path', 'text',
+                                            'date_modified', 'status'],
+                            ['student', 'task'], [student_id, task_id])
+    # Account for no submission and a text based submission (no path)
+    if not res:
+        return {}
+    submission = {
+        'name': res[0][0],
+        'date_modified': timestamp_to_string(res[0][3], True),
+        'status': {
+            'id': res[0][4]
+        },
+        'file': None,
+        'text': None
+    }
+
+    task = build_task(task_id)
+    if 'file' in task['sub_method']['name']:
+        submission['file'] = FileUpload(filename=res[0][1])
+    else:
+        submission['text'] = res[0][2]
+
+    res = db.select_columns('request_statuses',
+                            ['name'], ['id'],
+                            [submission['status']['id']])
+    submission['status']['name'] = res[0][0]
+    if 'approval' in task['mark_method']['name']:
+        submission['mark_method'] = 'approval'
+    else:
+        submission['mark_method'] = 'mark'
+    return submission

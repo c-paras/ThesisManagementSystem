@@ -2,7 +2,7 @@
   <form id="mark-form" method="">
     <table class="striped centered responsive-table" style="margin-bottom: 20px;">
       <colgroup>
-        {% if submission['markingMethod'] == 'approval' %}
+        {% if submission['mark_method'] == 'approval' %}
           <col span="1" style="width: 15%;">
           <col span="1" style="width: 10%;">
           <col span="1" style="width: 75%;">
@@ -17,7 +17,7 @@
       <thead>
         <tr>
           <th>Criteria</th>
-          {% if submission['markingMethod'] == 'approval' %}
+          {% if submission['mark_method'] == 'approval' %}
             <th>Approved</th>
           {% else %}
             <th>Max Mark</th>
@@ -32,10 +32,10 @@
           <tr>
             <td>{{ taskCriteria[i][2] }}</td>
             {% if markedFeedback[i] == [] %}
-              {% if submission['markingMethod'] == 'approval' %}
+              {% if submission['mark_method'] == 'approval' %}
                 <td>
                   <label>
-                    {% if submission['status'] == 'approved' %}
+                    {% if submission['status']['name'] == 'approved' %}
                       <input id="approveCheck" type="checkbox" class="filled-in" checked="checked">
                     {% else %}
                       <input id="approveCheck" type="checkbox" class="filled-in">
@@ -58,17 +58,17 @@
                   <textarea
                     id="enteredFeedback" class="materialize-textarea validate"
                     placeholder="Enter Feedback"
-                    {% if submission['markingMethod'] != 'approval' %}
+                    {% if submission['mark_method'] != 'approval' %}
                       required="" aria-required="true"
                     {% endif %}
                   ></textarea>
                 </div>
               </td>
             {% else %}
-              {% if submission['markingMethod'] == 'approval' %}
+              {% if submission['mark_method'] == 'approval' %}
                 <td>
                   <label>
-                    {% if submission['status'] == 'approved' %}
+                    {% if submission['status']['name'] == 'approved' %}
                       <input id="approveCheck" type="checkbox" class="filled-in" checked="checked">
                     {% else %}
                       <input id="approveCheck" type="checkbox" class="filled-in">
@@ -91,7 +91,7 @@
                   <div>
                     <textarea
                       id="enteredFeedback" class="materialize-textarea validate"
-                      {% if submission['markingMethod'] != 'approval' %}
+                      {% if submission['mark_method'] != 'approval' %}
                         required="" aria-required="true"
                       {% endif %}
                       placeholder="Enter Feedback"
@@ -100,7 +100,7 @@
                 {% else %}
                   <textarea
                     id="enteredFeedback" class="materialize-textarea validate"
-                    {% if submission['markingMethod'] != 'approval' %}
+                    {% if submission['mark_method'] != 'approval' %}
                       required="" aria-required="true"
                     {% endif %}
                   >{{ markedFeedback[i][0][1] }}</textarea>
