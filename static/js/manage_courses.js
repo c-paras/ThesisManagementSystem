@@ -16,18 +16,27 @@ function submitCO() {
 
 function setSessions() {
   course = $('#courses').children("option:selected").val();
+  session = $('#sessions').children("option:selected").val();
   makePOSTRequest('/get_sessions', course, (res) => {
     if (res.status === 'fail') {
       flash(res.message, error = true);
     } else {
-      $('#sessions option').each(function() {
+      $('#sessions option').not(':first').each(function() {
         $(this).remove();
       });
       $.each(res.data, function(index, val) {
-        $('#sessions').append($('<option>', {
-          value: val[1],
-          text: val[0]
-        }));
+        if(String(val[1]) === String(session)){
+          $('#sessions').append($('<option>', {
+            value: val[1],
+            text: val[0],
+            selected: true
+          }));
+        }else{
+          $('#sessions').append($('<option>', {
+            value: val[1],
+            text: val[0]
+          }));
+        }
       });
       $('select').formSelect();
     }

@@ -392,7 +392,7 @@ class queries:
     def get_course_offering_details():
         res = db.custom_query(
             """
-                SELECT co.id, c.code, s.term, s.year, c.id, s.id
+                SELECT co.id, c.code, s.term, s.year, c.id, s.id, c.name
                 FROM course_offerings co
                 INNER JOIN sessions s
                     ON s.id = co.session
@@ -471,7 +471,6 @@ class queries:
         return res
 
     def get_student_topic(student_id):
-        print(student_id)
         res = db.custom_query('''
             SELECT name
             FROM topics
@@ -483,3 +482,41 @@ class queries:
             ;'''.format(student_id=student_id)
         )
         return res
+
+    def is_fully_marked(student_id, task_id):
+        res = db.custom_query('''
+            SELECT COUNT(m.student) == (SELECT COUNT(DISTINCT tc.id)*2
+                            FROM tasks t
+                            INNER JOIN task_criteria tc
+                                ON tc.task = t.id
+                            WHERE t.id = {task_id})
+            FROM tasks t
+            INNER JOIN submissions s
+                ON t.id = s.task
+            INNER JOIN task_criteria tc
+                ON tc.task = t.id
+            INNER JOIN marks m
+                ON tc.id = m.criteria
+                AND s.student = m.student
+            WHERE t.id = {task_id}
+                AND s.student = {student_id}
+            ;'''.format(student_id=student_id, task_id=task_id)
+        )
+        return res[0][0]
+
+    def is_partially_marked(student_id, task_id):
+        res = db.custom_query('''
+            SELECT COUNT(m.student) > 0
+            FROM tasks t
+            INNER JOIN submissions s
+                ON t.id = s.task
+            INNER JOIN task_criteria tc
+                ON tc.task = t.id
+            INNER JOIN marks m
+                ON tc.id = m.criteria
+                AND s.student = m.student
+            WHERE t.id = {task_id}
+                AND s.student = {student_id}
+            ;'''.format(student_id=student_id, task_id=task_id)
+        )
+        return res[0][0]

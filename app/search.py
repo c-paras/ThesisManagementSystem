@@ -23,9 +23,11 @@ search = Blueprint('search', __name__)
 @at_least_role(UserRole.PUBLIC)
 def search_topic():
     if request.method == 'GET':
+        search_term = request.args.get('search')
         return render_template('search.html',
                                topic_request_text=config.TOPIC_REQUEST_TEXT,
-                               heading='Search Topics', title='Search Topics')
+                               heading='Search Topics', title='Search Topics',
+                               search_term=search_term)
 
     # getting input from forms
     data = json.loads(request.data)

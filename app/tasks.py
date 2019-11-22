@@ -304,6 +304,28 @@ def mark_task():
                            ['criteria', 'student', 'marker'],
                            [task_criteria[i], student_id, session['id']])
 
+    marked_method = db.select_columns('marking_methods', ['id'],
+                                      ['name'], ["requires mark"])[0][0]
+    is_mark_type = len(db.select_columns('tasks', ['id'],
+                                         ['id', 'marking_method'],
+                                         [task_id, marked_method]))
+
+    if is_mark_type:
+        new_sub_status = "pending mark"
+        if queries.is_fully_marked(student_id, task_id):
+            new_sub_status = "marked"
+        elif queries.is_partially_marked(student_id, task_id):
+            new_sub_status = "partially marked"
+
+        status_id = db.select_columns('request_statuses', ['id'],
+                                      ['name'], [new_sub_status])[0][0]
+
+        db.update_rows('submissions',
+                       [status_id],
+                       ['status'],
+                       ['student', 'task'],
+                       [student_id, task_id])
+
     # send email
     student = db.select_columns('users', ['name', 'email'],
                                 ['id'], [student_id])[0]

@@ -104,6 +104,7 @@ def respond_request():
         if 'assessor' not in request.form:
             db.close()
             return error('You must specify an assessor')
+        db.delete_rows('student_topic',  ['student'], [data[1]])
         db.insert_single('student_topic',
                          [data[1], data[2], request.form['assessor']],
                          ['student', 'topic', 'assessor'])

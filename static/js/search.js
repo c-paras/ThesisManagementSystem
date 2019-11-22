@@ -9,10 +9,10 @@ function makeCard(id, title, description, topics, supervisor, email, preqs, visi
   let topicBadges = '';
   let preqBadges = '';
   for (const topic of topics.split(',')) {
-    topicBadges += `<span class="new badge teal lighten-1" data-badge-caption="">${topic}</span>`;
+    topicBadges += `<span class="new badge badge-search" data-badge-caption="">${topic}</span>`;
   }
   for (const preq of preqs.split(',')) {
-    preqBadges += `<span class="new badge teal lighten-1" data-badge-caption="">${preq}</span>`;
+    preqBadges += `<span class="new badge badge-search" data-badge-caption="">${preq}</span>`;
   }
   const card = `<div class="row">
   <div class="col s12">
@@ -91,7 +91,6 @@ function searchResults() {
   if (!formValid(form)) {
     return;
   }
-
   const data = {
     'searchTerm': $('#search-input').val(),
     'checkbox': $('#checkbox-vis').is(':checked'),

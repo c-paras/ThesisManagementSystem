@@ -7,7 +7,12 @@
         <div class="col s12">
           <div class="input-field">
             <i class="material-icons prefix">search</i>
-            <input id="search-input" name="search" type="text" placeholder="Search">
+            {% if search_term %}
+              <input id="search-input" name="search" type="text" placeholder="Search"
+                     value="{{ search_term }}">
+            {% else %}
+              <input id="search-input" name="search" type="text" placeholder="Search">
+            {% endif %}
           </div>
         </div>
       </div>
@@ -37,8 +42,11 @@
             <span>Hide topics that are no longer on offer</span>
           </label>
         </div>
-        <div class="input-field right">
-          <a class="waves-effect waves-light btn" onclick="showAdvanced()">Advanced<i class="material-icons right">arrow_drop_down</i></a>
+        <div class="input-field col right">
+          <a class="waves-effect waves-light btn" onclick="showAdvanced()">
+            Advanced
+            <i class="material-icons right">arrow_drop_down</i>
+          </a>
         </div>
       </div>
       <div id="advanced-menu" class="row" style="display: none;">

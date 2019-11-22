@@ -55,7 +55,7 @@ class sqliteManager:
         names = [
             'pending', 'approved', 'rejected',
             'marked', 'pending mark', 'cancelled',
-            'not submitted'
+            'not submitted', 'partially marked'
         ]
         for name in names:
             queries.append((table, [name], ['name']))
@@ -64,7 +64,7 @@ class sqliteManager:
     # inserts 1 row in db
     # table = string, all others are lists
 
-    def insert_single(table, values, columns):
+    def insert_single(table, values, columns=None):
         placeholder = ','.join('?' * len(values))
         if columns is None:
             res = sqliteManager.conn.execute(
