@@ -127,6 +127,7 @@ def view_task():
     submission = build_student_submission(student['id'], task_id)
 
     db.close()
+
     owner = session['id'] == student['id']
     return render_template('task_base.html',
                            heading=task['course_name'] + " - " + task['name'],
@@ -145,7 +146,7 @@ def view_task():
 
 
 # get a nicely formatted table containing the marks of a student, or a blank
-# list of the criteria
+# list of the criteria in the case of no submission
 def get_marks_table_with_default(student_id, staff_id, task_id):
     res = queries.get_marks_table(student_id, staff_id, task_id)
     # check if any marks were returned, if so return those marks
