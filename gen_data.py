@@ -614,6 +614,10 @@ def gen_marks():
                 db.update_rows('submissions',
                                [request_types['marked']], ['status'],
                                ['student', 'task'], [student[0], task[0]])
+            else:
+                db.update_rows('submissions',
+                               [request_types['partially marked']], ['status'],
+                               ['student', 'task'], [student[0], task[0]])
 
 
 def gen_submissions():
