@@ -1,13 +1,31 @@
 {% extends "base.html" %}
 
 {% block body %}
-  <div class="valign-wrapper" style="height: 50vh;">
-    <div class="row center-align">
-      <h5> You are currently using a public account.</h5>
-      <div class="col s8 offset-s2">
-        You are able to search and view thesis topics,
-        but you will only be able to request one when you are formally enrolled in your thesis
+  <div class="row">
+    <div class="valign-wrapper">
+      <div class="row center-align">
+        <h5> You are currently using a public account.</h5>
+        <div class="col s8 offset-s2">
+          You are able to search and view thesis topics,
+          but you will only be able to request one when you are formally enrolled in your thesis
+        </div>
       </div>
     </div>
+  </div>
+  <div class="row">
+    <form class="col s12" id="search-form-public">
+      <div class="col offset-s2 s8">
+        <div class="input-field">
+          <i class="material-icons prefix">search</i>
+          <input id="search-input-public" name="search" type="text" placeholder="Quick search">
+        </div>
+      </div>
+      <div class="center">
+        <a class="waves-effect waves-light btn" id="search-btn-public"
+           onclick="searchResultsPublic()">Search Topics
+          <i class="material-icons right">send</i>
+        </a>
+      </div>
+    </form>
   </div>
 {% endblock %}

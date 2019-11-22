@@ -236,16 +236,16 @@
             </colgroup>
             <thead>
               <tr>
-                <th class="sortable">Name</th>
                 <th class="sortable">zID</th>
+                <th class="sortable">Name</th>
                 <th class="sortable">Topic</th>
               </tr>
             </thead>
             <tbody>
               {% for student in enrollments %}
                 <tr>
-                  <td>{{ student[0] }}</td>
                   <td><a href="mailto:{{ student[2] }}">{{ student[1] }}</a></td>
+                  <td>{{ student[0] }}</td>
                   <td>{{ student[3] }}</td>
                 </tr>
               {% endfor %}

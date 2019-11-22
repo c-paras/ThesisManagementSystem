@@ -91,7 +91,6 @@ function searchResults() {
   if (!formValid(form)) {
     return;
   }
-
   const data = {
     'searchTerm': $('#search-input').val(),
     'checkbox': $('#checkbox-vis').is(':checked'),
