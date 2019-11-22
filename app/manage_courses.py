@@ -531,6 +531,8 @@ def delete_task():
     db.delete_rows('tasks', ['id'], [task_id])
     db.delete_rows('task_attachments', ['task'], [task_id])
     db.delete_rows('task_criteria', ['task'], [task_id])
+    db.delete_rows('allowed_files', ['task'], [task_id])
+    db.delete_rows('submission_types', ['task'], [task_id])
 
     db.close()
     return jsonify({'status': 'ok', "message": "Deleted Task"})
