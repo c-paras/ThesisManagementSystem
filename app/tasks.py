@@ -366,18 +366,7 @@ def submit_file_task():
         db.close()
         return error("Task not found")
 
-    task = {
-        'id': task_id,
-        'deadline': datetime.fromtimestamp(res[0][0]),
-        'sub_method': {
-            'id': res[0][1]
-        },
-        'visible': res[0][2],
-        'offering': res[0][3],
-        'max_size': res[0][4],
-        'accepted_files': queries.get_tasks_accepted_files(task_id)
-    }
-
+    task = build_task(task_id)
     res = db.select_columns('enrollments', ['user'],
                             ['user', 'course_offering'],
                             [session['id'], task['offering']])
@@ -393,17 +382,13 @@ def submit_file_task():
         db.close()
         return error("Submissions closed")
 
-    res = db.select_columns('marking_methods', ['name'],
-                            ['id'], [task['sub_method']['id']])
-    task['sub_method']['name'] = res[0][0]
-
-    mark_method_id = None
-    if task['sub_method']['name'] == 'requires approval':
-        mark_method_id = db.select_columns('request_statuses', ['id'],
-                                           ['name'], ['pending'])[0][0]
-    elif task['sub_method']['name'] == 'requires mark':
-        mark_method_id = db.select_columns('request_statuses', ['id'],
-                                           ['name'], ['pending mark'])[0][0]
+    if task['mark_method']['name'] == 'requires approval':
+        res = db.select_columns('request_statuses', ['id'],
+                                ['name'], ['pending'])
+    elif task['mark_method']['name'] == 'requires mark':
+        res = db.select_columns('request_statuses', ['id'],
+                                ['name'], ['pending mark'])
+    pending_status_id = res[0][0]
 
     try:
         sent_file = FileUpload(req=request)
@@ -414,10 +399,10 @@ def submit_file_task():
         db.close()
         accept_files = ', '.join([f[1:] for f in task['accepted_files']])
         return error(f"File must be formatted as {accept_files}")
-    if sent_file.get_size() > task['max_size']:
+    if sent_file.get_size() > task['file_limit']:
         sent_file.remove_file()
         db.close()
-        return error(f"File larger than {task['max_size']}MB")
+        return error(f"File larger than {task['file_limit']}MB")
 
     sent_file.commit()
     res = db.select_columns('submissions', ['path'], ['student', 'task'],
@@ -437,7 +422,7 @@ def submit_file_task():
                                      sent_file.get_original_name(),
                                      str(sent_file.get_name()),
                                      datetime.now().timestamp(),
-                                     mark_method_id],
+                                     pending_status_id],
                      ['student', 'task', 'name', 'path',
                       'date_modified', 'status'])
     db.close()
@@ -594,7 +579,8 @@ def build_task(task_id):
         'description': res[0][6],
         'text_limit': res[0][8],
         'file_limit': res[0][9],
-        'attachment': None
+        'attachment': None,
+        'accepted_files': queries.get_tasks_accepted_files(task_id)
     }
     res = queries.get_general_task_info(task_id)
     task['course_name'] = res[0][0]
