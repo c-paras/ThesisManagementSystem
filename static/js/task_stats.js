@@ -7,11 +7,12 @@ function drawChart() {
   const urlString = `${url.toString()}?${params.toString()}`;
   makeGETRequest(urlString, (res) => {
     if(res.status === 'fail') {
-      alert("Student data request failed, please refresh the page");
+      flash("Student data request failed, please refresh the page", error=True);
       return;
     }
     const numStudents = res.students.length;
     if (numStudents === 0) {
+      flash("No students enrolled", error=True);
       return;
     }
     const marked = ['approved', 'rejected', 'marked', 'cancelled'];
