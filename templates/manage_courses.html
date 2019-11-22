@@ -103,13 +103,17 @@
                   </label>
                 </td>
                 <td>
-                  <!-- TODO: add link to edit material here -->
                   <a href="#!" onclick="openEditMaterial({{ material[0] }}, '{{ material[1] }}', '{{ material[2][0].get_url() }}', '{{ material[2][0].get_original_name() }}' )">
                     <i class="material-icons">edit</i>
                   </a>
                 </td>
                 <td>
-                  <a id="deleteMaterial{{material[0]}}"  href="#!" onclick="openMaterialDeleteConfirmation('{{ material[1]  }}', {{ material[0] }})">
+                  <a
+                    id="deleteMaterial{{material[0]}}"
+                    href="#!"
+                    onclick="openMaterialDeleteConfirmation('{{ material[1]  }}', {{ material[0] }})"
+                    class="red-text text-darken-3"
+                  >
                     <i class="material-icons">delete_forever</i>
                   </a>
                 </td>
@@ -189,14 +193,16 @@
                   </label>
                 </td>
                 <td>
-                  <!-- TODO: add link to edit material here -->
                   <a href="{{ url_for('create_task.create', course_offering_id=default_co, update=task[0]) }}">
                     <i class="material-icons">edit</i>
                   </a>
                 </td>
                 <td>
-                  <a id="deleteTask{{task[0]}}"  href="#!" onclick="checkDeleteTask('{{ task[1]  }}', {{ task[0] }})">
-                    <i class="material-icons">delete_forever</i>
+                  <a
+                    id="deleteTask{{task[0]}}"
+                    href="#!" onclick="checkDeleteTask('{{ task[1]  }}', {{ task[0] }})"
+                  >
+                    <i class="material-icons red-text text-darken-3">delete_forever</i>
                   </a>
                 </td>
                 <td>
@@ -270,12 +276,11 @@
       </a>
       <a id="dummyDownload"></a>
     </div>
-    
 
     <!-- Add material modal -->
     {% include "modals/add_material.html" %}
     <script type="text/javascript" src="{{ url_for('static', filename='js/material.js') }}" defer></script>
     {% include "modals/confirm_deletion.html" %}
-    
+
   </div>
 {% endblock %}

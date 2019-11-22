@@ -1,3 +1,52 @@
+let interval;
+
+function requestTimestamp(reqDate) {
+  const d = new Date(reqDate);
+  let dif = new Date(new Date() - d) / 1000;
+  let plural = (Math.floor(dif) === 1) ? '' : 's';
+  let timeframe = `second${plural} ago`;
+  let seconds = true;
+
+  if (dif > 60) {
+    dif /= 60;
+    plural = (Math.floor(dif) === 1) ? '' : 's';
+    timeframe = `minute${plural} ago`;
+    seconds = false;
+  }
+
+  if (dif > 60) {
+    dif /= 60;
+    plural = (Math.floor(dif) === 1) ? '' : 's';
+    timeframe = `hour${plural} ago`;
+  }
+
+  if (dif > 24 && timeframe === `hour${plural} ago`) {
+    dif /= 24;
+    plural = (Math.floor(dif) === 1) ? '' : 's';
+    timeframe = `day${plural} ago`;
+  }
+
+  dif = Math.floor(dif);
+  const date = d.getDate();
+  const year = d.getFullYear();
+  let hour = d.getHours();
+  hour = (hour < 10) ? `0${hour}` : hour;
+  let minutes = d.getMinutes();
+  minutes = (minutes < 10) ? `0${minutes}` : minutes;
+  const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+  const monthCode = months[d.getMonth()];
+  const dateString = (date + ' ' + monthCode + ' ' +
+    year + ' ' + hour + ':' + minutes);
+
+  if (seconds) {
+    $('#date-requested').text(`about ${dif} ${timeframe}`);
+  } else {
+    $('#date-requested').text(`${dif} ${timeframe}`);
+  }
+
+  return dateString;
+}
+
 function toggleViewAssessor() {
   if ($('#reject-check').prop('checked') === true) {
     $('#assessor-view').hide();
@@ -31,48 +80,14 @@ function openRequestModal(studentId, topicId) {
     `);
     $('#topic-name').text(res.topicName);
 
-    const d = new Date(res.reqDate);
-    let dif = new Date(new Date() - d)/1000;
-    let timeframe =" seconds ago";
-
-    if (dif > 60){
-      dif /= 60;
-      timeframe = " minutes ago";
-    }
-
-    if(dif > 60){
-      dif = dif/60;
-      timeframe = " hours ago";
-    }
-
-    if(dif > 24 && timeframe === " hours ago"){
-      dif /= 24;
-      timeframe = " days ago";
-    }
-    dif = Math.floor(dif);
-    const date = d.getDate();
-    const year = d.getFullYear();
-    const hour = d.getHours();
-    const minutes = d.getMinutes();
-    let month = [];
-    month[0] = "Jan";
-    month[1] = "Feb";
-    month[2] = "Mar";
-    month[3] = "Apr";
-    month[4] = "May";
-    month[5] = "Jun";
-    month[6] = "Jul";
-    month[7] = "Aug";
-    month[8] = "Sep";
-    month[9] = "Oct";
-    month[10] = "Nov";
-    month[11] = "Dec";
-    month_code = month[d.getMonth()];
-    const date_string = (date + ' ' + month_code + ' ' +
-      year + ' ' + hour + ':' + minutes);
-    $('#date-requested').attr('data-tooltip', date_string);
-    $('#date-requested').text(dif + timeframe);
+    clearInterval(interval);
+    const dateString = requestTimestamp(res.reqDate);
+    $('#date-requested').attr('data-tooltip', dateString);
     $('.tooltipped').tooltip();
+    interval = setInterval(function () {
+      requestTimestamp(res.reqDate);
+    }, Math.random() * (12000 - 4000) + 4000);
+
     toggleViewAssessor();
     const modal = M.Modal.getInstance($('#request-modal'));
     modal.open();
