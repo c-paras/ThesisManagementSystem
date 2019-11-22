@@ -91,7 +91,6 @@ function searchResults() {
   if (!formValid(form)) {
     return;
   }
-
   const data = {
     'searchTerm': $('#search-input').val(),
     'checkbox': $('#checkbox-vis').is(':checked'),
@@ -150,6 +149,16 @@ function searchResults() {
       updateCanRequest();
     }
   });
+}
+
+function searchResultsPublic() {
+  const form = $('#search-form-public');
+  if (!formValid(form)) {
+    return;
+  }
+  const searchTerm = $('#search-input-public').val();
+  window.location.href = '/search?search=' + searchTerm;
+
 }
 
 function loadPage() {
