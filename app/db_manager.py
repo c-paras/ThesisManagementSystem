@@ -55,7 +55,7 @@ class sqliteManager:
         names = [
             'pending', 'approved', 'rejected',
             'marked', 'pending mark', 'cancelled',
-            'not submitted'
+            'not submitted', 'partially marked'
         ]
         for name in names:
             queries.append((table, [name], ['name']))
