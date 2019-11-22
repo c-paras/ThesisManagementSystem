@@ -19,7 +19,7 @@
                     {% if key|int == co_map[default_co]['course']|int %}
                       selected="selected"
                     {% endif %}
-                    value="{{ key }}">{{value}}</option>
+                    value="{{ key }}">{{value[0]}}</option>
                 {% endfor %}
               </select>
               <label style="padding-top: 20px;">Course code</label>

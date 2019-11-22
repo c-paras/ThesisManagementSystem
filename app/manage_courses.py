@@ -154,10 +154,13 @@ def split_co(course_offerings):
             co_map[co[0]] = temp
 
         if co[4] not in courses:
-            courses[co[4]] = co[1]
+            courses[co[4]] = (co[1], co[6])
             sessions[co[4]] = []
 
-        ses_string = str(co[3])[2:] + 'T' + str(co[2])
+        if co[3] < 2019:
+            ses_string = str(co[3])[2:] + 'S' + str(co[2])
+        else:
+            ses_string = str(co[3])[2:] + 'T' + str(co[2])
         sessions[co[4]].append((ses_string, co[5]))
     return co_map, courses, sessions
 
@@ -195,7 +198,10 @@ def get_sessions():
         ses_details = db.select_columns(
             'sessions', ['year', 'term'], ['id'], [co[0]]
         )[0]
-        ses_string = str(ses_details[0])[2:] + 'T' + str(ses_details[1])
+        if ses_details[0] < 2019:
+            ses_string = str(ses_details[0])[2:] + 'S' + str(ses_details[1])
+        else:
+            ses_string = str(ses_details[0])[2:] + 'T' + str(ses_details[1])
         sessions.append((ses_string, co[0]))
     db.close()
     if len(session) > 0:

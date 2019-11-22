@@ -31,6 +31,30 @@ def get_all_request_types():
     return types
 
 
+def get_all_submission_types():
+    types = {}
+    res = db.select_columns('submission_methods', ['name', 'id'])
+    for name, iden in res:
+        types[name] = iden
+    return types
+
+
+def get_all_marking_types():
+    types = {}
+    res = db.select_columns('marking_methods', ['name', 'id'])
+    for name, iden in res:
+        types[name] = iden
+    return types
+
+
+def get_all_file_types():
+    types = {}
+    res = db.select_columns('file_types', ['name', 'id'])
+    for name, iden in res:
+        types[name] = iden
+    return types
+
+
 def gen_users():
     with open('db/names.json') as f:
         names = json.load(f)
@@ -107,18 +131,18 @@ def gen_sessions():
                     datetime.datetime(year, 11, 30, 23, 59, 59).timestamp()
                     ])
 
-    for year in range(2019, 2025):
+    for year in range(2019, 2021):
         ret.append([year, 1,
-                    datetime.datetime(year, 1, 1, 0, 0, 0).timestamp(),
-                    datetime.datetime(year, 4, 30, 23, 59, 59).timestamp()
+                    datetime.datetime(year, 2, 18, 0, 0, 0).timestamp(),
+                    datetime.datetime(year, 5, 18, 23, 59, 59).timestamp()
                     ])
         ret.append([year, 2,
-                    datetime.datetime(year, 5, 1, 0, 0, 0).timestamp(),
-                    datetime.datetime(year, 7, 31, 23, 59, 59).timestamp()
+                    datetime.datetime(year, 6, 3, 0, 0, 0).timestamp(),
+                    datetime.datetime(year, 8, 31, 23, 59, 59).timestamp()
                     ])
         ret.append([year, 3,
-                    datetime.datetime(year, 8, 1, 0, 0, 0).timestamp(),
-                    datetime.datetime(year, 11, 30, 23, 59, 59).timestamp()
+                    datetime.datetime(year, 9, 16, 0, 0, 0).timestamp(),
+                    datetime.datetime(year, 12, 14, 23, 59, 59).timestamp()
                     ])
 
     query = []
@@ -164,7 +188,6 @@ def gen_course_offering():
                     db.insert_single('course_offerings',
                                      [course_id, session_id[0]],
                                      ['course', 'session'])
-
             else:
                 # create offering for thesis A/B/C in years after 2018
                 session_ids = db_queries.get_session_ids_in_range(2019, 2021)
@@ -172,6 +195,19 @@ def gen_course_offering():
                     db.insert_single('course_offerings',
                                      [course_id, session_id[0]],
                                      ['course', 'session'])
+        session_id = db.select_columns(
+            'sessions', ['id'],
+            ['year', 'term'], [2019, 1]
+        )[0][0]
+        course_id = db.select_columns(
+            'courses', ['id'],
+            ['code'], ['COMP4931']
+        )[0][0]
+        db.insert_single(
+            'course_offerings',
+            [session_id, course_id],
+            ['session', 'course']
+        )
 
 
 def gen_topic_areas(topic_id, areas):
@@ -313,6 +349,86 @@ def gen_tasks():
                                      ['file_type', 'task'])
 
 
+def gen_tasks2():
+    res = db.select_columns('course_offerings', ['*'])
+    marking_methods = get_all_marking_types()
+    submission_methods = get_all_submission_types()
+    file_types = get_all_file_types()
+    task_id = 1
+
+    for co in res:
+        course = db.select_columns(
+            'courses', ['code', 'name'], ['id'], [co[1]]
+        )[0]
+        session = db.select_columns(
+            'sessions', ['start_date', 'end_date'], ['id'], [co[2]]
+        )[0]
+        start_date = datetime.datetime.fromtimestamp(session[0])
+        end_date = datetime.datetime.fromtimestamp(session[1])
+        task_name = ""
+        if "thesis a" in course[1].lower() or "part a" in course[1].lower():
+            task_name = "Thesis Abstract"
+            description = "Present your initial idea"
+            word_limit = 1000
+            marking_method = marking_methods['requires approval']
+            submission_method = submission_methods['text submission']
+
+            dif = datetime.timedelta(days=(7*2), minutes=-1)
+            deadline = datetime.datetime.timestamp(start_date + dif)
+            db.insert_single(
+                'tasks',
+                [task_id, task_name, deadline, description, marking_method,
+                    word_limit, co[0], submission_method],
+                ['id', 'name', 'deadline', 'description', 'marking_method',
+                    'word_limit', 'course_offering', 'submission_method']
+            )
+            task_id += 1
+
+        task_name = course[1] + " Presentation"
+        description = "Please present your progress for the current course "
+        size_limit = 5
+        marking_method = marking_methods['requires mark']
+        submission_method = submission_methods['file submission']
+        files = [file_types['.pdf']]
+        dif = datetime.timedelta(days=(7*8), minutes=-1)
+        deadline = datetime.datetime.timestamp(start_date + dif)
+
+        db.insert_single(
+            'tasks',
+            [task_id, task_name, deadline, description, marking_method,
+                size_limit, co[0], submission_method],
+            ['id', 'name', 'deadline', 'description', 'marking_method',
+                'size_limit', 'course_offering', 'submission_method']
+        )
+        insert_files(files, task_id)
+        task_id += 1
+
+        task_name = course[1] + " Report"
+        description = """Please write up a report to cover all of your progress
+            made in """ + course[1]
+        size_limit = 10
+        dif = datetime.timedelta(days=(7*11), minutes=-1)
+        deadline = datetime.datetime.timestamp(start_date + dif)
+        db.insert_single(
+            'tasks',
+            [task_id, task_name, deadline, description, marking_method,
+                size_limit, co[0], submission_method],
+            ['id', 'name', 'deadline', 'description', 'marking_method',
+                'size_limit', 'course_offering', 'submission_method']
+        )
+        insert_files(files, task_id)
+        task_id += 1
+
+
+def insert_files(files, task_id):
+    file_types = get_all_file_types()
+    for file in files:
+        file_id = file
+        if file in file_types:
+            file_id = file_types[file]
+        db.insert_single('submission_types', [file_id, task_id])
+
+
 def gen_enrollments():
     types = get_all_account_types()
 
@@ -377,29 +493,191 @@ def gen_enrollments():
                              ['user', 'course_offering'])
 
 
+def get_next_ses(year, term):
+    new_year = year
+    new_term = term
+    if year < 2019:
+        if term == 2:
+            new_year += 1
+            new_term = 1
+        else:
+            new_term += 1
+    else:
+        if term == 3:
+            new_year += 1
+            new_term = 1
+        else:
+            new_term += 1
+
+    if new_year > 2020:
+        return (-1, new_year, new_term)
+    res = db.select_columns(
+        'sessions', ['id', 'year', 'term'],
+        ['year', 'term'], [new_year, new_term]
+    )[0]
+    return res
+
+
+def get_next_course(name):
+    last_char = name[-1]
+    if last_char == 'A':
+        last_char = 'B'
+    else:
+        last_char = 'C'
+    course_name = name[:-1] + last_char
+    res = db.select_columns(
+        'courses', ['id', 'name', 'code'],
+        ['name'], [course_name]
+    )
+    if len(res) > 0:
+        return res[0]
+    return []
+
+
+def gen_enrollments2():
+    sessions = db.select_columns(
+        'sessions', ['id', 'year', 'term'], ['term'], [1]
+    )
+    sessions_t2 = db.select_columns(
+        'sessions', ['id', 'year', 'term'], ['term'], [2]
+    )
+    sessions_t3 = db.select_columns(
+        'sessions', ['id', 'year', 'term'], ['term'], [3]
+    )
+    types = get_all_account_types()
+    student_ids = db.select_columns(
+        'users', ['id'], ['account_type'], [types['student']]
+    )
+    for student in student_ids:
+        number = random.randrange(len(sessions))
+        ses_id = sessions[number][0]
+        ses_year = sessions[number][1]
+        ses_term = sessions[number][2]
+        number = random.randrange(5)
+        if not number:
+            term2 = random.randrange(2)
+            if term2:
+                temp_sessions = sessions_t2
+            else:
+                temp_sessions = sessions_t3
+            number = random.randrange(len(temp_sessions))
+            ses_id = temp_sessions[number][0]
+            ses_year = temp_sessions[number][1]
+            ses_term = temp_sessions[number][2]
+        number = random.randrange(10)
+        if ses_year < 2019:
+            if number < 2:
+                course_name = 'Thesis Part A+B'
+                co_id = get_co_id(ses_id, course_name)
+                db.insert_single(
+                    'enrollments',
+                    [student[0], co_id],
+                    ['user', 'course_offering']
+                )
+            else:
+                course_name = 'Thesis Part A'
+                co_id = get_co_id(ses_id, course_name)
+                db.insert_single(
+                    'enrollments',
+                    [student[0], co_id],
+                    ['user', 'course_offering']
+                )
+                _, course_name, _ = get_next_course(course_name)
+                ses_id, ses_year, ses_term = get_next_ses(ses_year, ses_term)
+                if ses_year > 2020:
+                    continue
+                co_id = get_co_id(ses_id, course_name)
+                db.insert_single(
+                    'enrollments',
+                    [student[0], co_id],
+                    ['user', 'course_offering']
+                )
+        else:
+            if number < 5:
+                course_name = 'Research Thesis A'
+                co_id = get_co_id(ses_id, course_name)
+                db.insert_single(
+                    'enrollments',
+                    [student[0], co_id],
+                    ['user', 'course_offering']
+                )
+                _, course_name, _ = get_next_course(course_name)
+                ses_id, ses_year, ses_term = get_next_ses(ses_year, ses_term)
+                if ses_year > 2020:
+                    continue
+                co_id = get_co_id(ses_id, course_name)
+                db.insert_single(
+                    'enrollments',
+                    [student[0], co_id],
+                    ['user', 'course_offering']
+                )
+                _, course_name, _ = get_next_course(course_name)
+                ses_id, ses_year, ses_term = get_next_ses(ses_year, ses_term)
+                if ses_year > 2020:
+                    continue
+                co_id = get_co_id(ses_id, course_name)
+                db.insert_single(
+                    'enrollments',
+                    [student[0], co_id],
+                    ['user', 'course_offering']
+                )
+            else:
+                course_name = 'Computer Science Thesis A'
+                co_id = get_co_id(ses_id, course_name)
+                db.insert_single(
+                    'enrollments',
+                    [student[0], co_id],
+                    ['user', 'course_offering']
+                )
+                _, course_name, _ = get_next_course(course_name)
+                ses_id, ses_year, ses_term = get_next_ses(ses_year, ses_term)
+                if ses_year > 2020:
+                    continue
+                co_id = get_co_id(ses_id, course_name)
+                db.insert_single(
+                    'enrollments',
+                    [student[0], co_id],
+                    ['user', 'course_offering']
+                )
+                _, course_name, _ = get_next_course(course_name)
+                ses_id, ses_year, ses_term = get_next_ses(ses_year, ses_term)
+                if ses_year > 2020:
+                    continue
+                co_id = get_co_id(ses_id, course_name)
+                db.insert_single(
+                    'enrollments',
+                    [student[0], co_id],
+                    ['user', 'course_offering']
+                )
+
+
+def get_co_id(ses_id, course_name):
+    course_id = db.select_columns(
+        'courses', ['id'],
+        ['name'], [course_name]
+    )[0][0]
+    co_id = db.select_columns(
+        'course_offerings', ['id'],
+        ['course', 'session'],
+        [course_id, ses_id]
+    )[0][0]
+    return co_id
+
+
 def gen_student_topics():
     types = get_all_account_types()
     # get first supervisor
+    sup_ids = db.select_columns(
+        'users', ['id'], ['account_type'], [types['supervisor']]
+    )
 
-    main_sup_id = db.select_columns('users',
-                                    ['id'],
-                                    ['account_type'],
-                                    [types['supervisor']])[0][0]
-
-    other_super = db.select_columns('users',
-                                    ['id'],
-                                    ['account_type'],
-                                    [types['supervisor']])[1][0]
 
     #
     # Add students supervisor_0 is supervising
     #
 
     # get possible topics
-    topics = db.select_columns('topics',
-                               ['id'],
-                               ['supervisor'],
-                               [main_sup_id])
+    topics = db.select_columns('topics', ['id', 'supervisor'],)
 
     # get all students
     students = db.select_columns('users',
@@ -407,85 +685,54 @@ def gen_student_topics():
                                  ['account_type'],
                                  [types['student']])
 
+    student_ids = []
+    request_student_ids = []
+    for student in students:
+        number = random.randrange(10)
+        if number > 2:
+            student_ids.append(student[0])
+        else:
+            request_student_ids.append(student[0])
+
+    gen_topic_requests(request_student_ids)
     # enroll current and past students students
-    tot_curr_stu = 3
-    student_ids = list(range(0, tot_curr_stu))
-    student_ids.extend(list(range(int(len(students)/2),
-                                  int(len(students)/2+tot_curr_stu))))
+    # tot_curr_stu = 3
+    # student_ids = list(range(0, tot_curr_stu))
+    # student_ids.extend(list(range(int(len(students)/2),
+    #                               int(len(students)/2+tot_curr_stu))))
 
-    for i in student_ids:
-        topic_id = random.randrange(0, len(topics))
+    for student_id in student_ids:
+        if len(sup_ids) < 2:
+            break
+        number = random.randrange(len(topics))
+        topic = topics[number][0]
+        supervisor_id = topics[number][1]
+        number = random.randrange(len(sup_ids))
+        assessor_id = sup_ids[number][0]
+        while assessor_id == supervisor_id:
+            number = random.randrange(len(sup_ids))
+            assessor_id = sup_ids[number][0]
         db.insert_single('student_topic',
-                         [students[i][0], topics[topic_id][0],
-                          other_super],
-                         ['student', 'topic', 'assessor'])
-
-    #
-    # Add students supervisor_0 is assessing
-    #
-
-    # get possible topics
-    topics = db.select_columns('topics',
-                               ['id'],
-                               ['supervisor'],
-                               [other_super])
-
-    # get all students
-    students = db.select_columns('users',
-                                 ['id'],
-                                 ['account_type'],
-                                 [types['student']])
-
-    # enroll current and past students students
-
-    student_ids = list(range(tot_curr_stu,
-                             2*tot_curr_stu))
-    student_ids.extend(list(range(int(len(students)/2+tot_curr_stu),
-                                  int(len(students)/2+tot_curr_stu*2))))
-
-    for i in student_ids:
-        topic_id = random.randrange(0, len(topics))
-        db.insert_single('student_topic',
-                         [students[i][0],
-                          topics[topic_id][0],
-                          main_sup_id],
+                         [student_id,
+                          topic,
+                          assessor_id],
                          ['student', 'topic', 'assessor'])
 
 
-def gen_topic_requests():
-    types = get_all_account_types()
-    # get first supervisor
-
-    main_sup_id = db.select_columns('users',
-                                    ['id'],
-                                    ['account_type'],
-                                    [types['supervisor']])[0][0]
-
+def gen_topic_requests(student_ids):
     #
     # Add students supervisor_0 is being requested by
     #
-
+    request_statuses = get_all_request_types()
+    pending_id = request_statuses['pending']
     # get possible topics
-    topics = db.select_columns('topics',
-                               ['id'],
-                               ['supervisor'],
-                               [main_sup_id])
-
-    # get all students
-    students = db.select_columns('users',
-                                 ['id'],
-                                 ['account_type'],
-                                 [types['student']])
-
-    # enroll current and past students students
-    student_ids = list(range(int(len(students)/3),
-                             int(len(students)/3+3)))
+    topics = db.select_columns('topics', ['id'])
 
     for i in student_ids:
-        topic_id = random.randrange(0, len(topics))
+        topic_id = random.randrange(len(topics))
         db.insert_single('topic_requests',
-                         [students[i][0], topics[topic_id][0],
-                          1, datetime.datetime.now().timestamp(),
+                         [i, topics[topic_id][0],
+                          pending_id, datetime.datetime.now().timestamp(),
                           'FAKE_GEN_DATA'],
                          ['student', 'topic', 'status',
                           'date_created', 'text'])
@@ -585,6 +832,10 @@ def gen_marks():
         for task in tasks:
             if 'approval' in task[3]:
                 continue
+            now = datetime.datetime.now().timestamp()
+            deadline = task[4]
+            if deadline > now:
+                continue
             criteria_ids = db.select_columns(
                 'task_criteria', ['id', 'max_mark'], ['task'], [task[0]]
             )
@@ -599,14 +850,13 @@ def gen_marks():
                     [criteria[0], mark, student[0],
                      markers[0], feedback, None]
                 ))
+                queries.append((
+                    'marks',
+                    [criteria[0], mark, student[0],
+                     markers[1], feedback, None]
+                ))
 
-                # make one of the students partially marked
-                if(student != students[0]):
-                    queries.append((
-                        'marks',
-                        [criteria[0], mark, student[0],
-                         markers[1], feedback, None]
-                    ))
+
             db.insert_multiple(queries)
 
             # update status to marked if fully marked
@@ -637,22 +887,29 @@ def gen_submissions():
         for task in tasks:
             # if task is in the future, don't create a submission
             if task[4] > now:
-                continue
+                deadline_time = datetime.datetime.fromtimestamp(task[4])
+                now_time = datetime.datetime.fromtimestamp(now)
+                dif = deadline_time - now_time
+                if dif.days > 14:
+                    continue
+                number = random.randrange(10)
+                if number > 2:
+                    continue
             stem = Path(str(uuid.uuid4()) + 'sample_submission.pdf')
             path = upload_dir / stem
             copyfile(sample_submission, path)
             if 'approval' in task[3]:
                 queries.append((
                     'submissions',
-                    [student[0], task[0], 'smiley',
-                     None, 'ez', now,
+                    [student[0], task[0], 'ExCiTiNg Title',
+                     None, 'Here is a lengthy essay', now,
                      request_types['approved']]
                 ))
             else:
                 queries.append((
                     'submissions',
-                    [student[0], task[0], 'smiley',
-                     str(stem), 'ez', now,
+                    [student[0], task[0], 'Normal Title',
+                     str(stem), 'Here is a lengthy description', now,
                      request_types['pending mark']]
                 ))
         db.insert_multiple(queries)
@@ -709,16 +966,13 @@ if __name__ == '__main__':
     gen_topics()
 
     print('Generating tasks...')
-    gen_tasks()
+    gen_tasks2()
 
     print('Generating enrollments...')
-    gen_enrollments()
+    gen_enrollments2()
 
-    print('Generating student topics...')
+    print('Generating student topics and topic requests...')
     gen_student_topics()
-
-    print('Generating topic requests...')
-    gen_topic_requests()
 
     print('Generating materials...')
     gen_materials()

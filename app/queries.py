@@ -392,7 +392,7 @@ class queries:
     def get_course_offering_details():
         res = db.custom_query(
             """
-                SELECT co.id, c.code, s.term, s.year, c.id, s.id
+                SELECT co.id, c.code, s.term, s.year, c.id, s.id, c.name
                 FROM course_offerings co
                 INNER JOIN sessions s
                     ON s.id = co.session
