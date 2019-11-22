@@ -600,17 +600,20 @@ def gen_marks():
                      markers[0], feedback, None]
                 ))
 
-                queries.append((
-                    'marks',
-                    [criteria[0], mark, student[0],
-                     markers[1], feedback, None]
-                ))
+                # make one of the students partially marked
+                if(student != students[0]):
+                    queries.append((
+                        'marks',
+                        [criteria[0], mark, student[0],
+                         markers[1], feedback, None]
+                    ))
             db.insert_multiple(queries)
 
-            # update status to marked
-            db.update_rows('submissions',
-                           [request_types['marked']], ['status'],
-                           ['student', 'task'], [student[0], task[0]])
+            # update status to marked if fully marked
+            if(student != students[0]):
+                db.update_rows('submissions',
+                               [request_types['marked']], ['status'],
+                               ['student', 'task'], [student[0], task[0]])
 
 
 def gen_submissions():
