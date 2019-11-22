@@ -102,9 +102,14 @@
       {% else %}
         {% if submission['mark_method'] == 'approval' %}
           {% if not submission['status']['name'] == 'pending' %}
-            <b>Status:</b> <span>{{ 'Your' if owner else 'Their' }} submission has been approved.</span>
-            <p></p>
-            <b>Feedback:</b> <span>{{ approval_feedback }}</span>
+            {% if approval_feedback %}
+              <b>Status:</b>
+            {% endif %}
+            <span>{{ 'Your' if owner else 'Their' }} submission has been approved.</span>
+            {% if approval_feedback %}
+              <p></p>
+              <b>Feedback:</b> <span>{{ approval_feedback }}</span>
+            {% endif %}
           {% else %}
             <span>{{ 'Your' if owner else 'Their' }} submission is pending approval</span>
           {% endif %}
