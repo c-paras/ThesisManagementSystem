@@ -11,6 +11,9 @@ function drawChart() {
       return;
     }
     const numStudents = res.students.length;
+    if (numStudents === 0) {
+      return;
+    }
     const marked = ['approved', 'rejected', 'marked', 'cancelled'];
     let markedCount = 0;
 
@@ -55,6 +58,8 @@ function drawChart() {
 }
 
 $(function() {
-  google.charts.load('current', {'packages':['corechart']});
-  google.charts.setOnLoadCallback(drawChart);
+  if(typeof google !== typeof undefined) {
+    google.charts.load('current', {'packages':['corechart']});
+    google.charts.setOnLoadCallback(drawChart);
+  }
 });

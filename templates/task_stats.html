@@ -14,56 +14,81 @@
       <h5>Submission Statistics:</h5>
     </div>
   </div>
-
-  <div class="row">
-    <div class="col s6 offset-s3">
-      <div style="height: 400px;" id="piechart"></div>
+  {% if students %}
+    <div class="row">
+      <div class="col s6 offset-s3">
+        <div style="height: 400px;" id="piechart">
+          <div class="row valign-wrapper" style="height: 100%;">
+            <div class="col s2 offset-s5">
+              <div class="preloader-wrapper big active">
+                <div class="spinner-layer">
+                  <div class="circle-clipper left">
+                    <div class="circle"></div>
+                  </div>
+                  <div class="gap-patch">
+                    <div class="circle"></div>
+                  </div>
+                  <div class="circle-clipper right">
+                    <div class="circle"></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
-  </div>
 
-  <div class="row">
-    <div class="col s12">
-      <table class="striped centered responsive-table js-sort-table">
-        <thead>
-          <tr>
-            <th class="sortable">zID</th>
-            <th class="sortable">Name</th>
-            <th class="sortable">Status</th>
-            <th class="sortable">Last Submission</th>
-            <th>View</th>
-          </tr>
-        </thead>
-        <tbody>
-          {% for student in students %}
+    <div class="row">
+      <div class="col s12">
+        <table class="striped centered responsive-table js-sort-table">
+          <thead>
             <tr>
-              <td>
-                <a href="mailto:{{ student['email'] }}">
-                  {{ student['email'].split('@')[0] }}
-                </a>
-              </td>
-              <td>
-                {{ student['name'] }}
-              </td>
-              <td>
-                {{ student['status']['name'] }}
-              </td>
-              <td>
-                {% if student['submission_date'] %}
-                  {{ student['submission_date'] }}
-                {% else %}
-                  N/A
-                {% endif %}
-              </td>
-              <td>
-                <a href="{{ url_for('tasks.view_task', task=task['id'], student=student['id']) }}">
-                  <i class="small material-icons teal-text">pageview</i>
-                </a>
-              </td>
+              <th class="sortable">zID</th>
+              <th class="sortable">Name</th>
+              <th class="sortable">Status</th>
+              <th class="sortable">Last Submission</th>
+              <th>View</th>
             </tr>
-          {% endfor %}
-        </tbody>
-      </table>
+          </thead>
+          <tbody>
+            {% for student in students %}
+              <tr>
+                <td>
+                  <a href="mailto:{{ student['email'] }}">
+                    {{ student['email'].split('@')[0] }}
+                  </a>
+                </td>
+                <td>
+                  {{ student['name'] }}
+                </td>
+                <td>
+                  {{ student['status']['name'] }}
+                </td>
+                <td>
+                  {% if student['submission_date'] %}
+                    {{ student['submission_date'] }}
+                  {% else %}
+                    N/A
+                  {% endif %}
+                </td>
+                <td>
+                  <a href="{{ url_for('tasks.view_task', task=task['id'], student=student['id']) }}">
+                    <i class="small material-icons teal-text">pageview</i>
+                  </a>
+                </td>
+              </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+        <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+      </div>
     </div>
-  </div>
-  <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+  {% else %}
+    <div class="row">
+      <div class="col s12">
+        There are currently no students enrolled in this course
+      </div>
+    </div>
+  {% endif %}
 {% endblock %}
