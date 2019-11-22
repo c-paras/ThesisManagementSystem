@@ -356,6 +356,28 @@ def staff_view():
                            ['criteria', 'student', 'marker'],
                            [task_criteria[i], studentId, session['id']])
 
+    # update status if marked
+    marked_method = db.select_columns('marking_methods', ['id'],
+                                      ['name'], ["requires mark"])[0][0]
+    is_mark_type = len(db.select_columns('tasks', ['id'],
+                                         ['marking_method'], [marked_method]))
+
+    if is_mark_type:
+        new_sub_status = "pending mark"
+        if queries.is_fully_marked(studentId, task_id):
+            new_sub_status = "marked"
+        elif queries.is_partially_marked(studentId, task_id):
+            new_sub_status = "partially marked"
+
+        status_id = db.select_columns('request_statuses', ['id'],
+                                      ['name'], [new_sub_status])[0][0]
+
+        db.update_rows('submissions',
+                       [status_id],
+                       ['status'],
+                       ['student', 'task'],
+                       [studentId, task_id])
+
     # send email
     student = db.select_columns('users', ['name', 'email'],
                                 ['id'], [studentId])[0]
@@ -631,6 +653,17 @@ def build_task(task_id):
         'description': res[0][6],
         'attachment': None
     }
+    res = db.select_columns('marking_methods', ['name'],
+                            ['id'], [task['sub_method']['id']])
+    task['sub_method']['name'] = res[0][0]
+    res = db.select_columns('task_attachments', ['path'], ['task'], [task_id])
+    if res:
+        task['attachment'] = [FileUpload(filename=res[0][0])]
+    return task
+
+
+def get_new_sub_status(student, task_id):
+    'Assumes you already have a database connection open'
     res = db.select_columns('marking_methods', ['name'],
                             ['id'], [task['sub_method']['id']])
     task['sub_method']['name'] = res[0][0]

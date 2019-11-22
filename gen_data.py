@@ -671,6 +671,7 @@ def gen_student_topics():
         'users', ['id'], ['account_type'], [types['supervisor']]
     )
 
+
     #
     # Add students supervisor_0 is supervising
     #
@@ -817,6 +818,9 @@ def gen_marks():
     )
     request_types = get_all_request_types()
 
+    # stop a number of students from being generated marks
+    del students[0:2]
+
     for student in students:
         markers = db_queries.get_user_ass_sup(student[0])
         if len(markers) == 0:
@@ -852,12 +856,18 @@ def gen_marks():
                      markers[1], feedback, None]
                 ))
 
+
             db.insert_multiple(queries)
 
-            # update status to marked
-            db.update_rows('submissions',
-                           [request_types['marked']], ['status'],
-                           ['student', 'task'], [student[0], task[0]])
+            # update status to marked if fully marked
+            if(student != students[0]):
+                db.update_rows('submissions',
+                               [request_types['marked']], ['status'],
+                               ['student', 'task'], [student[0], task[0]])
+            else:
+                db.update_rows('submissions',
+                               [request_types['partially marked']], ['status'],
+                               ['student', 'task'], [student[0], task[0]])
 
 
 def gen_submissions():
