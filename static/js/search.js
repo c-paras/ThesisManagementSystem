@@ -33,11 +33,11 @@ function makeCard(id, title, description, topics, supervisor, email, preqs, visi
           Supervisor: ${supervisor}
           <a href="mailto:${email}" target="_top"> (${email})</a>
         </p>
-        <p id="preqs" class="left" style="padding-bottom: 20px;">
+        <p id="preqs" class="left">
           <i class="material-icons tiny teal-text disable-icon">check_circle</i>
           Prerequisite(s): ${preqBadges}
         </p>
-        <br><br><br>
+        <br><br>
         <p>${description}</p>
       </div>
       <div class="card-action">
