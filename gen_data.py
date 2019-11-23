@@ -840,13 +840,33 @@ def gen_marks():
             # create the marks
             for criteria in criteria_ids:
                 mark = random.randrange(criteria[1])
-                feedback = "smile face"
+                if(mark/criteria[1] < .5):
+                    feedback = "Not on a high enough quality, there's"\
+                               + " alot of room for improvement."
+                elif(mark/criteria[1] < .7):
+                    feedback = "Some parts are of poor quality, and there's"\
+                               + " room for some improvement, but overall a"\
+                               + " decent attempt."
+                else:
+                    feedback = "Amazing quality, a few parts could use some"\
+                               + " polishing but great job!"
                 queries.append((
                     'marks',
                     [criteria[0], mark, student[0],
                      markers[0], feedback, None]
                 ))
+
                 mark = random.randrange(criteria[1])
+                if(mark/criteria[1] < .5):
+                    feedback = "Not on a high enough quality, there's"\
+                               + " alot of room for improvement."
+                elif(mark/criteria[1] < .7):
+                    feedback = "Some parts are of poor quality, and there's"\
+                               + " room for some improvement, but overall a"\
+                               + " decent attempt."
+                else:
+                    feedback = "Amazing quality, a few parts could use some"\
+                               + " polishing but great job!"
                 queries.append((
                     'marks',
                     [criteria[0], mark, student[0],
