@@ -162,7 +162,7 @@
                 <option value="-1" disabled selected>Max file size</option>
                 {% for size in [1, 2, 3, 4, 5, 10, 15, 20, 25, 50, 75, 100] %}
                   <option
-                    value="{{ size }}" 
+                    value="{{ size }}"
                     {% if default_fields["maximum-file-size"] == size %}
                       selected
                     {% endif %}
