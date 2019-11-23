@@ -140,7 +140,8 @@
           <colgroup>
             <col span="1" style="width: 25%;">
             <col span="1" style="width: 25%;">
-            <col span="1" style="width: 35%;">
+            <col span="1" style="width: 30%;">
+            <col span="1" style="width: 5%;">
             <col span="1" style="width: 5%;">
             <col span="1" style="width: 5%;">
             <col span="1" style="width: 5%;">
@@ -151,9 +152,9 @@
               <th class="sortable">Deadline</th>
               <th class="sortable">File</th>
               <th>Visible</th>
+              <th>Info</th>
               <th>Edit</th>
               <th>Delete</th>
-              <th>Info</th>
             </tr>
           </thead>
           <tbody>
@@ -193,6 +194,11 @@
                   </label>
                 </td>
                 <td>
+                  <a href="{{ url_for('tasks.task_info', task_id=task[0]) }}">
+                    <i class="material-icons">info</i>
+                  </a>
+                </td>
+                <td>
                   <a href="{{ url_for('create_task.create', course_offering_id=default_co, update=task[0]) }}">
                     <i class="material-icons">edit</i>
                   </a>
@@ -203,11 +209,6 @@
                     href="#!" onclick="checkDeleteTask('{{ task[1]  }}', {{ task[0] }})"
                   >
                     <i class="material-icons red-text text-darken-3">delete_forever</i>
-                  </a>
-                </td>
-                <td>
-                  <a href="{{ url_for('tasks.task_info', task_id=task[0]) }}">
-                    <i class="material-icons">info</i>
                   </a>
                 </td>
               </tr>
