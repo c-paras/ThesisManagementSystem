@@ -404,8 +404,8 @@ def gen_tasks2():
         task_id += 1
 
         task_name = course[1] + " Report"
-        description = """Please write up a report to cover all of your progress
-            made in """ + course[1]
+        description = "Please write up a report to cover all of your progress"\
+                      + " made in " + course[1]
         size_limit = 10
         dif = datetime.timedelta(days=(7*11), minutes=-1)
         deadline = datetime.datetime.timestamp(start_date + dif)
