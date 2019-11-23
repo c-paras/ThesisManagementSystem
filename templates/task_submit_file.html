@@ -1,20 +1,20 @@
 <div id="view-file-section">
-  {% if prev_submission %}
+  {% if submission %}
     <b>File submitted:</b>
     <a
-      class="waves-effect waves-light" href="{{ prev_submission['url'] }}"
-      download="{{ prev_submission['name'] }}"
+      class="waves-effect waves-light" href="{{ submission['file'].get_url() }}"
+      download="{{ submission['name'] }}"
     >
-      {{ prev_submission['name'] }}
+      {{ submission['name'] }}
       <i class="material-icons right">file_download</i>
     </a>
   {% endif %}
-  {% if can_submit %}
-    {% if prev_submission %}
+  {% if can_submit and owner %}
+    {% if submission %}
       <p></p>
     {% endif %}
     <a class="waves-effect waves-light btn" onclick="editFileSubmission()">
-      {% if prev_submission %}
+      {% if submission %}
         Resubmit
       {% else %}
         Submit
@@ -55,6 +55,6 @@
       </div>
     </div>
 
-    <input type="hidden" name="task" value="{{ task_id }}">
+    <input type="hidden" name="task" value="{{ task['id'] }}">
   </form>
 {% endif %}

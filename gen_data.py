@@ -671,7 +671,6 @@ def gen_student_topics():
         'users', ['id'], ['account_type'], [types['supervisor']]
     )
 
-
     #
     # Add students supervisor_0 is supervising
     #
@@ -855,7 +854,6 @@ def gen_marks():
                     [criteria[0], mark, student[0],
                      markers[1], feedback, None]
                 ))
-
 
             db.insert_multiple(queries)
 
