@@ -29,12 +29,18 @@ def change_user_password():
 
     try:
         fields = ['new-password', 'new-confirm-password']
-        password, confim_pass = get_fields(request.form, fields)
+        password, confirm_pass = get_fields(request.form, fields)
     except ValueError as e:
         return e.args[0]
 
     if len(password) < 8:
-        return error('Password must be at least 8 characters long!')
+        db.close()
+        return error(
+            'Password must be at least 8 characters long!', 'new-password')
+
+    if password != confirm_pass:
+        db.close()
+        return error('Passwords do not match!', 'new-confirm-password')
 
     acc_id = session['id']
     hash_pass = bcrypt.hashpw(password.encode('utf-8'), bcrypt.gensalt())
@@ -112,10 +118,11 @@ def reset():
     new_confirm = data['new_confirm']
 
     if len(new_pass) < 8:
-        return error('Password must be at least 8 characters long!')
+        return error(
+            'Password must be at least 8 characters long!', 'new-password')
 
     if new_pass != new_confirm:
-        return error('Passwords do not match!')
+        return error('Passwords do not match!', 'new-confirm-password')
 
     db.connect()
     reset_id_test = db.select_columns('users', ['reset_code'],

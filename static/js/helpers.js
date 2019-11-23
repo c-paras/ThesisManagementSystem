@@ -58,6 +58,9 @@ function formValid(form) {
       }
       markFieldValid($(this), notRequired);
     }
+    if (!invalid && !$(this).attr('pattern') && $(this).attr('required')) {
+      markFieldValid($(this), true);
+    }
   });
   return !invalid;
 }

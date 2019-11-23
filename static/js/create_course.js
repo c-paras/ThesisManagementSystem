@@ -22,8 +22,11 @@ function createCourse() {
     return;
   }
   makeRequest('/create_course', form, (res) => {
-    if(res.status === 'fail') {
+    if (res.status === 'fail') {
       flash(res.message, true);
+      if (res.field) {
+        markFieldValid($(`#${res.field}`), false);
+      }
       return;
     }
     flash('Created course');

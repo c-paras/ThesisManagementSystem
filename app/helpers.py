@@ -46,14 +46,18 @@ def get_fields(form, fields, optional=None, ints=None):
     return data
 
 
-def error(msg):
+def error(msg, field=''):
     ''' Format error response with message. '''
     if not (msg.endswith('.') or msg.endswith('!')):
         if '!' in msg:
             msg += '.'
         else:
             msg += '!'
-    return jsonify({'status': 'fail', 'message': msg})
+    return jsonify({
+        'status': 'fail',
+        'message': msg,
+        'field': field
+    })
 
 
 def send_email(to, name, subject, messages):

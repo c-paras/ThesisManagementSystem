@@ -122,7 +122,8 @@ def register():
         return e.args[0]
 
     if not re.match(config.EMAIL_FORMAT, email):
-        return error(f'Invalid email format!<br>{config.EMAIL_FORMAT_ERROR}')
+        return error(
+            f'Invalid email format!<br>{config.EMAIL_FORMAT_ERROR}', 'email')
 
     db.connect()
     res = db.select_columns('users', ['email', 'date_created', 'confirm_code'],
@@ -137,16 +138,16 @@ def register():
             db.connect()
         else:
             db.close()
-            return error('This email has already been registered!')
+            return error('This email has already been registered!', 'email')
 
     if len(password) < 8:
         msg = 'Password must be at least 8 characters long!'
         db.close()
-        return error(msg)
+        return error(msg, 'password')
 
     if password != confirm:
         db.close()
-        return error('Passwords do not match!')
+        return error('Passwords do not match!', 'confirm-password')
 
     hashed_pass = bcrypt.hashpw(password.encode('utf-8'), bcrypt.gensalt())
     name = email.split('@')[0]
@@ -248,11 +249,11 @@ def login():
 
     if not len(res):
         db.close()
-        return error('Unknown email!')
+        return error('Unknown email!', 'email')
     hashed_password = res[0]
     if not bcrypt.checkpw(password.encode('utf-8'), hashed_password[0]):
         db.close()
-        return error('Incorrect password!')
+        return error('Incorrect password!', 'password')
     if res[0][4] != '':
         db.close()
         return error('You must first confirm your account!')
