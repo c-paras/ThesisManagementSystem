@@ -385,7 +385,8 @@ def gen_tasks2():
             task_id += 1
 
         task_name = course[1] + " Presentation"
-        description = "Please present your progress for the current course "
+        description = "Please present the progress that you have made in "\
+                      + course[1]
         size_limit = 5
         marking_method = marking_methods['requires mark']
         submission_method = submission_methods['file submission']
@@ -841,8 +842,8 @@ def gen_marks():
             for criteria in criteria_ids:
                 mark = random.randrange(criteria[1])
                 if(mark/criteria[1] < .5):
-                    feedback = "Not on a high enough quality, there's"\
-                               + " alot of room for improvement."
+                    feedback = "Not of a high enough quality, there's"\
+                               + " a lot of room for improvement."
                 elif(mark/criteria[1] < .7):
                     feedback = "Some parts are of poor quality, and there's"\
                                + " room for some improvement, but overall a"\
@@ -858,8 +859,8 @@ def gen_marks():
 
                 mark = random.randrange(criteria[1])
                 if(mark/criteria[1] < .5):
-                    feedback = "Not on a high enough quality, there's"\
-                               + " alot of room for improvement."
+                    feedback = "Not of a high enough quality, there's"\
+                               + " a lot of room for improvement."
                 elif(mark/criteria[1] < .7):
                     feedback = "Some parts are of poor quality, and there's"\
                                + " room for some improvement, but overall a"\
