@@ -588,7 +588,7 @@ def build_task(task_id):
     task = {
         'id': task_id,
         'deadline': res[0][0],
-        'pretty_deadline': timestamp_to_string(res[0][0]),
+        'pretty_deadline': timestamp_to_string(res[0][0], True),
         'mark_method': {
             'id': res[0][1]
         },
