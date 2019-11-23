@@ -49,7 +49,7 @@ def change_user_password():
 def reset_request():
 
     try:
-        fields = ['email']
+        fields = ['email_reset']
         email = get_fields(request.form, fields)
         email = email[0]
     except ValueError as e:
