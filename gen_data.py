@@ -756,12 +756,12 @@ def gen_materials():
         queries = []
         queries.append((
             'materials',
-            ['Course outline', course[0]],
+            ['Course Outline', course[0]],
             ['name', 'course_offering']
         ))
         queries.append((
             'materials',
-            [f'Sample report {name}', course[0]],
+            [f'Sample Report {name.title()}', course[0]],
             ['name', 'course_offering']
         ))
         db.insert_multiple(queries)
