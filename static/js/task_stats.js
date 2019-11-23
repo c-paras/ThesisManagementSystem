@@ -30,7 +30,7 @@ function drawChart() {
       count: 0
     };
 
-    for (var i in res.students) {
+    for (const i in res.students) {
       const status = res.students[i].status.name;
       if (marked.names.includes(status)) {
         marked.count++;
