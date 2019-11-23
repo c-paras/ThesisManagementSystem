@@ -865,7 +865,7 @@ def gen_submissions():
     acc_types = get_all_account_types()
     request_types = get_all_request_types()
     students = db.select_columns(
-        'users', ['id'], ['account_type'], [acc_types['student']]
+        'users', ['id', 'email'], ['account_type'], [acc_types['student']]
     )
 
     upload_dir = Path(config.STATIC_PATH) / Path(config.FILE_UPLOAD_DIR)
@@ -875,6 +875,7 @@ def gen_submissions():
         tasks = db_queries.get_user_tasks(student[0])
         now = datetime.datetime.now().timestamp()
         queries = []
+        zid = student[1].split('@')[0]
         for task in tasks:
             # if task is in the future, don't create a submission
             if task[4] > now:
@@ -889,17 +890,19 @@ def gen_submissions():
             stem = Path(str(uuid.uuid4()) + 'sample_submission.pdf')
             path = upload_dir / stem
             copyfile(sample_submission, path)
+            sub_name = '{zid}-{task_name}'.format(zid=zid,
+                                                  task_name=task[1])
             if 'approval' in task[3]:
                 queries.append((
                     'submissions',
-                    [student[0], task[0], 'ExCiTiNg Title',
+                    [student[0], task[0], sub_name,
                      None, 'Here is a lengthy essay', now,
                      request_types['approved']]
                 ))
             else:
                 queries.append((
                     'submissions',
-                    [student[0], task[0], 'Normal Title',
+                    [student[0], task[0], sub_name,
                      str(stem), 'Here is a lengthy description', now,
                      request_types['pending mark']]
                 ))
