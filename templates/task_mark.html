@@ -47,7 +47,7 @@
                 <td>{{ taskCriteria[i][3] }}</td>
                 <td>
                   <input
-                    id="enteredMark" type="number" min="0"
+                    id="enteredMark{{i}}" type="number" min="0"
                     max="{{ taskCriteria[i][3] }}" placeholder="Enter Mark" class="validate"
                     required="" aria-required="true"
                   >
@@ -56,7 +56,7 @@
               <td>
                 <div>
                   <textarea
-                    id="enteredFeedback" class="materialize-textarea validate"
+                    id="enteredFeedback{{i}}" class="materialize-textarea validate"
                     placeholder="Enter Feedback"
                     {% if submission['mark_method'] != 'approval' %}
                       required="" aria-required="true"
@@ -80,7 +80,7 @@
                 <td>{{ taskCriteria[i][3] }}</td>
                 <td>
                   <input
-                    id="enteredMark" type="number" min="0" max="{{ taskCriteria[i][3] }}"
+                    id="enteredMark{{i}}" type="number" min="0" max="{{ taskCriteria[i][3] }}"
                     value="{{markedFeedback[i][0][0]}}" placeholder="Enter Mark"
                     required="" aria-required="true" class="validate"
                   >
@@ -90,7 +90,7 @@
                 {% if markedFeedback[i][0][1] == None %}
                   <div>
                     <textarea
-                      id="enteredFeedback" class="materialize-textarea validate"
+                      id="enteredFeedback{{i}}" class="materialize-textarea validate"
                       {% if submission['mark_method'] != 'approval' %}
                         required="" aria-required="true"
                       {% endif %}
@@ -99,7 +99,7 @@
                   </div>
                 {% else %}
                   <textarea
-                    id="enteredFeedback" class="materialize-textarea validate"
+                    id="enteredFeedback{{i}}" class="materialize-textarea validate"
                     {% if submission['mark_method'] != 'approval' %}
                       required="" aria-required="true"
                     {% endif %}
