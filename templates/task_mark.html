@@ -27,7 +27,7 @@
       {% if markedFeedback[0] == [] %}
         <div>
           <textarea
-            id="enteredFeedback" class="materialize-textarea validate"
+            id="enteredFeedback{{i}}" class="materialize-textarea validate"
             placeholder="Enter Feedback"
           ></textarea>
         </div>
@@ -35,13 +35,13 @@
         {% if markedFeedback[0][0][1] == None %}
           <div>
             <textarea
-              id="enteredFeedback" class="materialize-textarea validate"
+              id="enteredFeedback{{i}}" class="materialize-textarea validate"
               placeholder="Enter Feedback"
             ></textarea>
           </div>
         {% else %}
           <textarea
-            id="enteredFeedback" class="materialize-textarea validate"
+            id="enteredFeedback{{i}}" class="materialize-textarea validate"
           >{{ markedFeedback[0][0][1] }}</textarea>
         {% endif %}
       {% endif %}
@@ -78,7 +78,7 @@
                 <td>
                   <div>
                     <textarea
-                      id="enteredFeedback" class="materialize-textarea validate"
+                      id="enteredFeedback{{i}}" class="materialize-textarea validate"
                       placeholder="Enter Feedback"
                       {% if submission['markingMethod'] != 'approval' %}
                         required="" aria-required="true"
@@ -99,7 +99,7 @@
                   {% if markedFeedback[i][0][1] == None %}
                     <div>
                       <textarea
-                        id="enteredFeedback" class="materialize-textarea validate"
+                        id="enteredFeedback{{i}}" class="materialize-textarea validate"
                         {% if submission['markingMethod'] != 'approval' %}
                           required="" aria-required="true"
                         {% endif %}
