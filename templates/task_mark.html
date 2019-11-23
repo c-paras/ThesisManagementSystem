@@ -3,6 +3,7 @@
     <p></p>
     <b>Status: </b>
     {{submission['status']['name'][0]|upper}}{{submission['status']['name'][1:]}}
+    <p></p>
   {% else %}
     <form id="mark-form" method="">
       {% if submission['mark_method'] == 'approval' %}
@@ -122,13 +123,15 @@
     </form>
   {% endif %}
 </div>
-  
-<div class="right">
-  <a
-    class="waves-effect waves-light btn"
-    onclick="updateMarks({{ taskCriteria[0][1] }}, {{ studentId }}, {{ taskCriteriaId }}, {{ taskMax }})"
-  >
-    Commit Marks
-    <i class="material-icons right">send</i>
-  </a>
-</div>
+
+{%if not isAssessor or submission['mark_method'] != 'approval'%}
+  <div class="right">
+    <a
+      class="waves-effect waves-light btn"
+      onclick="updateMarks({{ taskCriteria[0][1] }}, {{ studentId }}, {{ taskCriteriaId }}, {{ taskMax }})"
+    >
+      Commit Marks
+      <i class="material-icons right">send</i>
+    </a>
+  </div>
+{% endif %}
