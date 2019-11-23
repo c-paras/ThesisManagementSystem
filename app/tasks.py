@@ -212,6 +212,12 @@ def mark_task():
         for criteria in task_criteria:
             task_max.append(criteria[3])
 
+        check_if_assessor = db.select_columns('student_topic', ['student'],
+                                              ['assessor', 'student'],
+                                              [session['id'], student_id])
+        is_assessor = False
+        if check_if_assessor:
+            is_assessor = True
         db.close()
 
         heading = f"{task['course_name']} - {task['name']}"
@@ -228,7 +234,8 @@ def mark_task():
                                taskMax=task_max,
                                markedFeedback=marked_feedback,
                                task=task,
-                               marker=True)
+                               marker=True,
+                               isAssessor=is_assessor)
 
     data = json.loads(request.data)
     marks = data['marks']
@@ -237,7 +244,6 @@ def mark_task():
     student_id = data['studentId']
     task_criteria = data['taskCriteria']
     task_max = data['taskMax']
-    print(feedback)
     db.connect()
     if session['id'] not in get_students_staff(student_id):
         db.close()
