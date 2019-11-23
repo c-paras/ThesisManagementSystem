@@ -237,6 +237,7 @@ def mark_task():
     student_id = data['studentId']
     task_criteria = data['taskCriteria']
     task_max = data['taskMax']
+    print(feedback)
     db.connect()
     if session['id'] not in get_students_staff(student_id):
         db.close()

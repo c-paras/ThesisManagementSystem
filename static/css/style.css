@@ -98,3 +98,7 @@ table.striped > tbody > tr:nth-child(2n+1) > td, table.striped > tbody > tr:nth-
   background-color: #e4e4e4 !important;
   color: black !important;
 }
+
+#toast-container {
+  pointer-events: none;
+}

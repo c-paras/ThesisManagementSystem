@@ -106,12 +106,12 @@ function updateMarks(taskId, studentid, taskCriteriaId, taskMax) {
 
   let marks = [];
 
-  $("[id='enteredMark']").each((function() {
+  $("[id^='enteredMark']").each((function() {
     marks.push($(this).val());
   }));
 
   let feedback = [];
-  $("[id='enteredFeedback']").each((function() {
+  $("[id^='enteredFeedback']").each((function() {
     feedback.push($(this).val());
   }));
   const data = {
