@@ -91,7 +91,7 @@
       {% if 'approval' in task['mark_method']['name'] and not submission %}
         {# Don't display an awaiting approval if there is no submission! #}
       {% else %}
-        {% if marker and submission['mark_method'] == 'approval' %}
+        {% if submission['mark_method'] == 'approval' %}
           <h5>Approval:</h5>
         {% else %}
           <h5>Marking:</h5>
