@@ -79,7 +79,6 @@ function makeRequest(endpoint, form, callback) {
   .then(callback);
 }
 
-
 /*
  * Make a POST request to the backend with a multipart form, only
  * supports a single file. Call the specified callback function to
