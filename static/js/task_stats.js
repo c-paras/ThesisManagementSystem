@@ -64,7 +64,7 @@ function drawChart() {
         height: "75%"
       },
       pieHole: 0.4,
-      colors: ['#F25F5C' , '#F8CB65' , '#255957', '#26A69A']
+      colors: ['#F25F5C', '#F8CB65', '#255957', '#26A69A']
     };
 
     const chart = new google.visualization.PieChart(document.getElementById('piechart'));
