@@ -99,6 +99,7 @@ table.striped > tbody > tr:nth-child(2n+1) > td, table.striped > tbody > tr:nth-
   color: black !important;
 }
 
+/* allow click through toasts */
 #toast-container {
   pointer-events: none;
 }

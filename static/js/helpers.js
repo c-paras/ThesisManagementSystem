@@ -56,7 +56,9 @@ function formValid(form) {
       if (!notRequired) {
         invalid = true;
       }
-      markFieldValid($(this), notRequired);
+    }
+    if ($(this).hasClass('validate')) {
+      markFieldValid($(this), !invalid);
     }
   });
   return !invalid;
@@ -78,7 +80,6 @@ function makeRequest(endpoint, form, callback) {
   .then(res => res.json())
   .then(callback);
 }
-
 
 /*
  * Make a POST request to the backend with a multipart form, only

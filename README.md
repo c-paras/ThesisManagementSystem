@@ -13,7 +13,6 @@ It is assumed that:
 * [JSHint 2.10.2](https://jshint.com/install/) or above is installed
 
 ### Installation
-
 Run the following commands to initialize the project:
 
 ```sh
@@ -31,7 +30,6 @@ python3 gen_data.py
 ```
 
 ## Usage
-
 Run the Python Flask server with the following command:
 ```sh
 python3 server.py
@@ -44,6 +42,23 @@ The server should restart automatically upon changing the project files.
 * `db/` - database-related files
 * `static/` - CSS and JS files
 * `templates/` - Jinja2 HTML templates
+
+## Attribution
+Some libraries used in this project are open-source. These include:
+* https://materializecss.com/getting-started.html
+* http://mirjamsk.github.io/materialize-pagination/
+* https://github.com/stationer/SortTable
+* https://cdnjs.com/libraries/jquery/
+* https://github.com/xdan/datetimepicker
+
+The files associated with these libraries are
+* `static/css/materialize.min.css`
+* `static/js/vendor/materialize.min.js`
+* `static/js/vendor/materialize-pagination.js`
+* `static/js/vendor/sort-table.min.js`
+* `static/js/vendor/jquery-3.4.1.min.js`
+* `static/css/jquery.datetimepicker.min.css`
+* `static/js/vendor/jquery.datetimepicker.full.min.js`
 
 ## Contributing
 1. Clone the repository (`git clone git@github.com:costaparas/ThesisManagementSystem.git`)
