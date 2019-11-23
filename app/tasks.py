@@ -360,7 +360,8 @@ def staff_view():
     marked_method = db.select_columns('marking_methods', ['id'],
                                       ['name'], ["requires mark"])[0][0]
     is_mark_type = len(db.select_columns('tasks', ['id'],
-                                         ['marking_method'], [marked_method]))
+                                         ['id', 'marking_method'],
+                                         [task_id, marked_method]))
 
     if is_mark_type:
         new_sub_status = "pending mark"
