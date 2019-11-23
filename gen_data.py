@@ -385,7 +385,8 @@ def gen_tasks2():
             task_id += 1
 
         task_name = course[1] + " Presentation"
-        description = "Please present your progress for the current course "
+        description = "Please present the progress that you have made in "\
+                      + course[1]
         size_limit = 5
         marking_method = marking_methods['requires mark']
         submission_method = submission_methods['file submission']
@@ -404,8 +405,8 @@ def gen_tasks2():
         task_id += 1
 
         task_name = course[1] + " Report"
-        description = """Please write up a report to cover all of your progress
-            made in """ + course[1]
+        description = "Please write up a report to cover all of your progress"\
+                      + " made in " + course[1]
         size_limit = 10
         dif = datetime.timedelta(days=(7*11), minutes=-1)
         deadline = datetime.datetime.timestamp(start_date + dif)
@@ -756,12 +757,12 @@ def gen_materials():
         queries = []
         queries.append((
             'materials',
-            ['Course outline', course[0]],
+            ['Course Outline', course[0]],
             ['name', 'course_offering']
         ))
         queries.append((
             'materials',
-            [f'Sample report {name}', course[0]],
+            [f'Sample Report {name.title()}', course[0]],
             ['name', 'course_offering']
         ))
         db.insert_multiple(queries)
@@ -840,13 +841,33 @@ def gen_marks():
             # create the marks
             for criteria in criteria_ids:
                 mark = random.randrange(criteria[1])
-                feedback = "smile face"
+                if(mark/criteria[1] < .5):
+                    feedback = "Not of a high enough quality, there's"\
+                               + " a lot of room for improvement."
+                elif(mark/criteria[1] < .7):
+                    feedback = "Some parts are of poor quality, and there's"\
+                               + " room for some improvement, but overall a"\
+                               + " decent attempt."
+                else:
+                    feedback = "Amazing quality, a few parts could use some"\
+                               + " polishing but great job!"
                 queries.append((
                     'marks',
                     [criteria[0], mark, student[0],
                      markers[0], feedback, None]
                 ))
+
                 mark = random.randrange(criteria[1])
+                if(mark/criteria[1] < .5):
+                    feedback = "Not of a high enough quality, there's"\
+                               + " a lot of room for improvement."
+                elif(mark/criteria[1] < .7):
+                    feedback = "Some parts are of poor quality, and there's"\
+                               + " room for some improvement, but overall a"\
+                               + " decent attempt."
+                else:
+                    feedback = "Amazing quality, a few parts could use some"\
+                               + " polishing but great job!"
                 queries.append((
                     'marks',
                     [criteria[0], mark, student[0],
@@ -865,7 +886,7 @@ def gen_submissions():
     acc_types = get_all_account_types()
     request_types = get_all_request_types()
     students = db.select_columns(
-        'users', ['id'], ['account_type'], [acc_types['student']]
+        'users', ['id', 'email'], ['account_type'], [acc_types['student']]
     )
 
     upload_dir = Path(config.STATIC_PATH) / Path(config.FILE_UPLOAD_DIR)
@@ -875,6 +896,7 @@ def gen_submissions():
         tasks = db_queries.get_user_tasks(student[0])
         now = datetime.datetime.now().timestamp()
         queries = []
+        zid = student[1].split('@')[0]
         for task in tasks:
             # if task is in the future, don't create a submission
             if task[4] > now:
@@ -889,17 +911,19 @@ def gen_submissions():
             stem = Path(str(uuid.uuid4()) + 'sample_submission.pdf')
             path = upload_dir / stem
             copyfile(sample_submission, path)
+            sub_name = '{zid}-{task_name}'.format(zid=zid,
+                                                  task_name=task[1])
             if 'approval' in task[3]:
                 queries.append((
                     'submissions',
-                    [student[0], task[0], 'ExCiTiNg Title',
+                    [student[0], task[0], sub_name,
                      None, 'Here is a lengthy essay', now,
                      request_types['approved']]
                 ))
             else:
                 queries.append((
                     'submissions',
-                    [student[0], task[0], 'Normal Title',
+                    [student[0], task[0], sub_name,
                      str(stem), 'Here is a lengthy description', now,
                      request_types['pending mark']]
                 ))
