@@ -85,6 +85,10 @@ def create():
                         default_fields['criteria'] = crit
 
         db.close()
+        if default_fields['maximum-file-size'] == '':
+            default_fields['maximum-file-size'] = 5
+        if default_fields['accepted-file-type'] == '':
+            default_fields['accepted-file-type'] = '.pdf'
         return render_template('create_task.html', heading=heading,
                                title=heading, file_types=file_types,
                                course_id=course_id,
