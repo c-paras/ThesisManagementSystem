@@ -6,6 +6,7 @@ from flask import session
 
 from app.auth import at_least_role
 from app.auth import UserRole
+from app.helpers import error
 from app.db_manager import sqliteManager as db
 from app.queries import queries
 
@@ -80,7 +81,7 @@ def delete_topic():
     db.delete_rows('announcements', ['topic'], [topic_id])
     db.delete_rows('prerequisites', ['topic'], [topic_id])
     db.close()
-    return jsonify({'status': 'ok', "message": "Deleted Topic"})
+    return jsonify({'status': 'ok', "message": "Topic deleted"})
 
 
 @manage_topics.route('/check_delete_topic', methods=['POST'])
@@ -93,8 +94,8 @@ def check_delete_topic():
     student_topic = db.select_columns('student_topic', ['student'],
                                       ['topic'], [topic_id])
     if student_topic:
-        return jsonify({'status': 'fail',
-                        'message': "Unable to delete - Students are enrolled"})
+        return error(
+            'Cannot delete this topic!<br>There are enrolled students')
 
     # checking if a there is any pending topic requests
     pending = 'pending'
@@ -105,8 +106,7 @@ def check_delete_topic():
                                       [topic_id, pending_id[0][0]])
 
     if topic_request:
-        return jsonify({'status': 'fail',
-                        'message': "Unable to delete - \
-                         There are pending topic requests"})
+        return error(
+            'Cannot delete this topic!<br>There are pending topic requests.')
     db.close()
-    return jsonify({'status': 'ok', "message": "Deleted Topic"})
+    return jsonify({'status': 'ok', "message": "Topic deleted"})

@@ -3,7 +3,6 @@ import re
 import config
 
 from app.db_manager import sqliteManager as db
-from app.file_upload import FileUpload
 
 
 def get_all_account_types():

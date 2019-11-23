@@ -16,7 +16,7 @@ function updateTopicVisibility(id) {
       flash(res.message, error = true);
     } else {
       if (id === undefined) {
-        flash('All topics are now unavailable students', false);
+        flash('All topics are now unavailable to students', false);
       } else {
         if ($(`#${id}`).is(':checked')) {
           flash('Topic is now visible to students', false);
@@ -45,7 +45,7 @@ function deleteTopic(topicId) {
 }
 
 function openTopicDeleteConfirmation(topicName, topicId) {
-  let text = 'Are you sure you want to delete the Topic: ' + topicName;
+  const text = `Are you sure you want to delete the topic: '${topicName}'?`;
   $('#deletion-message').text(text);
   $('#confirm-deletion').click(function callDelet() {
     deleteTopic(topicId);

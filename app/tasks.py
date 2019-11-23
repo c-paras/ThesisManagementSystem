@@ -16,7 +16,6 @@ from app.helpers import error, timestamp_to_string, zid_sort
 from app.queries import queries
 from app.helpers import send_email
 
-import calendar
 import json
 import sqlite3
 
@@ -278,23 +277,16 @@ def mark_task():
         try:
             val = int(marks[i])
             if val < 0 or val > 100:
-                return jsonify({'status': 'fail',
-                                'message':
-                                'Marks must be between 0-100'})
+                return error('Marks must be between 0-100')
 
             if val > task_max[i]:
-                return jsonify({'status': 'fail',
-                                'message':
-                                'Marks exceeds max mark'})
+                return error(f'Mark {val} exceeds max mark of {task_max[i]}')
         except ValueError:
-            return jsonify({'status': 'fail',
-                            'message':
-                            'Please enter a integer value for marks'})
+            return error('Please enter an integer value for marks')
 
     for f in feedback:
         if f == '':
-            return jsonify({'status': 'fail',
-                            'message': 'Please enter some feedback'})
+            return error('Please enter some feedback')
 
     for i in range(len(marks)):
         try:
@@ -405,11 +397,11 @@ def submit_file_task():
 
     if not request.form.get('certify', 'false') == 'true':
         db.close()
-        return error("You must certify it is all your own work")
+        return error("You must certify this is all your own work")
 
     if datetime.now().timestamp() >= task['deadline']:
         db.close()
-        return error("Submissions closed")
+        return error("Submissions closed!<br>You can no longer submit")
 
     if task['mark_method']['name'] == 'requires approval':
         res = db.select_columns('request_statuses', ['id'],
@@ -422,7 +414,7 @@ def submit_file_task():
     try:
         sent_file = FileUpload(req=request)
     except KeyError:
-        return error("Must give a file for submission")
+        return error("You must supply a file for submission")
 
     if sent_file.get_extention() not in task['accepted_files']:
         db.close()
@@ -431,7 +423,8 @@ def submit_file_task():
     if sent_file.get_size() > task['file_limit']:
         sent_file.remove_file()
         db.close()
-        return error(f"File larger than {task['file_limit']}MB")
+        return error(
+            f'File exceeds the maximum size of {task["file_limit"]} MB')
 
     sent_file.commit()
     res = db.select_columns('submissions', ['path'], ['student', 'task'],
@@ -476,11 +469,11 @@ def submit_text_task():
 
     if not request.form.get('certify', 'false') == 'true':
         db.close()
-        return error("You must certify it is all your own work")
+        return error("You must certify this is all your own work")
 
     if datetime.now().timestamp() >= task['deadline']:
         db.close()
-        return error("Submissions closed")
+        return error("Submissions closed!<br>You can no longer submit")
 
     mark_method_id = None
     if task['mark_method']['name'] == 'requires approval':
@@ -493,7 +486,7 @@ def submit_text_task():
     # check if text is too long
     if(len(text.strip().split(' ')) > task["word_limit"]):
         db.close()
-        return error("Your submission is above the word limit")
+        return error(f'Your submission exceeds the word limit')
 
     res = db.select_columns('submissions', ['*'], ['student', 'task'],
                             [session['id'], task['id']])
@@ -546,7 +539,7 @@ def task_status():
     task = build_task(request.args.get('task_id', -1, type=int))
     if not task:
         db.close()
-        return error("Couldn't find task")
+        return error("Could not find task")
     students = get_student_statuses(task)
     db.close()
     return jsonify({'status': 'ok', 'students': students})

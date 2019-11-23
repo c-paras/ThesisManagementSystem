@@ -31,7 +31,7 @@ function submitReset(user_id, reset_id) {
         markFieldValid($(`#${res.field}`), false);
       }
     } else {
-      delayToast('Password Changed!', false);
+      delayToast('Password changed!', false);
       window.location.href = '/login';
     }
   });

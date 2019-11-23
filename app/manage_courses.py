@@ -240,10 +240,12 @@ def upload_enroll_file():
         return error('Could not find a file to upload')
 
     if enroll_file.get_extention() != '.csv':
-        return error('File type must be csv')
+        return error('File type must be in .csv format')
 
     if enroll_file.get_size() > config.MAX_FILE_SIZE:
-        return error('File is too large')
+        return error(
+            f'File exceeds the maximum size of {config.MAX_FILE_SIZE} MB'
+        )
     enroll_file.commit()
     db.connect()
     error_string = update_from_file(
@@ -279,7 +281,7 @@ def upload_material():
     # check if no file when there should be one
     if file_name == '' and \
             (delete_old_file == 'true' or old_material_id is None):
-        return error('File Name is required!')
+        return error('File is required!')
 
     # check if course offering is valid
     res = db.select_columns('course_offerings', ['id'],
@@ -524,9 +526,8 @@ def delete_task():
                                     ['task'], [task_id])
 
     if submissions:
-        return jsonify({'status': 'fail',
-                        'message': "Unable to delete - \
-                         Students have already made submissions"})
+        return error('Cannot delete this task!' +
+                     '<br>Students have already made submissions')
 
     task_path = db.select_columns('task_attachments', ['path'],
                                   ['task'], [task_id])
@@ -541,7 +542,7 @@ def delete_task():
     db.delete_rows('submission_types', ['task'], [task_id])
 
     db.close()
-    return jsonify({'status': 'ok', "message": "Deleted Task"})
+    return jsonify({'status': 'ok', "message": "Task deleted"})
 
 
 @manage_courses.route('/check_delete_task', methods=['POST'])
@@ -555,12 +556,12 @@ def check_delete_task():
                                     ['task'], [task_id])
 
     if submissions:
-        return jsonify({'status': 'fail',
-                        'message': "Unable to delete - \
-                         Students have already made submissions"})
+        msg = 'Cannot delete this task!<br>' \
+            + 'Students have already made submissions'
+        return error(msg)
 
     db.close()
-    return jsonify({'status': 'ok', "message": "Deleted Task"})
+    return jsonify({'status': 'ok', "message": "Task deleted"})
 
 
 @manage_courses.route('/delete_material', methods=['POST'])
@@ -580,4 +581,4 @@ def delete_material():
     db.delete_rows('materials', ['id'], [material_id])
     db.delete_rows('material_attachments', ['material'], [material_id])
 
-    return jsonify({'status': 'ok', "message": "Deleted Material"})
+    return jsonify({'status': 'ok', "message": "Material deleted"})
