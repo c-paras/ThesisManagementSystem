@@ -56,9 +56,7 @@ function formValid(form) {
       if (!notRequired) {
         invalid = true;
       }
-    }
-    if ($(this).hasClass('validate')) {
-      markFieldValid($(this), !invalid);
+      markFieldValid($(this), notRequired);
     }
   });
   return !invalid;
