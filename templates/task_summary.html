@@ -13,7 +13,7 @@
         <b>Attachment:</b>
         <a
           class="waves-effect waves-light" href="{{ task['attachment'].get_url() }}"
-          download="{{ task['attachment'].get_original_name() }}"
+          target="_blank" rel="noopener noreferrer"
         >
           {{ task['attachment'].get_original_name() }}
           <i class="material-icons right">file_download</i>

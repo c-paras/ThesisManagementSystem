@@ -77,7 +77,7 @@
                 <td>{{ material[1] }}</td>
                 <td>
                   {% for attachment in material[2] %}
-                    <a href="{{ attachment.get_url() }}">
+                    <a href="{{ attachment.get_url() }}" target="_blank" rel="noopener noreferrer">
                       {{ attachment.get_original_name() }}
                     </a>
                   {% endfor %}
@@ -165,7 +165,7 @@
                 <td>
                   {% if task[3]|length %}
                     {% for attachment in task[3] %}
-                      <a href="{{ attachment.get_url() }}">
+                      <a href="{{ attachment.get_url() }}" target="_blank" rel="noopener noreferrer">
                         {{ attachment.get_original_name() }}
                       </a>
                     {% endfor %}
