@@ -43,7 +43,7 @@
                     {% if topic[2] == 1 %}
                       <label>
                         <input
-                          type="checkbox" id="topic-{{ loop.index0 }}" class="filled-in"
+                          type="checkbox" id="{{ topic[0] }}" class="filled-in"
                           name="topic-{{ loop.index0 }}" checked="checked"
                           onchange="updateTopicVisibility('topic-{{ loop.index0 }}')"
                         >
@@ -53,7 +53,7 @@
                     {% else %}
                       <label>
                         <input
-                          type="checkbox" id="topic-{{ loop.index0 }}" class="filled-in"
+                          type="checkbox" id="{{ topic[0] }}" class="filled-in"
                           name="topic-{{ loop.index0 }}"
                           onchange="updateTopicVisibility('topic-{{ loop.index0 }}')"
                         >
