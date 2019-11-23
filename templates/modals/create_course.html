@@ -25,8 +25,11 @@
           <div class="col s10 offset-s1">
             <div class="input-field">
               <i class="material-icons prefix">label</i>
-              <input placeholder="Course Code" name="code" type="text" class="validate" required>
-              <span class="helper-text" data-error="Course code is required"></span>
+              <input
+                placeholder="Course Code" name="code" type="text" class="validate"
+                required pattern="^[A-Z]{4}[0-9]{4}$"
+              >
+              <span class="helper-text" data-error="Invalid course code"></span>
             </div>
           </div>
         </div>

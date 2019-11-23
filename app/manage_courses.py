@@ -385,7 +385,7 @@ def create_course():
 
     if not re.match(config.COURSE_CODE_FORMAT, course['code']):
         db.close()
-        return error("Invalid course code")
+        return error("Invalid course code", 'code')
 
     course['year'] = int(res[3])
     if curr_year > course['year']:

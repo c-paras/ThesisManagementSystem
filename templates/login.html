@@ -42,6 +42,10 @@
     </div>
     <!-- Reset password modal -->
     {% include "modals/reset_pass.html" %}
+    <script
+      type="text/javascript"
+      src="{{ url_for('static', filename='js/reset_password.js') }}" defer
+    ></script>
   </div>
 
 {% endblock %}
