@@ -511,11 +511,11 @@ def submit_text_task():
 @at_least_role(UserRole.COURSE_ADMIN)
 def task_info():
     db.connect()
-    task = request.args.get('task_id', None, type=int)
-    if not task:
+    task_id = request.args.get('task_id', None, type=int)
+    if not task_id:
         db.close()
         return abort(400)
-    task = build_task(task)
+    task = build_task(task_id)
     if not task:
         db.close()
         return abort(404)

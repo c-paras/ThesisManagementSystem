@@ -140,7 +140,8 @@
           <colgroup>
             <col span="1" style="width: 25%;">
             <col span="1" style="width: 25%;">
-            <col span="1" style="width: 35%;">
+            <col span="1" style="width: 30%;">
+            <col span="1" style="width: 5%;">
             <col span="1" style="width: 5%;">
             <col span="1" style="width: 5%;">
             <col span="1" style="width: 5%;">
@@ -150,10 +151,10 @@
               <th class="sortable">Task</th>
               <th class="sortable">Deadline</th>
               <th class="sortable">File</th>
+              <th>Info</th>
               <th>Visible</th>
               <th>Edit</th>
               <th>Delete</th>
-              <th>Info</th>
             </tr>
           </thead>
           <tbody>
@@ -171,6 +172,11 @@
                   {% else %}
                     N/A
                   {% endif %}
+                </td>
+                <td>
+                  <a href="{{ url_for('tasks.task_info', task_id=task[0]) }}">
+                    <i class="material-icons">info</i>
+                  </a>
                 </td>
                 <td>
                   {% if task[4] == 1 %}
@@ -203,11 +209,6 @@
                     href="#!" onclick="checkDeleteTask('{{ task[1]  }}', {{ task[0] }})"
                   >
                     <i class="material-icons red-text text-darken-3">delete_forever</i>
-                  </a>
-                </td>
-                <td>
-                  <a href="{{ url_for('tasks.task_info', task_id=task[0]) }}">
-                    <i class="material-icons">info</i>
                   </a>
                 </td>
               </tr>
