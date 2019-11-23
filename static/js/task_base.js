@@ -114,7 +114,6 @@ function updateMarks(taskId, studentid, taskCriteriaId, taskMax) {
   $("[id^='enteredFeedback']").each((function() {
     feedback.push($(this).val());
   }));
-
   const data = {
     'marks': marks,
     'feedback': feedback,
@@ -124,8 +123,12 @@ function updateMarks(taskId, studentid, taskCriteriaId, taskMax) {
     "taskMax": taskMax
   };
 
-  if ($("#approveCheck").val() !== undefined) {
-    data.approveCheck = $("#approveCheck").is(':checked');
+  if ($("#approveCheckApprove").val() !== undefined) {
+    if ($("#approveCheckApprove").is(':checked')) {
+      data.approveCheck = true;
+    } else {
+      data.approveCheck = false;
+    }
   }
 
   makePOSTRequest('/mark_task', data, (res) => {

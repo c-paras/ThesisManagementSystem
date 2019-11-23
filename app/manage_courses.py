@@ -528,9 +528,17 @@ def delete_task():
                         'message': "Unable to delete - \
                          Students have already made submissions"})
 
+    task_path = db.select_columns('task_attachments', ['path'],
+                                  ['task'], [task_id])
+    if task_path:
+        file_upload = FileUpload(filename=task_path[0][0])
+        file_upload.remove_file()
+
     db.delete_rows('tasks', ['id'], [task_id])
     db.delete_rows('task_attachments', ['task'], [task_id])
     db.delete_rows('task_criteria', ['task'], [task_id])
+    db.delete_rows('allowed_files', ['task'], [task_id])
+    db.delete_rows('submission_types', ['task'], [task_id])
 
     db.close()
     return jsonify({'status': 'ok', "message": "Deleted Task"})
@@ -562,6 +570,13 @@ def delete_material():
     material_id = data['materialId']
 
     db.connect()
+
+    material_path = db.select_columns('material_attachments', ['path'],
+                                      ['material'], [material_id])
+    if material_path:
+        file_upload = FileUpload(filename=material_path[0][0])
+        file_upload.remove_file()
+
     db.delete_rows('materials', ['id'], [material_id])
     db.delete_rows('material_attachments', ['material'], [material_id])
 

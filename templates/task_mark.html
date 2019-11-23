@@ -1,49 +1,72 @@
 <div>
   <form id="mark-form" method="">
-    <table class="striped centered responsive-table" style="margin-bottom: 20px;">
-      <colgroup>
-        {% if submission['mark_method'] == 'approval' %}
-          <col span="1" style="width: 15%;">
-          <col span="1" style="width: 10%;">
-          <col span="1" style="width: 75%;">
+    {% if submission['mark_method'] == 'approval' %}
+      {% if submission['status']['name'] == 'approved' %}
+        <p>
+          <label>
+            <input id="approveCheckApprove" class="with-gap" name="group3" type="radio" checked />
+            <span>Approve</span>
+          </label>
+          <label>
+            <input id="approveCheckReject" class="with-gap" name="group3" type="radio"/>
+            <span>Reject</span>
+          </label>
+        </p>
+      {% else %}
+        <p>
+          <label>
+            <input id="approveCheckApprove" class="with-gap" name="group3" type="radio"/>
+            <span>Approve</span>
+          </label>
+          <label>
+            <input id="approveCheckReject" class="with-gap" name="group3" type="radio" checked/>
+            <span>Reject</span>
+          </label>
+        </p>
+      {% endif %}
+      {% if markedFeedback[0] == [] %}
+        <div>
+          <textarea
+            id="enteredFeedback{{i}}" class="materialize-textarea validate"
+            placeholder="Enter Feedback"
+          ></textarea>
+        </div>
+      {% else %}
+        {% if markedFeedback[0][0][1] == None %}
+          <div>
+            <textarea
+              id="enteredFeedback" class="materialize-textarea validate"
+              placeholder="Enter Feedback"
+            ></textarea>
+          </div>
         {% else %}
+          <textarea
+            id="enteredFeedback" class="materialize-textarea validate"
+          >{{ markedFeedback[0][0][1] }}</textarea>
+        {% endif %}
+      {% endif %}
+    {% else %}
+      <table class="striped centered responsive-table" style="margin-bottom: 20px;">
+        <colgroup>
           <col span="1" style="width: 25%;">
           <col span="1" style="width: 5%;">
           <col span="1" style="width: 5%;">
           <col span="1" style="width: 65%;">
-        {% endif %}
-      </colgroup>
-
-      <thead>
-        <tr>
-          <th>Criteria</th>
-          {% if submission['mark_method'] == 'approval' %}
-            <th>Approved</th>
-          {% else %}
+        </colgroup>
+        <thead>
+          <tr>
+            <th>Criteria</th>
             <th>Max Mark</th>
             <th>Assigned Mark</th>
-          {% endif %}
-          <th>Feedback</th>
-        </tr>
-      </thead>
-
-      <tbody>
-        {% for i in range(0, taskCriteria|length) %}
-          <tr>
-            <td>{{ taskCriteria[i][2] }}</td>
-            {% if markedFeedback[i] == [] %}
-              {% if submission['mark_method'] == 'approval' %}
-                <td>
-                  <label>
-                    {% if submission['status']['name'] == 'approved' %}
-                      <input id="approveCheck" type="checkbox" class="filled-in" checked="checked">
-                    {% else %}
-                      <input id="approveCheck" type="checkbox" class="filled-in">
-                    {% endif %}
-                    <span></span>
-                  </label>
-                </td>
-              {% else %}
+            <th>Feedback</th>
+          </tr>
+        </thead>
+  
+        <tbody>
+          {% for i in range(0, taskCriteria|length) %}
+            <tr>
+              <td>{{ taskCriteria[i][2] }}</td>
+              {% if markedFeedback[i] == [] %}
                 <td>{{ taskCriteria[i][3] }}</td>
                 <td>
                   <input
@@ -52,29 +75,16 @@
                     required="" aria-required="true"
                   >
                 </td>
-              {% endif %}
-              <td>
-                <div>
-                  <textarea
-                    id="enteredFeedback{{i}}" class="materialize-textarea validate"
-                    placeholder="Enter Feedback"
-                    {% if submission['mark_method'] != 'approval' %}
-                      required="" aria-required="true"
-                    {% endif %}
-                  ></textarea>
-                </div>
-              </td>
-            {% else %}
-              {% if submission['mark_method'] == 'approval' %}
                 <td>
-                  <label>
-                    {% if submission['status']['name'] == 'approved' %}
-                      <input id="approveCheck" type="checkbox" class="filled-in" checked="checked">
-                    {% else %}
-                      <input id="approveCheck" type="checkbox" class="filled-in">
-                    {% endif %}
-                    <span></span>
-                  </label>
+                  <div>
+                    <textarea
+                      id="enteredFeedback{{i}}" class="materialize-textarea validate"
+                      placeholder="Enter Feedback"
+                      {% if submission['markingMethod'] != 'approval' %}
+                        required="" aria-required="true"
+                      {% endif %}
+                    ></textarea>
+                  </div>
                 </td>
               {% else %}
                 <td>{{ taskCriteria[i][3] }}</td>
@@ -85,35 +95,35 @@
                     required="" aria-required="true" class="validate"
                   >
                 </td>
-              {% endif %}
-              <td>
-                {% if markedFeedback[i][0][1] == None %}
-                  <div>
+                <td>
+                  {% if markedFeedback[i][0][1] == None %}
+                    <div>
+                      <textarea
+                        id="enteredFeedback{{i}}" class="materialize-textarea validate"
+                        {% if submission['markingMethod'] != 'approval' %}
+                          required="" aria-required="true"
+                        {% endif %}
+                        placeholder="Enter Feedback"
+                      ></textarea>
+                    </div>
+                  {% else %}
                     <textarea
                       id="enteredFeedback{{i}}" class="materialize-textarea validate"
                       {% if submission['mark_method'] != 'approval' %}
                         required="" aria-required="true"
                       {% endif %}
-                      placeholder="Enter Feedback"
-                    ></textarea>
-                  </div>
-                {% else %}
-                  <textarea
-                    id="enteredFeedback{{i}}" class="materialize-textarea validate"
-                    {% if submission['mark_method'] != 'approval' %}
-                      required="" aria-required="true"
-                    {% endif %}
-                  >{{ markedFeedback[i][0][1] }}</textarea>
-                {% endif %}
-              </td>
-            {% endif %}
-          </tr>
-        {% endfor %}
-      </tbody>
-    </table>
+                    >{{ markedFeedback[i][0][1] }}</textarea>
+                  {% endif %}
+                </td>
+              {% endif %}
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    {% endif %}
   </form>
 </div>
-
+  
 <div class="right">
   <a
     class="waves-effect waves-light btn"
