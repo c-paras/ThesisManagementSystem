@@ -293,13 +293,12 @@ def staff_view():
     studentId = data['studentId']
     task_criteria = data['taskCriteria']
     task_max = data['taskMax']
-
     db.connect()
     try:
         check = data['approveCheck']
         if (not check):
             res = db.select_columns('request_statuses',
-                                    ['id'], ['name'], ['pending'])
+                                    ['id'], ['name'], ['rejected'])
             db.update_rows('submissions', [res[0][0]],
                            ['status'],
                            ['student', 'task'],
