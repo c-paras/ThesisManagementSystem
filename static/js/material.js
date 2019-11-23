@@ -46,7 +46,6 @@ function openEditMaterial(materialID, materialName, filePath, fileName) {
 
   $('#old-file-name').html(fileName);
   $('#old-file-download').attr("href", filePath);
-  $('#old-file-download').attr("download", fileName);
 
   $('#upload-file-area').hide();
   $('#old-file-area').show();
