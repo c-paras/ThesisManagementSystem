@@ -15,27 +15,43 @@ function drawChart() {
       flash("No students enrolled", error=True);
       return;
     }
-    const marked = ['approved', 'rejected', 'marked', 'cancelled'];
-    let markedCount = 0;
+    const marked = {
+      names: ['approved', 'rejected', 'marked', 'cancelled'],
+      count: 0
+    };
 
-    const submitted = ['pending', 'pending mark'];
-    let submittedCount = 0;
+    const submitted = {
+      names: ['pending', 'pending mark'],
+      count: 0
+    };
+
+    const partial = {
+      names: ['partially marked'],
+      count: 0
+    };
+
     for (var i in res.students) {
-      if (marked.includes(res.students[i].status.name)) {
-        markedCount++;
+      const status = res.students[i].status.name;
+      if (marked.names.includes(status)) {
+        marked.count++;
         continue;
       }
-      if (submitted.includes(res.students[i].status.name)) {
-        submittedCount++;
+      if (partial.names.includes(status)) {
+        partial.count++;
+        continue;
+      }
+      if (submitted.names.includes(status)) {
+        submitted.count++;
         continue;
       }
     }
-    const notSubmittedCount = numStudents - (markedCount + submittedCount);
+    const notSubmittedCount = numStudents - (marked.count + partial.count + submitted.count);
     const data = google.visualization.arrayToDataTable([
       ['Type', '# Students'],
-      ['Marked',  markedCount],
-      ['Submitted',  submittedCount],
-      ['Not Submitted', notSubmittedCount]
+      ['Not Submitted', notSubmittedCount],
+      ['Submitted',  submitted.count],
+      ['Partly Marked', partial.count],
+      ['Marked',  marked.count],
     ]);
 
     const options = {
@@ -48,11 +64,10 @@ function drawChart() {
         height: "75%"
       },
       pieHole: 0.4,
-      colors: ['#26a69a', '#a66426', '#a6262c']
+      colors: ['#F25F5C' , '#F8CB65' , '#255957', '#26a69a']
     };
 
     const chart = new google.visualization.PieChart(document.getElementById('piechart'));
-
     chart.draw(data, options);
   });
 
