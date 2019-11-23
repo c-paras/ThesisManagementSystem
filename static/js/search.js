@@ -37,7 +37,7 @@ function makeCard(id, title, description, topics, supervisor, email, preqs, visi
           <i class="material-icons tiny teal-text disable-icon">check_circle</i>
           Prerequisite(s): ${preqBadges}
         </p>
-        <br><br>
+        <br><br><br>
         <p>${description}</p>
       </div>
       <div class="card-action">

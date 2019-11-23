@@ -119,7 +119,7 @@ def search_topic():
         for t in topics:
             if re.search(search_term, t['title'], flags=re.I):
                 matched_search_phrase.append(t)
-            if re.search(search_term, t['description'], flags=re.I):
+            elif re.search(search_term, t['description'], flags=re.I):
                 matched_search_phrase.append(t)
     else:
         matched_search_phrase = topics
