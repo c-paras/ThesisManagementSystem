@@ -34,12 +34,12 @@ def change_user_password():
         return e.args[0]
 
     if len(password) < 8:
-        db.close()
+
         return error(
             'Password must be at least 8 characters long!', 'new-password')
 
     if password != confirm_pass:
-        db.close()
+
         return error('Passwords do not match!', 'new-confirm-password')
 
     acc_id = session['id']
@@ -68,13 +68,13 @@ def reset_request():
 
     res = db.select_columns('users', ['name', 'id'], ['email'], [email])
     if len(res) == 0:
+        db.close()
         return jsonify({'status': 'ok'})
 
     reset_id = str(uuid.uuid1())
     db.connect()
     db.update_rows('users', [reset_id], ['reset_code'],
                    ['id'], [res[0][1]])
-    db.close()
 
     reset_link = url_for('.reset', user=res[0][1],
                          resetID=reset_id, _external=True)
@@ -87,7 +87,7 @@ def reset_request():
                    ' to reset your password.'
 
                ])
-
+    db.close()
     return jsonify({'status': 'ok'})
 
 
@@ -136,6 +136,8 @@ def reset():
         db.close()
 
     else:
+        db.close()
         return error('You are not allowed to change this password!')
 
+    db.close()
     return jsonify({'status': 'ok'})

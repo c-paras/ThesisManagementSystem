@@ -134,8 +134,6 @@ def register():
         if res[0][2] != '' and res[0][1] + config.ACCOUNT_EXPIRY < now:
             # expire unactivated accounts every 24 hours
             db.delete_rows('users', ['email'], [email])
-            db.close()
-            db.connect()
         else:
             db.close()
             return error('This email has already been registered!', 'email')
@@ -194,6 +192,7 @@ def confirm():
     if len(res) and res[0][1] + config.ACCOUNT_EXPIRY < now:
         expired = True  # expire unactivated accounts every 24 hours
         db.delete_rows('users', ['name'], [user])
+        db.close()
         flash('This activation link has expired!<br>' +
               'You must register your account again.', 'error')
     if not expired and len(res) and confirm_code == res[0][0]:

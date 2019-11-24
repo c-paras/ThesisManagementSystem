@@ -271,7 +271,6 @@ def upload_material():
                        ints=['course-offering'])
     except ValueError as e:
         return e.args[0]
-    db.connect()
 
     try:
         old_material_id = int(old_material_id)
@@ -282,7 +281,7 @@ def upload_material():
     if file_name == '' and \
             (delete_old_file == 'true' or old_material_id is None):
         return error('File is required!')
-
+    db.connect()
     # check if course offering is valid
     res = db.select_columns('course_offerings', ['id'],
                             ['id'], [course_offering])
@@ -526,6 +525,7 @@ def delete_task():
                                     ['task'], [task_id])
 
     if submissions:
+        db.close()
         return error('Cannot delete this task!' +
                      '<br>Students have already made submissions')
 
@@ -554,13 +554,12 @@ def check_delete_task():
     db.connect()
     submissions = db.select_columns('submissions', ['name'],
                                     ['task'], [task_id])
-
+    db.close()
     if submissions:
         msg = 'Cannot delete this task!<br>' \
             + 'Students have already made submissions'
         return error(msg)
 
-    db.close()
     return jsonify({'status': 'ok', "message": "Task deleted"})
 
 
@@ -580,5 +579,5 @@ def delete_material():
 
     db.delete_rows('materials', ['id'], [material_id])
     db.delete_rows('material_attachments', ['material'], [material_id])
-
+    db.close()
     return jsonify({'status': 'ok', "message": "Material deleted"})
