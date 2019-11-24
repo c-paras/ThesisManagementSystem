@@ -10,6 +10,7 @@ from datetime import datetime
 
 from app.auth import at_least_role
 from app.auth import UserRole
+from app.auth import is_at_least_role
 from app.db_manager import sqliteManager as db
 from app.file_upload import FileUpload
 from app.helpers import error, timestamp_to_string, zid_sort
@@ -58,22 +59,21 @@ def view_task():
     student['name'] = res[0][0]
     student['email'] = res[0][1]
 
-    # check that this user is allowed to view this task
-    can_view = False
-    my_tasks = queries.get_user_tasks(student['id'])
-    for task in my_tasks:
-        if task[0] == task_id:
-            can_view = True
-            break
-
-    if not can_view:
-        db.close()
-        abort(403)
     #
     # get general page info
     #
 
     task = build_task(task_id)
+
+    # check that this user is allowed to view this task
+    can_view = True
+    if not is_at_least_role(UserRole.COURSE_ADMIN):
+        print(task)
+        can_view = task['visible'] == 1
+
+    if not can_view:
+        db.close()
+        abort(403)
 
     can_submit = datetime.now().timestamp() <= task['deadline']
     accepted_files = None
