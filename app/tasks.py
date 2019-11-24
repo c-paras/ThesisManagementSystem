@@ -68,7 +68,11 @@ def view_task():
     # check that this user is allowed to view this task
     can_view = True
     if not is_at_least_role(UserRole.COURSE_ADMIN):
-        can_view = task['visible'] == 1
+        my_tasks = map(lambda t: t[0], queries.get_user_tasks(student['id']))
+        if task['id'] in my_tasks:
+            can_view = task['visible']
+        else:
+            can_view = False
 
     if not can_view:
         db.close()
