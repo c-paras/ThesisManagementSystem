@@ -44,7 +44,7 @@ def request_new_topic():
         return error('No such topic exists!')
     if not int(res[0][3]):
         db.close()
-        return error('This topic is not available for request!')
+        return error('This topic is not available to request!')
 
     res = db.select_columns('request_statuses', ['id'], ['name'], ['pending'])
 

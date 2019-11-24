@@ -67,7 +67,7 @@ function disableTopicRequest(elem, msg) {
 function updateCanRequest() {
   $('[name="request-btn"]').each(function () {
     if ($(this).attr('visible') === '0') {
-      disableTopicRequest($(this), 'This topic is not available for request!');
+      disableTopicRequest($(this), 'This topic is not available to request!');
     }
   });
   if (!canRequest) {

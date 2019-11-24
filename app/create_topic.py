@@ -63,7 +63,7 @@ def create():
 
     # make sure the course codes are uppercase and strip for areas and prereqs
     if len(areas) == 0:
-        return error('You should enter at least one topic area')
+        return error('You must enter at least one topic area')
     original_prereqs = prereqs
     prereqs = [x.upper().strip() for x in prereqs]
     areas = [x.strip() for x in areas]
