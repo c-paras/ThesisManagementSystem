@@ -63,7 +63,7 @@
                   {{ student['name'] }}
                 </td>
                 <td>
-                  {{ student['status']['name'] }}
+                  {{ student['status']['name']|cap_first }}
                 </td>
                 <td>
                   {% if student['submission_date'] %}
