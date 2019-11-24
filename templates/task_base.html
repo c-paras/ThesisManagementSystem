@@ -176,7 +176,7 @@
                           <td>{{item[0]}}</td>
                           <td class="center-align">{{item[1]}}/{{item[2]}}</td>
                           {% if item[1] == '-' %}
-                            <td><i>{{item[3]}}</i></td>
+                            <td><i>{{item[3]|lower|cap_first}}</i></td>
                           {% else %}
                             <td>{{item[3]}}</td>
                           {% endif %}
