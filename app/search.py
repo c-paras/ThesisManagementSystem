@@ -63,6 +63,7 @@ def search_topic():
     # user stories.
     if (len(search_topic) > 0 and len(topic_area) == 0) or\
        (len(search_super) > 0 and len(supervisor) == 0):
+        db.close()
         return jsonify({'status': 'ok', 'topics': [],
                         'topicsArea': [],
                         'topicSupervisor': []})
@@ -167,7 +168,7 @@ def search_topic():
                          sort_words['create'])
     to_return_searches = sorted(to_return_searches,
                                 key=sort_function, reverse=reverse)
-
+    db.close()
     return jsonify({'status': 'ok', 'topics': to_return_searches,
                     'canRequest': session['acc_type'] == 'student'})
 
@@ -192,6 +193,6 @@ def get_chips():
     chips_supervisor = {}
     for sup in supervisors:
         chips_supervisor[sup[0]] = None
-
+    db.close()
     return jsonify({'status': 'ok', 'chipsTopic': chips_topic_area,
                     'chipsSuper': chips_supervisor})

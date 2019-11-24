@@ -94,6 +94,7 @@ def check_delete_topic():
     student_topic = db.select_columns('student_topic', ['student'],
                                       ['topic'], [topic_id])
     if student_topic:
+        db.close()
         return error(
             'Cannot delete this topic!<br>There are enrolled students')
 
@@ -106,6 +107,7 @@ def check_delete_topic():
                                       [topic_id, pending_id[0][0]])
 
     if topic_request:
+        db.close()
         return error(
             'Cannot delete this topic!<br>There are pending topic requests.')
     db.close()

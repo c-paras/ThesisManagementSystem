@@ -67,6 +67,7 @@ def view_task():
             break
 
     if not can_view:
+        db.close()
         abort(403)
     #
     # get general page info
@@ -277,15 +278,19 @@ def mark_task():
         try:
             val = int(marks[i])
             if val < 0 or val > 100:
+                db.close()
                 return error('Marks must be between 0-100')
 
             if val > task_max[i]:
+                db.close()
                 return error(f'Mark {val} exceeds max mark of {task_max[i]}')
         except ValueError:
+            db.close()
             return error('Please enter an integer value for marks')
 
     for f in feedback:
         if f == '':
+            db.close()
             return error('Please enter some feedback')
 
     for i in range(len(marks)):
@@ -414,6 +419,7 @@ def submit_file_task():
     try:
         sent_file = FileUpload(req=request)
     except KeyError:
+        db.close()
         return error("You must supply a file for submission")
 
     if sent_file.get_extention() not in task['accepted_files']:

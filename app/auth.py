@@ -134,8 +134,6 @@ def register():
         if res[0][2] != '' and res[0][1] + config.ACCOUNT_EXPIRY < now:
             # expire unactivated accounts every 24 hours
             db.delete_rows('users', ['email'], [email])
-            db.close()
-            db.connect()
         else:
             db.close()
             return error('This email has already been registered!', 'email')
