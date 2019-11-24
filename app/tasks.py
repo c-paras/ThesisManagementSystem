@@ -68,7 +68,6 @@ def view_task():
     # check that this user is allowed to view this task
     can_view = True
     if not is_at_least_role(UserRole.COURSE_ADMIN):
-        print(task)
         can_view = task['visible'] == 1
 
     if not can_view:
