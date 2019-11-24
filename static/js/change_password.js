@@ -10,7 +10,7 @@ function submitChange() {
         markFieldValid($(`#${res.field}`), false);
       }
     } else {
-      delayToast('Password Changed!',false);
+      delayToast('Password changed!',false);
       location.reload();
     }
   });

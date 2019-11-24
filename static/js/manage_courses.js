@@ -138,7 +138,7 @@ function deleteMaterial(materialId) {
 }
 
 function openTaskDeleteConfirmation(taskName, taskId) {
-  const text = 'Are you sure you want to delete the task: ' + taskName;
+  const text = `Are you sure you want to delete the task: '${taskName}'?`;
   $('#deletion-message').text(text);
   $('#confirm-deletion').click(function callDelet() {
     deleteTask(taskId);
@@ -161,7 +161,7 @@ function checkDeleteTask(taskName, taskId) {
 }
 
 function openMaterialDeleteConfirmation(materialName, materialId) {
-  const text = 'Are you sure you want to delete the Material: ' + materialName;
+  const text = `Are you sure you want to delete the material: '${materialName}'?`;
   $('#deletion-message').text(text);
   $('#confirm-deletion').click(function callDelet() {
     deleteMaterial(materialId);

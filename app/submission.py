@@ -13,8 +13,6 @@ from app.file_upload import FileUpload
 from app.queries import queries
 from app.helpers import timestamp_to_string
 
-import calendar
-
 
 submissions = Blueprint('submissions', __name__)
 

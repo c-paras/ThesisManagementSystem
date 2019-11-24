@@ -49,7 +49,7 @@ function uploadText(btn) {
   formValid(form); /* auto-validate, but proceed to show errors below */
 
   if ($('#textarea1').val().trim().length === 0) {
-    flash('Your must enter some text to submit', true);
+    flash('You must enter some text to submit', true);
     return;
   }
 

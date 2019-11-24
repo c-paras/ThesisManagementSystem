@@ -14,7 +14,6 @@ from app.queries import queries
 from app.helpers import error
 from app.helpers import zid_sort
 from app.update_accounts import update_from_file, update_account_type
-from app.update_accounts import get_all_account_types
 
 import json
 import re
@@ -256,10 +255,12 @@ def upload_staff():
         return error('Could not find a file to upload')
 
     if enroll_file.get_extention() != '.csv':
-        return error('File type must be csv')
+        return error('File type must be in .csv format')
 
     if enroll_file.get_size() > config.MAX_FILE_SIZE:
-        return error('File is too large')
+        return error(
+            f'File exceeds the maximum size of {config.MAX_FILE_SIZE} MB'
+        )
     enroll_file.commit()
     db.connect()
     error_string = update_from_file(

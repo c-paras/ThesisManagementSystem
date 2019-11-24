@@ -16,7 +16,7 @@ function addStaff() {
       flash(res.message, error = true);
     } else {
       delayToast('Account type changed', false);
-      location.reload();
+      window.location.href = location.href.replace('#!', '');
     }
   });
 }
@@ -80,7 +80,7 @@ function addStaffFile() {
       flash(res.message, error = true);
     } else {
       delayToast('Account type changed', false);
-      location.reload();
+      window.location.href = location.href.replace('#!', '');
     }
   });
 }

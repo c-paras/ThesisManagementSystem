@@ -7,7 +7,7 @@ function createCourse() {
   const selectBox = M.FormSelect.getInstance(form.find('select[name=year]')[0]);
   // Can't use getSelectedValues() due to bug https://github.com/Dogfalo/materialize/issues/6123
   if(selectBox.el.selectedIndex === 0) {
-    flash('You need to select a year for the course offering', true);
+    flash('You must select a year for the course offering', true);
     return;
   }
 
@@ -29,10 +29,11 @@ function createCourse() {
       }
       return;
     }
-    flash('Created course');
     if(location.href.includes('manage_courses')) {
-      location.reload();
+      delayToast('Course created');
+      window.location.href = location.href.replace('#!', '');
     } else {
+      flash('Course created');
       $('#create-course-modal').modal('close');
     }
   });

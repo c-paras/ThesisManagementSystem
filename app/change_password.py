@@ -82,10 +82,9 @@ def reset_request():
                messages=[
                    'You have submitted a request ' +
                    'to reset your password on TMS.',
-                   f'Your account is "{email}".',
-                   'click ' +
-                   f'<a href="{reset_link}">here</a>' +
-                   ' to reset your password'
+                   f'Your account is {email}.',
+                   f'Click <a href="{reset_link}">here</a>' +
+                   ' to reset your password.'
 
                ])
 
