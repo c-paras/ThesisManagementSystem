@@ -72,7 +72,7 @@ def reset_request():
         return jsonify({'status': 'ok'})
 
     reset_id = str(uuid.uuid1())
-    db.connect()
+
     db.update_rows('users', [reset_id], ['reset_code'],
                    ['id'], [res[0][1]])
 
@@ -133,7 +133,6 @@ def reset():
 
         db.update_rows('users', [hash_pass, ''],
                        ['password', 'reset_code'], ['id'], [user_id])
-        db.close()
 
     else:
         db.close()

@@ -192,7 +192,6 @@ def confirm():
     if len(res) and res[0][1] + config.ACCOUNT_EXPIRY < now:
         expired = True  # expire unactivated accounts every 24 hours
         db.delete_rows('users', ['name'], [user])
-        db.close()
         flash('This activation link has expired!<br>' +
               'You must register your account again.', 'error')
     if not expired and len(res) and confirm_code == res[0][0]:

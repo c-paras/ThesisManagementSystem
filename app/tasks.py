@@ -278,9 +278,11 @@ def mark_task():
         try:
             val = int(marks[i])
             if val < 0 or val > 100:
+                db.close()
                 return error('Marks must be between 0-100')
 
             if val > task_max[i]:
+                db.close()
                 return error(f'Mark {val} exceeds max mark of {task_max[i]}')
         except ValueError:
             db.close()
